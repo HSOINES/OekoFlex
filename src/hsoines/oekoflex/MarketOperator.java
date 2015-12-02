@@ -1,5 +1,7 @@
 package hsoines.oekoflex;
 
+import hsoines.oekoflex.bid.Bid;
+
 public interface MarketOperator {
-	public void receiveBid(float price, float amount);
+	public void registerBid(Bid bid);
 }

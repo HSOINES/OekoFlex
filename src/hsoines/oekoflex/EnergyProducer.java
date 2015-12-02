@@ -7,4 +7,5 @@ package hsoines.oekoflex;
  * Time: 23:34
  */
 public interface EnergyProducer {
+    void setMarketOperator(MarketOperator marketOperator);
 }

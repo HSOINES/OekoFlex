@@ -51,20 +51,15 @@
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
   </component>
-  <component name="masterDetails">
-    <states>
-      <state key="ProjectJDKs.UI">
-        <settings>
-          <last-edited>1.8</last-edited>
-          <splitter-proportions>
-            <option name="proportions">
-              <list>
-                <option value="0.2" />
-              </list>
-            </option>
-          </splitter-proportions>
-        </settings>
-      </state>
-    </states>
+  <component name="libraryTable">
+    <library name="repast runtime">
+      <CLASSES>
+        <root url="jar:///Applications/Repast Simphony 2.3.1/eclipse/plugins/repast.simphony.bin_and_src_2.3.1/repast.simphony.bin_and_src.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar:///Applications/Repast Simphony 2.3.1/eclipse/plugins/repast.simphony.bin_and_src_2.3.1/repast.simphony.bin_and_src.jar!/" />
+      </SOURCES>
+    </library>
   </component>
 </project>

@@ -4,7 +4,7 @@ public class Bid {
 	private final float price;
 	private final float amount;
 
-	Bid(float price, float amount){
+	public Bid(float price, float amount){
 		this.price = price;
 		this.amount = amount;
 	}

@@ -1,4 +1,4 @@
-package hsoines.oekoflex;
+package hsoines.oekoflex.impl;
 
 import repast.simphony.context.Context;
 import repast.simphony.context.space.graph.NetworkBuilder;
@@ -11,16 +11,17 @@ public class EnergyOnlyMarketBuilder implements ContextBuilder<Object>{
 	public Context build(Context<Object> context) {
 		context.setId("EnergyOnlyMarket");
 		
-        NetworkBuilder <Object > netBuilder = new NetworkBuilder<Object >("EOMnetwork", context , true);
-        netBuilder.buildNetwork();
-        Network<Object> net = (Network<Object>) context.getProjection("EOMnetwork");
+//        NetworkBuilder <Object > netBuilder = new NetworkBuilder<Object >("EOMnetwork", context , true);
+//        netBuilder.buildNetwork();
+//        Network<Object> net = (Network<Object>) context.getProjection("EOMnetwork");
        
-        MarketOperator mo = new MarketOperator();
+        SimpleMarketOperator mo = new SimpleMarketOperator();
 		
 		for (int i = 0; i < 5; i++){
 			SimpleEnergyProducer prod = new SimpleEnergyProducer();
+			prod.setMarketOperator(mo);
 			context.add(prod);
-			net.addEdge(prod, mo);
+			//net.addEdge(prod, mo);
 		}
 		
 		return context;
