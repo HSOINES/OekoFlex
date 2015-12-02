@@ -1,10 +1,5 @@
 package hsoines.oekoflex;
 
-public class MarketOperator {
-
-	public void sendBid(int i) {
-				
-	}
-	
-	
+public interface MarketOperator {
+	public void receiveBid(float price, float amount);
 }
