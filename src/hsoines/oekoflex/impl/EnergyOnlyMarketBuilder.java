@@ -21,9 +21,14 @@ public class EnergyOnlyMarketBuilder implements ContextBuilder<Object>{
 			SimpleEnergyProducer prod = new SimpleEnergyProducer();
 			prod.setMarketOperator(mo);
 			context.add(prod);
-			//net.addEdge(prod, mo);
 		}
 		
+		for (int i = 0; i < 5; i++){
+			SimpleEnergyConsumer consumer = new SimpleEnergyConsumer();
+			consumer.setMarketOperator(mo);
+			context.add(consumer);
+		}
+
 		return context;
 	}
 
