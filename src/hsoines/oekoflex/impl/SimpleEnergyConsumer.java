@@ -29,7 +29,7 @@ public final class SimpleEnergyConsumer implements EnergyConsumer, MarketOperato
     }
 
     @Override
-    public void notifyExectionRate(final float rate, final Bid bid) {
+    public void notifyAssignmentRate(final float rate, final Bid bid) {
 
     }
 }

@@ -95,7 +95,7 @@ public class SimpleMarketOperator implements MarketOperator {
             if (demand.getPrice() > clearedPrice){
                 MarketOperatorListener marketOperatorListener = demand.getMarketOperatorListener();
                 if (marketOperatorListener != null) {
-                    marketOperatorListener.notifyExectionRate(1f, demand);
+                    marketOperatorListener.notifyAssignmentRate(1f, demand);
                 }
             } else if (demand.getPrice() == clearedPrice){
 

@@ -7,5 +7,5 @@ package hsoines.oekoflex;
  * Time: 19:12
  */
 public interface MarketOperatorListener {
-    void notifyExectionRate(float rate, Bid bid);
+    void notifyAssignmentRate(float rate, Bid bid);
 }

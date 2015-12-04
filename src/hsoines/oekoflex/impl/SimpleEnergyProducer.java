@@ -22,7 +22,7 @@ public class SimpleEnergyProducer implements EnergyProducer, MarketOperatorListe
     }
 
     @Override
-    public void notifyExectionRate(final float rate, final Bid bid) {
+    public void notifyAssignmentRate(final float rate, final Bid bid) {
 
     }
 }
