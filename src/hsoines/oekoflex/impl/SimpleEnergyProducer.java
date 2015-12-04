@@ -10,10 +10,11 @@ import repast.simphony.engine.schedule.ScheduledMethod;
 public class SimpleEnergyProducer implements EnergyProducer, MarketOperatorListener {
 
     private MarketOperator marketOperator;
+    private float lastAssignmentRate;
 
     @ScheduledMethod(start = 1, interval = 1, priority = 100)
     public void makeBid(){
-        marketOperator.addSupport(new Support(1234f, (int) (3000 * Math.random()), this));
+        marketOperator.addSupport(new Support((float)(100f * Math.random()), (int) (3000 * Math.random()), this));
     }
 
     @Override
@@ -23,6 +24,6 @@ public class SimpleEnergyProducer implements EnergyProducer, MarketOperatorListe
 
     @Override
     public void notifyAssignmentRate(final float rate, final Bid bid) {
-
+        lastAssignmentRate = rate;
     }
 }

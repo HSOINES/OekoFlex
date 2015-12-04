@@ -15,6 +15,7 @@ import hsoines.oekoflex.bid.Demand;
  */
 public final class SimpleEnergyConsumer implements EnergyConsumer, MarketOperatorListener {
     private MarketOperator marketOperator;
+    private float lastAssignmentRate;
 
     @Override
     public void setMarketOperator(final MarketOperator marketOperator) {
@@ -30,6 +31,6 @@ public final class SimpleEnergyConsumer implements EnergyConsumer, MarketOperato
 
     @Override
     public void notifyAssignmentRate(final float rate, final Bid bid) {
-
+        lastAssignmentRate = rate;
     }
 }

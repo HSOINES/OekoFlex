@@ -71,14 +71,22 @@ public class SimpleMarketOperator implements MarketOperator {
                     }
                 }
             } else {
-                if (balance >= 0) {
+                if (balance > 0) {
                     clearedPrice = support.getPrice();
                     clearedQuantity = totalDemandQuantity;
                     lastAssignmentRate = (float) balance / support.getQuantity();
-                } else {
+                } else if (balance < 0){
                     clearedPrice = demand.getPrice();
                     clearedQuantity = totalSupportQuantity;
                     lastAssignmentRate = (float) -balance / demand.getQuantity();
+                } else {
+                   /// unklar: demand-price oder support price? oder mittelwert
+                    clearedPrice = (support.getPrice() + demand.getPrice()) / 2;
+                    lastAssignmentRate = 1;
+                    if (totalDemandQuantity != totalSupportQuantity){
+                        throw new IllegalStateException("must be equal: " + totalDemandQuantity);
+                    }
+                    clearedQuantity = totalDemandQuantity;
                 }
                 break;
             }
@@ -98,6 +106,8 @@ public class SimpleMarketOperator implements MarketOperator {
                     marketOperatorListener.notifyAssignmentRate(1f, demand);
                 } else if (demand.getPrice() == clearedPrice) {
                     marketOperatorListener.notifyAssignmentRate(lastAssignmentRate, demand);
+                } else {
+                    marketOperatorListener.notifyAssignmentRate(0, demand);
                 }
             }
         }
@@ -108,6 +118,8 @@ public class SimpleMarketOperator implements MarketOperator {
                     marketOperatorListener.notifyAssignmentRate(1f, support);
                 } else if (support.getPrice() == clearedPrice) {
                     marketOperatorListener.notifyAssignmentRate(lastAssignmentRate, support);
+                } else {
+                    marketOperatorListener.notifyAssignmentRate(0, support);
                 }
             }
         }
