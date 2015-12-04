@@ -10,11 +10,7 @@ public class EnergyOnlyMarketBuilder implements ContextBuilder<Object>{
 	@Override
 	public Context build(Context<Object> context) {
 		context.setId("EnergyOnlyMarket");
-		
-//        NetworkBuilder <Object > netBuilder = new NetworkBuilder<Object >("EOMnetwork", context , true);
-//        netBuilder.buildNetwork();
-//        Network<Object> net = (Network<Object>) context.getProjection("EOMnetwork");
-       
+      
         SimpleMarketOperator mo = new SimpleMarketOperator();
 		
 		for (int i = 0; i < 5; i++){

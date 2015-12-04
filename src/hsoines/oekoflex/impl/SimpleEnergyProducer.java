@@ -2,6 +2,7 @@ package hsoines.oekoflex.impl;
 
 import hsoines.oekoflex.EnergyProducer;
 import hsoines.oekoflex.MarketOperator;
+import hsoines.oekoflex.ask.Ask;
 import hsoines.oekoflex.bid.Bid;
 import repast.simphony.context.Context;
 import repast.simphony.engine.schedule.ScheduledMethod;
@@ -14,10 +15,10 @@ public class SimpleEnergyProducer implements EnergyProducer {
     private MarketOperator marketOperator;
 
     @ScheduledMethod(start = 1, interval = 1)
-    public void sendBid(){
+    public void makeBid(){
         Context<Object> context = ContextUtils.getContext(this);
 
-        marketOperator.registerBid(new Bid(1234f, (float) (3000f * Math.random())));
+        marketOperator.addAsk(new Ask(1234f, (int) (3000 * Math.random())));
     }
 
     @Override
