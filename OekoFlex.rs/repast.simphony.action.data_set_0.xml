@@ -1,0 +1,49 @@
+<repast.simphony.data2.engine.DataSetDescriptor>
+  <name>SimpleDataSet</name>
+  <type>AGGREGATE</type>
+  <inclTick>true</inclTick>
+  <inclBatchRun>false</inclBatchRun>
+  <inclRandomSeed>false</inclRandomSeed>
+  <scheduleParams>
+    <start>1.0</start>
+    <interval>1.0</interval>
+    <priority>-Infinity</priority>
+    <pType>LAST</pType>
+    <duration>-1.0</duration>
+    <frequency>REPEAT</frequency>
+    <hashCode>-682668393</hashCode>
+  </scheduleParams>
+  <atEnd>false</atEnd>
+  <methodDataSources class="linked-hash-map">
+    <entry>
+      <string>BidCosts</string>
+      <repast.simphony.data2.engine.MethodDataSourceDefinition>
+        <id>BidCosts</id>
+        <className>hsoines.oekoflex.impl.SimpleMarketOperator</className>
+        <methodName>getBidCosts</methodName>
+        <aggType>SUM</aggType>
+      </repast.simphony.data2.engine.MethodDataSourceDefinition>
+    </entry>
+    <entry>
+      <string>AskCosts</string>
+      <repast.simphony.data2.engine.MethodDataSourceDefinition>
+        <id>AskCosts</id>
+        <className>hsoines.oekoflex.impl.SimpleMarketOperator</className>
+        <methodName>getAskCosts</methodName>
+        <aggType>SUM</aggType>
+      </repast.simphony.data2.engine.MethodDataSourceDefinition>
+    </entry>
+    <entry>
+      <string>BidAmount</string>
+      <repast.simphony.data2.engine.MethodDataSourceDefinition>
+        <id>BidAmount</id>
+        <className>hsoines.oekoflex.impl.SimpleMarketOperator</className>
+        <methodName>getTotalBidAmount</methodName>
+        <aggType>SUM</aggType>
+      </repast.simphony.data2.engine.MethodDataSourceDefinition>
+    </entry>
+  </methodDataSources>
+  <countSources class="linked-hash-map"/>
+  <customNADataSources class="linked-hash-map"/>
+  <customAggDataSources class="linked-hash-map"/>
+</repast.simphony.data2.engine.DataSetDescriptor>
