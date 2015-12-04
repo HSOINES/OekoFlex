@@ -1,81 +1,94 @@
 package hsoines.oekoflex.impl;
 
 import hsoines.oekoflex.MarketOperator;
-import hsoines.oekoflex.ask.Ask;
-import hsoines.oekoflex.bid.Bid;
+import hsoines.oekoflex.ask.Support;
+import hsoines.oekoflex.bid.Demand;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import repast.simphony.engine.schedule.ScheduledMethod;
 
-public class SimpleMarketOperator implements MarketOperator{
+public class SimpleMarketOperator implements MarketOperator {
 
-	private final List<Bid> bids;
-	private final List<Ask> asks;
+    private final List<Demand> demands;
+    private final List<Support> supports;
+    private int clearedQuantity;
+    private float clearedPrice;
 
-	private int totalAskAmount = 0;
-	private int totalBidAmount = 0;
-	private float bidCosts = 0;
-	private float askCosts = 0;
-
-	SimpleMarketOperator(){
-		bids = new ArrayList<Bid>();
-		asks = new ArrayList<Ask>();
-	}
-	
-	@Override
-	public void addBid(Bid bid) {
-		bids.add(bid);
-	}
-
-	@Override
-	public void addAsk(Ask ask) {
-		asks.add(ask);
-	}	
-	
-    @ScheduledMethod(start = 1, interval = 1, priority = 100)
-    public void clearMarket(){
-		bids.sort(new Bid.AscendingComparator());
-		asks.sort(new Ask.AscendingComparator());
-
-		for (Bid bid : bids) {
-			totalBidAmount += bid.getAmount();
-			bidCosts += bid.getPrice() * bid.getAmount();
-		}
-
-		for (Ask ask : asks) {
-			totalAskAmount += ask.getAmount();
-			float lastAskCosts = ask.getPrice() * ask.getAmount();
-			askCosts += lastAskCosts;
-			if (totalAskAmount > totalBidAmount){
-				float diff = totalAskAmount - totalBidAmount;
-				float percentageOveruse = diff / ask.getAmount();
-				totalAskAmount -= percentageOveruse * ask.getAmount();
-				askCosts -= percentageOveruse * ask.getAmount();
-				break;
-			}
-		}
-
-		asks.clear();
-		bids.clear();
+    SimpleMarketOperator() {
+        demands = new ArrayList<Demand>();
+        supports = new ArrayList<Support>();
     }
 
-	public int getTotalAskAmount() {
-		return totalAskAmount;
-	}
+    @Override
+    public void addDemand(Demand demand) {
+        demands.add(demand);
+    }
 
-	public int getTotalBidAmount() {
-		return totalBidAmount;
-	}
+    @Override
+    public void addSupport(Support support) {
+        supports.add(support);
+    }
 
-	public float getBidCosts() {
-		return bidCosts;
-	}
+    @ScheduledMethod(start = 1, interval = 1, priority = 1)
+    public void clearMarket() {
+        demands.sort(new Demand.DescendingComparator());
+        supports.sort(new Support.AscendingComparator());
 
-	public float getAskCosts() {
-		return askCosts;
-	}
+        if (demands.size() < 1 || supports.size() < 1) {
+            throw new IllegalStateException("Sizes unsufficient! SupportSize: " + supports.size() + ", DemandSize: " + demands.size());
+        }
+        Iterator<Demand> demandIterator = demands.iterator();
+        Iterator<Support> supportIterator = supports.iterator();
+        int totalSupportQuantity = 0;
+        int totalDemandQuantity = 0;
+        int balance = 0;
+        Support support = supportIterator.next();
+        Demand demand = demandIterator.next();
+        while (true) {
+            if (demand.getPrice() >= support.getPrice()) {
+                if (balance > 0) {
+                    float supportQuantity = support.getQuantity();
+                    balance -= supportQuantity;
+                    totalSupportQuantity += supportQuantity;
+                    if (supportIterator.hasNext()) {
+                        support = supportIterator.next();
+                    } else {
+                        throw new IllegalStateException("not enought supports!");
+                    }
+                } else {
+                    float demandQuantity = demand.getQuantity();
+                    balance += demandQuantity;
+                    totalDemandQuantity += demandQuantity;
+                    if (demandIterator.hasNext()) {
+                        demand = demandIterator.next();
+                    } else {
+                        throw new IllegalStateException("not enought demands!");
+                    }
+                }
+            } else {
+                if (balance >= 0) {
+                    clearedPrice = support.getPrice();
+                    clearedQuantity = totalDemandQuantity;
+                } else {
+                    clearedPrice = demand.getPrice();
+                    clearedQuantity = totalSupportQuantity;
+                }
+                break;
+            }
+        }
 
+        supports.clear();
+        demands.clear();
+    }
 
+    public int getTotalSupportQuantity() {
+        return clearedQuantity;
+    }
+
+    public float getClearedPrice() {
+        return clearedPrice;
+    }
 }

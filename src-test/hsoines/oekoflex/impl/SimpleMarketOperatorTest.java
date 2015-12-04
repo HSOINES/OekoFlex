@@ -1,7 +1,7 @@
 package hsoines.oekoflex.impl;
 
-import hsoines.oekoflex.ask.Ask;
-import hsoines.oekoflex.bid.Bid;
+import hsoines.oekoflex.ask.Support;
+import hsoines.oekoflex.bid.Demand;
 
 import static org.junit.Assert.*;
 
@@ -11,26 +11,34 @@ import static org.junit.Assert.*;
 public class SimpleMarketOperatorTest {
 
     @org.junit.Test
-    public void testAssignBids() throws Exception {
+    public void testClearingWithPartialDemand() throws Exception {
         SimpleMarketOperator simpleMarketOperator = new SimpleMarketOperator();
-        simpleMarketOperator.addBid(new Bid(4.0f, 120));
-        simpleMarketOperator.addBid(new Bid(3.6f, 50));
-        simpleMarketOperator.addBid(new Bid(3.2f, 50));
-        simpleMarketOperator.addBid(new Bid(2.7f, 80));
-        simpleMarketOperator.addBid(new Bid(2.1f, 80));
-        simpleMarketOperator.addBid(new Bid(2.1f, 80));
+        simpleMarketOperator.addDemand(new Demand(9, 11));
+        simpleMarketOperator.addDemand(new Demand(7, 6));
 
-        simpleMarketOperator.addAsk(new Ask(2f, 180));
-        simpleMarketOperator.addAsk(new Ask(2.1f, 140));
-        simpleMarketOperator.addAsk(new Ask(2.8f, 80));
-        simpleMarketOperator.addAsk(new Ask(3f, 90));//2/3 davon
-        simpleMarketOperator.addAsk(new Ask(3.4f, 70));
+        simpleMarketOperator.addSupport(new Support(5, 10));
+        simpleMarketOperator.addSupport(new Support(6, 5));
+        simpleMarketOperator.addSupport(new Support(8, 5));
 
         simpleMarketOperator.clearMarket();
 
-        assertEquals(460, simpleMarketOperator.getTotalAskAmount());
-        assertEquals(460, simpleMarketOperator.getTotalBidAmount());
-        assertEquals(1372, simpleMarketOperator.getBidCosts(), 0.0001);
-        assertEquals(1058, simpleMarketOperator.getAskCosts(), 0.0001);
+        assertEquals(15, simpleMarketOperator.getTotalSupportQuantity());
+        assertEquals(7, simpleMarketOperator.getClearedPrice(), 0.00001);
+    }
+
+    @org.junit.Test
+    public void testClearingWithPartialSupport() throws Exception {
+        SimpleMarketOperator simpleMarketOperator = new SimpleMarketOperator();
+        simpleMarketOperator.addSupport(new Support(9, 11));
+        simpleMarketOperator.addSupport(new Support(7, 6));
+
+        simpleMarketOperator.addDemand(new Demand(5, 10));
+        simpleMarketOperator.addDemand(new Demand(6, 5));
+        simpleMarketOperator.addDemand(new Demand(8, 5));
+
+        simpleMarketOperator.clearMarket();
+
+        assertEquals(5, simpleMarketOperator.getTotalSupportQuantity());
+        assertEquals(7, simpleMarketOperator.getClearedPrice(), 0.00001);
     }
 }

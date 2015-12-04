@@ -1,10 +1,9 @@
 package hsoines.oekoflex.impl;
 
-import hsoines.oekoflex.ask.Ask;
 import repast.simphony.engine.schedule.ScheduledMethod;
 import hsoines.oekoflex.EnergyConsumer;
 import hsoines.oekoflex.MarketOperator;
-import hsoines.oekoflex.bid.Bid;
+import hsoines.oekoflex.bid.Demand;
 
 /**
  * Created by IntelliJ IDEA.
@@ -20,10 +19,10 @@ public final class SimpleEnergyConsumer implements EnergyConsumer {
         this.marketOperator = marketOperator;
     }
     
-    @ScheduledMethod(start = 1, interval = 1)
+    @ScheduledMethod(start = 1, interval = 1, priority = 100)
     public void makeAsk(){
     	if (marketOperator != null){
-    		marketOperator.addBid(new Bid(123f, 444 ));
+    		marketOperator.addDemand(new Demand(123f, 444));
     	}
     }
 }

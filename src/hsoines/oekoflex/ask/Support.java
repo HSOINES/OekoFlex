@@ -1,7 +1,5 @@
 package hsoines.oekoflex.ask;
 
-import hsoines.oekoflex.bid.Bid;
-
 import java.util.Comparator;
 
 /**
@@ -10,26 +8,26 @@ import java.util.Comparator;
  * Date: 03/12/15
  * Time: 08:27
  */
-public final class Ask {
+public final class Support {
     private final float price;
-    private final int amount;
+    private final int quantity;
 
     public float getPrice() {
         return price;
     }
 
-    public float getAmount() {
-        return amount;
+    public float getQuantity() {
+        return quantity;
     }
 
-    public Ask(float price, int amount) {
+    public Support(float price, int quantity) {
         this.price = price;
-        this.amount = amount;
+        this.quantity = quantity;
     }
 
-    public static class AscendingComparator implements Comparator<Ask> {
+    public static class AscendingComparator implements Comparator<Support> {
         @Override
-        public int compare(Ask o1, Ask o2) {
+        public int compare(Support o1, Support o2) {
                 return Float.compare(o1.getPrice(), o2.getPrice());
         }
     }
