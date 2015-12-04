@@ -74,34 +74,43 @@ public class SimpleMarketOperator implements MarketOperator {
                 if (balance >= 0) {
                     clearedPrice = support.getPrice();
                     clearedQuantity = totalDemandQuantity;
-                    lastAssignmentRate = (float)balance / support.getQuantity();
+                    lastAssignmentRate = (float) balance / support.getQuantity();
                 } else {
                     clearedPrice = demand.getPrice();
                     clearedQuantity = totalSupportQuantity;
-                    lastAssignmentRate = (float) - balance / demand.getQuantity();
+                    lastAssignmentRate = (float) -balance / demand.getQuantity();
                 }
                 break;
             }
         }
 
-        notifyExecutionRate(support.getPrice());
+        notifyExecutionRate();
 
         supports.clear();
         demands.clear();
     }
 
-    private void notifyExecutionRate(final float lastSupportPrice) {
+    private void notifyExecutionRate() {
         for (Demand demand : demands) {
-            if (demand.getPrice() > clearedPrice){
-                MarketOperatorListener marketOperatorListener = demand.getMarketOperatorListener();
-                if (marketOperatorListener != null) {
+            MarketOperatorListener marketOperatorListener = demand.getMarketOperatorListener();
+            if (marketOperatorListener != null) {
+                if (demand.getPrice() > clearedPrice) {
                     marketOperatorListener.notifyAssignmentRate(1f, demand);
+                } else if (demand.getPrice() == clearedPrice) {
+                    marketOperatorListener.notifyAssignmentRate(lastAssignmentRate, demand);
                 }
-            } else if (demand.getPrice() == clearedPrice){
-
             }
         }
-
+        for (Support support : supports) {
+            MarketOperatorListener marketOperatorListener = support.getMarketOperatorListener();
+            if (marketOperatorListener != null) {
+                if (support.getPrice() < clearedPrice) {
+                    marketOperatorListener.notifyAssignmentRate(1f, support);
+                } else if (support.getPrice() == clearedPrice) {
+                    marketOperatorListener.notifyAssignmentRate(lastAssignmentRate, support);
+                }
+            }
+        }
     }
 
     public int getTotalSupportQuantity() {
