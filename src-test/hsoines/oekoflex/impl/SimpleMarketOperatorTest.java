@@ -26,7 +26,7 @@ public class SimpleMarketOperatorTest {
         simpleMarketOperator.addAsk(new Ask(3f, 90));//2/3 davon
         simpleMarketOperator.addAsk(new Ask(3.4f, 70));
 
-        simpleMarketOperator.assignBids();
+        simpleMarketOperator.clearMarket();
 
         assertEquals(460, simpleMarketOperator.getTotalAskAmount());
         assertEquals(460, simpleMarketOperator.getTotalBidAmount());

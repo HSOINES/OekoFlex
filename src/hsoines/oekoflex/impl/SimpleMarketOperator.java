@@ -35,7 +35,7 @@ public class SimpleMarketOperator implements MarketOperator{
 	}	
 	
     @ScheduledMethod(start = 1, interval = 1, priority = 100)
-    public void assignBids(){
+    public void clearMarket(){
 		bids.sort(new Bid.AscendingComparator());
 		asks.sort(new Ask.AscendingComparator());
 
