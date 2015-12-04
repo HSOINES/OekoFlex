@@ -33,4 +33,8 @@ public final class SimpleEnergyConsumer implements EnergyConsumer, MarketOperato
     public void notifyAssignmentRate(final float rate, final Bid bid) {
         lastAssignmentRate = rate;
     }
+
+    public float getLastAssignmentRate() {
+        return lastAssignmentRate;
+    }
 }
