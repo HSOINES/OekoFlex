@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <Scenario>
 <repast.simphony.action.data_set context="EnergyOnlyMarket" file="repast.simphony.action.data_set_0.xml" />
-<repast.simphony.action.time_series_chart context="EnergyOnlyMarket" file="repast.simphony.action.time_series_chart_1.xml" />
+<repast.simphony.dataLoader.engine.ClassNameDataLoaderAction context="EnergyOnlyMarket" file="repast.simphony.dataLoader.engine.ClassNameDataLoaderAction_1.xml" />
+<repast.simphony.action.time_series_chart context="EnergyOnlyMarket" file="repast.simphony.action.time_series_chart_2.xml" />
 </Scenario>
