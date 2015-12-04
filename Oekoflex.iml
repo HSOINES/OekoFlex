@@ -4,9 +4,12 @@
     <exclude-output />
     <content url="file://$MODULE_DIR$">
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src-test" isTestSource="true" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="repast runtime" level="project" />
+    <orderEntry type="library" name="repast.simphony.bin_and_src" level="application" />
+    <orderEntry type="library" name="lib" level="project" />
   </component>
 </module>
