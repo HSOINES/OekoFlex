@@ -1,6 +1,7 @@
 package hsoines.oekoflex.impl;
 
 import hsoines.oekoflex.MarketOperator;
+import hsoines.oekoflex.MarketOperatorListener;
 import hsoines.oekoflex.ask.Support;
 import hsoines.oekoflex.bid.Demand;
 
@@ -16,6 +17,7 @@ public class SimpleMarketOperator implements MarketOperator {
     private final List<Support> supports;
     private int clearedQuantity;
     private float clearedPrice;
+    private float lastAssignmentRate;
 
     SimpleMarketOperator() {
         demands = new ArrayList<Demand>();
@@ -72,16 +74,34 @@ public class SimpleMarketOperator implements MarketOperator {
                 if (balance >= 0) {
                     clearedPrice = support.getPrice();
                     clearedQuantity = totalDemandQuantity;
+                    lastAssignmentRate = (float)balance / support.getQuantity();
                 } else {
                     clearedPrice = demand.getPrice();
                     clearedQuantity = totalSupportQuantity;
+                    lastAssignmentRate = (float) - balance / demand.getQuantity();
                 }
                 break;
             }
         }
 
+        notifyExecutionRate(support.getPrice());
+
         supports.clear();
         demands.clear();
+    }
+
+    private void notifyExecutionRate(final float lastSupportPrice) {
+        for (Demand demand : demands) {
+            if (demand.getPrice() > clearedPrice){
+                MarketOperatorListener marketOperatorListener = demand.getMarketOperatorListener();
+                if (marketOperatorListener != null) {
+                    marketOperatorListener.notifyExectionRate(1f, demand);
+                }
+            } else if (demand.getPrice() == clearedPrice){
+
+            }
+        }
+
     }
 
     public int getTotalSupportQuantity() {
@@ -91,4 +111,9 @@ public class SimpleMarketOperator implements MarketOperator {
     public float getClearedPrice() {
         return clearedPrice;
     }
+
+    public float getLastAssignmentRate() {
+        return lastAssignmentRate;
+    }
+
 }

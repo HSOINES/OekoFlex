@@ -1,5 +1,7 @@
 package hsoines.oekoflex.impl;
 
+import hsoines.oekoflex.Bid;
+import hsoines.oekoflex.MarketOperatorListener;
 import repast.simphony.engine.schedule.ScheduledMethod;
 import hsoines.oekoflex.EnergyConsumer;
 import hsoines.oekoflex.MarketOperator;
@@ -11,7 +13,7 @@ import hsoines.oekoflex.bid.Demand;
  * Date: 03/12/15
  * Time: 08:28
  */
-public final class SimpleEnergyConsumer implements EnergyConsumer {
+public final class SimpleEnergyConsumer implements EnergyConsumer, MarketOperatorListener {
     private MarketOperator marketOperator;
 
     @Override
@@ -22,7 +24,12 @@ public final class SimpleEnergyConsumer implements EnergyConsumer {
     @ScheduledMethod(start = 1, interval = 1, priority = 100)
     public void makeAsk(){
     	if (marketOperator != null){
-    		marketOperator.addDemand(new Demand(123f, 444));
+    		marketOperator.addDemand(new Demand(123f, 444, this));
     	}
+    }
+
+    @Override
+    public void notifyExectionRate(final float rate, final Bid bid) {
+
     }
 }

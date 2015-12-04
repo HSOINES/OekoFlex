@@ -1,14 +1,20 @@
 package hsoines.oekoflex.bid;
 
+import hsoines.oekoflex.Bid;
+import hsoines.oekoflex.MarketOperatorListener;
+import hsoines.oekoflex.MarketOperatorListenerProvider;
+
 import java.util.Comparator;
 
-public class Demand {
+public class Demand implements Bid, MarketOperatorListenerProvider {
     private final float price;
     private final int quantity;
+    private final MarketOperatorListener marketOperatorListener;
 
-    public Demand(float price, int quantity) {
+    public Demand(float price, int quantity, MarketOperatorListener marketOperatorListener) {
         this.price = price;
         this.quantity = quantity;
+        this.marketOperatorListener = marketOperatorListener;
     }
 
     public float getPrice() {
@@ -18,6 +24,12 @@ public class Demand {
     public float getQuantity() {
         return quantity;
     }
+
+    @Override
+    public MarketOperatorListener getMarketOperatorListener() {
+        return marketOperatorListener;
+    }
+
 
     public static class DescendingComparator implements Comparator<Demand> {
         @Override
