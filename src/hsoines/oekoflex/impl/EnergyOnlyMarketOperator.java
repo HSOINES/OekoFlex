@@ -13,8 +13,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import repast.simphony.engine.schedule.ScheduledMethod;
 
-public class SimpleMarketOperator implements MarketOperator {
-    private static final Log log = LogFactory.getLog(SimpleMarketOperator.class);
+public class EnergyOnlyMarketOperator implements MarketOperator {
+    private static final Log log = LogFactory.getLog(EnergyOnlyMarketOperator.class);
 
     private final List<Demand> demands;
     private final List<Supply> supplies;
@@ -22,7 +22,7 @@ public class SimpleMarketOperator implements MarketOperator {
     private float clearedPrice;
     private float lastAssignmentRate;
 
-    SimpleMarketOperator() {
+    EnergyOnlyMarketOperator() {
 
         demands = new ArrayList<Demand>();
         supplies = new ArrayList<Supply>();
@@ -52,8 +52,6 @@ public class SimpleMarketOperator implements MarketOperator {
         int totalDemandQuantity = 0;
         clearedQuantity = 0;
         int balance = 0;
-        float lastDemandRate = 0;
-        float lastSupplyRate = 0;
         boolean moreSupplies = true;
         boolean moreDemands = true;
         Demand demand = null;
@@ -99,7 +97,7 @@ public class SimpleMarketOperator implements MarketOperator {
                     if ( !(supply == null) && demand.getPrice() <= supply.getPrice()){
                         break;
                     }
-                    clearedPrice = (supply != null)?(demand.getPrice() + supply.getPrice())/2:demand.getPrice();     //todo
+                    clearedPrice = (supply != null)?(demand.getPrice() + supply.getPrice())/2:demand.getPrice();
                     balance += demand.getQuantity();
                     totalDemandQuantity += demand.getQuantity();
                     logString = "Demand added. Price: " + demand.getPrice() + ", Quantity: " + demand.getQuantity();
@@ -113,14 +111,10 @@ public class SimpleMarketOperator implements MarketOperator {
 
         clearedQuantity = Math.min(totalDemandQuantity, totalSupplyQuantity);
         if (balance < 0){
-            lastDemandRate = 1;
             lastAssignmentRate = (supply.getQuantity()  + balance) / supply.getQuantity();
         } else if (balance > 0){
             lastAssignmentRate = (demand.getQuantity() - balance) / demand.getQuantity();
-            lastSupplyRate = 1;
         } else {
-            lastDemandRate = 1;
-            lastSupplyRate = 1;
             lastAssignmentRate = 1;
         }
         if (lastAssignmentRate > 1){

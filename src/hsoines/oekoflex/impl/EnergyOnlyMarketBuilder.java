@@ -1,10 +1,8 @@
 package hsoines.oekoflex.impl;
 
 import repast.simphony.context.Context;
-import repast.simphony.context.space.graph.NetworkBuilder;
 import repast.simphony.dataLoader.ContextBuilder;
 import repast.simphony.engine.environment.RunEnvironment;
-import repast.simphony.space.graph.Network;
 
 public class EnergyOnlyMarketBuilder implements ContextBuilder<Object>{
 
@@ -17,7 +15,7 @@ public class EnergyOnlyMarketBuilder implements ContextBuilder<Object>{
 		RunEnvironment re = RunEnvironment.getInstance();
 		re.endAt(TICKS_TO_RUN);
 		
-        SimpleMarketOperator mo = new SimpleMarketOperator();
+        EnergyOnlyMarketOperator mo = new EnergyOnlyMarketOperator();
 		context.add(mo);
 		for (int i = 0; i < 50; i++){
 			SimpleEnergyProducer prod = new SimpleEnergyProducer();
