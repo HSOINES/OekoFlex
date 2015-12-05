@@ -40,6 +40,14 @@
         <methodName>getLastClearedPrice</methodName>
       </repast.simphony.data2.engine.MethodDataSourceDefinition>
     </entry>
+    <entry>
+      <string>TotalClearedQuantity</string>
+      <repast.simphony.data2.engine.MethodDataSourceDefinition>
+        <id>TotalClearedQuantity</id>
+        <className>hsoines.oekoflex.impl.EnergyOnlyMarketOperator</className>
+        <methodName>getTotalClearedQuantity</methodName>
+      </repast.simphony.data2.engine.MethodDataSourceDefinition>
+    </entry>
   </methodDataSources>
   <countSources class="linked-hash-map"/>
   <customNADataSources class="linked-hash-map"/>
