@@ -1,9 +1,9 @@
 package hsoines.oekoflex;
 
-import hsoines.oekoflex.ask.Support;
-import hsoines.oekoflex.bid.Demand;
+import hsoines.oekoflex.supply.Supply;
+import hsoines.oekoflex.demand.Demand;
 
 public interface MarketOperator {
 	public void addDemand(Demand demand);
-	public void addSupport(Support support);
+	public void addSupply(Supply supply);
 }

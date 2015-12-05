@@ -1,9 +1,9 @@
 <repast.simphony.chart2.engine.TimeSeriesChartDescriptor>
-  <name>Time Series Chart</name>
-  <dataSet>SimpleDataSet</dataSet>
+  <name>MarketOperator</name>
+  <dataSet>MarketOperator</dataSet>
   <xAxisLabel>Tick Count</xAxisLabel>
   <yAxisLabel></yAxisLabel>
-  <chartTitle>Ask And Bid Costs</chartTitle>
+  <chartTitle>MarketOperator</chartTitle>
   <type>TIME_SERIES</type>
   <background>
     <red>192</red>
@@ -21,42 +21,16 @@
   <showLegend>true</showLegend>
   <seriesIds>
     <entry>
-      <string>BidAmount</string>
+      <string>Price</string>
       <SeriesData>
-        <label>BidAmount</label>
-        <color>
-          <red>0</red>
-          <green>255</green>
-          <blue>0</blue>
-          <alpha>255</alpha>
-        </color>
-      </SeriesData>
-    </entry>
-    <entry>
-      <string>BidCosts</string>
-      <SeriesData>
-        <label>BidCosts</label>
-        <color>
-          <red>0</red>
-          <green>0</green>
-          <blue>255</blue>
-          <alpha>255</alpha>
-        </color>
-      </SeriesData>
-    </entry>
-    <entry>
-      <string>AskCosts</string>
-      <SeriesData>
-        <label>AskCosts</label>
-        <color>
-          <red>255</red>
-          <green>0</green>
-          <blue>0</blue>
-          <alpha>255</alpha>
-        </color>
+        <label></label>
       </SeriesData>
     </entry>
   </seriesIds>
-  <dataValueIds/>
+  <dataValueIds>
+    <string>Price</string>
+    <string>LastAssignmentRate</string>
+    <string>LastClearedPrice</string>
+  </dataValueIds>
   <plotRangeLength>-1</plotRangeLength>
 </repast.simphony.chart2.engine.TimeSeriesChartDescriptor>

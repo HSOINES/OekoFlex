@@ -6,5 +6,5 @@ package hsoines.oekoflex;
  * Date: 03/12/15
  * Time: 08:28
  */
-public interface EnergyConsumer extends MarketOperatorAggregator {
+public interface EnergyConsumer extends EnergyTrader {
 }

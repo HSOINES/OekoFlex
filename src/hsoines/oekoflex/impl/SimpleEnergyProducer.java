@@ -4,17 +4,21 @@ import hsoines.oekoflex.Bid;
 import hsoines.oekoflex.EnergyProducer;
 import hsoines.oekoflex.MarketOperatorListener;
 import hsoines.oekoflex.MarketOperator;
-import hsoines.oekoflex.ask.Support;
+import hsoines.oekoflex.supply.Supply;
 import repast.simphony.engine.schedule.ScheduledMethod;
 
 public class SimpleEnergyProducer implements EnergyProducer, MarketOperatorListener {
 
     private MarketOperator marketOperator;
+    private float lastClearedPrice;
     private float lastAssignmentRate;
+
+    private float lastBidPrice;
 
     @ScheduledMethod(start = 1, interval = 1, priority = 100)
     public void makeBid(){
-        marketOperator.addSupport(new Support((float)(100f * Math.random()), (int) (3000 * Math.random()), this));
+        lastBidPrice = (float) (1000f * Math.random());
+        marketOperator.addSupply(new Supply(lastBidPrice, (int) (100 * Math.random()), this));
     }
 
     @Override
@@ -23,11 +27,24 @@ public class SimpleEnergyProducer implements EnergyProducer, MarketOperatorListe
     }
 
     @Override
-    public void notifyAssignmentRate(final float rate, final Bid bid) {
+    public void notifyClearingDone(final float clearedPrice, final float rate, final Bid bid) {
+        this.lastClearedPrice = clearedPrice;
         lastAssignmentRate = rate;
     }
 
+    @Override
     public float getLastAssignmentRate() {
         return lastAssignmentRate;
     }
+
+    @Override
+    public float getLastClearedPrice() {
+        return lastClearedPrice;
+    }
+
+    @Override
+    public float getLastBidPrice() {
+        return lastBidPrice;
+    }
+
 }

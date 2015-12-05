@@ -8,7 +8,7 @@ import repast.simphony.space.graph.Network;
 
 public class EnergyOnlyMarketBuilder implements ContextBuilder<Object>{
 
-	public static final int TICKS_TO_RUN = 365 * 24 * 4;
+	public static final int TICKS_TO_RUN = 24 * 4;
 
 	@Override
 	public Context build(Context<Object> context) {
@@ -19,13 +19,13 @@ public class EnergyOnlyMarketBuilder implements ContextBuilder<Object>{
 		
         SimpleMarketOperator mo = new SimpleMarketOperator();
 		context.add(mo);
-		for (int i = 0; i < 5; i++){
+		for (int i = 0; i < 50; i++){
 			SimpleEnergyProducer prod = new SimpleEnergyProducer();
 			prod.setMarketOperator(mo);
 			context.add(prod);
 		}
 		
-		for (int i = 0; i < 5; i++){
+		for (int i = 0; i < 50; i++){
 			SimpleEnergyConsumer consumer = new SimpleEnergyConsumer();
 			consumer.setMarketOperator(mo);
 			context.add(consumer);

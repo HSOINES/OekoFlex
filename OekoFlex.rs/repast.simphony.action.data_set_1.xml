@@ -1,6 +1,7 @@
 <repast.simphony.data2.engine.DataSetDescriptor>
-  <name>SimpleDataSet</name>
-  <type>AGGREGATE</type>
+  <name>MarketOperator</name>
+  <type>NON_AGGREGATE</type>
+  <sourceType>hsoines.oekoflex.impl.SimpleMarketOperator</sourceType>
   <inclTick>true</inclTick>
   <inclBatchRun>false</inclBatchRun>
   <inclRandomSeed>false</inclRandomSeed>
@@ -11,35 +12,32 @@
     <pType>LAST</pType>
     <duration>-1.0</duration>
     <frequency>REPEAT</frequency>
-    <hashCode>-682668393</hashCode>
+    <hashCode>1309455463</hashCode>
   </scheduleParams>
   <atEnd>false</atEnd>
   <methodDataSources class="linked-hash-map">
     <entry>
-      <string>BidCosts</string>
+      <string>Price</string>
       <repast.simphony.data2.engine.MethodDataSourceDefinition>
-        <id>BidCosts</id>
+        <id>Price</id>
         <className>hsoines.oekoflex.impl.SimpleMarketOperator</className>
-        <methodName>getBidCosts</methodName>
-        <aggType>SUM</aggType>
+        <methodName>getPrice</methodName>
       </repast.simphony.data2.engine.MethodDataSourceDefinition>
     </entry>
     <entry>
-      <string>AskCosts</string>
+      <string>LastAssignmentRate</string>
       <repast.simphony.data2.engine.MethodDataSourceDefinition>
-        <id>AskCosts</id>
+        <id>LastAssignmentRate</id>
         <className>hsoines.oekoflex.impl.SimpleMarketOperator</className>
-        <methodName>getAskCosts</methodName>
-        <aggType>SUM</aggType>
+        <methodName>getLastAssignmentRate</methodName>
       </repast.simphony.data2.engine.MethodDataSourceDefinition>
     </entry>
     <entry>
-      <string>BidAmount</string>
+      <string>LastClearedPrice</string>
       <repast.simphony.data2.engine.MethodDataSourceDefinition>
-        <id>BidAmount</id>
+        <id>LastClearedPrice</id>
         <className>hsoines.oekoflex.impl.SimpleMarketOperator</className>
-        <methodName>getTotalBidAmount</methodName>
-        <aggType>SUM</aggType>
+        <methodName>getLastClearedPrice</methodName>
       </repast.simphony.data2.engine.MethodDataSourceDefinition>
     </entry>
   </methodDataSources>

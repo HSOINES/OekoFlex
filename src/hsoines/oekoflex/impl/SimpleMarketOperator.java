@@ -2,26 +2,30 @@ package hsoines.oekoflex.impl;
 
 import hsoines.oekoflex.MarketOperator;
 import hsoines.oekoflex.MarketOperatorListener;
-import hsoines.oekoflex.ask.Support;
-import hsoines.oekoflex.bid.Demand;
+import hsoines.oekoflex.supply.Supply;
+import hsoines.oekoflex.demand.Demand;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import repast.simphony.engine.schedule.ScheduledMethod;
 
 public class SimpleMarketOperator implements MarketOperator {
+    private static final Log log = LogFactory.getLog(SimpleMarketOperator.class);
 
     private final List<Demand> demands;
-    private final List<Support> supports;
+    private final List<Supply> supplies;
     private int clearedQuantity;
     private float clearedPrice;
     private float lastAssignmentRate;
 
     SimpleMarketOperator() {
+
         demands = new ArrayList<Demand>();
-        supports = new ArrayList<Support>();
+        supplies = new ArrayList<Supply>();
     }
 
     @Override
@@ -30,71 +34,102 @@ public class SimpleMarketOperator implements MarketOperator {
     }
 
     @Override
-    public void addSupport(Support support) {
-        supports.add(support);
+    public void addSupply(Supply supply) {
+        this.supplies.add(supply);
     }
 
     @ScheduledMethod(start = 1, interval = 1, priority = 1)
     public void clearMarket() {
         demands.sort(new Demand.DescendingComparator());
-        supports.sort(new Support.AscendingComparator());
+        this.supplies.sort(new Supply.AscendingComparator());
 
-        if (demands.size() < 1 || supports.size() < 1) {
-            throw new IllegalStateException("Sizes unsufficient! SupportSize: " + supports.size() + ", DemandSize: " + demands.size());
+        if (demands.size() < 1 || this.supplies.size() < 1) {
+            throw new IllegalStateException("Sizes unsufficient! SupportSize: " + this.supplies.size() + ", DemandSize: " + demands.size());
         }
         Iterator<Demand> demandIterator = demands.iterator();
-        Iterator<Support> supportIterator = supports.iterator();
-        int totalSupportQuantity = 0;
+        Iterator<Supply> supplyIterator = this.supplies.iterator();
+        int totalSupplyQuantity = 0;
         int totalDemandQuantity = 0;
+        clearedQuantity = 0;
         int balance = 0;
-        Support support = supportIterator.next();
-        Demand demand = demandIterator.next();
-        while (true) {
-            if (demand.getPrice() >= support.getPrice()) {
-                if (balance > 0) {
-                    float supportQuantity = support.getQuantity();
-                    balance -= supportQuantity;
-                    totalSupportQuantity += supportQuantity;
-                    if (supportIterator.hasNext()) {
-                        support = supportIterator.next();
-                    } else {
-                        throw new IllegalStateException("not enought supports!");
+        float lastDemandRate = 0;
+        float lastSupplyRate = 0;
+        boolean moreSupplies = true;
+        boolean moreDemands = true;
+        Demand demand = null;
+        Supply supply = null;
+        do {
+            String logString ="";
+            if (balance > 0) {
+                if (supplyIterator.hasNext()){
+                    supply = supplyIterator.next();
+                    if ( demand.getPrice() <= supply.getPrice()){
+                        break;
                     }
+                    balance -= supply.getQuantity();
+                    if (balance < 0) {
+                        clearedPrice = supply.getPrice();
+                    }
+                    totalSupplyQuantity += supply.getQuantity();
+                    logString = "Supply added. Price: " + supply.getPrice() + ", Quantity: " + supply.getQuantity();
                 } else {
-                    float demandQuantity = demand.getQuantity();
-                    balance += demandQuantity;
-                    totalDemandQuantity += demandQuantity;
-                    if (demandIterator.hasNext()) {
-                        demand = demandIterator.next();
-                    } else {
-                        throw new IllegalStateException("not enought demands!");
+                    moreSupplies= false;
+                }
+            } else if (balance < 0) {
+                if (demandIterator.hasNext()){
+                    demand = demandIterator.next();
+                    if ( demand.getPrice() <= supply.getPrice()){
+                        break;
                     }
+                    balance += demand.getQuantity();
+                    if (balance > 0) {
+                        clearedPrice = demand.getPrice();
+                    }
+                    totalDemandQuantity += demand.getQuantity();
+                    logString = "Demand added. Price: " + demand.getPrice() + ", Quantity: " + demand.getQuantity();
+                } else {
+                    moreDemands = false;
                 }
             } else {
-                if (balance > 0) {
-                    clearedPrice = support.getPrice();
-                    clearedQuantity = totalDemandQuantity;
-                    lastAssignmentRate = (float) balance / support.getQuantity();
-                } else if (balance < 0){
-                    clearedPrice = demand.getPrice();
-                    clearedQuantity = totalSupportQuantity;
-                    lastAssignmentRate = (float) -balance / demand.getQuantity();
-                } else {
-                   /// unklar: demand-price oder support price? oder mittelwert
-                    clearedPrice = (support.getPrice() + demand.getPrice()) / 2;
-                    lastAssignmentRate = 1;
-                    if (totalDemandQuantity != totalSupportQuantity){
-                        throw new IllegalStateException("must be equal: " + totalDemandQuantity);
-                    }
-                    clearedQuantity = totalDemandQuantity;
+                if (totalDemandQuantity != totalSupplyQuantity) {
+                    throw new IllegalStateException("mustn't differ");
                 }
-                break;
+                if (demandIterator.hasNext()){
+                    demand = demandIterator.next();
+                    if ( !(supply == null) && demand.getPrice() <= supply.getPrice()){
+                        break;
+                    }
+                    clearedPrice = (supply != null)?(demand.getPrice() + supply.getPrice())/2:demand.getPrice();     //todo
+                    balance += demand.getQuantity();
+                    totalDemandQuantity += demand.getQuantity();
+                    logString = "Demand added. Price: " + demand.getPrice() + ", Quantity: " + demand.getQuantity();
+                } else {
+                    moreDemands = false;
+                }
+
             }
+            log.info("                                                      " + logString + ", " + "Balance: " + balance);
+        } while (supply == null || moreDemands || moreSupplies);
+
+        clearedQuantity = Math.min(totalDemandQuantity, totalSupplyQuantity);
+        if (balance < 0){
+            lastDemandRate = 1;
+            lastAssignmentRate = (supply.getQuantity()  + balance) / supply.getQuantity();
+        } else if (balance > 0){
+            lastAssignmentRate = (demand.getQuantity() - balance) / demand.getQuantity();
+            lastSupplyRate = 1;
+        } else {
+            lastDemandRate = 1;
+            lastSupplyRate = 1;
+            lastAssignmentRate = 1;
+        }
+        if (lastAssignmentRate > 1){
+            throw  new IllegalStateException("lastAssignmentRate: " + lastAssignmentRate);
         }
 
         notifyExecutionRate();
 
-        supports.clear();
+        supplies.clear();
         demands.clear();
     }
 
@@ -103,38 +138,43 @@ public class SimpleMarketOperator implements MarketOperator {
             MarketOperatorListener marketOperatorListener = demand.getMarketOperatorListener();
             if (marketOperatorListener != null) {
                 if (demand.getPrice() > clearedPrice) {
-                    marketOperatorListener.notifyAssignmentRate(1f, demand);
+                    marketOperatorListener.notifyClearingDone(clearedPrice, 1f, demand);
                 } else if (demand.getPrice() == clearedPrice) {
-                    marketOperatorListener.notifyAssignmentRate(lastAssignmentRate, demand);
+                    marketOperatorListener.notifyClearingDone(clearedPrice, lastAssignmentRate, demand);
                 } else {
-                    marketOperatorListener.notifyAssignmentRate(0, demand);
+                    marketOperatorListener.notifyClearingDone(clearedPrice, 0, demand);
                 }
             }
         }
-        for (Support support : supports) {
-            MarketOperatorListener marketOperatorListener = support.getMarketOperatorListener();
+        for (Supply supply : this.supplies) {
+            MarketOperatorListener marketOperatorListener = supply.getMarketOperatorListener();
             if (marketOperatorListener != null) {
-                if (support.getPrice() < clearedPrice) {
-                    marketOperatorListener.notifyAssignmentRate(1f, support);
-                } else if (support.getPrice() == clearedPrice) {
-                    marketOperatorListener.notifyAssignmentRate(lastAssignmentRate, support);
+                if (supply.getPrice() < clearedPrice) {
+                    marketOperatorListener.notifyClearingDone(clearedPrice, 1f, supply);
+                } else if (supply.getPrice() == clearedPrice) {
+                    marketOperatorListener.notifyClearingDone(clearedPrice, lastAssignmentRate, supply);
                 } else {
-                    marketOperatorListener.notifyAssignmentRate(0, support);
+                    marketOperatorListener.notifyClearingDone(clearedPrice, 0, supply);
                 }
             }
         }
     }
 
-    public int getTotalSupportQuantity() {
+    public int getTotalClearedQuantity() {
         return clearedQuantity;
     }
 
-    public float getClearedPrice() {
+    public float getLastClearedPrice() {
         return clearedPrice;
     }
 
     public float getLastAssignmentRate() {
         return lastAssignmentRate;
     }
+
+    public float getPrice() {  //dummy, da chart nicht sauber laeuft
+        return 0;
+    }
+
 
 }
