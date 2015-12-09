@@ -6,6 +6,6 @@ package hsoines.oekoflex;
  * Date: 04/12/15
  * Time: 19:24
  */
-public interface MarketOperatorListenerProvider {
+public interface MarketOperatorListenerProvider  {
     MarketOperatorListener getMarketOperatorListener();
 }

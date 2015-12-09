@@ -1,0 +1,17 @@
+<repast.simphony.data2.engine.FileSinkDescriptor>
+  <name>SimpleEnergyConsumer</name>
+  <dataSet>SimpleEnergyConsumer</dataSet>
+  <delimiter>,</delimiter>
+  <format>TABULAR</format>
+  <sourceIds class="linked-hash-set">
+    <string>tick</string>
+    <string>Name</string>
+    <string>Price</string>
+    <string>LastAssignmentRate</string>
+    <string>LastClearedPrice</string>
+    <string>TotalClearedQuantity</string>
+    <string>LastBidPrice</string>
+  </sourceIds>
+  <fileName>SimpleEnergyConsumer.txt</fileName>
+  <addTimeStamp>true</addTimeStamp>
+</repast.simphony.data2.engine.FileSinkDescriptor>

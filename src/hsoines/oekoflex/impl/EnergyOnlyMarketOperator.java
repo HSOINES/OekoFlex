@@ -136,29 +136,48 @@ public class EnergyOnlyMarketOperator implements MarketOperator, OekoflexAgent {
     }
 
     private void notifyExecutionRate() {
+        StringBuilder logString = new StringBuilder();
+        logString.append(getName()).append(",")
+                .append(getLastClearedPrice()).append(",")
+                .append(getLastAssignmentRate()).append(",")
+                .append(getTotalClearedQuantity()).append(",");
         for (Demand demand : demands) {
             MarketOperatorListener marketOperatorListener = demand.getMarketOperatorListener();
             if (marketOperatorListener != null) {
+                float assignmentRate = 0;
                 if (demand.getPrice() > clearedPrice) {
-                    marketOperatorListener.notifyClearingDone(clearedPrice, 1f, demand);
+                    assignmentRate = 1f;
                 } else if (demand.getPrice() == clearedPrice) {
-                    marketOperatorListener.notifyClearingDone(clearedPrice, lastAssignmentRate, demand);
+                    assignmentRate = lastAssignmentRate;
                 } else {
-                    marketOperatorListener.notifyClearingDone(clearedPrice, 0, demand);
+                    assignmentRate = 0;
                 }
+                marketOperatorListener.notifyClearingDone(clearedPrice, assignmentRate, demand);
+                logString.append(marketOperatorListener.getName()).append(",")
+                        .append(assignmentRate).append(",")
+                        .append(demand.getPrice()).append(",")
+                        .append(demand.getQuantity()).append(",");
             }
         }
         for (Supply supply : this.supplies) {
             MarketOperatorListener marketOperatorListener = supply.getMarketOperatorListener();
             if (marketOperatorListener != null) {
+                float assignmentRate = 0;
                 if (supply.getPrice() < clearedPrice) {
-                    marketOperatorListener.notifyClearingDone(clearedPrice, 1f, supply);
+                    assignmentRate = 1;
                 } else if (supply.getPrice() == clearedPrice) {
-                    marketOperatorListener.notifyClearingDone(clearedPrice, lastAssignmentRate, supply);
+                    assignmentRate = lastAssignmentRate;
                 } else {
-                    marketOperatorListener.notifyClearingDone(clearedPrice, 0, supply);
+                    assignmentRate = 0;
                 }
+                marketOperatorListener.notifyClearingDone(clearedPrice, assignmentRate, supply);
+                logString.append(marketOperatorListener.getName()).append(",")
+                        .append(assignmentRate).append(",")
+                        .append(supply.getPrice()).append(",")
+                        .append(supply.getQuantity()).append(",");
             }
+            Log allInOneLine = LogFactory.getLog("ALL_IN_ONE_LINE");
+            allInOneLine.info(logString.toString());
         }
     }
 
@@ -175,7 +194,7 @@ public class EnergyOnlyMarketOperator implements MarketOperator, OekoflexAgent {
     }
 
     public float getPrice() {  //dummy, da chart nicht sauber laeuft
-        return 0;
+        return -1;
     }
 
 
