@@ -2,27 +2,31 @@ package hsoines.oekoflex.impl;
 
 import hsoines.oekoflex.MarketOperator;
 import hsoines.oekoflex.MarketOperatorListener;
+import hsoines.oekoflex.OekoflexAgent;
 import hsoines.oekoflex.supply.Supply;
 import hsoines.oekoflex.demand.Demand;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import repast.simphony.engine.schedule.ScheduledMethod;
 
-public class EnergyOnlyMarketOperator implements MarketOperator {
+public class EnergyOnlyMarketOperator implements MarketOperator, OekoflexAgent {
     private static final Log log = LogFactory.getLog(EnergyOnlyMarketOperator.class);
 
     private final List<Demand> demands;
     private final List<Supply> supplies;
+    private final String name;
     private int clearedQuantity;
     private float clearedPrice;
     private float lastAssignmentRate;
 
-    EnergyOnlyMarketOperator() {
+    EnergyOnlyMarketOperator(String name) {
+        this.name = name;
 
         demands = new ArrayList<Demand>();
         supplies = new ArrayList<Supply>();
@@ -67,6 +71,8 @@ public class EnergyOnlyMarketOperator implements MarketOperator {
                     balance -= supply.getQuantity();
                     if (balance < 0) {
                         clearedPrice = supply.getPrice();
+                    } else {
+                        clearedPrice = demand.getPrice();
                     }
                     totalSupplyQuantity += supply.getQuantity();
                     logString = "Supply added. Price: " + supply.getPrice() + ", Quantity: " + supply.getQuantity();
@@ -82,6 +88,8 @@ public class EnergyOnlyMarketOperator implements MarketOperator {
                     balance += demand.getQuantity();
                     if (balance > 0) {
                         clearedPrice = demand.getPrice();
+                    } else {
+                        clearedPrice = supply.getPrice();
                     }
                     totalDemandQuantity += demand.getQuantity();
                     logString = "Demand added. Price: " + demand.getPrice() + ", Quantity: " + demand.getQuantity();
@@ -171,4 +179,8 @@ public class EnergyOnlyMarketOperator implements MarketOperator {
     }
 
 
+    @Override
+    public String getName() {
+        return name;
+    }
 }

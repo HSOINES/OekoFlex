@@ -1,19 +1,21 @@
 package hsoines.oekoflex.impl;
 
-import hsoines.oekoflex.Bid;
-import hsoines.oekoflex.EnergyProducer;
-import hsoines.oekoflex.MarketOperatorListener;
-import hsoines.oekoflex.MarketOperator;
+import hsoines.oekoflex.*;
 import hsoines.oekoflex.supply.Supply;
 import repast.simphony.engine.schedule.ScheduledMethod;
 
-public class SimpleEnergyProducer implements EnergyProducer, MarketOperatorListener {
+public class SimpleEnergyProducer implements EnergyProducer, MarketOperatorListener, OekoflexAgent {
 
+    private final String name;
     private MarketOperator marketOperator;
     private float lastClearedPrice;
     private float lastAssignmentRate;
 
     private float lastBidPrice;
+
+    public SimpleEnergyProducer(String name) {
+        this.name = name;
+    }
 
     @ScheduledMethod(start = 1, interval = 1, priority = 100)
     public void makeBid(){
@@ -47,4 +49,8 @@ public class SimpleEnergyProducer implements EnergyProducer, MarketOperatorListe
         return lastBidPrice;
     }
 
+    @Override
+    public String getName() {
+        return name;
+    }
 }

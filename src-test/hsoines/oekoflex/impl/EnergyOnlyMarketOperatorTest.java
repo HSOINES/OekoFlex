@@ -16,7 +16,7 @@ public class EnergyOnlyMarketOperatorTest {
 
     @Before
     public void setUp() throws Exception {
-        energyOnlyMarketOperator = new EnergyOnlyMarketOperator();
+        energyOnlyMarketOperator = new EnergyOnlyMarketOperator("test");
     }
 
     @org.junit.Test
@@ -113,7 +113,7 @@ public class EnergyOnlyMarketOperatorTest {
 
         assertEquals(300, energyOnlyMarketOperator.getTotalClearedQuantity());
         assertEquals(7.5f, energyOnlyMarketOperator.getLastClearedPrice(), 0.00001);
-        assertEquals(.6666f, energyOnlyMarketOperator.getLastAssignmentRate(), 0.00001);
+        assertEquals(.4f, energyOnlyMarketOperator.getLastAssignmentRate(), 0.00001);
 
 
     }
