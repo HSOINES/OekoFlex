@@ -1,6 +1,7 @@
 package hsoines.oekoflex.impl;
 
 import hsoines.oekoflex.*;
+import hsoines.oekoflex.demand.Demand;
 import hsoines.oekoflex.supply.Supply;
 import repast.simphony.engine.schedule.ScheduledMethod;
 
@@ -21,6 +22,7 @@ public class SimpleEnergyProducer implements EnergyProducer, MarketOperatorListe
     public void makeBid(){
         lastBidPrice = (float) (1000f * Math.random());
         marketOperator.addSupply(new Supply(lastBidPrice, (int) (100 * Math.random()), this));
+        marketOperator.addDemand(new Demand(lastBidPrice, (int) (100 * Math.random()), this));
     }
 
     @Override
