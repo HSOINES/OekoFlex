@@ -6,4 +6,8 @@ import hsoines.oekoflex.demand.Demand;
 public interface MarketOperator {
 	public void addDemand(Demand demand);
 	public void addSupply(Supply supply);
+
+	enum AssignmentType{
+		PartialDemand, PartialSupply, Full
+	}
 }

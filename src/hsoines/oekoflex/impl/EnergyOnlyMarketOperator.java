@@ -20,10 +20,13 @@ public class EnergyOnlyMarketOperator implements MarketOperator, OekoflexAgent {
 
     private final List<Demand> demands;
     private final List<Supply> supplies;
+    private  List<Demand> lastDemands;
+    private  List<Supply> lastSupplies;
     private final String name;
     private int clearedQuantity;
     private float clearedPrice;
     private float lastAssignmentRate;
+    private AssignmentType lastAssignmentType;
 
     EnergyOnlyMarketOperator(String name) {
         this.name = name;
@@ -120,10 +123,13 @@ public class EnergyOnlyMarketOperator implements MarketOperator, OekoflexAgent {
         clearedQuantity = Math.min(totalDemandQuantity, totalSupplyQuantity);
         if (balance < 0){
             lastAssignmentRate = (supply.getQuantity()  + balance) / supply.getQuantity();
+            lastAssignmentType = AssignmentType.PartialSupply;
         } else if (balance > 0){
             lastAssignmentRate = (demand.getQuantity() - balance) / demand.getQuantity();
+            lastAssignmentType = AssignmentType.PartialDemand;
         } else {
             lastAssignmentRate = 1;
+            lastAssignmentType = AssignmentType.Full;
         }
         if (lastAssignmentRate > 1){
             throw  new IllegalStateException("lastAssignmentRate: " + lastAssignmentRate);
@@ -131,6 +137,8 @@ public class EnergyOnlyMarketOperator implements MarketOperator, OekoflexAgent {
 
         notifyExecutionRate();
 
+        lastDemands = new ArrayList<>(demands);
+        lastSupplies = new ArrayList<>(supplies);
         supplies.clear();
         demands.clear();
     }
@@ -201,5 +209,17 @@ public class EnergyOnlyMarketOperator implements MarketOperator, OekoflexAgent {
     @Override
     public String getName() {
         return name;
+    }
+
+    public List<Supply> getLastSupplies() {
+        return lastSupplies;
+    }
+
+    public List<Demand> getLastDemands() {
+        return lastDemands;
+    }
+
+    public AssignmentType getLastAssignmentType() {
+        return lastAssignmentType;
     }
 }

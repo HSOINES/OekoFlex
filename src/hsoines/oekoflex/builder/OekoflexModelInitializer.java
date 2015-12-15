@@ -35,10 +35,9 @@ public class OekoflexModelInitializer  implements ModelInitializer  {
 	        @Override
 	        public void runInitialize(RunState runState, Context context, Parameters runParams) {
 	          display = new MerritOrderGraph(context);
-	          runState.getGUIRegistry().addDisplay("Trigger Count", GUIRegistryType.OTHER, display);
+	          runState.getGUIRegistry().addDisplay("Merrit Order Graph", GUIRegistryType.OTHER, display);
 	          runState.getScheduleRegistry().getModelSchedule().schedule(ScheduleParameters.createRepeating(1, 1,
 	                  ScheduleParameters.END), new DisplayUpdater(display));
-
 	        }
 
 	        @Override
