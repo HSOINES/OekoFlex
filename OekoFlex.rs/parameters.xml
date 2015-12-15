@@ -2,5 +2,7 @@
 <parameters>
 
 	<parameter name="randomSeed" displayName="Default Random Seed" type="int" defaultValue="__NULL__" />
+	<parameter name="supplyCapacityAgent1" displayName="Supply Capacity Agent 1" type="int" defaultValue="200" />
+	<parameter name="supplyDelayAgent1" displayName="Supply Delay Agent 1" type="int" defaultValue="200" />
 
 </parameters>

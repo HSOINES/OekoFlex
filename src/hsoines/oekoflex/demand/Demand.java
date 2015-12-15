@@ -8,10 +8,10 @@ import java.util.Comparator;
 
 public class Demand implements Bid, MarketOperatorListenerProvider {
     private final float price;
-    private final int quantity;
+    private final float quantity;
     private final MarketOperatorListener marketOperatorListener;
 
-    public Demand(float price, int quantity, MarketOperatorListener marketOperatorListener) {
+    public Demand(float price, float quantity, MarketOperatorListener marketOperatorListener) {
         this.price = price;
         this.quantity = quantity;
         this.marketOperatorListener = marketOperatorListener;

@@ -28,7 +28,7 @@ public class EnergyOnlyMarketOperator implements MarketOperator, OekoflexAgent {
     private float lastAssignmentRate;
     private AssignmentType lastAssignmentType;
 
-    EnergyOnlyMarketOperator(String name) {
+    public EnergyOnlyMarketOperator(String name) {
         this.name = name;
 
         demands = new ArrayList<Demand>();

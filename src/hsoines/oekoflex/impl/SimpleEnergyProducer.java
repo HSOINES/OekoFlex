@@ -22,7 +22,6 @@ public class SimpleEnergyProducer implements EnergyProducer, MarketOperatorListe
     public void makeBid(){
         lastBidPrice = (float) (1000f * Math.random());
         marketOperator.addSupply(new Supply(lastBidPrice, (int) (100 * Math.random()), this));
-        marketOperator.addDemand(new Demand(lastBidPrice, (int) (100 * Math.random()), this));
     }
 
     @Override

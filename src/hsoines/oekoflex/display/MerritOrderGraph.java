@@ -6,7 +6,9 @@ import hsoines.oekoflex.OekoflexAgent;
 import hsoines.oekoflex.impl.EnergyOnlyMarketOperator;
 import hsoines.oekoflex.demand.Demand;
 import hsoines.oekoflex.supply.Supply;
+
 import org.knowm.xchart.*;
+
 import repast.simphony.context.Context;
 import repast.simphony.essentials.RepastEssentials;
 import repast.simphony.visualization.DisplayEditorLifecycle;
@@ -20,6 +22,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.util.TimeZone;
 
 public class MerritOrderGraph implements IDisplay {
 
@@ -80,8 +84,8 @@ public class MerritOrderGraph implements IDisplay {
         chart.getStyleManager().setAxisTitlesVisible(false);
 
         double tickCount = RepastEssentials.GetTickCount();
-        Date date = new Date((long)tickCount * 15 * 60 * 1000);
-        SimpleDateFormat format = new SimpleDateFormat("MM-dd hh:mm:ss");
+        Date date = new Date(((long)tickCount-1) * 15 * 60 * 1000);
+        SimpleDateFormat format = new SimpleDateFormat("MM-dd HH:mm:ss");
         String info = "Date: " + format.format(date) +
                 ", Last Cleared Price:" + eomOperator.getLastClearedPrice() +
                 ", Assignment Type: " + eomOperator.getLastAssignmentType().toString() +
