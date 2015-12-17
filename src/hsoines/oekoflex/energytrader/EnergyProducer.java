@@ -1,4 +1,6 @@
-package hsoines.oekoflex;
+package hsoines.oekoflex.energytrader;
+
+import hsoines.oekoflex.energytrader.EnergyTrader;
 
 /**
  * Created by IntelliJ IDEA.

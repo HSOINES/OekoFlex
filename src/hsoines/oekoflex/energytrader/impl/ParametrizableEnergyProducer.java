@@ -1,6 +1,7 @@
-package hsoines.oekoflex.impl;
+package hsoines.oekoflex.energytrader.impl;
 
 import hsoines.oekoflex.*;
+import hsoines.oekoflex.energytrader.EnergyProducer;
 import hsoines.oekoflex.supply.Supply;
 import repast.simphony.engine.environment.RunEnvironment;
 import repast.simphony.engine.schedule.ScheduledMethod;
@@ -14,19 +15,19 @@ public class ParametrizableEnergyProducer implements EnergyProducer, MarketOpera
     private float lastAssignmentRate;
 
     private float bidPrice;
-    private final float supplyCapacity;
-    private final float supplyDelay;
+    private final int supplyCapacity;
+    private final int supplyDelay;
     private float bidQuantity;
 
     public ParametrizableEnergyProducer(String name) {
         this.name = name;
         Parameters p = RunEnvironment.getInstance().getParameters();
 
-        supplyCapacity = (float) p.getValue("supplyCapacityAgent1");
-        supplyDelay = (float) p.getValue("supplyDelayAgent1");
+        supplyCapacity = (int) p.getValue("supplyCapacityAgent1");
+        supplyDelay = (int) p.getValue("supplyDelayAgent1");
 
-        bidPrice = (float) (1000 * Math.random());
-        bidQuantity = (int) (supplyCapacity * Math.random());
+        bidPrice = (float)Math.random() * 500;
+        bidQuantity = 200;
     }
 
     @ScheduledMethod(start = 1, interval = 1, priority = 100)
@@ -38,10 +39,10 @@ public class ParametrizableEnergyProducer implements EnergyProducer, MarketOpera
                 bidQuantity = supplyCapacity;
             }
         } else {
-            bidPrice -= 10;
+            bidPrice -= 10;            
             bidQuantity -= supplyDelay;
-            if (bidQuantity < 0) {
-                return;
+            if (bidQuantity < 20) {
+            	bidQuantity = 20;
             }
         }
         marketOperator.addSupply(new Supply(bidPrice, bidQuantity, this));

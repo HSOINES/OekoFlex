@@ -1,58 +1,54 @@
-package hsoines.oekoflex.impl;
+package hsoines.oekoflex.energytrader.impl;
 
 import hsoines.oekoflex.*;
+import hsoines.oekoflex.energytrader.EnergyProducer;
+import hsoines.oekoflex.supply.Supply;
 import repast.simphony.engine.schedule.ScheduledMethod;
-import hsoines.oekoflex.demand.Demand;
 
-/**
- * Created by IntelliJ IDEA.
- * User: jh
- * Date: 03/12/15
- * Time: 08:28
- */
-public final class SimpleEnergyConsumer implements EnergyConsumer, MarketOperatorListener, OekoflexAgent {
+public class SimpleEnergyProducer implements EnergyProducer, MarketOperatorListener, OekoflexAgent {
+
     private final String name;
     private MarketOperator marketOperator;
-    private float clearedPrice;
+    private float lastClearedPrice;
     private float lastAssignmentRate;
 
     private float lastBidPrice;
 
-    public SimpleEnergyConsumer(String name) {
+    public SimpleEnergyProducer(String name) {
         this.name = name;
+    }
+
+    @ScheduledMethod(start = 1, interval = 1, priority = 100)
+    public void makeBid(){
+        lastBidPrice = (float) (300f * Math.random()) + 500;
+        marketOperator.addSupply(new Supply(lastBidPrice, (int) (100 * Math.random()), this));
     }
 
     @Override
     public void setMarketOperator(final MarketOperator marketOperator) {
         this.marketOperator = marketOperator;
     }
-    
-    @ScheduledMethod(start = 1, interval = 1, priority = 100)
-    public void makeAsk(){
-    	if (marketOperator != null){
-            lastBidPrice = (float) (1000f * Math.random());
-            marketOperator.addDemand(new Demand(lastBidPrice, (int)(100f * Math.random()), this));
-    	}
-    }
 
     @Override
     public void notifyClearingDone(final float clearedPrice, final float rate, final Bid bid) {
-        this.clearedPrice = clearedPrice;
+        this.lastClearedPrice = clearedPrice;
         lastAssignmentRate = rate;
     }
 
+    @Override
     public float getLastAssignmentRate() {
         return lastAssignmentRate;
     }
 
+    @Override
     public float getLastClearedPrice() {
-        return clearedPrice;
+        return lastClearedPrice;
     }
 
+    @Override
     public float getLastBidPrice() {
         return lastBidPrice;
     }
-
 
     @Override
     public String getName() {

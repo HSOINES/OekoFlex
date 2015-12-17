@@ -115,10 +115,9 @@ public class EnergyOnlyMarketOperator implements MarketOperator, OekoflexAgent {
                 } else {
                     moreDemands = false;
                 }
-
             }
             log.info("                                                      " + logString + ", " + "Balance: " + balance);
-        } while (supply == null || moreDemands || moreSupplies);
+            } while (supply == null || (moreDemands && balance <= 0) || (moreSupplies && balance > 0)); //Demand + Supply immer quantity > 0!!!
 
         clearedQuantity = Math.min(totalDemandQuantity, totalSupplyQuantity);
         if (balance < 0){
