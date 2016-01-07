@@ -1,5 +1,7 @@
 package hsoines.oekoflex.util;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import repast.simphony.essentials.RepastEssentials;
 
 import java.text.SimpleDateFormat;
@@ -12,18 +14,29 @@ import java.util.TimeZone;
  * Time: 07:58
  */
 public final class TimeUtilities {
+    private static final Log log = LogFactory.getLog(TimeUtilities.class);
 
     static {
         TimeZone.setDefault(TimeZone.getTimeZone("GMT"));
     }
 
     public enum EnergyTimeZone {
-        QUARTER_HOUR, FOUR_HOURS;
+        QUARTER_HOUR(1), FOUR_HOURS(16);
+
+        private final int ticks;
+
+        EnergyTimeZone(final int ticks) {
+            this.ticks = ticks;
+        }
+
+        public int getTicks() {
+            return ticks;
+        }
     }
 
-    public static EnergyTimeZone getEnergyTimeZone() {
+    public static boolean isEnergyTimeZone(EnergyTimeZone energyTimeZone) {
         long tick = getTick(getCurrentDate());
-        return getEnergyTimeZone(tick);
+        return isEnergyTimeZone(energyTimeZone, tick);
     }
 
     public static SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -44,11 +57,16 @@ public final class TimeUtilities {
         return ticks + 1;
     }
 
-    static EnergyTimeZone getEnergyTimeZone(final long tick) {
-        if (tick % 16 == 0) {
-            return EnergyTimeZone.FOUR_HOURS;
+    static boolean isEnergyTimeZone(final EnergyTimeZone energyTimeZone, final long tick) {
+        switch (energyTimeZone) {
+            case QUARTER_HOUR:
+                return true;
+            case FOUR_HOURS:
+                return tick % 16 == 0;
+            default:
+                log.error("unknown EnergyTimeZone: " + energyTimeZone);
+                return false;
         }
-        return EnergyTimeZone.QUARTER_HOUR;
     }
 
 

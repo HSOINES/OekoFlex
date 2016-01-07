@@ -3,13 +3,17 @@ package hsoines.oekoflex.energytrader.impl;
 import hsoines.oekoflex.*;
 import hsoines.oekoflex.energytrader.EnergyOnlyMarketTrader;
 import hsoines.oekoflex.energytrader.EnergyProducer;
+import hsoines.oekoflex.energytrader.EnergySlotList;
 import hsoines.oekoflex.energytrader.RegelenergieMarketTrader;
 import hsoines.oekoflex.supply.Supply;
 import hsoines.oekoflex.util.TimeUtilities;
 
+import java.util.Date;
+
 public class CombinedEnergyProducer implements EnergyProducer, MarketOperatorListener, OekoflexAgent, RegelenergieMarketTrader, EnergyOnlyMarketTrader {
 
     private final String name;
+    private final EnergySlotList produceSlotList;
     private EnergyOnlyMarketOperator energyOnlyMarketOperator;
     private float lastClearedPrice;
     private float lastAssignmentRate;
@@ -19,11 +23,14 @@ public class CombinedEnergyProducer implements EnergyProducer, MarketOperatorLis
 
     public CombinedEnergyProducer(String name) {
         this.name = name;
+        produceSlotList = new EnergySlotListImpl(EnergySlotList.SlotType.PRODUCE, 10000);
     }
 
     @Override
     public void makeSupply(){
-        if (TimeUtilities.getEnergyTimeZone() == TimeUtilities.EnergyTimeZone.FOUR_HOURS) {
+        if (TimeUtilities.isEnergyTimeZone(TimeUtilities.EnergyTimeZone.FOUR_HOURS)) {
+            Date currentDate = TimeUtilities.getCurrentDate();
+            produceSlotList.getSlotOfferCapacity(currentDate, TimeUtilities.EnergyTimeZone.FOUR_HOURS);
 
         }
         lastBidPrice = (float) (300f * Math.random()) + 500;

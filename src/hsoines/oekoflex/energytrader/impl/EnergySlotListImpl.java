@@ -27,13 +27,29 @@ public final class EnergySlotListImpl implements EnergySlotList{
     }
 
     @Override
+    public int getSlotOfferCapacity(final Date date, final TimeUtilities.EnergyTimeZone energyTimeZone) {
+        int minOffersCap = capacity;
+        long tick = TimeUtilities.getTick(date);
+        for (int i = 0; i < energyTimeZone.getTicks(); i++) {
+            int currentCap = getSlotOfferCapacity(tick + i);
+            if (currentCap < minOffersCap) {
+                minOffersCap = currentCap;
+            }
+        }
+        return minOffersCap;
+    }
+
+    @Override
     public int addOfferedQuantity(final Date date, final int quantity) {
         return addQuantity(date, quantity, offeredSlotList);
     }
 
     @Override
-    public int addAssignedQuantity(final Date date, final int quantity) {
-        return addQuantity(date, quantity, assignedSlotList);
+    public void addAssignedQuantity(final Date date, final int quantity) {
+        int i = addQuantity(date, quantity, assignedSlotList);
+        if (i != quantity) {
+            throw new IllegalStateException("Assigned quantity should not exceed the maximum quantity.");
+        }
     }
 
     @Override
@@ -52,6 +68,10 @@ public final class EnergySlotListImpl implements EnergySlotList{
     @Override
     public int getSlotOfferCapacity(final Date date) {
         long slotIndex = TimeUtilities.getTick(date);
+        return getSlotOfferCapacity(slotIndex);
+    }
+
+    public int getSlotOfferCapacity(final long slotIndex) {
         return getRemainingCapacity(slotIndex, offeredSlotList);
     }
 
