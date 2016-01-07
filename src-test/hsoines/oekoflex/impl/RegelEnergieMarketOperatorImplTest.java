@@ -7,12 +7,15 @@ import hsoines.oekoflex.marketoperator.impl.RegelEnergieMarketOperatorImpl;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentMatcher;
 import org.mockito.Matchers;
 import repast.simphony.context.Context;
 import repast.simphony.context.DefaultContext;
 import repast.simphony.engine.environment.RunEnvironment;
 import repast.simphony.engine.environment.RunState;
 import repast.simphony.engine.schedule.Schedule;
+
+import java.util.Date;
 
 import static org.mockito.Mockito.*;
 
@@ -51,6 +54,18 @@ public class RegelEnergieMarketOperatorImplTest {
         verify(listener, times(16)).notifyClearingDone(Matchers.eq(30f), Matchers.eq(1f), Matchers.<Bid>any(), Matchers.any());
         verify(listener, times(16)).notifyClearingDone(Matchers.eq(40f), Matchers.eq(1f), Matchers.<Bid>any(), Matchers.any());
         verify(listener, times(64)).notifyClearingDone(Matchers.anyFloat(), Matchers.anyFloat(), Matchers.<Bid>any(), Matchers.any());
+    }
+
+    @Test
+    public void testFourTimesNotification() throws Exception {
+        operator.addSupply(new Supply(10, 1000, listener));
+
+        operator.clearMarket();
+
+        verify(listener, times(1)).notifyClearingDone(Matchers.eq(10f), Matchers.eq(1f), Matchers.<Bid>any(), argThat(new DateMatcher(new Date(0))));
+        verify(listener, times(1)).notifyClearingDone(Matchers.eq(10f), Matchers.eq(1f), Matchers.<Bid>any(), argThat(new DateMatcher(new Date(15 * 60 * 1000))));
+        verify(listener, times(1)).notifyClearingDone(Matchers.eq(10f), Matchers.eq(1f), Matchers.<Bid>any(), argThat(new DateMatcher(new Date(30 * 60 * 1000))));
+        verify(listener, times(1)).notifyClearingDone(Matchers.eq(10f), Matchers.eq(1f), Matchers.<Bid>any(), argThat(new DateMatcher(new Date(45 * 60 * 1000))));
     }
 
     @Test
@@ -111,5 +126,18 @@ public class RegelEnergieMarketOperatorImplTest {
     @After
     public void tearDown() throws Exception {
 
+    }
+
+    class DateMatcher extends ArgumentMatcher<Date> {
+        private final Date date;
+
+        public DateMatcher(Date date) {
+            this.date = date;
+        }
+
+        public boolean matches(Object arg) {
+            Date thing = (Date) arg;
+            return thing.equals(date);
+        }
     }
 }
