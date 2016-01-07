@@ -3,7 +3,7 @@ package hsoines.oekoflex.impl;
 import hsoines.oekoflex.bid.Bid;
 import hsoines.oekoflex.bid.Supply;
 import hsoines.oekoflex.energytrader.MarketOperatorListener;
-import hsoines.oekoflex.marketoperator.impl.SampleRegelEnergieMarketOperator;
+import hsoines.oekoflex.marketoperator.impl.RegelEnergieMarketOperatorImpl;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,12 +23,12 @@ import static org.mockito.Mockito.*;
  */
 public class RegelEnergieMarketOperatorImplTest {
 
-    private SampleRegelEnergieMarketOperator operator;
+    private RegelEnergieMarketOperatorImpl operator;
     private MarketOperatorListener listener;
 
     @Before
     public void setUp() throws Exception {
-        operator = new SampleRegelEnergieMarketOperator("operator", 10000);
+        operator = new RegelEnergieMarketOperatorImpl("operator", 10000);
         listener = mock(MarketOperatorListener.class);
 
         Schedule schedule = new Schedule();

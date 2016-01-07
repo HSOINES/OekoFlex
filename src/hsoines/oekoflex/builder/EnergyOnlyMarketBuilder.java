@@ -7,7 +7,7 @@ import hsoines.oekoflex.energytrader.impl.ParametrizableEnergyProducer;
 import hsoines.oekoflex.energytrader.impl.SimpleEnergyProducer;
 import hsoines.oekoflex.marketoperator.RegelEnergieMarketOperator;
 import hsoines.oekoflex.marketoperator.impl.EnergyOnlyMarketOperatorImpl;
-import hsoines.oekoflex.marketoperator.impl.SampleRegelEnergieMarketOperator;
+import hsoines.oekoflex.marketoperator.impl.RegelEnergieMarketOperatorImpl;
 import repast.simphony.context.Context;
 import repast.simphony.dataLoader.ContextBuilder;
 import repast.simphony.engine.environment.RunEnvironment;
@@ -25,7 +25,7 @@ public class EnergyOnlyMarketBuilder implements ContextBuilder<OekoflexAgent>{
 		re.endAt(TICKS_TO_RUN);
 
 		EnergyOnlyMarketOperatorImpl energyOnlyMarketOperator = new EnergyOnlyMarketOperatorImpl("EOM_Operator");
-		RegelEnergieMarketOperator regelEnergieMarketOperator = new SampleRegelEnergieMarketOperator("RegelEnergieMarketOperator", 10000);
+		RegelEnergieMarketOperator regelEnergieMarketOperator = new RegelEnergieMarketOperatorImpl("RegelEnergieMarketOperator", 10000);
 		context.add(energyOnlyMarketOperator);
 		for (int i = 0; i < 5; i++){
 			SimpleEnergyProducer prod = new SimpleEnergyProducer("SimpleEnergyProducer_" + i);

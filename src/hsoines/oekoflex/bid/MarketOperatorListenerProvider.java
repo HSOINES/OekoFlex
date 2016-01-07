@@ -1,4 +1,4 @@
-package hsoines.oekoflex;
+package hsoines.oekoflex.bid;
 
 import hsoines.oekoflex.energytrader.MarketOperatorListener;
 
