@@ -17,8 +17,16 @@ public final class TimeUtilities {
         TimeZone.setDefault(TimeZone.getTimeZone("GMT"));
     }
 
-    public static SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    public enum EnergyTimeZone {
+        QUARTER_HOUR, FOUR_HOURS;
+    }
 
+    public static EnergyTimeZone getEnergyTimeZone() {
+        long tick = getTick(getCurrentDate());
+        return getEnergyTimeZone(tick);
+    }
+
+    public static SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     public static final int QUARTER_HOUR_IN_MILLIS = 15 * 60 * 1000;
 
@@ -35,4 +43,13 @@ public final class TimeUtilities {
         long ticks = date.getTime() / QUARTER_HOUR_IN_MILLIS;
         return ticks + 1;
     }
+
+    static EnergyTimeZone getEnergyTimeZone(final long tick) {
+        if (tick % 16 == 0) {
+            return EnergyTimeZone.FOUR_HOURS;
+        }
+        return EnergyTimeZone.QUARTER_HOUR;
+    }
+
+
 }

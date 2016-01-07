@@ -1,12 +1,10 @@
 package hsoines.oekoflex.util;
 
 import org.junit.Test;
-import repast.simphony.engine.environment.RunEnvironment;
-import repast.simphony.essentials.RepastEssentials;
 
 import java.util.Date;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * User: jh
@@ -20,5 +18,12 @@ public class TimeUtilitiesTest {
         Date date = TimeUtilities.getDate(ticks);
         long convertedTicks = TimeUtilities.getTick(date);
         assertEquals(ticks, convertedTicks);
+    }
+
+    @Test
+    public void testTimeZone() throws Exception {
+        assertEquals(TimeUtilities.EnergyTimeZone.QUARTER_HOUR, TimeUtilities.getEnergyTimeZone(0l));
+        assertEquals(TimeUtilities.EnergyTimeZone.QUARTER_HOUR, TimeUtilities.getEnergyTimeZone(0l));
+
     }
 }

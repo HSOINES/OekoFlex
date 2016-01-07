@@ -1,22 +1,21 @@
 package hsoines.oekoflex.energytrader.impl;
 
-import hsoines.oekoflex.Bid;
-import hsoines.oekoflex.EnergyOnlyMarketOperator;
-import hsoines.oekoflex.MarketOperatorListener;
-import hsoines.oekoflex.OekoflexAgent;
+import hsoines.oekoflex.*;
 import hsoines.oekoflex.energytrader.EnergyOnlyMarketTrader;
 import hsoines.oekoflex.energytrader.EnergyProducer;
 import hsoines.oekoflex.energytrader.RegelenergieMarketTrader;
 import hsoines.oekoflex.supply.Supply;
+import hsoines.oekoflex.util.TimeUtilities;
 
 public class CombinedEnergyProducer implements EnergyProducer, MarketOperatorListener, OekoflexAgent, RegelenergieMarketTrader, EnergyOnlyMarketTrader {
 
     private final String name;
-    private EnergyOnlyMarketOperator marketOperator;
+    private EnergyOnlyMarketOperator energyOnlyMarketOperator;
     private float lastClearedPrice;
     private float lastAssignmentRate;
 
     private float lastBidPrice;
+    private RegelEnergieMarketOperator regelEnergieMarketOperator;
 
     public CombinedEnergyProducer(String name) {
         this.name = name;
@@ -24,13 +23,17 @@ public class CombinedEnergyProducer implements EnergyProducer, MarketOperatorLis
 
     @Override
     public void makeSupply(){
+        if (TimeUtilities.getEnergyTimeZone() == TimeUtilities.EnergyTimeZone.FOUR_HOURS) {
+
+        }
         lastBidPrice = (float) (300f * Math.random()) + 500;
-        marketOperator.addSupply(new Supply(lastBidPrice, (int) (100 * Math.random()), this));
+        energyOnlyMarketOperator.addSupply(new Supply(lastBidPrice, (int) (100 * Math.random()), this));
+
     }
 
     @Override
     public void setMarketOperator(final EnergyOnlyMarketOperator marketOperator) {
-        this.marketOperator = marketOperator;
+        this.energyOnlyMarketOperator = marketOperator;
     }
 
     @Override
@@ -45,8 +48,8 @@ public class CombinedEnergyProducer implements EnergyProducer, MarketOperatorLis
     }
 
     @Override
-    public void setMarketOperator(final RegelenergieMarketOperator marketOperator) {
-
+    public void setMarketOperator(final RegelEnergieMarketOperator marketOperator) {
+        regelEnergieMarketOperator = marketOperator;
     }
 
     @Override
