@@ -13,12 +13,12 @@ import java.util.List;
  * Date: 07/01/16
  * Time: 10:55
  */
-public final class RegelEnergieMarketOperatorImpl implements RegelenergieMarketOperator, OekoflexAgent {
+public final class RegelenergieMarketOperatorImpl implements RegelenergieMarketOperator, OekoflexAgent {
     private final String name;
     private final int quantity;
     private final List<Supply> supplies;
 
-    public RegelEnergieMarketOperatorImpl(String name, int quantity) {
+    public RegelenergieMarketOperatorImpl(String name, int quantity) {
         this.name = name;
         this.quantity = quantity;
         supplies = new ArrayList<Supply>();

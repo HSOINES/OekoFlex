@@ -7,7 +7,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Matchers;
-import org.mockito.Mockito;
 
 import static org.mockito.Mockito.*;
 
@@ -18,12 +17,12 @@ import static org.mockito.Mockito.*;
  */
 public class RegelEnergieMarketOperatorImplTest {
 
-    private RegelEnergieMarketOperatorImpl operator;
+    private RegelenergieMarketOperatorImpl operator;
     private MarketOperatorListener listener;
 
     @Before
     public void setUp() throws Exception {
-        operator = new RegelEnergieMarketOperatorImpl("operator", 10000);
+        operator = new RegelenergieMarketOperatorImpl("operator", 10000);
         listener = mock(MarketOperatorListener.class);
     }
 
