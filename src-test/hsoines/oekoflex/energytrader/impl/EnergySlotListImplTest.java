@@ -1,6 +1,7 @@
 package hsoines.oekoflex.energytrader.impl;
 
 import hsoines.oekoflex.energytrader.EnergySlotList;
+import hsoines.oekoflex.util.EnergyTimeZone;
 import hsoines.oekoflex.util.TimeUtilities;
 import org.junit.Before;
 import org.junit.Test;
@@ -46,7 +47,7 @@ public class EnergySlotListImplTest {
         energySlotList.addOfferedQuantity(date1, 100);
         energySlotList.addOfferedQuantity(date2, 200);
         energySlotList.addOfferedQuantity(date3, 300);
-        assertEquals(700, energySlotList.getSlotOfferCapacity(date0, TimeUtilities.EnergyTimeZone.FOUR_HOURS));
+        assertEquals(700, energySlotList.getSlotOfferCapacity(date0, EnergyTimeZone.FOUR_HOURS));
     }
 
     @Test

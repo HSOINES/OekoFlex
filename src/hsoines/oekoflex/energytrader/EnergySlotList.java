@@ -1,6 +1,6 @@
 package hsoines.oekoflex.energytrader;
 
-import hsoines.oekoflex.util.TimeUtilities;
+import hsoines.oekoflex.util.EnergyTimeZone;
 
 import java.util.Date;
 
@@ -15,7 +15,7 @@ import java.util.Date;
  * assigned quantities: quantities are assigned by a marketoperator
  */
 public interface EnergySlotList {
-    int getSlotOfferCapacity(Date date, TimeUtilities.EnergyTimeZone energyTimeZone);
+    int getSlotOfferCapacity(Date date, EnergyTimeZone energyTimeZone);
 
     enum SlotState { FREE, OFFERED, ASSIGNED}
     enum SlotType {PRODUCE, CONSUM}

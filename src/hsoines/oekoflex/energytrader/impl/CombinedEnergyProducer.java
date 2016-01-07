@@ -6,6 +6,7 @@ import hsoines.oekoflex.energytrader.EnergyProducer;
 import hsoines.oekoflex.energytrader.EnergySlotList;
 import hsoines.oekoflex.energytrader.RegelenergieMarketTrader;
 import hsoines.oekoflex.supply.Supply;
+import hsoines.oekoflex.util.EnergyTimeZone;
 import hsoines.oekoflex.util.TimeUtilities;
 
 import java.util.Date;
@@ -28,12 +29,13 @@ public class CombinedEnergyProducer implements EnergyProducer, MarketOperatorLis
 
     @Override
     public void makeSupply(){
-        if (TimeUtilities.isEnergyTimeZone(TimeUtilities.EnergyTimeZone.FOUR_HOURS)) {
-            Date currentDate = TimeUtilities.getCurrentDate();
-            produceSlotList.getSlotOfferCapacity(currentDate, TimeUtilities.EnergyTimeZone.FOUR_HOURS);
-
+        Date currentDate = TimeUtilities.getCurrentDate();
+        if (TimeUtilities.isEnergyTimeZone(EnergyTimeZone.FOUR_HOURS)) {
+            int offerCapacity = produceSlotList.getSlotOfferCapacity(currentDate, EnergyTimeZone.FOUR_HOURS);
+            regelEnergieMarketOperator.addSupply(new Supply(100f, offerCapacity, this));
         }
         lastBidPrice = (float) (300f * Math.random()) + 500;
+        int offerCapacity = produceSlotList.getSlotOfferCapacity(currentDate, EnergyTimeZone.QUARTER_HOUR);
         energyOnlyMarketOperator.addSupply(new Supply(lastBidPrice, (int) (100 * Math.random()), this));
 
     }

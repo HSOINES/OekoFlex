@@ -20,20 +20,6 @@ public final class TimeUtilities {
         TimeZone.setDefault(TimeZone.getTimeZone("GMT"));
     }
 
-    public enum EnergyTimeZone {
-        QUARTER_HOUR(1), FOUR_HOURS(16);
-
-        private final int ticks;
-
-        EnergyTimeZone(final int ticks) {
-            this.ticks = ticks;
-        }
-
-        public int getTicks() {
-            return ticks;
-        }
-    }
-
     public static boolean isEnergyTimeZone(EnergyTimeZone energyTimeZone) {
         long tick = getTick(getCurrentDate());
         return isEnergyTimeZone(energyTimeZone, tick);

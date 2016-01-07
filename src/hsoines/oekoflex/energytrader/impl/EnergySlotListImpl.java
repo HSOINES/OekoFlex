@@ -1,6 +1,7 @@
 package hsoines.oekoflex.energytrader.impl;
 
 import hsoines.oekoflex.energytrader.EnergySlotList;
+import hsoines.oekoflex.util.EnergyTimeZone;
 import hsoines.oekoflex.util.TimeUtilities;
 
 import java.util.Date;
@@ -27,7 +28,7 @@ public final class EnergySlotListImpl implements EnergySlotList{
     }
 
     @Override
-    public int getSlotOfferCapacity(final Date date, final TimeUtilities.EnergyTimeZone energyTimeZone) {
+    public int getSlotOfferCapacity(final Date date, final EnergyTimeZone energyTimeZone) {
         int minOffersCap = capacity;
         long tick = TimeUtilities.getTick(date);
         for (int i = 0; i < energyTimeZone.getTicks(); i++) {
