@@ -36,7 +36,7 @@ public class CombinedEnergyProducer implements EnergyProducer, MarketOperatorLis
         }
         lastBidPrice = (float) (300f * Math.random()) + 500;
         int offerCapacity = produceSlotList.getSlotOfferCapacity(currentDate, EnergyTimeZone.QUARTER_HOUR);
-        energyOnlyMarketOperator.addSupply(new Supply(lastBidPrice, (int) (100 * Math.random()), this));
+        energyOnlyMarketOperator.addSupply(new Supply(lastBidPrice, offerCapacity, this));
 
     }
 

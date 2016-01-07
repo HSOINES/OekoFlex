@@ -2,9 +2,9 @@ package hsoines.oekoflex.builder;
 
 import hsoines.oekoflex.OekoflexAgent;
 import hsoines.oekoflex.energytrader.impl.DaytimeEnergyConsumer;
-import hsoines.oekoflex.impl.EnergyOnlyMarketOperatorImpl;
 import hsoines.oekoflex.energytrader.impl.ParametrizableEnergyProducer;
 import hsoines.oekoflex.energytrader.impl.SimpleEnergyProducer;
+import hsoines.oekoflex.impl.EnergyOnlyMarketOperatorImpl;
 import repast.simphony.context.Context;
 import repast.simphony.dataLoader.ContextBuilder;
 import repast.simphony.engine.environment.RunEnvironment;
@@ -16,7 +16,7 @@ public class EnergyOnlyMarketBuilder implements ContextBuilder<OekoflexAgent>{
 	@Override
 	public Context build(Context<OekoflexAgent> context) {
 
-		context.setId("EnergyOnlyMarket");
+		context.setId("OekoFlex");
 
 		RunEnvironment re = RunEnvironment.getInstance();
 		re.endAt(TICKS_TO_RUN);
