@@ -1,17 +1,15 @@
 <repast.simphony.data2.engine.FileSinkDescriptor>
-  <name>SimpleEnergyConsumer</name>
-  <dataSet>SimpleEnergyConsumer</dataSet>
+  <name>MarketOperator</name>
+  <dataSet>MarketOperator</dataSet>
   <delimiter>,</delimiter>
   <format>TABULAR</format>
   <sourceIds class="linked-hash-set">
     <string>tick</string>
     <string>Name</string>
-    <string>Price</string>
-    <string>LastAssignmentRate</string>
     <string>LastClearedPrice</string>
     <string>TotalClearedQuantity</string>
-    <string>LastBidPrice</string>
+    <string>LastAssignmentRate</string>
   </sourceIds>
-  <fileName>SimpleEnergyConsumer.txt</fileName>
+  <fileName>run/repast-logs/MarketOperator.txt</fileName>
   <addTimeStamp>true</addTimeStamp>
 </repast.simphony.data2.engine.FileSinkDescriptor>

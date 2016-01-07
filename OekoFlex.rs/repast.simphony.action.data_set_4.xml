@@ -1,0 +1,55 @@
+<repast.simphony.data2.engine.DataSetDescriptor>
+    <name>EnergyOnlyMarketTraderDataSet</name>
+    <type>NON_AGGREGATE</type>
+    <sourceType>hsoines.oekoflex.energytrader.EnergyOnlyMarketTrader</sourceType>
+    <inclTick>true</inclTick>
+    <inclBatchRun>false</inclBatchRun>
+    <inclRandomSeed>false</inclRandomSeed>
+    <scheduleParams>
+        <start>1.0</start>
+        <interval>1.0</interval>
+        <priority>-Infinity</priority>
+        <pType>LAST</pType>
+        <duration>-1.0</duration>
+        <frequency>REPEAT</frequency>
+        <hashCode>1258257821</hashCode>
+    </scheduleParams>
+    <atEnd>false</atEnd>
+    <methodDataSources class="linked-hash-map">
+        <entry>
+            <string>LastAssignmentRate</string>
+            <repast.simphony.data2.engine.MethodDataSourceDefinition>
+                <id>LastAssignmentRate</id>
+                <className>hsoines.oekoflex.energytrader.EnergyOnlyMarketTrader</className>
+                <methodName>getLastAssignmentRate</methodName>
+            </repast.simphony.data2.engine.MethodDataSourceDefinition>
+        </entry>
+        <entry>
+            <string>LastBidPrice</string>
+            <repast.simphony.data2.engine.MethodDataSourceDefinition>
+                <id>LastBidPrice</id>
+                <className>hsoines.oekoflex.energytrader.EnergyOnlyMarketTrader</className>
+                <methodName>getLastBidPrice</methodName>
+            </repast.simphony.data2.engine.MethodDataSourceDefinition>
+        </entry>
+        <entry>
+            <string>LastClearedPrice</string>
+            <repast.simphony.data2.engine.MethodDataSourceDefinition>
+                <id>LastClearedPrice</id>
+                <className>hsoines.oekoflex.energytrader.EnergyOnlyMarketTrader</className>
+                <methodName>getLastClearedPrice</methodName>
+            </repast.simphony.data2.engine.MethodDataSourceDefinition>
+        </entry>
+        <entry>
+            <string>Name</string>
+            <repast.simphony.data2.engine.MethodDataSourceDefinition>
+                <id>Name</id>
+                <className>hsoines.oekoflex.energytrader.EnergyOnlyMarketTrader</className>
+                <methodName>getName</methodName>
+            </repast.simphony.data2.engine.MethodDataSourceDefinition>
+        </entry>
+    </methodDataSources>
+    <countSources class="linked-hash-map"/>
+    <customNADataSources class="linked-hash-map"/>
+    <customAggDataSources class="linked-hash-map"/>
+</repast.simphony.data2.engine.DataSetDescriptor>

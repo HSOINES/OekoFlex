@@ -1,8 +1,11 @@
 package hsoines.oekoflex.energytrader.impl;
 
-import hsoines.oekoflex.*;
-import hsoines.oekoflex.energytrader.EnergyConsumer;
+import hsoines.oekoflex.Bid;
+import hsoines.oekoflex.EnergyOnlyMarketOperator;
+import hsoines.oekoflex.MarketOperatorListener;
 import hsoines.oekoflex.demand.Demand;
+import hsoines.oekoflex.energytrader.EnergyConsumer;
+import hsoines.oekoflex.energytrader.EnergyOnlyMarketTrader;
 
 /**
  * Created by IntelliJ IDEA.
@@ -10,7 +13,7 @@ import hsoines.oekoflex.demand.Demand;
  * Date: 03/12/15
  * Time: 08:28
  */
-public final class SimpleEnergyConsumer implements EnergyConsumer, MarketOperatorListener, OekoflexAgent {
+public final class SimpleEnergyConsumer implements EnergyConsumer, MarketOperatorListener, EnergyOnlyMarketTrader {
     private final String name;
     private EnergyOnlyMarketOperator marketOperator;
     private float clearedPrice;

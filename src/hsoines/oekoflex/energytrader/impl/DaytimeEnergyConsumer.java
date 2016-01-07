@@ -3,9 +3,9 @@ package hsoines.oekoflex.energytrader.impl;
 import hsoines.oekoflex.Bid;
 import hsoines.oekoflex.EnergyOnlyMarketOperator;
 import hsoines.oekoflex.MarketOperatorListener;
-import hsoines.oekoflex.OekoflexAgent;
 import hsoines.oekoflex.demand.Demand;
 import hsoines.oekoflex.energytrader.EnergyConsumer;
+import hsoines.oekoflex.energytrader.EnergyOnlyMarketTrader;
 import hsoines.oekoflex.energytrader.EnergySlotList;
 import hsoines.oekoflex.util.TimeUtilities;
 
@@ -18,7 +18,7 @@ import java.util.Date;
  * Date: 03/12/15
  * Time: 08:28
  */
-public final class DaytimeEnergyConsumer implements EnergyConsumer, MarketOperatorListener, OekoflexAgent {
+public final class DaytimeEnergyConsumer implements EnergyConsumer, MarketOperatorListener, EnergyOnlyMarketTrader {
     private final String name;
     private EnergyOnlyMarketOperator marketOperator;
     private float clearedPrice;

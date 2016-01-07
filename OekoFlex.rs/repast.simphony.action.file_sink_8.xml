@@ -1,0 +1,15 @@
+<repast.simphony.data2.engine.FileSinkDescriptor>
+    <name>EnergyOnlyMarketTrader</name>
+    <dataSet>EnergyOnlyMarketTraderDataSet</dataSet>
+    <delimiter>,</delimiter>
+    <format>TABULAR</format>
+    <sourceIds class="linked-hash-set">
+        <string>tick</string>
+        <string>Name</string>
+        <string>LastBidPrice</string>
+        <string>LastClearedPrice</string>
+        <string>LastAssignmentRate</string>
+    </sourceIds>
+    <fileName>run/repast-logs/EnergyOnlyMarketTrader.txt</fileName>
+    <addTimeStamp>true</addTimeStamp>
+</repast.simphony.data2.engine.FileSinkDescriptor>

@@ -8,7 +8,7 @@ import repast.simphony.engine.schedule.ScheduledMethod;
  * Date: 03/12/15
  * Time: 08:28
  */
-public interface EnergyConsumer extends EnergyOnlyMarketTrader {
+public interface EnergyConsumer {
     @ScheduledMethod(start = 1, interval = 1, priority = 100)
     void makeDemand();
 }

@@ -1,17 +1,20 @@
 package hsoines.oekoflex.energytrader.impl;
 
-import hsoines.oekoflex.*;
+import hsoines.oekoflex.Bid;
+import hsoines.oekoflex.EnergyOnlyMarketOperator;
+import hsoines.oekoflex.MarketOperatorListener;
+import hsoines.oekoflex.RegelEnergieMarketOperator;
 import hsoines.oekoflex.energytrader.EnergyOnlyMarketTrader;
 import hsoines.oekoflex.energytrader.EnergyProducer;
 import hsoines.oekoflex.energytrader.EnergySlotList;
-import hsoines.oekoflex.energytrader.RegelenergieMarketTrader;
+import hsoines.oekoflex.energytrader.RegelEnergieMarketTrader;
 import hsoines.oekoflex.supply.Supply;
 import hsoines.oekoflex.util.EnergyTimeZone;
 import hsoines.oekoflex.util.TimeUtilities;
 
 import java.util.Date;
 
-public class CombinedEnergyProducer implements EnergyProducer, MarketOperatorListener, OekoflexAgent, RegelenergieMarketTrader, EnergyOnlyMarketTrader {
+public class CombinedEnergyProducer implements EnergyProducer, MarketOperatorListener, RegelEnergieMarketTrader, EnergyOnlyMarketTrader {
 
     private final String name;
     private final EnergySlotList produceSlotList;
