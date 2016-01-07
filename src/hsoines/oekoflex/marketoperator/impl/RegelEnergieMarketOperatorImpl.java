@@ -1,11 +1,12 @@
 package hsoines.oekoflex.marketoperator.impl;
 
-import hsoines.oekoflex.OekoflexAgent;
 import hsoines.oekoflex.bid.Supply;
 import hsoines.oekoflex.energytrader.MarketOperatorListener;
 import hsoines.oekoflex.marketoperator.RegelEnergieMarketOperator;
 import hsoines.oekoflex.util.EnergyTimeZone;
 import hsoines.oekoflex.util.TimeUtilities;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,10 +16,15 @@ import java.util.List;
  * Date: 07/01/16
  * Time: 10:55
  */
-public final class RegelEnergieMarketOperatorImpl implements RegelEnergieMarketOperator, OekoflexAgent {
+public final class RegelEnergieMarketOperatorImpl implements RegelEnergieMarketOperator {
+    private static final Log log = LogFactory.getLog(RegelEnergieMarketOperatorImpl.class);
+
     private final String name;
     private final int quantity;
     private final List<Supply> supplies;
+    private long totalClearedQuantity;
+    private float lastClearedPrice;
+    private float lastAssignmentRate;
 
     public RegelEnergieMarketOperatorImpl(String name, int quantity) {
         this.name = name;
@@ -34,20 +40,34 @@ public final class RegelEnergieMarketOperatorImpl implements RegelEnergieMarketO
     @Override
     public void clearMarket() {
         supplies.sort((o1, o2) -> Float.compare(o1.getPrice(), o2.getPrice()));
-        int clearedQuantity = 0;
+        totalClearedQuantity = 0;
+        lastAssignmentRate = 0;
         for (Supply supply : supplies) {
             MarketOperatorListener marketOperatorListener = supply.getMarketOperatorListener();
-            if (clearedQuantity + supply.getQuantity() < quantity) {
-                clearedQuantity += supply.getQuantity();
+            if (totalClearedQuantity + supply.getQuantity() < quantity) {
+                totalClearedQuantity += supply.getQuantity();
+                lastAssignmentRate = 1;
                 doNotify(supply, marketOperatorListener, 1);
-            } else if (clearedQuantity >= quantity) {
+            } else if (totalClearedQuantity >= quantity) {
                 break;
             } else {
-                float assignRate = (quantity - clearedQuantity) / supply.getQuantity();
-                doNotify(supply, marketOperatorListener, assignRate);
-                clearedQuantity += supply.getQuantity() * assignRate;
+                lastAssignmentRate = (quantity - totalClearedQuantity) / supply.getQuantity();
+                doNotify(supply, marketOperatorListener, lastAssignmentRate);
+                totalClearedQuantity += supply.getQuantity() * lastAssignmentRate;
             }
         }
+        supplies.clear();
+    }
+
+    @Override
+    public long getTotalClearedQuantity() {
+        log.info("Cleared Quantity:" + totalClearedQuantity);
+        return totalClearedQuantity;
+    }
+
+    @Override
+    public float getLastAssignmentRate() {
+        return lastAssignmentRate;
     }
 
     void doNotify(final Supply supply, final MarketOperatorListener marketOperatorListener, float assignRate) {

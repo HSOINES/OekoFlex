@@ -10,6 +10,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -114,7 +115,7 @@ public class EnergyOnlyMarketOperatorImpl implements EnergyOnlyMarketOperator, O
                     moreDemands = false;
                 }
             }
-            log.info("                                                      " + logString + ", " + "Balance: " + balance);
+            log.debug("                                                      " + logString + ", " + "Balance: " + balance);
         }
         while (supply == null || (moreDemands && balance <= 0) || (moreSupplies && balance > 0)); //Demand + Supply immer quantity > 0!!!
 
@@ -147,6 +148,7 @@ public class EnergyOnlyMarketOperatorImpl implements EnergyOnlyMarketOperator, O
                 .append(getLastClearedPrice()).append(",")
                 .append(getLastAssignmentRate()).append(",")
                 .append(getTotalClearedQuantity()).append(",");
+        Date date = TimeUtilities.getCurrentDate();
         for (Demand demand : demands) {
             MarketOperatorListener marketOperatorListener = demand.getMarketOperatorListener();
             if (marketOperatorListener != null) {
@@ -158,7 +160,7 @@ public class EnergyOnlyMarketOperatorImpl implements EnergyOnlyMarketOperator, O
                 } else {
                     assignmentRate = 0;
                 }
-                marketOperatorListener.notifyClearingDone(clearedPrice, assignmentRate, demand, TimeUtilities.getCurrentDate());
+                marketOperatorListener.notifyClearingDone(clearedPrice, assignmentRate, demand, date);
                 logString.append(marketOperatorListener.getName()).append(",")
                         .append(assignmentRate).append(",")
                         .append(demand.getPrice()).append(",")
@@ -176,7 +178,7 @@ public class EnergyOnlyMarketOperatorImpl implements EnergyOnlyMarketOperator, O
                 } else {
                     assignmentRate = 0;
                 }
-                marketOperatorListener.notifyClearingDone(clearedPrice, assignmentRate, supply, TimeUtilities.getCurrentDate());
+                marketOperatorListener.notifyClearingDone(clearedPrice, assignmentRate, supply, date);
                 logString.append(marketOperatorListener.getName()).append(",")
                         .append(assignmentRate).append(",")
                         .append(supply.getPrice()).append(",")
@@ -187,14 +189,17 @@ public class EnergyOnlyMarketOperatorImpl implements EnergyOnlyMarketOperator, O
         }
     }
 
+    @Override
     public int getTotalClearedQuantity() {
         return clearedQuantity;
     }
 
+    @Override
     public float getLastClearedPrice() {
         return clearedPrice;
     }
 
+    @Override
     public float getLastAssignmentRate() {
         return lastAssignmentRate;
     }

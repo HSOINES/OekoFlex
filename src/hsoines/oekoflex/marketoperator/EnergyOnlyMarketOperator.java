@@ -11,6 +11,12 @@ public interface EnergyOnlyMarketOperator {
 	@ScheduledMethod(start = 1, interval = 1, priority = 1)
 	void clearMarket();
 
+	int getTotalClearedQuantity();
+
+	float getLastClearedPrice();
+
+	float getLastAssignmentRate();
+
 	enum AssignmentType{
 		PartialDemand, PartialSupply, Full
 	}

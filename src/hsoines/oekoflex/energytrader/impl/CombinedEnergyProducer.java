@@ -5,6 +5,10 @@ import hsoines.oekoflex.bid.Supply;
 import hsoines.oekoflex.energytrader.*;
 import hsoines.oekoflex.marketoperator.EnergyOnlyMarketOperator;
 import hsoines.oekoflex.marketoperator.RegelEnergieMarketOperator;
+import hsoines.oekoflex.strategies.ConstantPriceStrategy;
+import hsoines.oekoflex.strategies.ConstantQuantityStrategy;
+import hsoines.oekoflex.strategies.PriceStrategy;
+import hsoines.oekoflex.strategies.QuantityStrategy;
 import hsoines.oekoflex.util.EnergyTimeZone;
 import hsoines.oekoflex.util.TimeUtilities;
 
@@ -14,6 +18,9 @@ public class CombinedEnergyProducer implements EnergyProducer, MarketOperatorLis
 
     private final String name;
     private final EnergySlotList produceSlotList;
+    private final PriceStrategy regelMarktPriceStrategy;
+    private final QuantityStrategy quantityStrategy;
+    private final ConstantPriceStrategy energyOnlyPriceStrategy;
     private EnergyOnlyMarketOperator energyOnlyMarketOperator;
     private float lastClearedPrice;
     private float lastAssignmentRate;
@@ -24,19 +31,20 @@ public class CombinedEnergyProducer implements EnergyProducer, MarketOperatorLis
     public CombinedEnergyProducer(String name) {
         this.name = name;
         produceSlotList = new EnergySlotListImpl(EnergySlotList.SlotType.PRODUCE, 100);
+        regelMarktPriceStrategy = new ConstantPriceStrategy(500f);
+        energyOnlyPriceStrategy = new ConstantPriceStrategy(300f);
+        quantityStrategy = new ConstantQuantityStrategy(20);
     }
 
     @Override
     public void makeSupply(){
-        Date currentDate = TimeUtilities.getCurrentDate();
+        Date date = TimeUtilities.getCurrentDate();
         if (TimeUtilities.isEnergyTimeZone(EnergyTimeZone.FOUR_HOURS)) {
-            int offerCapacity = produceSlotList.getSlotOfferCapacity(currentDate, EnergyTimeZone.FOUR_HOURS);
-            produceSlotList.addOfferedQuantity(currentDate, offerCapacity);
-            regelEnergieMarketOperator.addSupply(new Supply(100f, offerCapacity, this));
+            int offerCapacity = produceSlotList.addOfferedQuantity(date, quantityStrategy.getQuantity(), EnergyTimeZone.FOUR_HOURS);
+            regelEnergieMarketOperator.addSupply(new Supply(regelMarktPriceStrategy.getPrice(date), offerCapacity, this));
         }
-        lastBidPrice = (float) (300f * Math.random()) + 500;
-        int offerCapacity = produceSlotList.getSlotOfferCapacity(currentDate, EnergyTimeZone.QUARTER_HOUR);
-        produceSlotList.addOfferedQuantity(currentDate, offerCapacity);
+        lastBidPrice = energyOnlyPriceStrategy.getPrice(date);
+        int offerCapacity = produceSlotList.addOfferedQuantity(date, quantityStrategy.getQuantity(), EnergyTimeZone.QUARTER_HOUR);
         energyOnlyMarketOperator.addSupply(new Supply(lastBidPrice, offerCapacity, this));
     }
 

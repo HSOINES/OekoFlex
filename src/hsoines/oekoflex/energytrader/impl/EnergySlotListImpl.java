@@ -13,7 +13,7 @@ import java.util.Map;
  * Date: 17/12/15
  * Time: 08:08
  */
-public final class EnergySlotListImpl implements EnergySlotList{
+public final class EnergySlotListImpl implements EnergySlotList {
 
     private final Map<Long, Integer> offeredSlotList;
     private final Map<Long, Integer> assignedSlotList;
@@ -28,8 +28,8 @@ public final class EnergySlotListImpl implements EnergySlotList{
     }
 
     @Override
-    public int getSlotOfferCapacity(final Date date, final EnergyTimeZone energyTimeZone) {
-        int minOffersCap = capacity;
+    public int addOfferedQuantity(final Date date, final int quantity, final EnergyTimeZone energyTimeZone) {
+        int minOffersCap = quantity;
         long tick = TimeUtilities.getTick(date);
         for (int i = 0; i < energyTimeZone.getTicks(); i++) {
             int currentCap = getSlotOfferCapacity(tick + i);
@@ -37,17 +37,16 @@ public final class EnergySlotListImpl implements EnergySlotList{
                 minOffersCap = currentCap;
             }
         }
+        for (int i = 0; i < energyTimeZone.getTicks(); i++) {
+            addQuantity(tick + i, minOffersCap, offeredSlotList);
+        }
         return minOffersCap;
     }
 
     @Override
-    public int addOfferedQuantity(final Date date, final int quantity) {
-        return addQuantity(date, quantity, offeredSlotList);
-    }
-
-    @Override
     public void addAssignedQuantity(final Date date, final int quantity) {
-        int i = addQuantity(date, quantity, assignedSlotList);
+        Long slotIndex = TimeUtilities.getTick(date);
+        int i = addQuantity(slotIndex, quantity, assignedSlotList);
         if (i != quantity) {
             throw new IllegalStateException("Assigned quantity should not exceed the maximum quantity.");
         }
@@ -66,33 +65,26 @@ public final class EnergySlotListImpl implements EnergySlotList{
         return getRemainingCapacity(slotIndex, assignedSlotList);
     }
 
-    @Override
-    public int getSlotOfferCapacity(final Date date) {
-        long slotIndex = TimeUtilities.getTick(date);
-        return getSlotOfferCapacity(slotIndex);
-    }
-
-    public int getSlotOfferCapacity(final long slotIndex) {
+    int getSlotOfferCapacity(final long slotIndex) {
         return getRemainingCapacity(slotIndex, offeredSlotList);
     }
 
     private int getRemainingCapacity(final long slotIndex, final Map<Long, Integer> slotList) {
-        if (slotList.get(slotIndex) == null){
-        	slotList.put(slotIndex, 0);
+        if (slotList.get(slotIndex) == null) {
+            slotList.put(slotIndex, 0);
             return capacity;
         } else {
             int i = capacity - slotList.get(slotIndex);
-            return i > 0 ? i:0;
+            return i >= 0 ? i : 0;
         }
     }
 
-    private int addQuantity(final Date date, final int quantity, final Map<Long, Integer> slotList) {
-        Long slotIndex = TimeUtilities.getTick(date);
+    private int addQuantity(final long slotIndex, final int quantity, final Map<Long, Integer> slotList) {
         int remainingCapacity = getRemainingCapacity(slotIndex, slotList);
         int currentQuantity = slotList.get(slotIndex);
-        if (remainingCapacity == 0){
+        if (remainingCapacity == 0) {
             return 0;
-        } else if (remainingCapacity > quantity){
+        } else if (remainingCapacity > quantity) {
             slotList.put(slotIndex, currentQuantity + quantity);
             return quantity;
         } else {

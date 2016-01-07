@@ -1,0 +1,47 @@
+<repast.simphony.data2.engine.DataSetDescriptor>
+    <name>RegelEnergieMarktOperatorDataSet</name>
+    <type>NON_AGGREGATE</type>
+    <sourceType>hsoines.oekoflex.marketoperator.RegelEnergieMarketOperator</sourceType>
+    <inclTick>true</inclTick>
+    <inclBatchRun>false</inclBatchRun>
+    <inclRandomSeed>false</inclRandomSeed>
+    <scheduleParams>
+        <start>1.0</start>
+        <interval>1.0</interval>
+        <priority>-Infinity</priority>
+        <pType>LAST</pType>
+        <duration>-1.0</duration>
+        <frequency>REPEAT</frequency>
+        <hashCode>236151325</hashCode>
+    </scheduleParams>
+    <atEnd>false</atEnd>
+    <methodDataSources class="linked-hash-map">
+        <entry>
+            <string>Name</string>
+            <repast.simphony.data2.engine.MethodDataSourceDefinition>
+                <id>Name</id>
+                <className>hsoines.oekoflex.marketoperator.RegelEnergieMarketOperator</className>
+                <methodName>getName</methodName>
+            </repast.simphony.data2.engine.MethodDataSourceDefinition>
+        </entry>
+        <entry>
+            <string>TotalClearedQuantity</string>
+            <repast.simphony.data2.engine.MethodDataSourceDefinition>
+                <id>TotalClearedQuantity</id>
+                <className>hsoines.oekoflex.marketoperator.RegelEnergieMarketOperator</className>
+                <methodName>getTotalClearedQuantity</methodName>
+            </repast.simphony.data2.engine.MethodDataSourceDefinition>
+        </entry>
+        <entry>
+            <string>LastAssignmentRate</string>
+            <repast.simphony.data2.engine.MethodDataSourceDefinition>
+                <id>LastAssignmentRate</id>
+                <className>hsoines.oekoflex.marketoperator.RegelEnergieMarketOperator</className>
+                <methodName>getLastAssignmentRate</methodName>
+            </repast.simphony.data2.engine.MethodDataSourceDefinition>
+        </entry>
+    </methodDataSources>
+    <countSources class="linked-hash-map"/>
+    <customNADataSources class="linked-hash-map"/>
+    <customAggDataSources class="linked-hash-map"/>
+</repast.simphony.data2.engine.DataSetDescriptor>

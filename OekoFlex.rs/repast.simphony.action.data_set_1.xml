@@ -1,5 +1,5 @@
 <repast.simphony.data2.engine.DataSetDescriptor>
-  <name>MarketOperator</name>
+  <name>EnergieOnlyMarketOperator</name>
   <type>NON_AGGREGATE</type>
   <sourceType>hsoines.oekoflex.marketoperator.impl.EnergyOnlyMarketOperatorImpl</sourceType>
   <inclTick>true</inclTick>

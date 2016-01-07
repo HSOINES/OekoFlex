@@ -1,15 +1,19 @@
 package hsoines.oekoflex.marketoperator;
 
+import hsoines.oekoflex.OekoflexAgent;
 import hsoines.oekoflex.bid.Supply;
 import repast.simphony.engine.schedule.ScheduledMethod;
 
-public interface RegelEnergieMarketOperator {
+public interface RegelEnergieMarketOperator extends OekoflexAgent {
 	void addSupply(Supply supply);
 
-	@ScheduledMethod(start = 1, interval = 3, priority = 2)
+	@ScheduledMethod(start = 1, interval = 16, priority = 2)
 	void clearMarket();
 
-	enum AssignmentType{
-		PartialDemand, PartialSupply, Full
-	}
+
+	long getTotalClearedQuantity();
+
+//	float getLastClearedPrice(); // nicht am Regelenergiemarkt!
+
+	float getLastAssignmentRate();
 }

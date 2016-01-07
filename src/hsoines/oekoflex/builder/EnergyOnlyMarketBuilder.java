@@ -27,6 +27,7 @@ public class EnergyOnlyMarketBuilder implements ContextBuilder<OekoflexAgent>{
 		EnergyOnlyMarketOperatorImpl energyOnlyMarketOperator = new EnergyOnlyMarketOperatorImpl("EOM_Operator");
 		RegelEnergieMarketOperator regelEnergieMarketOperator = new RegelEnergieMarketOperatorImpl("RegelEnergieMarketOperator", 10000);
 		context.add(energyOnlyMarketOperator);
+		context.add(regelEnergieMarketOperator);
 		for (int i = 0; i < 5; i++){
 			SimpleEnergyProducer prod = new SimpleEnergyProducer("SimpleEnergyProducer_" + i);
 			prod.setEnergieOnlyMarketOperator(energyOnlyMarketOperator);
@@ -45,8 +46,8 @@ public class EnergyOnlyMarketBuilder implements ContextBuilder<OekoflexAgent>{
 			context.add(producer);
 		}
 
-		for (int i = 0; i < 50; i++) {
-			CombinedEnergyProducer producer = new CombinedEnergyProducer("CombinedEnergyProducer" + i);
+		for (int i = 0; i < 3; i++) {
+			CombinedEnergyProducer producer = new CombinedEnergyProducer("CombinedEnergyProducer_" + i);
 			producer.setEnergieOnlyMarketOperator(energyOnlyMarketOperator);
 			producer.setRegelEnergieMarketOperator(regelEnergieMarketOperator);
 			context.add(producer);

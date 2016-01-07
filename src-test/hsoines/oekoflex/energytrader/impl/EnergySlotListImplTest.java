@@ -42,12 +42,11 @@ public class EnergySlotListImplTest {
 
     @Test
     public void testMultipleTicks() throws Exception {
-
-        energySlotList.addOfferedQuantity(date0, 100);
-        energySlotList.addOfferedQuantity(date1, 100);
-        energySlotList.addOfferedQuantity(date2, 200);
-        energySlotList.addOfferedQuantity(date3, 300);
-        assertEquals(700, energySlotList.getSlotOfferCapacity(date0, EnergyTimeZone.FOUR_HOURS));
+        energySlotList.addOfferedQuantity(date0, 100, EnergyTimeZone.QUARTER_HOUR);
+        energySlotList.addOfferedQuantity(date1, 100, EnergyTimeZone.QUARTER_HOUR);
+        energySlotList.addOfferedQuantity(date2, 200, EnergyTimeZone.QUARTER_HOUR);
+        energySlotList.addOfferedQuantity(date3, 300, EnergyTimeZone.QUARTER_HOUR);
+        assertEquals(700, energySlotList.addOfferedQuantity(date0, 1000, EnergyTimeZone.FOUR_HOURS));
     }
 
     @Test
@@ -60,6 +59,14 @@ public class EnergySlotListImplTest {
     public void testSlotAssignedException() {
         energySlotList.addAssignedQuantity(date0, 500);
         energySlotList.addAssignedQuantity(date0, 500);
-        energySlotList.addAssignedQuantity(date0, 500);
+        energySlotList.addAssignedQuantity(date0, 1);
+    }
+
+    @Test
+    public void testSlotAssigning2() throws Exception {
+        energySlotList.addAssignedQuantity(date0, 300);
+        assertEquals(700, energySlotList.getSlotAssignCapacity(date0));
+        energySlotList.addAssignedQuantity(date0, 700);
+        assertEquals(0, energySlotList.getSlotAssignCapacity(date0));
     }
 }
