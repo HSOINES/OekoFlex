@@ -2,11 +2,12 @@ package hsoines.oekoflex.energytrader.impl;
 
 import hsoines.oekoflex.*;
 import hsoines.oekoflex.energytrader.EnergyProducer;
+import hsoines.oekoflex.energytrader.EnergyonlyMarketTrader;
 import hsoines.oekoflex.supply.Supply;
 import repast.simphony.engine.environment.RunEnvironment;
 import repast.simphony.parameter.Parameters;
 
-public class ParametrizableEnergyProducer implements EnergyProducer, MarketOperatorListener, OekoflexAgent {
+public class ParametrizableEnergyProducer implements EnergyProducer, MarketOperatorListener, OekoflexAgent, EnergyonlyMarketTrader {
 
     private final String name;
     private EnergyOnlyMarketOperator marketOperator;

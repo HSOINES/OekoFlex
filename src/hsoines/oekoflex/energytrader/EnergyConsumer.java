@@ -1,6 +1,5 @@
 package hsoines.oekoflex.energytrader;
 
-import hsoines.oekoflex.energytrader.EnergyTrader;
 import repast.simphony.engine.schedule.ScheduledMethod;
 
 /**
@@ -9,7 +8,7 @@ import repast.simphony.engine.schedule.ScheduledMethod;
  * Date: 03/12/15
  * Time: 08:28
  */
-public interface EnergyConsumer extends EnergyTrader {
+public interface EnergyConsumer extends EnergyonlyMarketTrader {
     @ScheduledMethod(start = 1, interval = 1, priority = 100)
     void makeDemand();
 }

@@ -14,5 +14,7 @@
 	<classpathentry kind="lib" path="/Users/jhense/programming/OekoFlex/Oekoflex/lib/log4j-api-2.4.1.jar"/>
 	<classpathentry kind="lib" path="/Users/jhense/programming/OekoFlex/Oekoflex/lib/log4j-core-2.4.1.jar"/>
 	<classpathentry kind="lib" path="/Users/jhense/programming/OekoFlex/Oekoflex/lib/xchart-2.6.1.jar"/>
+	<classpathentry kind="lib" path="lib/mockito-core-1.10.19.jar"/>
+	<classpathentry kind="lib" path="lib/objenesis-2.2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -3,9 +3,10 @@ package hsoines.oekoflex.energytrader.impl;
 import hsoines.oekoflex.*;
 import hsoines.oekoflex.energytrader.EnergyProducer;
 import hsoines.oekoflex.energytrader.EnergyonlyMarketTrader;
+import hsoines.oekoflex.energytrader.RegelenergieMarketTrader;
 import hsoines.oekoflex.supply.Supply;
 
-public class SimpleEnergyProducer implements EnergyProducer, MarketOperatorListener, OekoflexAgent, EnergyonlyMarketTrader {
+public class CombinedEnergyProducer implements EnergyProducer, MarketOperatorListener, OekoflexAgent, RegelenergieMarketTrader, EnergyonlyMarketTrader {
 
     private final String name;
     private EnergyOnlyMarketOperator marketOperator;
@@ -14,7 +15,7 @@ public class SimpleEnergyProducer implements EnergyProducer, MarketOperatorListe
 
     private float lastBidPrice;
 
-    public SimpleEnergyProducer(String name) {
+    public CombinedEnergyProducer(String name) {
         this.name = name;
     }
 
@@ -38,6 +39,11 @@ public class SimpleEnergyProducer implements EnergyProducer, MarketOperatorListe
     @Override
     public float getLastAssignmentRate() {
         return lastAssignmentRate;
+    }
+
+    @Override
+    public void setMarketOperator(final RegelenergieMarketOperator marketOperator) {
+
     }
 
     @Override

@@ -1,14 +1,14 @@
 package hsoines.oekoflex.energytrader;
 
-import hsoines.oekoflex.EnergyOnlyMarketOperator;
+import hsoines.oekoflex.RegelenergieMarketOperator;
 
 /**
  * User: jh
  * Date: 03/12/15
  * Time: 08:29
  */
-public interface EnergyTrader {
-    void setMarketOperator(EnergyOnlyMarketOperator marketOperator);
+public interface RegelenergieMarketTrader {
+    void setMarketOperator(RegelenergieMarketOperator marketOperator);
 
     float getLastClearedPrice();
 
