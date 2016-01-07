@@ -7,10 +7,11 @@ import hsoines.oekoflex.energytrader.EnergyOnlyMarketTrader;
 import hsoines.oekoflex.energytrader.EnergySlotList;
 import hsoines.oekoflex.energytrader.MarketOperatorListener;
 import hsoines.oekoflex.marketoperator.EnergyOnlyMarketOperator;
+import hsoines.oekoflex.strategies.DaytimePriceStrategy;
+import hsoines.oekoflex.strategies.PriceStrategy;
 import hsoines.oekoflex.util.EnergyTimeZone;
 import hsoines.oekoflex.util.TimeUtilities;
 
-import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -21,40 +22,34 @@ import java.util.Date;
  */
 public final class DaytimeEnergyConsumer implements EnergyConsumer, MarketOperatorListener, EnergyOnlyMarketTrader {
     private final String name;
+    private final int quantity;
     private EnergyOnlyMarketOperator marketOperator;
     private float clearedPrice;
     private float lastAssignmentRate;
 
     private float lastBidPrice;
     private EnergySlotList consumeSlots;
+    private final PriceStrategy priceStrategy;
 
-    public DaytimeEnergyConsumer(String name) {
+    public DaytimeEnergyConsumer(String name, int quantity, float priceAtDay, float decreaseAtNight) {
         this.name = name;
+        this.quantity = quantity;
+        priceStrategy = new DaytimePriceStrategy(priceAtDay, decreaseAtNight);
+        consumeSlots = new EnergySlotListImpl(EnergySlotList.SlotType.CONSUM, 500);
     }
 
     @Override
     public void setEnergieOnlyMarketOperator(final EnergyOnlyMarketOperator marketOperator) {
         this.marketOperator = marketOperator;
-        consumeSlots = new EnergySlotListImpl(EnergySlotList.SlotType.CONSUM, 500);
-        for (int i = 0; i < 5000; i++){
-            Date date = TimeUtilities.getDate(i);
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(date);
-            if (calendar.get(Calendar.HOUR_OF_DAY) > 8 && calendar.get(Calendar.HOUR_OF_DAY) < 20) {
-                consumeSlots.addOfferedQuantity(date, 0, EnergyTimeZone.QUARTER_HOUR);
-            } else {
-                consumeSlots.addOfferedQuantity(date, 250, EnergyTimeZone.QUARTER_HOUR);
-            }
-        }
     }
     
     @Override
     public void makeDemand(){
         Date date = TimeUtilities.getCurrentDate();
     	if (marketOperator != null){
-            lastBidPrice = (float) (100f * Math.random()) + 400;
-            int quantity = consumeSlots.addOfferedQuantity(date, 500, EnergyTimeZone.QUARTER_HOUR);
-            marketOperator.addDemand(new Demand(lastBidPrice, quantity, this));
+            lastBidPrice = priceStrategy.getPrice(date);
+            int offeredQuantity = consumeSlots.addOfferedQuantity(date, quantity, EnergyTimeZone.QUARTER_HOUR);
+            marketOperator.addDemand(new Demand(lastBidPrice, offeredQuantity, this));
         }
     }
 

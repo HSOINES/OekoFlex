@@ -7,6 +7,8 @@ import hsoines.oekoflex.util.EnergyTimeZone;
 import hsoines.oekoflex.util.TimeUtilities;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import repast.simphony.engine.environment.RunEnvironment;
+import repast.simphony.parameter.Parameters;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,13 +25,16 @@ public final class RegelEnergieMarketOperatorImpl implements RegelEnergieMarketO
     private final int quantity;
     private final List<Supply> supplies;
     private long totalClearedQuantity;
-    private float lastClearedPrice;
+    private float lastClearedMaxPrice;
     private float lastAssignmentRate;
 
-    public RegelEnergieMarketOperatorImpl(String name, int quantity) {
+    public RegelEnergieMarketOperatorImpl(String name) {
         this.name = name;
-        this.quantity = quantity;
         supplies = new ArrayList<Supply>();
+
+        Parameters p = RunEnvironment.getInstance().getParameters();
+
+        this.quantity = (int) p.getValue("rigidDemandEnergyOnlyMarket");
     }
 
     @Override
@@ -75,10 +80,15 @@ public final class RegelEnergieMarketOperatorImpl implements RegelEnergieMarketO
         for (int i = 0; i < EnergyTimeZone.FOUR_HOURS.getTicks(); i++) {
             marketOperatorListener.notifyClearingDone(supply.getPrice(), assignRate, supply, TimeUtilities.getDate(tick + i));
         }
+        lastClearedMaxPrice = supply.getPrice();
     }
 
     @Override
     public String getName() {
         return name;
+    }
+
+    public float getLastClearedMaxPrice() {
+        return lastClearedMaxPrice;
     }
 }

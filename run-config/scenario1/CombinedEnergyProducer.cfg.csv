@@ -1,0 +1,4 @@
+"name","capacity","priceRegelMarkt","priceEnergyOnlyMarkt","quantityPercentageOnRegelMarkt"
+energy1,1000,500,400,80
+energy2,1000,500,400,70
+energy3,1000,500,400,60

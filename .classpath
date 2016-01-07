@@ -16,5 +16,6 @@
 	<classpathentry kind="lib" path="/Users/jhense/programming/OekoFlex/Oekoflex/lib/xchart-2.6.1.jar"/>
 	<classpathentry kind="lib" path="lib/mockito-core-1.10.19.jar"/>
 	<classpathentry kind="lib" path="lib/objenesis-2.2.jar"/>
+	<classpathentry kind="lib" path="lib/commons-csv-1.2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -31,7 +31,7 @@ public class RegelEnergieMarketOperatorImplTest {
 
     @Before
     public void setUp() throws Exception {
-        operator = new RegelEnergieMarketOperatorImpl("operator", 10000);
+        operator = new RegelEnergieMarketOperatorImpl("operator");
         listener = mock(MarketOperatorListener.class);
 
         Schedule schedule = new Schedule();

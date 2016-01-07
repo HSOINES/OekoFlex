@@ -2,6 +2,11 @@
 <parameters>
 
 	<parameter name="randomSeed" displayName="Default Random Seed" type="int" defaultValue="__NULL__" />
+	<parameter name="runConfigDir" displayName="Konfigurations-Verzeichnis" type="String"
+			   defaultValue="run-config/scenario1"/>
+	<parameter name="rigidDemandEnergyOnlyMarket" displayName="Starre Nachfrage Regelleistungsmarkt" type="int"
+			   defaultValue="1000"/>
+	<parameter name="daysToRun" displayName="Simulationstage" type="int" defaultValue="1"/>
 	<parameter name="supplyCapacityAgent1" displayName="Supply Capacity Agent 1" type="int" defaultValue="200" />
 	<parameter name="supplyDelayAgent1" displayName="Supply Delay Agent 1" type="int" defaultValue="200" />
 

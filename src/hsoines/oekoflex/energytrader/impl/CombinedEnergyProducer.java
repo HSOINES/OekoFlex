@@ -6,9 +6,7 @@ import hsoines.oekoflex.energytrader.*;
 import hsoines.oekoflex.marketoperator.EnergyOnlyMarketOperator;
 import hsoines.oekoflex.marketoperator.RegelEnergieMarketOperator;
 import hsoines.oekoflex.strategies.ConstantPriceStrategy;
-import hsoines.oekoflex.strategies.ConstantQuantityStrategy;
 import hsoines.oekoflex.strategies.PriceStrategy;
-import hsoines.oekoflex.strategies.QuantityStrategy;
 import hsoines.oekoflex.util.EnergyTimeZone;
 import hsoines.oekoflex.util.TimeUtilities;
 
@@ -17,34 +15,31 @@ import java.util.Date;
 public class CombinedEnergyProducer implements EnergyProducer, MarketOperatorListener, RegelEnergieMarketTrader, EnergyOnlyMarketTrader {
 
     private final String name;
-    private final EnergySlotList produceSlotList;
-    private final PriceStrategy regelMarktPriceStrategy;
-    private final QuantityStrategy quantityStrategy;
-    private final ConstantPriceStrategy energyOnlyPriceStrategy;
+    private EnergySlotList produceSlotList;
+    private PriceStrategy regelMarktPriceStrategy;
+    private ConstantPriceStrategy energyOnlyPriceStrategy;
     private EnergyOnlyMarketOperator energyOnlyMarketOperator;
     private float lastClearedPrice;
     private float lastAssignmentRate;
 
     private float lastBidPrice;
     private RegelEnergieMarketOperator regelEnergieMarketOperator;
+    private int capacity;
+    private float quantityPercentageOnRegelMarkt;
 
     public CombinedEnergyProducer(String name) {
         this.name = name;
-        produceSlotList = new EnergySlotListImpl(EnergySlotList.SlotType.PRODUCE, 100);
-        regelMarktPriceStrategy = new ConstantPriceStrategy(500f);
-        energyOnlyPriceStrategy = new ConstantPriceStrategy(300f);
-        quantityStrategy = new ConstantQuantityStrategy(20);
     }
 
     @Override
     public void makeSupply(){
         Date date = TimeUtilities.getCurrentDate();
         if (TimeUtilities.isEnergyTimeZone(EnergyTimeZone.FOUR_HOURS)) {
-            int offerCapacity = produceSlotList.addOfferedQuantity(date, quantityStrategy.getQuantity(), EnergyTimeZone.FOUR_HOURS);
+            int offerCapacity = produceSlotList.addOfferedQuantity(date, (int) (capacity * quantityPercentageOnRegelMarkt), EnergyTimeZone.FOUR_HOURS);
             regelEnergieMarketOperator.addSupply(new Supply(regelMarktPriceStrategy.getPrice(date), offerCapacity, this));
         }
         lastBidPrice = energyOnlyPriceStrategy.getPrice(date);
-        int offerCapacity = produceSlotList.addOfferedQuantity(date, quantityStrategy.getQuantity(), EnergyTimeZone.QUARTER_HOUR);
+        int offerCapacity = produceSlotList.addOfferedQuantity(date, capacity, EnergyTimeZone.QUARTER_HOUR);
         energyOnlyMarketOperator.addSupply(new Supply(lastBidPrice, offerCapacity, this));
     }
 
@@ -83,5 +78,23 @@ public class CombinedEnergyProducer implements EnergyProducer, MarketOperatorLis
     @Override
     public String getName() {
         return name;
+    }
+
+    public void setCapacity(final int capacity) {
+        this.capacity = capacity;
+        produceSlotList = new EnergySlotListImpl(EnergySlotList.SlotType.PRODUCE, capacity);
+    }
+
+    public void setPriceRegelMarkt(final float priceRegelMarkt) {
+        regelMarktPriceStrategy = new ConstantPriceStrategy(priceRegelMarkt);
+    }
+
+    public void setPriceEnergyOnlyMarkt(final float priceEnergyOnlyMarkt) {
+        energyOnlyPriceStrategy = new ConstantPriceStrategy(priceEnergyOnlyMarkt);
+
+    }
+
+    public void setQuantityPercentageOnRegelMarkt(final float quantityPercentageOnRegelMarkt) {
+        this.quantityPercentageOnRegelMarkt = quantityPercentageOnRegelMarkt;
     }
 }
