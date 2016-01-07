@@ -1,6 +1,7 @@
 package hsoines.oekoflex.summary;
 
 import hsoines.oekoflex.bid.Demand;
+import hsoines.oekoflex.tools.RepastTestInitializer;
 import org.junit.Test;
 
 import java.util.Date;
@@ -13,7 +14,8 @@ import java.util.Date;
 public class BidSummaryFactoryTest {
     @Test
     public void testLog() throws Exception {
-        BidSummary bidSummary = BidSummaryFactory.create("energy1");
+        RepastTestInitializer.init();
+        BidSummary bidSummary = BidSummaryFactory.create("a_logger");
         bidSummary.add(12f, .3f, new Demand(12f, 11111, null), new Date());
     }
 }
