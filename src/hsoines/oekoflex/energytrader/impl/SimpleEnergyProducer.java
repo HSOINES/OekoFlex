@@ -8,7 +8,7 @@ import repast.simphony.engine.schedule.ScheduledMethod;
 public class SimpleEnergyProducer implements EnergyProducer, MarketOperatorListener, OekoflexAgent {
 
     private final String name;
-    private MarketOperator marketOperator;
+    private EOMMarketOperator marketOperator;
     private float lastClearedPrice;
     private float lastAssignmentRate;
 
@@ -25,7 +25,7 @@ public class SimpleEnergyProducer implements EnergyProducer, MarketOperatorListe
     }
 
     @Override
-    public void setMarketOperator(final MarketOperator marketOperator) {
+    public void setMarketOperator(final EOMMarketOperator marketOperator) {
         this.marketOperator = marketOperator;
     }
 

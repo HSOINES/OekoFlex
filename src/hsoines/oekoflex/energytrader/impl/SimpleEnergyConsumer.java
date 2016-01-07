@@ -13,7 +13,7 @@ import hsoines.oekoflex.demand.Demand;
  */
 public final class SimpleEnergyConsumer implements EnergyConsumer, MarketOperatorListener, OekoflexAgent {
     private final String name;
-    private MarketOperator marketOperator;
+    private EOMMarketOperator marketOperator;
     private float clearedPrice;
     private float lastAssignmentRate;
 
@@ -24,7 +24,7 @@ public final class SimpleEnergyConsumer implements EnergyConsumer, MarketOperato
     }
 
     @Override
-    public void setMarketOperator(final MarketOperator marketOperator) {
+    public void setMarketOperator(final EOMMarketOperator marketOperator) {
         this.marketOperator = marketOperator;
     }
     

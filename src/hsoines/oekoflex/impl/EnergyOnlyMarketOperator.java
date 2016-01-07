@@ -1,6 +1,6 @@
 package hsoines.oekoflex.impl;
 
-import hsoines.oekoflex.MarketOperator;
+import hsoines.oekoflex.EOMMarketOperator;
 import hsoines.oekoflex.MarketOperatorListener;
 import hsoines.oekoflex.OekoflexAgent;
 import hsoines.oekoflex.supply.Supply;
@@ -9,13 +9,11 @@ import hsoines.oekoflex.demand.Demand;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import repast.simphony.engine.schedule.ScheduledMethod;
 
-public class EnergyOnlyMarketOperator implements MarketOperator, OekoflexAgent {
+public class EnergyOnlyMarketOperator implements EOMMarketOperator, OekoflexAgent {
     private static final Log log = LogFactory.getLog(EnergyOnlyMarketOperator.class);
 
     private final List<Demand> demands;
@@ -45,7 +43,7 @@ public class EnergyOnlyMarketOperator implements MarketOperator, OekoflexAgent {
         this.supplies.add(supply);
     }
 
-    @ScheduledMethod(start = 1, interval = 1, priority = 1)
+    @Override
     public void clearMarket() {
         demands.sort(new Demand.DescendingComparator());
         this.supplies.sort(new Supply.AscendingComparator());

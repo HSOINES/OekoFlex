@@ -1,6 +1,6 @@
 package hsoines.oekoflex.energytrader;
 
-import hsoines.oekoflex.MarketOperator;
+import hsoines.oekoflex.EOMMarketOperator;
 
 /**
  * User: jh
@@ -8,7 +8,7 @@ import hsoines.oekoflex.MarketOperator;
  * Time: 08:29
  */
 public interface EnergyTrader {
-    void setMarketOperator(MarketOperator marketOperator);
+    void setMarketOperator(EOMMarketOperator marketOperator);
 
     float getLastClearedPrice();
 
