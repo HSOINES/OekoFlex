@@ -12,11 +12,11 @@ import static org.junit.Assert.*;
  */
 public class EnergyOnlyMarketOperatorTest {
 
-    private EnergyOnlyMarketOperator energyOnlyMarketOperator;
+    private EnergyOnlyMarketOperatorImpl energyOnlyMarketOperator;
 
     @Before
     public void setUp() throws Exception {
-        energyOnlyMarketOperator = new EnergyOnlyMarketOperator("test");
+        energyOnlyMarketOperator = new EnergyOnlyMarketOperatorImpl("test");
     }
 
     @org.junit.Test

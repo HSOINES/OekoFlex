@@ -4,13 +4,12 @@ import hsoines.oekoflex.*;
 import hsoines.oekoflex.energytrader.EnergyProducer;
 import hsoines.oekoflex.supply.Supply;
 import repast.simphony.engine.environment.RunEnvironment;
-import repast.simphony.engine.schedule.ScheduledMethod;
 import repast.simphony.parameter.Parameters;
 
 public class ParametrizableEnergyProducer implements EnergyProducer, MarketOperatorListener, OekoflexAgent {
 
     private final String name;
-    private EOMMarketOperator marketOperator;
+    private EnergyOnlyMarketOperator marketOperator;
     private float lastClearedPrice;
     private float lastAssignmentRate;
 
@@ -48,7 +47,7 @@ public class ParametrizableEnergyProducer implements EnergyProducer, MarketOpera
     }
 
     @Override
-    public void setMarketOperator(final EOMMarketOperator marketOperator) {
+    public void setMarketOperator(final EnergyOnlyMarketOperator marketOperator) {
         this.marketOperator = marketOperator;
     }
 

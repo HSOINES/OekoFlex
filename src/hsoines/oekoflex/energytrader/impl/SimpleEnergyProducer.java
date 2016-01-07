@@ -3,12 +3,11 @@ package hsoines.oekoflex.energytrader.impl;
 import hsoines.oekoflex.*;
 import hsoines.oekoflex.energytrader.EnergyProducer;
 import hsoines.oekoflex.supply.Supply;
-import repast.simphony.engine.schedule.ScheduledMethod;
 
 public class SimpleEnergyProducer implements EnergyProducer, MarketOperatorListener, OekoflexAgent {
 
     private final String name;
-    private EOMMarketOperator marketOperator;
+    private EnergyOnlyMarketOperator marketOperator;
     private float lastClearedPrice;
     private float lastAssignmentRate;
 
@@ -25,7 +24,7 @@ public class SimpleEnergyProducer implements EnergyProducer, MarketOperatorListe
     }
 
     @Override
-    public void setMarketOperator(final EOMMarketOperator marketOperator) {
+    public void setMarketOperator(final EnergyOnlyMarketOperator marketOperator) {
         this.marketOperator = marketOperator;
     }
 

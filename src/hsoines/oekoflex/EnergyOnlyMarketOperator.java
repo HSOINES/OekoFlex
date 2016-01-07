@@ -4,7 +4,7 @@ import hsoines.oekoflex.supply.Supply;
 import hsoines.oekoflex.demand.Demand;
 import repast.simphony.engine.schedule.ScheduledMethod;
 
-public interface EOMMarketOperator {
+public interface EnergyOnlyMarketOperator {
 	public void addDemand(Demand demand);
 	public void addSupply(Supply supply);
 

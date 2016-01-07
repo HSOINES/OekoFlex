@@ -1,14 +1,13 @@
 package hsoines.oekoflex.energytrader.impl;
 
 import hsoines.oekoflex.Bid;
-import hsoines.oekoflex.EOMMarketOperator;
+import hsoines.oekoflex.EnergyOnlyMarketOperator;
 import hsoines.oekoflex.MarketOperatorListener;
 import hsoines.oekoflex.OekoflexAgent;
 import hsoines.oekoflex.demand.Demand;
 import hsoines.oekoflex.energytrader.EnergyConsumer;
 import hsoines.oekoflex.energytrader.EnergySlotList;
 import hsoines.oekoflex.util.TimeUtilities;
-import repast.simphony.engine.schedule.ScheduledMethod;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -21,7 +20,7 @@ import java.util.Date;
  */
 public final class DaytimeEnergyConsumer implements EnergyConsumer, MarketOperatorListener, OekoflexAgent {
     private final String name;
-    private EOMMarketOperator marketOperator;
+    private EnergyOnlyMarketOperator marketOperator;
     private float clearedPrice;
     private float lastAssignmentRate;
 
@@ -33,7 +32,7 @@ public final class DaytimeEnergyConsumer implements EnergyConsumer, MarketOperat
     }
 
     @Override
-    public void setMarketOperator(final EOMMarketOperator marketOperator) {
+    public void setMarketOperator(final EnergyOnlyMarketOperator marketOperator) {
         this.marketOperator = marketOperator;
         energySlotList = new EnergySlotListImpl(EnergySlotList.SlotType.CONSUM, 500);
         for (int i = 0; i < 5000; i++){

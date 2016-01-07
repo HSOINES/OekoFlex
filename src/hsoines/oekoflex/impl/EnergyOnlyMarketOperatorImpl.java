@@ -1,6 +1,6 @@
 package hsoines.oekoflex.impl;
 
-import hsoines.oekoflex.EOMMarketOperator;
+import hsoines.oekoflex.EnergyOnlyMarketOperator;
 import hsoines.oekoflex.MarketOperatorListener;
 import hsoines.oekoflex.OekoflexAgent;
 import hsoines.oekoflex.supply.Supply;
@@ -13,8 +13,8 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-public class EnergyOnlyMarketOperator implements EOMMarketOperator, OekoflexAgent {
-    private static final Log log = LogFactory.getLog(EnergyOnlyMarketOperator.class);
+public class EnergyOnlyMarketOperatorImpl implements EnergyOnlyMarketOperator, OekoflexAgent {
+    private static final Log log = LogFactory.getLog(EnergyOnlyMarketOperatorImpl.class);
 
     private final List<Demand> demands;
     private final List<Supply> supplies;
@@ -26,7 +26,7 @@ public class EnergyOnlyMarketOperator implements EOMMarketOperator, OekoflexAgen
     private float lastAssignmentRate;
     private AssignmentType lastAssignmentType;
 
-    public EnergyOnlyMarketOperator(String name) {
+    public EnergyOnlyMarketOperatorImpl(String name) {
         this.name = name;
 
         demands = new ArrayList<Demand>();
@@ -149,7 +149,7 @@ public class EnergyOnlyMarketOperator implements EOMMarketOperator, OekoflexAgen
         for (Demand demand : demands) {
             MarketOperatorListener marketOperatorListener = demand.getMarketOperatorListener();
             if (marketOperatorListener != null) {
-                float assignmentRate = 0;
+                float assignmentRate;
                 if (demand.getPrice() > clearedPrice) {
                     assignmentRate = 1f;
                 } else if (demand.getPrice() == clearedPrice) {

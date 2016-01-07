@@ -3,7 +3,7 @@ package hsoines.oekoflex.display;
 import javax.swing.*;
 
 import hsoines.oekoflex.OekoflexAgent;
-import hsoines.oekoflex.impl.EnergyOnlyMarketOperator;
+import hsoines.oekoflex.impl.EnergyOnlyMarketOperatorImpl;
 import hsoines.oekoflex.demand.Demand;
 import hsoines.oekoflex.supply.Supply;
 
@@ -11,7 +11,6 @@ import hsoines.oekoflex.util.TimeUtilities;
 import org.knowm.xchart.*;
 
 import repast.simphony.context.Context;
-import repast.simphony.essentials.RepastEssentials;
 import repast.simphony.visualization.DisplayEditorLifecycle;
 import repast.simphony.visualization.DisplayListener;
 import repast.simphony.visualization.IDisplay;
@@ -19,19 +18,16 @@ import repast.simphony.visualization.Layout;
 import repast.simphony.visualization.ProbeListener;
 
 import java.awt.*;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
-import java.util.TimeZone;
 
 public class MerritOrderGraph implements IDisplay {
 
     private final Context<OekoflexAgent> context;
     private Chart chart;
     private JPanel panel;
-    private EnergyOnlyMarketOperator eomOperator;
+    private EnergyOnlyMarketOperatorImpl eomOperator;
 
     public MerritOrderGraph(Context<OekoflexAgent> context) {
 
@@ -40,7 +36,7 @@ public class MerritOrderGraph implements IDisplay {
         Iterable<OekoflexAgent> iter = context.getAgentLayer(OekoflexAgent.class);
         for (OekoflexAgent oekoflexAgent : iter) {
             if (oekoflexAgent.getName().equals("EOM_Operator")) {
-                eomOperator = (EnergyOnlyMarketOperator) oekoflexAgent;
+                eomOperator = (EnergyOnlyMarketOperatorImpl) oekoflexAgent;
             }
         }
         panel = new JPanel();

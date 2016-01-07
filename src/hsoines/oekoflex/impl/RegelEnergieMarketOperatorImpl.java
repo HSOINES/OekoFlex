@@ -1,14 +1,11 @@
 package hsoines.oekoflex.impl;
 
-import hsoines.oekoflex.EOMMarketOperator;
 import hsoines.oekoflex.MarketOperatorListener;
 import hsoines.oekoflex.OekoflexAgent;
 import hsoines.oekoflex.RegelEnergieMarketOperator;
-import hsoines.oekoflex.demand.Demand;
 import hsoines.oekoflex.supply.Supply;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 /**

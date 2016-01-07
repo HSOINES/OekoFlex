@@ -1,7 +1,7 @@
 <repast.simphony.data2.engine.DataSetDescriptor>
   <name>MarketOperator</name>
   <type>NON_AGGREGATE</type>
-  <sourceType>hsoines.oekoflex.impl.EnergyOnlyMarketOperator</sourceType>
+  <sourceType>hsoines.oekoflex.impl.EnergyOnlyMarketOperatorImpl</sourceType>
   <inclTick>true</inclTick>
   <inclBatchRun>false</inclBatchRun>
   <inclRandomSeed>false</inclRandomSeed>
@@ -20,7 +20,7 @@
       <string>Price</string>
       <repast.simphony.data2.engine.MethodDataSourceDefinition>
         <id>Price</id>
-        <className>hsoines.oekoflex.impl.EnergyOnlyMarketOperator</className>
+        <className>hsoines.oekoflex.impl.EnergyOnlyMarketOperatorImpl</className>
         <methodName>getPrice</methodName>
       </repast.simphony.data2.engine.MethodDataSourceDefinition>
     </entry>
@@ -28,7 +28,7 @@
       <string>LastAssignmentRate</string>
       <repast.simphony.data2.engine.MethodDataSourceDefinition>
         <id>LastAssignmentRate</id>
-        <className>hsoines.oekoflex.impl.EnergyOnlyMarketOperator</className>
+        <className>hsoines.oekoflex.impl.EnergyOnlyMarketOperatorImpl</className>
         <methodName>getLastAssignmentRate</methodName>
       </repast.simphony.data2.engine.MethodDataSourceDefinition>
     </entry>
@@ -36,7 +36,7 @@
       <string>LastClearedPrice</string>
       <repast.simphony.data2.engine.MethodDataSourceDefinition>
         <id>LastClearedPrice</id>
-        <className>hsoines.oekoflex.impl.EnergyOnlyMarketOperator</className>
+        <className>hsoines.oekoflex.impl.EnergyOnlyMarketOperatorImpl</className>
         <methodName>getLastClearedPrice</methodName>
       </repast.simphony.data2.engine.MethodDataSourceDefinition>
     </entry>
@@ -44,7 +44,7 @@
       <string>TotalClearedQuantity</string>
       <repast.simphony.data2.engine.MethodDataSourceDefinition>
         <id>TotalClearedQuantity</id>
-        <className>hsoines.oekoflex.impl.EnergyOnlyMarketOperator</className>
+        <className>hsoines.oekoflex.impl.EnergyOnlyMarketOperatorImpl</className>
         <methodName>getTotalClearedQuantity</methodName>
       </repast.simphony.data2.engine.MethodDataSourceDefinition>
     </entry>
@@ -52,7 +52,7 @@
       <string>Name</string>
       <repast.simphony.data2.engine.MethodDataSourceDefinition>
         <id>Name</id>
-        <className>hsoines.oekoflex.impl.EnergyOnlyMarketOperator</className>
+        <className>hsoines.oekoflex.impl.EnergyOnlyMarketOperatorImpl</className>
         <methodName>getName</methodName>
       </repast.simphony.data2.engine.MethodDataSourceDefinition>
     </entry>

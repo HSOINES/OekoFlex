@@ -2,15 +2,12 @@ package hsoines.oekoflex.builder;
 
 import hsoines.oekoflex.OekoflexAgent;
 import hsoines.oekoflex.energytrader.impl.DaytimeEnergyConsumer;
-import hsoines.oekoflex.impl.EnergyOnlyMarketOperator;
+import hsoines.oekoflex.impl.EnergyOnlyMarketOperatorImpl;
 import hsoines.oekoflex.energytrader.impl.ParametrizableEnergyProducer;
-import hsoines.oekoflex.energytrader.impl.SimpleEnergyConsumer;
 import hsoines.oekoflex.energytrader.impl.SimpleEnergyProducer;
 import repast.simphony.context.Context;
 import repast.simphony.dataLoader.ContextBuilder;
 import repast.simphony.engine.environment.RunEnvironment;
-
-import java.util.TimeZone;
 
 public class EnergyOnlyMarketBuilder implements ContextBuilder<OekoflexAgent>{
 
@@ -24,7 +21,7 @@ public class EnergyOnlyMarketBuilder implements ContextBuilder<OekoflexAgent>{
 		RunEnvironment re = RunEnvironment.getInstance();
 		re.endAt(TICKS_TO_RUN);
 		
-        EnergyOnlyMarketOperator mo = new EnergyOnlyMarketOperator("EOM_Operator");
+        EnergyOnlyMarketOperatorImpl mo = new EnergyOnlyMarketOperatorImpl("EOM_Operator");
 		context.add(mo);
 		for (int i = 0; i < 5; i++){
 			SimpleEnergyProducer prod = new SimpleEnergyProducer("SimpleEnergyProducer_" + i);
