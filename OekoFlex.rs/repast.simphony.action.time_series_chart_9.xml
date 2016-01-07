@@ -1,9 +1,9 @@
 <repast.simphony.chart2.engine.TimeSeriesChartDescriptor>
-  <name>LastClearedQuantity</name>
+  <name>LastClearedPrice</name>
   <dataSet>MarketOperator</dataSet>
   <xAxisLabel>Tick Count</xAxisLabel>
   <yAxisLabel></yAxisLabel>
-  <chartTitle>TotalClearedQuantity</chartTitle>
+  <chartTitle>LastClearedPrice</chartTitle>
   <type>TIME_SERIES</type>
   <background>
     <red>192</red>
@@ -28,7 +28,7 @@
     </entry>
   </seriesIds>
   <dataValueIds>
-    <string>TotalClearedQuantity</string>
+    <string>LastClearedPrice</string>
   </dataValueIds>
   <plotRangeLength>-1</plotRangeLength>
 </repast.simphony.chart2.engine.TimeSeriesChartDescriptor>
