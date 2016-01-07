@@ -11,4 +11,5 @@ public interface Bid {
 
     float getQuantity();
 
+    String getTypeString();
 }

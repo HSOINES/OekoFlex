@@ -1,6 +1,7 @@
 package hsoines.oekoflex.energytrader;
 
 import hsoines.oekoflex.OekoflexAgent;
+import hsoines.oekoflex.summary.BidSummary;
 
 /**
  * User: jh
@@ -13,4 +14,6 @@ public interface MarketTrader extends OekoflexAgent {
     float getLastAssignmentRate();
 
     float getLastBidPrice();
+
+    void setBidSummary(BidSummary bidSummary);
 }

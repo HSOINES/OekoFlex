@@ -3,6 +3,8 @@ package hsoines.oekoflex.builder;
 import hsoines.oekoflex.OekoflexAgent;
 import hsoines.oekoflex.energytrader.impl.DaytimeEnergyConsumer;
 import hsoines.oekoflex.marketoperator.impl.EnergyOnlyMarketOperatorImpl;
+import hsoines.oekoflex.summary.BidSummary;
+import hsoines.oekoflex.summary.BidSummaryFactory;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
@@ -28,7 +30,7 @@ public final class DaytimeEnergyConsumerFactory {
         CSVParser format = CSVFormat.DEFAULT.withHeader().parse(reader);
         for (CSVRecord parameters : format) {
             try {
-                String name = parameters.get("name");
+                String name = parameters.get("name");// + "_" + Long.toHexString(System.currentTimeMillis());
                 int quantity = Integer.parseInt(parameters.get("quantity"));
                 float priceAtDay = Float.parseFloat(parameters.get("priceAtDay"));
                 float decreaseAtNightInPercent = Float.parseFloat(parameters.get("decreaseAtNightInPercent"));
@@ -37,6 +39,8 @@ public final class DaytimeEnergyConsumerFactory {
                 daytimeEnergyConsumer.setEnergieOnlyMarketOperator(energyOnlyMarketOperator);
                 context.add(daytimeEnergyConsumer);
 
+                BidSummary bidSummary = BidSummaryFactory.create(name);
+                daytimeEnergyConsumer.setBidSummary(bidSummary);
                 log.info("CombinedEnergyProducer Build done: " + name);
             } catch (NumberFormatException e) {
                 log.error(e.getMessage(), e);

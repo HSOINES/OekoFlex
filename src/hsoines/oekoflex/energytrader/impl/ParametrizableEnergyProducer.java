@@ -6,6 +6,7 @@ import hsoines.oekoflex.energytrader.EnergyOnlyMarketTrader;
 import hsoines.oekoflex.energytrader.EnergyProducer;
 import hsoines.oekoflex.energytrader.MarketOperatorListener;
 import hsoines.oekoflex.marketoperator.EnergyOnlyMarketOperator;
+import hsoines.oekoflex.summary.BidSummary;
 import repast.simphony.engine.environment.RunEnvironment;
 import repast.simphony.parameter.Parameters;
 
@@ -75,6 +76,11 @@ public class ParametrizableEnergyProducer implements EnergyProducer, MarketOpera
     @Override
     public float getLastBidPrice() {
         return bidPrice;
+    }
+
+    @Override
+    public void setBidSummary(final BidSummary bidSummary) {
+
     }
 
     @Override

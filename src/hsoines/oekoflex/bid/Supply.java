@@ -36,6 +36,12 @@ public final class Supply implements Bid, MarketOperatorListenerProvider {
          return quantity;
      }
 
+
+    @Override
+    public String getTypeString() {
+        return "Supply";
+    }
+
     public static class AscendingComparator implements Comparator<Supply> {
         @Override
         public int compare(Supply o1, Supply o2) {

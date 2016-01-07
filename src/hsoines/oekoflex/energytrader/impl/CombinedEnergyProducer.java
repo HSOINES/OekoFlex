@@ -7,6 +7,7 @@ import hsoines.oekoflex.marketoperator.EnergyOnlyMarketOperator;
 import hsoines.oekoflex.marketoperator.RegelEnergieMarketOperator;
 import hsoines.oekoflex.strategies.ConstantPriceStrategy;
 import hsoines.oekoflex.strategies.PriceStrategy;
+import hsoines.oekoflex.summary.BidSummary;
 import hsoines.oekoflex.util.EnergyTimeZone;
 import hsoines.oekoflex.util.TimeUtilities;
 
@@ -26,6 +27,7 @@ public class CombinedEnergyProducer implements EnergyProducer, MarketOperatorLis
     private RegelEnergieMarketOperator regelEnergieMarketOperator;
     private int capacity;
     private float quantityPercentageOnRegelMarkt;
+    private BidSummary bidSummary;
 
     public CombinedEnergyProducer(String name) {
         this.name = name;
@@ -53,6 +55,9 @@ public class CombinedEnergyProducer implements EnergyProducer, MarketOperatorLis
         this.lastClearedPrice = clearedPrice;
         lastAssignmentRate = rate;
         produceSlotList.addAssignedQuantity(currentDate, (int) (bid.getQuantity() * rate));
+        if (bidSummary != null) {
+            bidSummary.add(clearedPrice, rate, bid, currentDate);
+        }
     }
 
     @Override
@@ -96,5 +101,9 @@ public class CombinedEnergyProducer implements EnergyProducer, MarketOperatorLis
 
     public void setQuantityPercentageOnRegelMarkt(final float quantityPercentageOnRegelMarkt) {
         this.quantityPercentageOnRegelMarkt = quantityPercentageOnRegelMarkt;
+    }
+
+    public void setBidSummary(final BidSummary bidSummary) {
+        this.bidSummary = bidSummary;
     }
 }

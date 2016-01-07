@@ -9,6 +9,7 @@ import hsoines.oekoflex.energytrader.MarketOperatorListener;
 import hsoines.oekoflex.marketoperator.EnergyOnlyMarketOperator;
 import hsoines.oekoflex.strategies.DaytimePriceStrategy;
 import hsoines.oekoflex.strategies.PriceStrategy;
+import hsoines.oekoflex.summary.BidSummary;
 import hsoines.oekoflex.util.EnergyTimeZone;
 import hsoines.oekoflex.util.TimeUtilities;
 
@@ -30,6 +31,7 @@ public final class DaytimeEnergyConsumer implements EnergyConsumer, MarketOperat
     private float lastBidPrice;
     private EnergySlotList consumeSlots;
     private final PriceStrategy priceStrategy;
+    private BidSummary bidSummary;
 
     public DaytimeEnergyConsumer(String name, int quantity, float priceAtDay, float decreaseAtNight) {
         this.name = name;
@@ -60,6 +62,9 @@ public final class DaytimeEnergyConsumer implements EnergyConsumer, MarketOperat
         this.clearedPrice = clearedPrice;
         lastAssignmentRate = rate;
         consumeSlots.addAssignedQuantity(date, (int) Math.floor(rate * bid.getQuantity()));
+        if (bidSummary != null) {
+            bidSummary.add(clearedPrice, rate, bid, currentDate);
+        }
     }
 
     public float getLastAssignmentRate() {
@@ -78,5 +83,10 @@ public final class DaytimeEnergyConsumer implements EnergyConsumer, MarketOperat
     @Override
     public String getName() {
         return name;
+    }
+
+    @Override
+    public void setBidSummary(final BidSummary bidSummary) {
+        this.bidSummary = bidSummary;
     }
 }

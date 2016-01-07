@@ -6,6 +6,7 @@ import hsoines.oekoflex.energytrader.EnergyOnlyMarketTrader;
 import hsoines.oekoflex.energytrader.EnergyProducer;
 import hsoines.oekoflex.energytrader.MarketOperatorListener;
 import hsoines.oekoflex.marketoperator.EnergyOnlyMarketOperator;
+import hsoines.oekoflex.summary.BidSummary;
 
 import java.util.Date;
 
@@ -52,6 +53,11 @@ public class SimpleEnergyProducer implements EnergyProducer, MarketOperatorListe
     @Override
     public float getLastBidPrice() {
         return lastBidPrice;
+    }
+
+    @Override
+    public void setBidSummary(final BidSummary bidSummary) {
+
     }
 
     @Override

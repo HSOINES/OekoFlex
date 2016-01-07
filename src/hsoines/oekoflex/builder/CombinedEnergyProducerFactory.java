@@ -4,6 +4,8 @@ import hsoines.oekoflex.OekoflexAgent;
 import hsoines.oekoflex.energytrader.impl.CombinedEnergyProducer;
 import hsoines.oekoflex.marketoperator.RegelEnergieMarketOperator;
 import hsoines.oekoflex.marketoperator.impl.EnergyOnlyMarketOperatorImpl;
+import hsoines.oekoflex.summary.BidSummary;
+import hsoines.oekoflex.summary.BidSummaryFactory;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
@@ -29,7 +31,7 @@ public final class CombinedEnergyProducerFactory {
         CSVParser format = CSVFormat.DEFAULT.withHeader().parse(reader);
         for (CSVRecord parameters : format) {
             try {
-                String name = parameters.get("name");
+                String name = parameters.get("name");// + "_" + Long.toHexString(System.currentTimeMillis());
                 int capacity = Integer.parseInt(parameters.get("capacity"));
                 float priceRegelMarkt = Float.parseFloat(parameters.get("priceRegelMarkt"));
                 float priceEnergyOnlyMarkt = Float.parseFloat(parameters.get("priceEnergyOnlyMarkt"));
@@ -45,7 +47,9 @@ public final class CombinedEnergyProducerFactory {
 
                 context.add(combinedEnergyProducer);
 
-                log.info("CombinedEnergyProducer Build done: " + name);
+                BidSummary bidSummary = BidSummaryFactory.create(name);
+                combinedEnergyProducer.setBidSummary(bidSummary);
+                CombinedEnergyProducerFactory.log.info("CombinedEnergyProducer Build done: " + name);
             } catch (NumberFormatException e) {
                 log.error(e.getMessage(), e);
             }

@@ -24,6 +24,11 @@ public class Demand implements Bid, MarketOperatorListenerProvider {
     }
 
     @Override
+    public String getTypeString() {
+        return "Demand";
+    }
+
+    @Override
     public MarketOperatorListener getMarketOperatorListener() {
         return marketOperatorListener;
     }

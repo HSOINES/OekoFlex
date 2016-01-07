@@ -1,5 +1,5 @@
 "name","quantity","priceAtDay","decreaseAtNightInPercent"
-daytimeConsumer,1000,2500,.8
-daytimeConsumer,2000,3500,.70
-daytimeConsumer,4000,3000,.60
-daytimeConsumer,10000,3000,.40
+daytimeConsumer1,1000,2500,.8
+daytimeConsumer2,2000,3500,.70
+daytimeConsumer3,4000,3000,.60
+daytimeConsumer4,10000,3000,.40
