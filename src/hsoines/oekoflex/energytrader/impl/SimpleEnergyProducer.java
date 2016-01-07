@@ -1,11 +1,14 @@
 package hsoines.oekoflex.energytrader.impl;
 
-import hsoines.oekoflex.*;
+import hsoines.oekoflex.Bid;
+import hsoines.oekoflex.EnergyOnlyMarketOperator;
+import hsoines.oekoflex.MarketOperatorListener;
+import hsoines.oekoflex.OekoflexAgent;
+import hsoines.oekoflex.energytrader.EnergyOnlyMarketTrader;
 import hsoines.oekoflex.energytrader.EnergyProducer;
-import hsoines.oekoflex.energytrader.EnergyonlyMarketTrader;
 import hsoines.oekoflex.supply.Supply;
 
-public class SimpleEnergyProducer implements EnergyProducer, MarketOperatorListener, OekoflexAgent, EnergyonlyMarketTrader {
+public class SimpleEnergyProducer implements EnergyProducer, MarketOperatorListener, OekoflexAgent, EnergyOnlyMarketTrader {
 
     private final String name;
     private EnergyOnlyMarketOperator marketOperator;
