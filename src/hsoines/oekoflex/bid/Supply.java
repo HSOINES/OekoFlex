@@ -1,6 +1,5 @@
-package hsoines.oekoflex.supply;
+package hsoines.oekoflex.bid;
 
-import hsoines.oekoflex.Bid;
 import hsoines.oekoflex.MarketOperatorListener;
 import hsoines.oekoflex.MarketOperatorListenerProvider;
 

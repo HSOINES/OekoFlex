@@ -1,8 +1,8 @@
 package hsoines.oekoflex.impl;
 
-import hsoines.oekoflex.Bid;
 import hsoines.oekoflex.MarketOperatorListener;
-import hsoines.oekoflex.supply.Supply;
+import hsoines.oekoflex.bid.Bid;
+import hsoines.oekoflex.bid.Supply;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -28,10 +28,10 @@ public class RegelEnergieMarketOperatorImplTest {
 
     @Test
     public void testClearingWithTooLittleSupplies() throws Exception {
-        operator.addSupply(new Supply(10, 1000, listener));
-        operator.addSupply(new Supply(20, 1000, listener));
-        operator.addSupply(new Supply(30, 1000, listener));
-        operator.addSupply(new Supply(40, 1000, listener));
+        operator.addSupply(new Supply(10, 1000, listener, dddd));
+        operator.addSupply(new Supply(20, 1000, listener, dddd));
+        operator.addSupply(new Supply(30, 1000, listener, dddd));
+        operator.addSupply(new Supply(40, 1000, listener, dddd));
 
         operator.clearMarket();
 
@@ -44,10 +44,10 @@ public class RegelEnergieMarketOperatorImplTest {
 
     @Test
     public void testClearingWithExactlyQuantity() throws Exception {
-        operator.addSupply(new Supply(10, 2500, listener));
-        operator.addSupply(new Supply(20, 2500, listener));
-        operator.addSupply(new Supply(30, 2500, listener));
-        operator.addSupply(new Supply(40, 2500, listener));
+        operator.addSupply(new Supply(10, 2500, listener, dddd));
+        operator.addSupply(new Supply(20, 2500, listener, dddd));
+        operator.addSupply(new Supply(30, 2500, listener, dddd));
+        operator.addSupply(new Supply(40, 2500, listener, dddd));
 
         operator.clearMarket();
 
@@ -60,10 +60,10 @@ public class RegelEnergieMarketOperatorImplTest {
 
     @Test
     public void testClearingWithRatedQuantity() throws Exception {
-        operator.addSupply(new Supply(10, 2500, listener));
-        operator.addSupply(new Supply(20, 2500, listener));
-        operator.addSupply(new Supply(30, 2500, listener));
-        operator.addSupply(new Supply(40, 5000, listener));
+        operator.addSupply(new Supply(10, 2500, listener, dddd));
+        operator.addSupply(new Supply(20, 2500, listener, dddd));
+        operator.addSupply(new Supply(30, 2500, listener, dddd));
+        operator.addSupply(new Supply(40, 5000, listener, dddd));
 
         operator.clearMarket();
 
@@ -78,14 +78,14 @@ public class RegelEnergieMarketOperatorImplTest {
 
     @Test
     public void testClearingWithManyMoreSupplies() throws Exception {
-        operator.addSupply(new Supply(10, 2500, listener));
-        operator.addSupply(new Supply(20, 2500, listener));
-        operator.addSupply(new Supply(30, 2500, listener));
-        operator.addSupply(new Supply(40, 5000, listener));
-        operator.addSupply(new Supply(50, 5000, listener));
-        operator.addSupply(new Supply(50, 5000, listener));
-        operator.addSupply(new Supply(50, 5000, listener));
-        operator.addSupply(new Supply(50, 5000, listener));
+        operator.addSupply(new Supply(10, 2500, listener, dddd));
+        operator.addSupply(new Supply(20, 2500, listener, dddd));
+        operator.addSupply(new Supply(30, 2500, listener, dddd));
+        operator.addSupply(new Supply(40, 5000, listener, dddd));
+        operator.addSupply(new Supply(50, 5000, listener, dddd));
+        operator.addSupply(new Supply(50, 5000, listener, dddd));
+        operator.addSupply(new Supply(50, 5000, listener, dddd));
+        operator.addSupply(new Supply(50, 5000, listener, dddd));
 
         operator.clearMarket();
 

@@ -1,22 +1,18 @@
 package hsoines.oekoflex.display;
 
-import javax.swing.*;
-
 import hsoines.oekoflex.OekoflexAgent;
+import hsoines.oekoflex.bid.Demand;
+import hsoines.oekoflex.bid.Supply;
 import hsoines.oekoflex.impl.EnergyOnlyMarketOperatorImpl;
-import hsoines.oekoflex.demand.Demand;
-import hsoines.oekoflex.supply.Supply;
-
 import hsoines.oekoflex.util.TimeUtilities;
-import org.knowm.xchart.*;
-
+import org.knowm.xchart.Chart;
+import org.knowm.xchart.ChartBuilder;
+import org.knowm.xchart.StyleManager;
+import org.knowm.xchart.XChartPanel;
 import repast.simphony.context.Context;
-import repast.simphony.visualization.DisplayEditorLifecycle;
-import repast.simphony.visualization.DisplayListener;
-import repast.simphony.visualization.IDisplay;
-import repast.simphony.visualization.Layout;
-import repast.simphony.visualization.ProbeListener;
+import repast.simphony.visualization.*;
 
+import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Date;

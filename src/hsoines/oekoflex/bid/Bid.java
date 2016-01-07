@@ -1,4 +1,4 @@
-package hsoines.oekoflex;
+package hsoines.oekoflex.bid;
 
 /**
  * Created by IntelliJ IDEA.
@@ -10,4 +10,5 @@ public interface Bid {
     float getPrice();
 
     float getQuantity();
+
 }

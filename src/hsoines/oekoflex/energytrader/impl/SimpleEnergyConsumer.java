@@ -1,11 +1,12 @@
 package hsoines.oekoflex.energytrader.impl;
 
-import hsoines.oekoflex.Bid;
 import hsoines.oekoflex.EnergyOnlyMarketOperator;
 import hsoines.oekoflex.MarketOperatorListener;
-import hsoines.oekoflex.demand.Demand;
+import hsoines.oekoflex.bid.Bid;
+import hsoines.oekoflex.bid.Demand;
 import hsoines.oekoflex.energytrader.EnergyConsumer;
 import hsoines.oekoflex.energytrader.EnergyOnlyMarketTrader;
+import hsoines.oekoflex.util.TimeUtilities;
 
 /**
  * Created by IntelliJ IDEA.
@@ -26,15 +27,15 @@ public final class SimpleEnergyConsumer implements EnergyConsumer, MarketOperato
     }
 
     @Override
-    public void setMarketOperator(final EnergyOnlyMarketOperator marketOperator) {
+    public void setEnergieOnlyMarketOperator(final EnergyOnlyMarketOperator marketOperator) {
         this.marketOperator = marketOperator;
     }
     
     public void makeDemand(){
     	if (marketOperator != null){
             lastBidPrice = (float) (300f * Math.random()) + 500;
-            marketOperator.addDemand(new Demand(lastBidPrice, (int)(100f * Math.random()), this));
-    	}
+            marketOperator.addDemand(new Demand(lastBidPrice, (int) (100f * Math.random()), this, TimeUtilities.getCurrentDate()));
+        }
     }
 
     @Override

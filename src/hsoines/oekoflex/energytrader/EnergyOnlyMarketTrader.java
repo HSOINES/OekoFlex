@@ -8,6 +8,6 @@ import hsoines.oekoflex.EnergyOnlyMarketOperator;
  * Time: 08:29
  */
 public interface EnergyOnlyMarketTrader extends MarketTrader {
-    void setMarketOperator(EnergyOnlyMarketOperator marketOperator);
+    void setEnergieOnlyMarketOperator(EnergyOnlyMarketOperator marketOperator);
 
 }

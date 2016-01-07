@@ -1,7 +1,7 @@
 <repast.simphony.data2.engine.DataSetDescriptor>
-  <name>SimpleEnergyProducer</name>
+  <name>EnergyOnlyMarketTraderDataSet</name>
   <type>NON_AGGREGATE</type>
-  <sourceType>hsoines.oekoflex.energytrader.impl.SimpleEnergyProducer</sourceType>
+  <sourceType>hsoines.oekoflex.energytrader.EnergyOnlyMarketTrader</sourceType>
   <inclTick>true</inclTick>
   <inclBatchRun>false</inclBatchRun>
   <inclRandomSeed>false</inclRandomSeed>
@@ -12,7 +12,7 @@
     <pType>LAST</pType>
     <duration>-1.0</duration>
     <frequency>REPEAT</frequency>
-    <hashCode>894562624</hashCode>
+    <hashCode>1258257821</hashCode>
   </scheduleParams>
   <atEnd>false</atEnd>
   <methodDataSources class="linked-hash-map">
@@ -20,7 +20,7 @@
       <string>LastAssignmentRate</string>
       <repast.simphony.data2.engine.MethodDataSourceDefinition>
         <id>LastAssignmentRate</id>
-        <className>hsoines.oekoflex.energytrader.impl.SimpleEnergyProducer</className>
+        <className>hsoines.oekoflex.energytrader.EnergyOnlyMarketTrader</className>
         <methodName>getLastAssignmentRate</methodName>
       </repast.simphony.data2.engine.MethodDataSourceDefinition>
     </entry>
@@ -28,7 +28,7 @@
       <string>LastBidPrice</string>
       <repast.simphony.data2.engine.MethodDataSourceDefinition>
         <id>LastBidPrice</id>
-        <className>hsoines.oekoflex.energytrader.impl.SimpleEnergyProducer</className>
+        <className>hsoines.oekoflex.energytrader.EnergyOnlyMarketTrader</className>
         <methodName>getLastBidPrice</methodName>
       </repast.simphony.data2.engine.MethodDataSourceDefinition>
     </entry>
@@ -36,7 +36,7 @@
       <string>LastClearedPrice</string>
       <repast.simphony.data2.engine.MethodDataSourceDefinition>
         <id>LastClearedPrice</id>
-        <className>hsoines.oekoflex.energytrader.impl.SimpleEnergyProducer</className>
+        <className>hsoines.oekoflex.energytrader.EnergyOnlyMarketTrader</className>
         <methodName>getLastClearedPrice</methodName>
       </repast.simphony.data2.engine.MethodDataSourceDefinition>
     </entry>
@@ -44,7 +44,7 @@
       <string>Name</string>
       <repast.simphony.data2.engine.MethodDataSourceDefinition>
         <id>Name</id>
-        <className>hsoines.oekoflex.energytrader.impl.SimpleEnergyProducer</className>
+        <className>hsoines.oekoflex.energytrader.EnergyOnlyMarketTrader</className>
         <methodName>getName</methodName>
       </repast.simphony.data2.engine.MethodDataSourceDefinition>
     </entry>

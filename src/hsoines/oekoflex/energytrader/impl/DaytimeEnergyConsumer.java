@@ -1,9 +1,9 @@
 package hsoines.oekoflex.energytrader.impl;
 
-import hsoines.oekoflex.Bid;
 import hsoines.oekoflex.EnergyOnlyMarketOperator;
 import hsoines.oekoflex.MarketOperatorListener;
-import hsoines.oekoflex.demand.Demand;
+import hsoines.oekoflex.bid.Bid;
+import hsoines.oekoflex.bid.Demand;
 import hsoines.oekoflex.energytrader.EnergyConsumer;
 import hsoines.oekoflex.energytrader.EnergyOnlyMarketTrader;
 import hsoines.oekoflex.energytrader.EnergySlotList;
@@ -32,7 +32,7 @@ public final class DaytimeEnergyConsumer implements EnergyConsumer, MarketOperat
     }
 
     @Override
-    public void setMarketOperator(final EnergyOnlyMarketOperator marketOperator) {
+    public void setEnergieOnlyMarketOperator(final EnergyOnlyMarketOperator marketOperator) {
         this.marketOperator = marketOperator;
         energySlotList = new EnergySlotListImpl(EnergySlotList.SlotType.CONSUM, 500);
         for (int i = 0; i < 5000; i++){
@@ -52,8 +52,8 @@ public final class DaytimeEnergyConsumer implements EnergyConsumer, MarketOperat
     	if (marketOperator != null){
             lastBidPrice = (float) (100f * Math.random()) + 400;
             int quantity = energySlotList.getSlotOfferCapacity(date);
-            marketOperator.addDemand(new Demand(lastBidPrice, quantity, this));
-    	}
+            marketOperator.addDemand(new Demand(lastBidPrice, quantity, this, TimeUtilities.getCurrentDate()));
+        }
     }
 
     @Override

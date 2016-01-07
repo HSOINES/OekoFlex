@@ -1,5 +1,7 @@
 package hsoines.oekoflex;
 
+import hsoines.oekoflex.bid.Bid;
+
 /**
  * User: jh
  * Date: 04/12/15

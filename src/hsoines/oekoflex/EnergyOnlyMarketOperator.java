@@ -1,7 +1,7 @@
 package hsoines.oekoflex;
 
-import hsoines.oekoflex.supply.Supply;
-import hsoines.oekoflex.demand.Demand;
+import hsoines.oekoflex.bid.Demand;
+import hsoines.oekoflex.bid.Supply;
 import repast.simphony.engine.schedule.ScheduledMethod;
 
 public interface EnergyOnlyMarketOperator {

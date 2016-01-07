@@ -3,8 +3,8 @@ package hsoines.oekoflex.impl;
 import hsoines.oekoflex.EnergyOnlyMarketOperator;
 import hsoines.oekoflex.MarketOperatorListener;
 import hsoines.oekoflex.OekoflexAgent;
-import hsoines.oekoflex.demand.Demand;
-import hsoines.oekoflex.supply.Supply;
+import hsoines.oekoflex.bid.Demand;
+import hsoines.oekoflex.bid.Supply;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 

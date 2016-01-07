@@ -1,7 +1,7 @@
 <repast.simphony.data2.engine.DataSetDescriptor>
-  <name>SimpleEnergyConsumer</name>
+  <name>RegelEnergieMarketTrader</name>
   <type>NON_AGGREGATE</type>
-  <sourceType>hsoines.oekoflex.energytrader.impl.SimpleEnergyConsumer</sourceType>
+  <sourceType>hsoines.oekoflex.energytrader.RegelEnergieMarketTrader</sourceType>
   <inclTick>true</inclTick>
   <inclBatchRun>false</inclBatchRun>
   <inclRandomSeed>false</inclRandomSeed>
@@ -12,23 +12,23 @@
     <pType>LAST</pType>
     <duration>-1.0</duration>
     <frequency>REPEAT</frequency>
-    <hashCode>894562624</hashCode>
+    <hashCode>-122866732</hashCode>
   </scheduleParams>
   <atEnd>false</atEnd>
   <methodDataSources class="linked-hash-map">
     <entry>
-      <string>LastAssignmentRate</string>
+      <string>Name</string>
       <repast.simphony.data2.engine.MethodDataSourceDefinition>
-        <id>LastAssignmentRate</id>
-        <className>hsoines.oekoflex.energytrader.impl.SimpleEnergyConsumer</className>
-        <methodName>getLastAssignmentRate</methodName>
+        <id>Name</id>
+        <className>hsoines.oekoflex.energytrader.RegelEnergieMarketTrader</className>
+        <methodName>getName</methodName>
       </repast.simphony.data2.engine.MethodDataSourceDefinition>
     </entry>
     <entry>
       <string>LastBidPrice</string>
       <repast.simphony.data2.engine.MethodDataSourceDefinition>
         <id>LastBidPrice</id>
-        <className>hsoines.oekoflex.energytrader.impl.SimpleEnergyConsumer</className>
+        <className>hsoines.oekoflex.energytrader.RegelEnergieMarketTrader</className>
         <methodName>getLastBidPrice</methodName>
       </repast.simphony.data2.engine.MethodDataSourceDefinition>
     </entry>
@@ -36,16 +36,16 @@
       <string>LastClearedPrice</string>
       <repast.simphony.data2.engine.MethodDataSourceDefinition>
         <id>LastClearedPrice</id>
-        <className>hsoines.oekoflex.energytrader.impl.SimpleEnergyConsumer</className>
+        <className>hsoines.oekoflex.energytrader.RegelEnergieMarketTrader</className>
         <methodName>getLastClearedPrice</methodName>
       </repast.simphony.data2.engine.MethodDataSourceDefinition>
     </entry>
     <entry>
-      <string>Name</string>
+      <string>LastAssignmentRate</string>
       <repast.simphony.data2.engine.MethodDataSourceDefinition>
-        <id>Name</id>
-        <className>hsoines.oekoflex.energytrader.impl.SimpleEnergyConsumer</className>
-        <methodName>getName</methodName>
+        <id>LastAssignmentRate</id>
+        <className>hsoines.oekoflex.energytrader.RegelEnergieMarketTrader</className>
+        <methodName>getLastAssignmentRate</methodName>
       </repast.simphony.data2.engine.MethodDataSourceDefinition>
     </entry>
   </methodDataSources>
