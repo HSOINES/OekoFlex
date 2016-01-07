@@ -17,12 +17,12 @@ import static org.mockito.Mockito.*;
  */
 public class RegelEnergieMarketOperatorImplTest {
 
-    private RegelenergieMarketOperatorImpl operator;
+    private RegelEnergieMarketOperatorImpl operator;
     private MarketOperatorListener listener;
 
     @Before
     public void setUp() throws Exception {
-        operator = new RegelenergieMarketOperatorImpl("operator", 10000);
+        operator = new RegelEnergieMarketOperatorImpl("operator", 10000);
         listener = mock(MarketOperatorListener.class);
     }
 

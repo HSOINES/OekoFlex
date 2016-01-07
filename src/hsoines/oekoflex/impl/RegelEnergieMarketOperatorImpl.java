@@ -2,7 +2,7 @@ package hsoines.oekoflex.impl;
 
 import hsoines.oekoflex.MarketOperatorListener;
 import hsoines.oekoflex.OekoflexAgent;
-import hsoines.oekoflex.RegelenergieMarketOperator;
+import hsoines.oekoflex.RegelEnergieMarketOperator;
 import hsoines.oekoflex.supply.Supply;
 
 import java.util.ArrayList;
@@ -13,12 +13,12 @@ import java.util.List;
  * Date: 07/01/16
  * Time: 10:55
  */
-public final class RegelenergieMarketOperatorImpl implements RegelenergieMarketOperator, OekoflexAgent {
+public final class RegelEnergieMarketOperatorImpl implements RegelEnergieMarketOperator, OekoflexAgent {
     private final String name;
     private final int quantity;
     private final List<Supply> supplies;
 
-    public RegelenergieMarketOperatorImpl(String name, int quantity) {
+    public RegelEnergieMarketOperatorImpl(String name, int quantity) {
         this.name = name;
         this.quantity = quantity;
         supplies = new ArrayList<Supply>();
