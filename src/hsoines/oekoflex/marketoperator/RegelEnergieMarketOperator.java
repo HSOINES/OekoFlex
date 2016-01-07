@@ -1,4 +1,4 @@
-package hsoines.oekoflex;
+package hsoines.oekoflex.marketoperator;
 
 import hsoines.oekoflex.bid.Supply;
 import repast.simphony.engine.schedule.ScheduledMethod;

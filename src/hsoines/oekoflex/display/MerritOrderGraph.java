@@ -3,7 +3,7 @@ package hsoines.oekoflex.display;
 import hsoines.oekoflex.OekoflexAgent;
 import hsoines.oekoflex.bid.Demand;
 import hsoines.oekoflex.bid.Supply;
-import hsoines.oekoflex.impl.EnergyOnlyMarketOperatorImpl;
+import hsoines.oekoflex.marketoperator.impl.EnergyOnlyMarketOperatorImpl;
 import hsoines.oekoflex.util.TimeUtilities;
 import org.knowm.xchart.Chart;
 import org.knowm.xchart.ChartBuilder;

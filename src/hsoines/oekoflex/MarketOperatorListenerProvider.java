@@ -1,5 +1,7 @@
 package hsoines.oekoflex;
 
+import hsoines.oekoflex.energytrader.MarketOperatorListener;
+
 /**
  * Created by IntelliJ IDEA.
  * User: jh

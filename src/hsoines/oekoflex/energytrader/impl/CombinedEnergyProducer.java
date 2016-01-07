@@ -1,14 +1,10 @@
 package hsoines.oekoflex.energytrader.impl;
 
-import hsoines.oekoflex.EnergyOnlyMarketOperator;
-import hsoines.oekoflex.MarketOperatorListener;
-import hsoines.oekoflex.RegelEnergieMarketOperator;
 import hsoines.oekoflex.bid.Bid;
 import hsoines.oekoflex.bid.Supply;
-import hsoines.oekoflex.energytrader.EnergyOnlyMarketTrader;
-import hsoines.oekoflex.energytrader.EnergyProducer;
-import hsoines.oekoflex.energytrader.EnergySlotList;
-import hsoines.oekoflex.energytrader.RegelEnergieMarketTrader;
+import hsoines.oekoflex.energytrader.*;
+import hsoines.oekoflex.marketoperator.EnergyOnlyMarketOperator;
+import hsoines.oekoflex.marketoperator.RegelEnergieMarketOperator;
 import hsoines.oekoflex.util.EnergyTimeZone;
 import hsoines.oekoflex.util.TimeUtilities;
 
@@ -36,13 +32,12 @@ public class CombinedEnergyProducer implements EnergyProducer, MarketOperatorLis
         if (TimeUtilities.isEnergyTimeZone(EnergyTimeZone.FOUR_HOURS)) {
             int offerCapacity = produceSlotList.getSlotOfferCapacity(currentDate, EnergyTimeZone.FOUR_HOURS);
             produceSlotList.addOfferedQuantity(currentDate, offerCapacity);
-            regelEnergieMarketOperator.addSupply(new Supply(100f, offerCapacity, this, currentDate));
+            regelEnergieMarketOperator.addSupply(new Supply(100f, offerCapacity, this));
         }
         lastBidPrice = (float) (300f * Math.random()) + 500;
         int offerCapacity = produceSlotList.getSlotOfferCapacity(currentDate, EnergyTimeZone.QUARTER_HOUR);
         produceSlotList.addOfferedQuantity(currentDate, offerCapacity);
-        energyOnlyMarketOperator.addSupply(new Supply(lastBidPrice, offerCapacity, this, currentDate));
-
+        energyOnlyMarketOperator.addSupply(new Supply(lastBidPrice, offerCapacity, this));
     }
 
     @Override
@@ -51,10 +46,10 @@ public class CombinedEnergyProducer implements EnergyProducer, MarketOperatorLis
     }
 
     @Override
-    public void notifyClearingDone(final float clearedPrice, final float rate, final Bid bid) {
+    public void notifyClearingDone(final float clearedPrice, final float rate, final Bid bid, final Date currentDate) {
         this.lastClearedPrice = clearedPrice;
         lastAssignmentRate = rate;
-        produceSlotList.addAssignedQuantity(bid.getDate(), (int) (bid.getQuantity() * rate));
+        produceSlotList.addAssignedQuantity(currentDate, (int) (bid.getQuantity() * rate));
     }
 
     @Override

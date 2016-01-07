@@ -1,10 +1,11 @@
-package hsoines.oekoflex.impl;
+package hsoines.oekoflex.marketoperator.impl;
 
-import hsoines.oekoflex.EnergyOnlyMarketOperator;
-import hsoines.oekoflex.MarketOperatorListener;
 import hsoines.oekoflex.OekoflexAgent;
 import hsoines.oekoflex.bid.Demand;
 import hsoines.oekoflex.bid.Supply;
+import hsoines.oekoflex.energytrader.MarketOperatorListener;
+import hsoines.oekoflex.marketoperator.EnergyOnlyMarketOperator;
+import hsoines.oekoflex.util.TimeUtilities;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -157,7 +158,7 @@ public class EnergyOnlyMarketOperatorImpl implements EnergyOnlyMarketOperator, O
                 } else {
                     assignmentRate = 0;
                 }
-                marketOperatorListener.notifyClearingDone(clearedPrice, assignmentRate, demand);
+                marketOperatorListener.notifyClearingDone(clearedPrice, assignmentRate, demand, TimeUtilities.getCurrentDate());
                 logString.append(marketOperatorListener.getName()).append(",")
                         .append(assignmentRate).append(",")
                         .append(demand.getPrice()).append(",")
@@ -175,7 +176,7 @@ public class EnergyOnlyMarketOperatorImpl implements EnergyOnlyMarketOperator, O
                 } else {
                     assignmentRate = 0;
                 }
-                marketOperatorListener.notifyClearingDone(clearedPrice, assignmentRate, supply);
+                marketOperatorListener.notifyClearingDone(clearedPrice, assignmentRate, supply, TimeUtilities.getCurrentDate());
                 logString.append(marketOperatorListener.getName()).append(",")
                         .append(assignmentRate).append(",")
                         .append(supply.getPrice()).append(",")

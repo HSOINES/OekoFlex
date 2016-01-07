@@ -1,6 +1,6 @@
 package hsoines.oekoflex.energytrader;
 
-import hsoines.oekoflex.EnergyOnlyMarketOperator;
+import hsoines.oekoflex.marketoperator.EnergyOnlyMarketOperator;
 
 /**
  * User: jh

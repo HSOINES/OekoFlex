@@ -1,12 +1,12 @@
 package hsoines.oekoflex.energytrader.impl;
 
-import hsoines.oekoflex.EnergyOnlyMarketOperator;
-import hsoines.oekoflex.MarketOperatorListener;
 import hsoines.oekoflex.bid.Bid;
 import hsoines.oekoflex.bid.Demand;
 import hsoines.oekoflex.energytrader.EnergyConsumer;
 import hsoines.oekoflex.energytrader.EnergyOnlyMarketTrader;
 import hsoines.oekoflex.energytrader.EnergySlotList;
+import hsoines.oekoflex.energytrader.MarketOperatorListener;
+import hsoines.oekoflex.marketoperator.EnergyOnlyMarketOperator;
 import hsoines.oekoflex.util.TimeUtilities;
 
 import java.util.Calendar;
@@ -52,12 +52,12 @@ public final class DaytimeEnergyConsumer implements EnergyConsumer, MarketOperat
     	if (marketOperator != null){
             lastBidPrice = (float) (100f * Math.random()) + 400;
             int quantity = energySlotList.getSlotOfferCapacity(date);
-            marketOperator.addDemand(new Demand(lastBidPrice, quantity, this, TimeUtilities.getCurrentDate()));
+            marketOperator.addDemand(new Demand(lastBidPrice, quantity, this));
         }
     }
 
     @Override
-    public void notifyClearingDone(final float clearedPrice, final float rate, final Bid bid) {
+    public void notifyClearingDone(final float clearedPrice, final float rate, final Bid bid, final Date currentDate) {
         Date date = TimeUtilities.getCurrentDate();
 
         this.clearedPrice = clearedPrice;

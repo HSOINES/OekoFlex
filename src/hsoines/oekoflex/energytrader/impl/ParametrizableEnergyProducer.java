@@ -1,14 +1,15 @@
 package hsoines.oekoflex.energytrader.impl;
 
-import hsoines.oekoflex.EnergyOnlyMarketOperator;
-import hsoines.oekoflex.MarketOperatorListener;
 import hsoines.oekoflex.bid.Bid;
 import hsoines.oekoflex.bid.Supply;
 import hsoines.oekoflex.energytrader.EnergyOnlyMarketTrader;
 import hsoines.oekoflex.energytrader.EnergyProducer;
-import hsoines.oekoflex.util.TimeUtilities;
+import hsoines.oekoflex.energytrader.MarketOperatorListener;
+import hsoines.oekoflex.marketoperator.EnergyOnlyMarketOperator;
 import repast.simphony.engine.environment.RunEnvironment;
 import repast.simphony.parameter.Parameters;
+
+import java.util.Date;
 
 public class ParametrizableEnergyProducer implements EnergyProducer, MarketOperatorListener, EnergyOnlyMarketTrader {
 
@@ -47,7 +48,7 @@ public class ParametrizableEnergyProducer implements EnergyProducer, MarketOpera
             	bidQuantity = 20;
             }
         }
-        marketOperator.addSupply(new Supply(bidPrice, bidQuantity, this, TimeUtilities.getCurrentDate()));
+        marketOperator.addSupply(new Supply(bidPrice, bidQuantity, this));
     }
 
     @Override
@@ -56,7 +57,7 @@ public class ParametrizableEnergyProducer implements EnergyProducer, MarketOpera
     }
 
     @Override
-    public void notifyClearingDone(final float clearedPrice, final float rate, final Bid bid) {
+    public void notifyClearingDone(final float clearedPrice, final float rate, final Bid bid, final Date currentDate) {
         this.lastClearedPrice = clearedPrice;
         lastAssignmentRate = rate;
     }

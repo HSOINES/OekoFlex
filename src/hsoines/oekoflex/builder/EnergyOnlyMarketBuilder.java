@@ -1,13 +1,13 @@
 package hsoines.oekoflex.builder;
 
 import hsoines.oekoflex.OekoflexAgent;
-import hsoines.oekoflex.RegelEnergieMarketOperator;
 import hsoines.oekoflex.energytrader.impl.CombinedEnergyProducer;
 import hsoines.oekoflex.energytrader.impl.DaytimeEnergyConsumer;
 import hsoines.oekoflex.energytrader.impl.ParametrizableEnergyProducer;
 import hsoines.oekoflex.energytrader.impl.SimpleEnergyProducer;
-import hsoines.oekoflex.impl.EnergyOnlyMarketOperatorImpl;
-import hsoines.oekoflex.impl.SampleRegelEnergieMarketOperator;
+import hsoines.oekoflex.marketoperator.RegelEnergieMarketOperator;
+import hsoines.oekoflex.marketoperator.impl.EnergyOnlyMarketOperatorImpl;
+import hsoines.oekoflex.marketoperator.impl.SampleRegelEnergieMarketOperator;
 import repast.simphony.context.Context;
 import repast.simphony.dataLoader.ContextBuilder;
 import repast.simphony.engine.environment.RunEnvironment;
