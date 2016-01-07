@@ -28,8 +28,7 @@ public final class SimpleEnergyConsumer implements EnergyConsumer, MarketOperato
         this.marketOperator = marketOperator;
     }
     
-    @ScheduledMethod(start = 1, interval = 1, priority = 100)
-    public void makeAsk(){
+    public void makeDemand(){
     	if (marketOperator != null){
             lastBidPrice = (float) (300f * Math.random()) + 500;
             marketOperator.addDemand(new Demand(lastBidPrice, (int)(100f * Math.random()), this));

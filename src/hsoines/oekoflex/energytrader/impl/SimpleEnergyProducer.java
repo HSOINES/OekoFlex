@@ -18,8 +18,8 @@ public class SimpleEnergyProducer implements EnergyProducer, MarketOperatorListe
         this.name = name;
     }
 
-    @ScheduledMethod(start = 1, interval = 1, priority = 100)
-    public void makeBid(){
+    @Override
+    public void makeSupply(){
         lastBidPrice = (float) (300f * Math.random()) + 500;
         marketOperator.addSupply(new Supply(lastBidPrice, (int) (100 * Math.random()), this));
     }

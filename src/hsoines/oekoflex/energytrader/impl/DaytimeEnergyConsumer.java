@@ -47,8 +47,8 @@ public final class DaytimeEnergyConsumer implements EnergyConsumer, MarketOperat
         }
     }
     
-    @ScheduledMethod(start = 1, interval = 1, priority = 100)
-    public void makeAsk(){
+    @Override
+    public void makeDemand(){
         Date date = TimeUtilities.getCurrentDate();
     	if (marketOperator != null){
             lastBidPrice = (float) (100f * Math.random()) + 400;

@@ -30,8 +30,7 @@ public class ParametrizableEnergyProducer implements EnergyProducer, MarketOpera
         bidQuantity = 200;
     }
 
-    @ScheduledMethod(start = 1, interval = 1, priority = 100)
-    public void makeBid() {
+    public void makeSupply() {
         if (lastAssignmentRate > .5) {
             bidPrice += 10;
             bidQuantity += supplyDelay;
