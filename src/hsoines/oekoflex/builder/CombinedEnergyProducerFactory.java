@@ -25,7 +25,7 @@ import java.io.IOException;
 public final class CombinedEnergyProducerFactory {
     private static final Log log = LogFactory.getLog(CombinedEnergyProducerFactory.class);
 
-    public static void build(final File configDir, final Context<OekoflexAgent> context, final EnergyOnlyMarketOperatorImpl energyOnlyMarketOperator, final RegelEnergieMarketOperator regelEnergieMarketOperator) throws IOException {
+    public static void build(final File configDir, final Context<OekoflexAgent> context, final EnergyOnlyMarketOperatorImpl energyOnlyMarketOperator, final RegelEnergieMarketOperator regelenergieMarketOperator) throws IOException {
         File configFile = new File(configDir + "/CombinedEnergyProducer.cfg.csv");
         FileReader reader = new FileReader(configFile);
         CSVParser format = CSVFormat.DEFAULT.withHeader().parse(reader);
@@ -43,7 +43,7 @@ public final class CombinedEnergyProducerFactory {
                 combinedEnergyProducer.setPriceEnergyOnlyMarkt(priceEnergyOnlyMarkt);
                 combinedEnergyProducer.setQuantityPercentageOnRegelMarkt(quantityPercentageOnRegelMarkt);
                 combinedEnergyProducer.setEnergieOnlyMarketOperator(energyOnlyMarketOperator);
-                combinedEnergyProducer.setMarketOperator(regelEnergieMarketOperator);
+                combinedEnergyProducer.setRegelenergieMarketOperator(regelenergieMarketOperator);
 
                 context.add(combinedEnergyProducer);
 

@@ -1,7 +1,9 @@
 package hsoines.oekoflex.energytrader;
 
 import hsoines.oekoflex.OekoflexAgent;
+import hsoines.oekoflex.domain.SequenceDefinition;
 import hsoines.oekoflex.marketoperator.RegelEnergieMarketOperator;
+import repast.simphony.engine.schedule.ScheduledMethod;
 
 /**
  * User: jh
@@ -9,7 +11,10 @@ import hsoines.oekoflex.marketoperator.RegelEnergieMarketOperator;
  * Time: 08:29
  */
 public interface RegelenergieMarketTrader extends OekoflexAgent {
-    void setMarketOperator(RegelEnergieMarketOperator marketOperator);
+    @ScheduledMethod(start = 1, interval = SequenceDefinition.RegelenergieMarketIntervall, priority = SequenceDefinition.RegelenergieMarketBidPriority)
+    void makeBidRegelenergie();
+
+    void setRegelenergieMarketOperator(RegelEnergieMarketOperator marketOperator);
 
     float getLastClearedPrice();
 

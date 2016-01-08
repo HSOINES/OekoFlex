@@ -38,12 +38,12 @@ public class OekoFlexContextBuilder implements ContextBuilder<OekoflexAgent> {
 
 
         EnergyOnlyMarketOperatorImpl energyOnlyMarketOperator = new EnergyOnlyMarketOperatorImpl("EOM_Operator");
-        RegelEnergieMarketOperator regelEnergieMarketOperator = new RegelEnergieMarketOperatorImpl("RegelEnergieMarketOperator");
+        RegelEnergieMarketOperator regelenergieMarketOperator = new RegelEnergieMarketOperatorImpl("RegelEnergieMarketOperator");
         context.add(energyOnlyMarketOperator);
-        context.add(regelEnergieMarketOperator);
+        context.add(regelenergieMarketOperator);
 
         try {
-            CombinedEnergyProducerFactory.build(configDir, context, energyOnlyMarketOperator, regelEnergieMarketOperator);
+            CombinedEnergyProducerFactory.build(configDir, context, energyOnlyMarketOperator, regelenergieMarketOperator);
             DaytimeEnergyConsumerFactory.build(configDir, context, energyOnlyMarketOperator);
         } catch (IOException e) {
             log.error(e.toString(), e);

@@ -1,5 +1,6 @@
 package hsoines.oekoflex.util;
 
+import hsoines.oekoflex.domain.SequenceDefinition;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import repast.simphony.essentials.RepastEssentials;
@@ -48,7 +49,7 @@ public final class TimeUtilities {
             case QUARTER_HOUR:
                 return true;
             case FOUR_HOURS:
-                return tick % 16 == 0;
+                return tick % SequenceDefinition.RegelenergieMarketIntervall == 0;
             default:
                 log.error("unknown EnergyTimeZone: " + energyTimeZone);
                 return false;

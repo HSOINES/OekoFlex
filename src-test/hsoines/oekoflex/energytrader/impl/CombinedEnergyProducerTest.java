@@ -16,7 +16,7 @@ public class CombinedEnergyProducerTest {
 
     private CombinedEnergyProducer energyProducer;
     private EnergyOnlyMarketOperator energyOnlyMarketOperator;
-    private RegelEnergieMarketOperator regelEnergieMarketOperator;
+    private RegelEnergieMarketOperator regelenergieMarketOperator;
 
     @Before
     public void setUp() throws Exception {
@@ -24,8 +24,8 @@ public class CombinedEnergyProducerTest {
         energyProducer = new CombinedEnergyProducer("energyProducer");
         energyOnlyMarketOperator = Mockito.mock(EnergyOnlyMarketOperator.class);
         energyProducer.setEnergieOnlyMarketOperator(energyOnlyMarketOperator);
-        regelEnergieMarketOperator = Mockito.mock(RegelEnergieMarketOperator.class);
-        energyProducer.setMarketOperator(regelEnergieMarketOperator);
+        regelenergieMarketOperator = Mockito.mock(RegelEnergieMarketOperator.class);
+        energyProducer.setRegelenergieMarketOperator(regelenergieMarketOperator);
     }
 //
 //    @Test
