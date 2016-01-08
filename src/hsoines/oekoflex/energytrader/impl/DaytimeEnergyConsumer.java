@@ -2,8 +2,7 @@ package hsoines.oekoflex.energytrader.impl;
 
 import hsoines.oekoflex.bid.Bid;
 import hsoines.oekoflex.bid.Demand;
-import hsoines.oekoflex.energytrader.EnergyConsumer;
-import hsoines.oekoflex.energytrader.EnergyOnlyMarketTrader;
+import hsoines.oekoflex.energytrader.EOMTrader;
 import hsoines.oekoflex.energytrader.EnergySlotList;
 import hsoines.oekoflex.energytrader.MarketOperatorListener;
 import hsoines.oekoflex.marketoperator.EnergyOnlyMarketOperator;
@@ -21,7 +20,7 @@ import java.util.Date;
  * Date: 03/12/15
  * Time: 08:28
  */
-public final class DaytimeEnergyConsumer implements EnergyConsumer, MarketOperatorListener, EnergyOnlyMarketTrader {
+public final class DaytimeEnergyConsumer implements MarketOperatorListener, EOMTrader {
     private final String name;
     private final int quantity;
     private EnergyOnlyMarketOperator marketOperator;
@@ -46,7 +45,7 @@ public final class DaytimeEnergyConsumer implements EnergyConsumer, MarketOperat
     }
     
     @Override
-    public void makeDemand(){
+    public void makeBidEOM() {
         Date date = TimeUtilities.getCurrentDate();
     	if (marketOperator != null){
             lastBidPrice = priceStrategy.getPrice(date);

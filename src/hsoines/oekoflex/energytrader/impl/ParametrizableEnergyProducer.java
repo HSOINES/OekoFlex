@@ -2,8 +2,7 @@ package hsoines.oekoflex.energytrader.impl;
 
 import hsoines.oekoflex.bid.Bid;
 import hsoines.oekoflex.bid.Supply;
-import hsoines.oekoflex.energytrader.EnergyOnlyMarketTrader;
-import hsoines.oekoflex.energytrader.EnergyProducer;
+import hsoines.oekoflex.energytrader.EOMTrader;
 import hsoines.oekoflex.energytrader.MarketOperatorListener;
 import hsoines.oekoflex.marketoperator.EnergyOnlyMarketOperator;
 import hsoines.oekoflex.summary.BidSummary;
@@ -12,7 +11,7 @@ import repast.simphony.parameter.Parameters;
 
 import java.util.Date;
 
-public class ParametrizableEnergyProducer implements EnergyProducer, MarketOperatorListener, EnergyOnlyMarketTrader {
+public class ParametrizableEnergyProducer implements MarketOperatorListener, EOMTrader {
 
     private final String name;
     private EnergyOnlyMarketOperator marketOperator;
@@ -35,7 +34,7 @@ public class ParametrizableEnergyProducer implements EnergyProducer, MarketOpera
         bidQuantity = 200;
     }
 
-    public void makeSupply() {
+    public void makeBidEOM() {
         if (lastAssignmentRate > .5) {
             bidPrice += 10;
             bidQuantity += supplyDelay;

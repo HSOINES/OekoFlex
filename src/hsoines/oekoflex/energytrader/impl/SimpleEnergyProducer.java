@@ -2,14 +2,14 @@ package hsoines.oekoflex.energytrader.impl;
 
 import hsoines.oekoflex.bid.Bid;
 import hsoines.oekoflex.bid.Supply;
-import hsoines.oekoflex.energytrader.EnergyOnlyMarketTrader;
+import hsoines.oekoflex.energytrader.EOMTrader;
 import hsoines.oekoflex.energytrader.MarketOperatorListener;
 import hsoines.oekoflex.marketoperator.EnergyOnlyMarketOperator;
 import hsoines.oekoflex.summary.BidSummary;
 
 import java.util.Date;
 
-public class SimpleEnergyProducer implements MarketOperatorListener, EnergyOnlyMarketTrader {
+public class SimpleEnergyProducer implements MarketOperatorListener, EOMTrader {
 
     private final String name;
     private EnergyOnlyMarketOperator marketOperator;
@@ -23,7 +23,7 @@ public class SimpleEnergyProducer implements MarketOperatorListener, EnergyOnlyM
     }
 
     @Override
-    public void makeBidRegelenergie() {
+    public void makeBidEOM() {
         lastBidPrice = (float) (300f * Math.random()) + 500;
         marketOperator.addSupply(new Supply(lastBidPrice, (int) (100 * Math.random()), this));
     }
