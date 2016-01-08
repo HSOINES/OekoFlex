@@ -25,7 +25,7 @@ public class CombinedEnergyProducerTest {
         energyOnlyMarketOperator = Mockito.mock(EnergyOnlyMarketOperator.class);
         energyProducer.setEnergieOnlyMarketOperator(energyOnlyMarketOperator);
         regelEnergieMarketOperator = Mockito.mock(RegelEnergieMarketOperator.class);
-        energyProducer.setRegelEnergieMarketOperator(regelEnergieMarketOperator);
+        energyProducer.setMarketOperator(regelEnergieMarketOperator);
     }
 //
 //    @Test

@@ -1,7 +1,7 @@
 <repast.simphony.data2.engine.DataSetDescriptor>
   <name>RegelEnergieMarketTrader</name>
   <type>NON_AGGREGATE</type>
-  <sourceType>hsoines.oekoflex.energytrader.RegelEnergieMarketTrader</sourceType>
+  <sourceType>hsoines.oekoflex.energytrader.RegelenergieMarketTrader</sourceType>
   <inclTick>true</inclTick>
   <inclBatchRun>false</inclBatchRun>
   <inclRandomSeed>false</inclRandomSeed>
@@ -20,7 +20,7 @@
       <string>Name</string>
       <repast.simphony.data2.engine.MethodDataSourceDefinition>
         <id>Name</id>
-        <className>hsoines.oekoflex.energytrader.RegelEnergieMarketTrader</className>
+        <className>hsoines.oekoflex.energytrader.RegelenergieMarketTrader</className>
         <methodName>getName</methodName>
       </repast.simphony.data2.engine.MethodDataSourceDefinition>
     </entry>
@@ -28,7 +28,7 @@
       <string>LastBidPrice</string>
       <repast.simphony.data2.engine.MethodDataSourceDefinition>
         <id>LastBidPrice</id>
-        <className>hsoines.oekoflex.energytrader.RegelEnergieMarketTrader</className>
+        <className>hsoines.oekoflex.energytrader.RegelenergieMarketTrader</className>
         <methodName>getLastBidPrice</methodName>
       </repast.simphony.data2.engine.MethodDataSourceDefinition>
     </entry>
@@ -36,7 +36,7 @@
       <string>LastClearedPrice</string>
       <repast.simphony.data2.engine.MethodDataSourceDefinition>
         <id>LastClearedPrice</id>
-        <className>hsoines.oekoflex.energytrader.RegelEnergieMarketTrader</className>
+        <className>hsoines.oekoflex.energytrader.RegelenergieMarketTrader</className>
         <methodName>getLastClearedPrice</methodName>
       </repast.simphony.data2.engine.MethodDataSourceDefinition>
     </entry>
@@ -44,7 +44,7 @@
       <string>LastAssignmentRate</string>
       <repast.simphony.data2.engine.MethodDataSourceDefinition>
         <id>LastAssignmentRate</id>
-        <className>hsoines.oekoflex.energytrader.RegelEnergieMarketTrader</className>
+        <className>hsoines.oekoflex.energytrader.RegelenergieMarketTrader</className>
         <methodName>getLastAssignmentRate</methodName>
       </repast.simphony.data2.engine.MethodDataSourceDefinition>
     </entry>

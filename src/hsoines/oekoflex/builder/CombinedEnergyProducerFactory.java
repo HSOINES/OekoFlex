@@ -43,7 +43,7 @@ public final class CombinedEnergyProducerFactory {
                 combinedEnergyProducer.setPriceEnergyOnlyMarkt(priceEnergyOnlyMarkt);
                 combinedEnergyProducer.setQuantityPercentageOnRegelMarkt(quantityPercentageOnRegelMarkt);
                 combinedEnergyProducer.setEnergieOnlyMarketOperator(energyOnlyMarketOperator);
-                combinedEnergyProducer.setRegelEnergieMarketOperator(regelEnergieMarketOperator);
+                combinedEnergyProducer.setMarketOperator(regelEnergieMarketOperator);
 
                 context.add(combinedEnergyProducer);
 

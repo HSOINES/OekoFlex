@@ -13,7 +13,7 @@ import hsoines.oekoflex.util.TimeUtilities;
 
 import java.util.Date;
 
-public class CombinedEnergyProducer implements EnergyProducer, MarketOperatorListener, RegelEnergieMarketTrader, EnergyOnlyMarketTrader {
+public class CombinedEnergyProducer implements EnergyProducer, MarketOperatorListener, RegelenergieMarketTrader, EnergyOnlyMarketTrader {
 
     private final String name;
     private EnergySlotList produceSlotList;
@@ -66,7 +66,7 @@ public class CombinedEnergyProducer implements EnergyProducer, MarketOperatorLis
     }
 
     @Override
-    public void setRegelEnergieMarketOperator(final RegelEnergieMarketOperator marketOperator) {
+	public void setMarketOperator(RegelEnergieMarketOperator marketOperator) {
         regelEnergieMarketOperator = marketOperator;
     }
 
@@ -106,4 +106,5 @@ public class CombinedEnergyProducer implements EnergyProducer, MarketOperatorLis
     public void setBidSummary(final BidSummary bidSummary) {
         this.bidSummary = bidSummary;
     }
+
 }
