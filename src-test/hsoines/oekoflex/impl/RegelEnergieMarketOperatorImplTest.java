@@ -2,6 +2,7 @@ package hsoines.oekoflex.impl;
 
 import hsoines.oekoflex.bid.Bid;
 import hsoines.oekoflex.bid.Supply;
+import hsoines.oekoflex.domain.SequenceDefinition;
 import hsoines.oekoflex.energytrader.MarketOperatorListener;
 import hsoines.oekoflex.marketoperator.impl.RegelEnergieMarketOperatorImpl;
 import org.junit.After;
@@ -49,10 +50,10 @@ public class RegelEnergieMarketOperatorImplTest {
 
         operator.clearMarket();
 
-        verify(listener, times(16)).notifyClearingDone(Matchers.eq(10f), Matchers.eq(1f), Matchers.<Bid>any(), Matchers.any());
-        verify(listener, times(16)).notifyClearingDone(Matchers.eq(20f), Matchers.eq(1f), Matchers.<Bid>any(), Matchers.any());
-        verify(listener, times(16)).notifyClearingDone(Matchers.eq(30f), Matchers.eq(1f), Matchers.<Bid>any(), Matchers.any());
-        verify(listener, times(16)).notifyClearingDone(Matchers.eq(40f), Matchers.eq(1f), Matchers.<Bid>any(), Matchers.any());
+        verify(listener, times(SequenceDefinition.RegelenergieMarketInterval)).notifyClearingDone(Matchers.eq(10f), Matchers.eq(1f), Matchers.<Bid>any(), Matchers.any());
+        verify(listener, times(SequenceDefinition.RegelenergieMarketInterval)).notifyClearingDone(Matchers.eq(20f), Matchers.eq(1f), Matchers.<Bid>any(), Matchers.any());
+        verify(listener, times(SequenceDefinition.RegelenergieMarketInterval)).notifyClearingDone(Matchers.eq(30f), Matchers.eq(1f), Matchers.<Bid>any(), Matchers.any());
+        verify(listener, times(SequenceDefinition.RegelenergieMarketInterval)).notifyClearingDone(Matchers.eq(40f), Matchers.eq(1f), Matchers.<Bid>any(), Matchers.any());
         verify(listener, times(64)).notifyClearingDone(Matchers.anyFloat(), Matchers.anyFloat(), Matchers.<Bid>any(), Matchers.any());
     }
 
@@ -77,10 +78,10 @@ public class RegelEnergieMarketOperatorImplTest {
 
         operator.clearMarket();
 
-        verify(listener, times(16)).notifyClearingDone(Matchers.eq(10f), Matchers.eq(1f), Matchers.<Bid>any(), Matchers.any());
-        verify(listener, times(16)).notifyClearingDone(Matchers.eq(20f), Matchers.eq(1f), Matchers.<Bid>any(), Matchers.any());
-        verify(listener, times(16)).notifyClearingDone(Matchers.eq(30f), Matchers.eq(1f), Matchers.<Bid>any(), Matchers.any());
-        verify(listener, times(16)).notifyClearingDone(Matchers.eq(40f), Matchers.eq(1f), Matchers.<Bid>any(), Matchers.any());
+        verify(listener, times(SequenceDefinition.RegelenergieMarketInterval)).notifyClearingDone(Matchers.eq(10f), Matchers.eq(1f), Matchers.<Bid>any(), Matchers.any());
+        verify(listener, times(SequenceDefinition.RegelenergieMarketInterval)).notifyClearingDone(Matchers.eq(20f), Matchers.eq(1f), Matchers.<Bid>any(), Matchers.any());
+        verify(listener, times(SequenceDefinition.RegelenergieMarketInterval)).notifyClearingDone(Matchers.eq(30f), Matchers.eq(1f), Matchers.<Bid>any(), Matchers.any());
+        verify(listener, times(SequenceDefinition.RegelenergieMarketInterval)).notifyClearingDone(Matchers.eq(40f), Matchers.eq(1f), Matchers.<Bid>any(), Matchers.any());
         verify(listener, times(64)).notifyClearingDone(Matchers.anyFloat(), Matchers.anyFloat(), Matchers.<Bid>any(), Matchers.any());
     }
 
@@ -93,10 +94,10 @@ public class RegelEnergieMarketOperatorImplTest {
 
         operator.clearMarket();
 
-        verify(listener, times(16)).notifyClearingDone(Matchers.eq(10f), Matchers.eq(1f), Matchers.<Bid>any(), Matchers.any());
-        verify(listener, times(16)).notifyClearingDone(Matchers.eq(20f), Matchers.eq(1f), Matchers.<Bid>any(), Matchers.any());
-        verify(listener, times(16)).notifyClearingDone(Matchers.eq(30f), Matchers.eq(1f), Matchers.<Bid>any(), Matchers.any());
-        verify(listener, times(16)).notifyClearingDone(Matchers.eq(40f), Matchers.eq(.5f), Matchers.<Bid>any(), Matchers.any());
+        verify(listener, times(SequenceDefinition.RegelenergieMarketInterval)).notifyClearingDone(Matchers.eq(10f), Matchers.eq(1f), Matchers.<Bid>any(), Matchers.any());
+        verify(listener, times(SequenceDefinition.RegelenergieMarketInterval)).notifyClearingDone(Matchers.eq(20f), Matchers.eq(1f), Matchers.<Bid>any(), Matchers.any());
+        verify(listener, times(SequenceDefinition.RegelenergieMarketInterval)).notifyClearingDone(Matchers.eq(30f), Matchers.eq(1f), Matchers.<Bid>any(), Matchers.any());
+        verify(listener, times(SequenceDefinition.RegelenergieMarketInterval)).notifyClearingDone(Matchers.eq(40f), Matchers.eq(.5f), Matchers.<Bid>any(), Matchers.any());
 
         verify(listener, times(64)).notifyClearingDone(Matchers.anyFloat(), Matchers.anyFloat(), Matchers.<Bid>any(), Matchers.any());
 
@@ -115,10 +116,10 @@ public class RegelEnergieMarketOperatorImplTest {
 
         operator.clearMarket();
 
-        verify(listener, times(16)).notifyClearingDone(Matchers.eq(10f), Matchers.eq(1f), Matchers.<Bid>any(), Matchers.any());
-        verify(listener, times(16)).notifyClearingDone(Matchers.eq(20f), Matchers.eq(1f), Matchers.<Bid>any(), Matchers.any());
-        verify(listener, times(16)).notifyClearingDone(Matchers.eq(30f), Matchers.eq(1f), Matchers.<Bid>any(), Matchers.any());
-        verify(listener, times(16)).notifyClearingDone(Matchers.eq(40f), Matchers.eq(.5f), Matchers.<Bid>any(), Matchers.any());
+        verify(listener, times(SequenceDefinition.RegelenergieMarketInterval)).notifyClearingDone(Matchers.eq(10f), Matchers.eq(1f), Matchers.<Bid>any(), Matchers.any());
+        verify(listener, times(SequenceDefinition.RegelenergieMarketInterval)).notifyClearingDone(Matchers.eq(20f), Matchers.eq(1f), Matchers.<Bid>any(), Matchers.any());
+        verify(listener, times(SequenceDefinition.RegelenergieMarketInterval)).notifyClearingDone(Matchers.eq(30f), Matchers.eq(1f), Matchers.<Bid>any(), Matchers.any());
+        verify(listener, times(SequenceDefinition.RegelenergieMarketInterval)).notifyClearingDone(Matchers.eq(40f), Matchers.eq(.5f), Matchers.<Bid>any(), Matchers.any());
         verify(listener, times(64)).notifyClearingDone(Matchers.anyFloat(), Matchers.anyFloat(), Matchers.<Bid>any(), Matchers.any());
     }
 
