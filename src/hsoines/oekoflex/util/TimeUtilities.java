@@ -49,7 +49,7 @@ public final class TimeUtilities {
             case QUARTER_HOUR:
                 return true;
             case FOUR_HOURS:
-                return tick % SequenceDefinition.RegelenergieMarketIntervall == 0;
+                return tick % SequenceDefinition.RegelenergieMarketInterval == 0;
             default:
                 log.error("unknown EnergyTimeZone: " + energyTimeZone);
                 return false;

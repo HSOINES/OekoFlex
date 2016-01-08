@@ -11,7 +11,7 @@ import repast.simphony.engine.schedule.ScheduledMethod;
  * Time: 08:29
  */
 public interface RegelenergieMarketTrader extends OekoflexAgent {
-    @ScheduledMethod(start = 1, interval = SequenceDefinition.RegelenergieMarketIntervall, priority = SequenceDefinition.RegelenergieMarketBidPriority)
+    @ScheduledMethod(start = 1, interval = SequenceDefinition.RegelenergieMarketInterval, priority = SequenceDefinition.RegelenergieMarketBidPriority)
     void makeBidRegelenergie();
 
     void setRegelenergieMarketOperator(RegelEnergieMarketOperator marketOperator);
