@@ -2,7 +2,8 @@ package hsoines.oekoflex.impl;
 
 import hsoines.oekoflex.bid.Demand;
 import hsoines.oekoflex.bid.Supply;
-import hsoines.oekoflex.marketoperator.impl.EnergyOnlyMarketOperatorImpl;
+import hsoines.oekoflex.marketoperator.impl.EOMOperatorImpl;
+import hsoines.oekoflex.tools.RepastTestInitializer;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -11,13 +12,14 @@ import static org.junit.Assert.assertEquals;
 /**
  * Created by jhense on 03.12.2015.
  */
-public class EnergyOnlyMarketOperatorTest {
+public class EOMOperatorTest {
 
-    private EnergyOnlyMarketOperatorImpl energyOnlyMarketOperator;
+    private EOMOperatorImpl energyOnlyMarketOperator;
 
     @Before
     public void setUp() throws Exception {
-        energyOnlyMarketOperator = new EnergyOnlyMarketOperatorImpl("test");
+        RepastTestInitializer.init();
+        energyOnlyMarketOperator = new EOMOperatorImpl("test");
     }
 
     @org.junit.Test

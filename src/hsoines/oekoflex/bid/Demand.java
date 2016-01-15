@@ -1,15 +1,15 @@
 package hsoines.oekoflex.bid;
 
-import hsoines.oekoflex.energytrader.MarketOperatorListener;
+import hsoines.oekoflex.energytrader.EOMOperatorListener;
 
 import java.util.Comparator;
 
 public class Demand implements Bid, MarketOperatorListenerProvider {
     private final float price;
     private final float quantity;
-    private final MarketOperatorListener marketOperatorListener;
+    private final EOMOperatorListener marketOperatorListener;
 
-    public Demand(float price, float quantity, MarketOperatorListener marketOperatorListener) {
+    public Demand(float price, float quantity, EOMOperatorListener marketOperatorListener) {
         this.price = price;
         this.quantity = quantity;
         this.marketOperatorListener = marketOperatorListener;
@@ -28,8 +28,12 @@ public class Demand implements Bid, MarketOperatorListenerProvider {
         return "Demand";
     }
 
+    public void accept(BidVisitor bidVisitor) {
+        bidVisitor.visit(this);
+    }
+
     @Override
-    public MarketOperatorListener getMarketOperatorListener() {
+    public EOMOperatorListener getMarketOperatorListener() {
         return marketOperatorListener;
     }
 

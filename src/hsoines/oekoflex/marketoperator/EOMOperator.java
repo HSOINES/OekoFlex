@@ -6,7 +6,7 @@ import repast.simphony.engine.schedule.ScheduledMethod;
 
 import static hsoines.oekoflex.domain.SequenceDefinition.EOMClearingPriority;
 
-public interface EnergyOnlyMarketOperator {
+public interface EOMOperator {
 	public void addDemand(Demand demand);
 	public void addSupply(Supply supply);
 

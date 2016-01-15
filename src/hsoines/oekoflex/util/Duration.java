@@ -5,12 +5,12 @@ package hsoines.oekoflex.util;
  * Date: 07/01/16
  * Time: 13:52
  */
-public enum EnergyTimeZone {
+public enum Duration {
     QUARTER_HOUR(1), FOUR_HOURS(16);
 
     private final int ticks;
 
-    EnergyTimeZone(final int ticks) {
+    Duration(final int ticks) {
         this.ticks = ticks;
     }
 

@@ -1,6 +1,6 @@
 package hsoines.oekoflex.energytrader.impl;
 
-import hsoines.oekoflex.marketoperator.EnergyOnlyMarketOperator;
+import hsoines.oekoflex.marketoperator.EOMOperator;
 import hsoines.oekoflex.marketoperator.RegelEnergieMarketOperator;
 import hsoines.oekoflex.tools.RepastTestInitializer;
 import org.junit.Before;
@@ -15,15 +15,15 @@ import repast.simphony.context.Context;
 public class CombinedEnergyProducerTest {
 
     private CombinedEnergyProducer energyProducer;
-    private EnergyOnlyMarketOperator energyOnlyMarketOperator;
+    private EOMOperator EOMOperator;
     private RegelEnergieMarketOperator regelenergieMarketOperator;
 
     @Before
     public void setUp() throws Exception {
         Context context = RepastTestInitializer.init();
         energyProducer = new CombinedEnergyProducer("energyProducer");
-        energyOnlyMarketOperator = Mockito.mock(EnergyOnlyMarketOperator.class);
-        energyProducer.setEnergieOnlyMarketOperator(energyOnlyMarketOperator);
+        EOMOperator = Mockito.mock(EOMOperator.class);
+        energyProducer.setEOMOperator(EOMOperator);
         regelenergieMarketOperator = Mockito.mock(RegelEnergieMarketOperator.class);
         energyProducer.setRegelenergieMarketOperator(regelenergieMarketOperator);
     }

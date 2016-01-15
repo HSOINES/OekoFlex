@@ -23,11 +23,11 @@ public class TimeUtilitiesTest {
 
     @Test
     public void testTimeZone() throws Exception {
-        assertEquals(true, TimeUtilities.isEnergyTimeZone(EnergyTimeZone.QUARTER_HOUR, 0l));
-        assertEquals(true, TimeUtilities.isEnergyTimeZone(EnergyTimeZone.QUARTER_HOUR, 1l));
-        assertEquals(true, TimeUtilities.isEnergyTimeZone(EnergyTimeZone.FOUR_HOURS, 0l));
-        assertEquals(true, TimeUtilities.isEnergyTimeZone(EnergyTimeZone.FOUR_HOURS, SequenceDefinition.RegelenergieMarketInterval));
-        assertEquals(false, TimeUtilities.isEnergyTimeZone(EnergyTimeZone.FOUR_HOURS, 1l));
+        assertEquals(true, TimeUtilities.isEnergyTimeZone(Duration.QUARTER_HOUR, 0l));
+        assertEquals(true, TimeUtilities.isEnergyTimeZone(Duration.QUARTER_HOUR, 1l));
+        assertEquals(true, TimeUtilities.isEnergyTimeZone(Duration.FOUR_HOURS, 0l));
+        assertEquals(true, TimeUtilities.isEnergyTimeZone(Duration.FOUR_HOURS, SequenceDefinition.RegelenergieMarketInterval));
+        assertEquals(false, TimeUtilities.isEnergyTimeZone(Duration.FOUR_HOURS, 1l));
 
     }
 }

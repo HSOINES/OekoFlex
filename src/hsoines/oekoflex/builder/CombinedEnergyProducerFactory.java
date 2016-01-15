@@ -3,7 +3,7 @@ package hsoines.oekoflex.builder;
 import hsoines.oekoflex.OekoflexAgent;
 import hsoines.oekoflex.energytrader.impl.CombinedEnergyProducer;
 import hsoines.oekoflex.marketoperator.RegelEnergieMarketOperator;
-import hsoines.oekoflex.marketoperator.impl.EnergyOnlyMarketOperatorImpl;
+import hsoines.oekoflex.marketoperator.impl.EOMOperatorImpl;
 import hsoines.oekoflex.summary.BidSummary;
 import hsoines.oekoflex.summary.BidSummaryFactory;
 import org.apache.commons.csv.CSVFormat;
@@ -25,7 +25,7 @@ import java.io.IOException;
 public final class CombinedEnergyProducerFactory {
     private static final Log log = LogFactory.getLog(CombinedEnergyProducerFactory.class);
 
-    public static void build(final File configDir, final Context<OekoflexAgent> context, final EnergyOnlyMarketOperatorImpl energyOnlyMarketOperator, final RegelEnergieMarketOperator regelenergieMarketOperator) throws IOException {
+    public static void build(final File configDir, final Context<OekoflexAgent> context, final EOMOperatorImpl energyOnlyMarketOperator, final RegelEnergieMarketOperator regelenergieMarketOperator) throws IOException {
         File configFile = new File(configDir + "/CombinedEnergyProducer.cfg.csv");
         FileReader reader = new FileReader(configFile);
         CSVParser format = CSVFormat.DEFAULT.withHeader().parse(reader);
@@ -42,13 +42,13 @@ public final class CombinedEnergyProducerFactory {
                 combinedEnergyProducer.setPriceRegelMarkt(priceRegelMarkt);
                 combinedEnergyProducer.setPriceEnergyOnlyMarkt(priceEnergyOnlyMarkt);
                 combinedEnergyProducer.setQuantityPercentageOnRegelMarkt(quantityPercentageOnRegelMarkt);
-                combinedEnergyProducer.setEnergieOnlyMarketOperator(energyOnlyMarketOperator);
+                combinedEnergyProducer.setEOMOperator(energyOnlyMarketOperator);
                 combinedEnergyProducer.setRegelenergieMarketOperator(regelenergieMarketOperator);
 
                 context.add(combinedEnergyProducer);
 
                 BidSummary bidSummary = BidSummaryFactory.create(name);
-                combinedEnergyProducer.setBidSummary(bidSummary);
+                combinedEnergyProducer.setEOMBidSummary(bidSummary);
                 CombinedEnergyProducerFactory.log.info("CombinedEnergyProducer Build done: " + name);
             } catch (NumberFormatException e) {
                 log.error(e.getMessage(), e);

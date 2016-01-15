@@ -3,8 +3,8 @@ package hsoines.oekoflex.marketoperator.impl;
 import hsoines.oekoflex.OekoflexAgent;
 import hsoines.oekoflex.bid.Demand;
 import hsoines.oekoflex.bid.Supply;
-import hsoines.oekoflex.energytrader.MarketOperatorListener;
-import hsoines.oekoflex.marketoperator.EnergyOnlyMarketOperator;
+import hsoines.oekoflex.energytrader.EOMOperatorListener;
+import hsoines.oekoflex.marketoperator.EOMOperator;
 import hsoines.oekoflex.util.TimeUtilities;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -14,8 +14,8 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
-public class EnergyOnlyMarketOperatorImpl implements EnergyOnlyMarketOperator, OekoflexAgent {
-    private static final Log log = LogFactory.getLog(EnergyOnlyMarketOperatorImpl.class);
+public class EOMOperatorImpl implements EOMOperator, OekoflexAgent {
+    private static final Log log = LogFactory.getLog(EOMOperatorImpl.class);
 
     private final List<Demand> demands;
     private final List<Supply> supplies;
@@ -27,7 +27,7 @@ public class EnergyOnlyMarketOperatorImpl implements EnergyOnlyMarketOperator, O
     private float lastAssignmentRate;
     private AssignmentType lastAssignmentType;
 
-    public EnergyOnlyMarketOperatorImpl(String name) {
+    public EOMOperatorImpl(String name) {
         this.name = name;
 
         demands = new ArrayList<Demand>();
@@ -150,7 +150,7 @@ public class EnergyOnlyMarketOperatorImpl implements EnergyOnlyMarketOperator, O
                 .append(getTotalClearedQuantity()).append(",");
         Date date = TimeUtilities.getCurrentDate();
         for (Demand demand : demands) {
-            MarketOperatorListener marketOperatorListener = demand.getMarketOperatorListener();
+            EOMOperatorListener marketOperatorListener = demand.getMarketOperatorListener();
             if (marketOperatorListener != null) {
                 float assignmentRate;
                 if (demand.getPrice() > clearedPrice) {
@@ -160,15 +160,14 @@ public class EnergyOnlyMarketOperatorImpl implements EnergyOnlyMarketOperator, O
                 } else {
                     assignmentRate = 0;
                 }
-                marketOperatorListener.notifyClearingDone(clearedPrice, assignmentRate, demand, date);
-                logString.append(marketOperatorListener.getName()).append(",")
-                        .append(assignmentRate).append(",")
+                marketOperatorListener.notifyEOMClearingDone(clearedPrice, assignmentRate, demand, date);
+                logString.append(assignmentRate).append(",")
                         .append(demand.getPrice()).append(",")
                         .append(demand.getQuantity()).append(",");
             }
         }
         for (Supply supply : this.supplies) {
-            MarketOperatorListener marketOperatorListener = supply.getMarketOperatorListener();
+            EOMOperatorListener marketOperatorListener = supply.getMarketOperatorListener();
             if (marketOperatorListener != null) {
                 float assignmentRate = 0;
                 if (supply.getPrice() < clearedPrice) {
@@ -178,9 +177,8 @@ public class EnergyOnlyMarketOperatorImpl implements EnergyOnlyMarketOperator, O
                 } else {
                     assignmentRate = 0;
                 }
-                marketOperatorListener.notifyClearingDone(clearedPrice, assignmentRate, supply, date);
-                logString.append(marketOperatorListener.getName()).append(",")
-                        .append(assignmentRate).append(",")
+                marketOperatorListener.notifyEOMClearingDone(clearedPrice, assignmentRate, supply, date);
+                logString.append(assignmentRate).append(",")
                         .append(supply.getPrice()).append(",")
                         .append(supply.getQuantity()).append(",");
             }

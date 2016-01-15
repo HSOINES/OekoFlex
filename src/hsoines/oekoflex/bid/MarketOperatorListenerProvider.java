@@ -1,6 +1,6 @@
 package hsoines.oekoflex.bid;
 
-import hsoines.oekoflex.energytrader.MarketOperatorListener;
+import hsoines.oekoflex.energytrader.EOMOperatorListener;
 
 /**
  * Created by IntelliJ IDEA.
@@ -9,5 +9,5 @@ import hsoines.oekoflex.energytrader.MarketOperatorListener;
  * Time: 19:24
  */
 public interface MarketOperatorListenerProvider  {
-    MarketOperatorListener getMarketOperatorListener();
+    EOMOperatorListener getMarketOperatorListener();
 }

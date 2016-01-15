@@ -4,7 +4,7 @@ import hsoines.oekoflex.OekoflexAgent;
 import hsoines.oekoflex.energytrader.impl.ParametrizableEnergyProducer;
 import hsoines.oekoflex.energytrader.impl.SimpleEnergyProducer;
 import hsoines.oekoflex.marketoperator.RegelEnergieMarketOperator;
-import hsoines.oekoflex.marketoperator.impl.EnergyOnlyMarketOperatorImpl;
+import hsoines.oekoflex.marketoperator.impl.EOMOperatorImpl;
 import hsoines.oekoflex.marketoperator.impl.RegelEnergieMarketOperatorImpl;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -37,7 +37,7 @@ public class OekoFlexContextBuilder implements ContextBuilder<OekoflexAgent> {
         }
 
 
-        EnergyOnlyMarketOperatorImpl energyOnlyMarketOperator = new EnergyOnlyMarketOperatorImpl("EOM_Operator");
+        EOMOperatorImpl energyOnlyMarketOperator = new EOMOperatorImpl("EOM_Operator");
         RegelEnergieMarketOperator regelenergieMarketOperator = new RegelEnergieMarketOperatorImpl("RegelEnergieMarketOperator");
         context.add(energyOnlyMarketOperator);
         context.add(regelenergieMarketOperator);
@@ -52,7 +52,7 @@ public class OekoFlexContextBuilder implements ContextBuilder<OekoflexAgent> {
 
         for (int i = 0; i < 5; i++) {
             SimpleEnergyProducer prod = new SimpleEnergyProducer("SimpleEnergyProducer_" + i);
-            prod.setEnergieOnlyMarketOperator(energyOnlyMarketOperator);
+            prod.setEOMOperator(energyOnlyMarketOperator);
             context.add(prod);
         }
 
@@ -64,7 +64,7 @@ public class OekoFlexContextBuilder implements ContextBuilder<OekoflexAgent> {
 
         for (int i = 0; i < 50; i++) {
             ParametrizableEnergyProducer producer = new ParametrizableEnergyProducer("ParametrizableEnergyProducer_" + i);
-            producer.setEnergieOnlyMarketOperator(energyOnlyMarketOperator);
+            producer.setEOMOperator(energyOnlyMarketOperator);
             context.add(producer);
         }
 

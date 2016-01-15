@@ -1,9 +1,9 @@
 package hsoines.oekoflex.marketoperator.impl;
 
 import hsoines.oekoflex.bid.Supply;
-import hsoines.oekoflex.energytrader.MarketOperatorListener;
+import hsoines.oekoflex.energytrader.EOMOperatorListener;
 import hsoines.oekoflex.marketoperator.RegelEnergieMarketOperator;
-import hsoines.oekoflex.util.EnergyTimeZone;
+import hsoines.oekoflex.util.Duration;
 import hsoines.oekoflex.util.TimeUtilities;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -23,18 +23,20 @@ public final class RegelEnergieMarketOperatorImpl implements RegelEnergieMarketO
 
     private final String name;
     private final int quantity;
-    private final List<Supply> supplies;
+    private final List<Supply> supplies = new ArrayList<Supply>();
     private long totalClearedQuantity;
     private float lastClearedMaxPrice;
     private float lastAssignmentRate;
 
     public RegelEnergieMarketOperatorImpl(String name) {
         this.name = name;
-        supplies = new ArrayList<Supply>();
-
         Parameters p = RunEnvironment.getInstance().getParameters();
-
         this.quantity = (int) p.getValue("rigidDemandEnergyOnlyMarket");
+    }
+
+    RegelEnergieMarketOperatorImpl(int quantity) {
+        this.quantity = quantity;
+        this.name = "test_only";
     }
 
     @Override
@@ -48,7 +50,7 @@ public final class RegelEnergieMarketOperatorImpl implements RegelEnergieMarketO
         totalClearedQuantity = 0;
         lastAssignmentRate = 0;
         for (Supply supply : supplies) {
-            MarketOperatorListener marketOperatorListener = supply.getMarketOperatorListener();
+            EOMOperatorListener marketOperatorListener = supply.getMarketOperatorListener();
             if (totalClearedQuantity + supply.getQuantity() < quantity) {
                 totalClearedQuantity += supply.getQuantity();
                 lastAssignmentRate = 1;
@@ -75,10 +77,10 @@ public final class RegelEnergieMarketOperatorImpl implements RegelEnergieMarketO
         return lastAssignmentRate;
     }
 
-    void doNotify(final Supply supply, final MarketOperatorListener marketOperatorListener, float assignRate) {
+    void doNotify(final Supply supply, final EOMOperatorListener marketOperatorListener, float assignRate) {
         long tick = TimeUtilities.getTick(TimeUtilities.getCurrentDate());
-        for (int i = 0; i < EnergyTimeZone.FOUR_HOURS.getTicks(); i++) {
-            marketOperatorListener.notifyClearingDone(supply.getPrice(), assignRate, supply, TimeUtilities.getDate(tick + i));
+        for (int i = 0; i < Duration.FOUR_HOURS.getTicks(); i++) {
+            marketOperatorListener.notifyEOMClearingDone(supply.getPrice(), assignRate, supply, TimeUtilities.getDate(tick + i));
         }
         lastClearedMaxPrice = supply.getPrice();
     }

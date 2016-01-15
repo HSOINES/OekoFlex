@@ -3,18 +3,18 @@ package hsoines.oekoflex.energytrader.impl;
 import hsoines.oekoflex.bid.Bid;
 import hsoines.oekoflex.bid.Supply;
 import hsoines.oekoflex.energytrader.EOMTrader;
-import hsoines.oekoflex.energytrader.MarketOperatorListener;
-import hsoines.oekoflex.marketoperator.EnergyOnlyMarketOperator;
+import hsoines.oekoflex.energytrader.EnergyTradeHistory;
+import hsoines.oekoflex.marketoperator.EOMOperator;
 import hsoines.oekoflex.summary.BidSummary;
 import repast.simphony.engine.environment.RunEnvironment;
 import repast.simphony.parameter.Parameters;
 
 import java.util.Date;
 
-public class ParametrizableEnergyProducer implements MarketOperatorListener, EOMTrader {
+public class ParametrizableEnergyProducer implements EOMTrader {
 
     private final String name;
-    private EnergyOnlyMarketOperator marketOperator;
+    private EOMOperator marketOperator;
     private float lastClearedPrice;
     private float lastAssignmentRate;
 
@@ -52,12 +52,12 @@ public class ParametrizableEnergyProducer implements MarketOperatorListener, EOM
     }
 
     @Override
-    public void setEnergieOnlyMarketOperator(final EnergyOnlyMarketOperator marketOperator) {
+    public void setEOMOperator(final EOMOperator marketOperator) {
         this.marketOperator = marketOperator;
     }
 
     @Override
-    public void notifyClearingDone(final float clearedPrice, final float rate, final Bid bid, final Date currentDate) {
+    public void notifyEOMClearingDone(final float clearedPrice, final float rate, final Bid bid, final Date currentDate) {
         this.lastClearedPrice = clearedPrice;
         lastAssignmentRate = rate;
     }
@@ -78,7 +78,12 @@ public class ParametrizableEnergyProducer implements MarketOperatorListener, EOM
     }
 
     @Override
-    public void setBidSummary(final BidSummary bidSummary) {
+    public EnergyTradeHistory getProducedEnergyTradeHistory() {
+        return null;
+    }
+
+    @Override
+    public void setEOMBidSummary(final BidSummary bidSummary) {
 
     }
 

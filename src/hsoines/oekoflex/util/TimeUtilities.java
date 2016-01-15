@@ -21,9 +21,9 @@ public final class TimeUtilities {
         TimeZone.setDefault(TimeZone.getTimeZone("GMT"));
     }
 
-    public static boolean isEnergyTimeZone(EnergyTimeZone energyTimeZone) {
+    public static boolean isEnergyTimeZone(Duration duration) {
         long tick = getTick(getCurrentDate());
-        return isEnergyTimeZone(energyTimeZone, tick);
+        return isEnergyTimeZone(duration, tick);
     }
 
     public static SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -44,14 +44,14 @@ public final class TimeUtilities {
         return ticks + 1;
     }
 
-    static boolean isEnergyTimeZone(final EnergyTimeZone energyTimeZone, final long tick) {
-        switch (energyTimeZone) {
+    static boolean isEnergyTimeZone(final Duration duration, final long tick) {
+        switch (duration) {
             case QUARTER_HOUR:
                 return true;
             case FOUR_HOURS:
                 return tick % SequenceDefinition.RegelenergieMarketInterval == 0;
             default:
-                log.error("unknown EnergyTimeZone: " + energyTimeZone);
+                log.error("unknown EnergyTimeZone: " + duration);
                 return false;
         }
     }

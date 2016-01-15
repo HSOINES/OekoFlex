@@ -2,7 +2,7 @@ package hsoines.oekoflex.builder;
 
 import hsoines.oekoflex.OekoflexAgent;
 import hsoines.oekoflex.energytrader.impl.DaytimeEnergyConsumer;
-import hsoines.oekoflex.marketoperator.impl.EnergyOnlyMarketOperatorImpl;
+import hsoines.oekoflex.marketoperator.impl.EOMOperatorImpl;
 import hsoines.oekoflex.summary.BidSummary;
 import hsoines.oekoflex.summary.BidSummaryFactory;
 import org.apache.commons.csv.CSVFormat;
@@ -24,7 +24,7 @@ import java.io.IOException;
 public final class DaytimeEnergyConsumerFactory {
     private static final Log log = LogFactory.getLog(DaytimeEnergyConsumerFactory.class);
 
-    public static void build(final File configDir, final Context<OekoflexAgent> context, final EnergyOnlyMarketOperatorImpl energyOnlyMarketOperator) throws IOException {
+    public static void build(final File configDir, final Context<OekoflexAgent> context, final EOMOperatorImpl energyOnlyMarketOperator) throws IOException {
         File configFile = new File(configDir + "/" + "DaytimeEnergyConsumer.cfg.csv");
         FileReader reader = new FileReader(configFile);
         CSVParser format = CSVFormat.DEFAULT.withHeader().parse(reader);
@@ -36,11 +36,11 @@ public final class DaytimeEnergyConsumerFactory {
                 float decreaseAtNightInPercent = Float.parseFloat(parameters.get("decreaseAtNightInPercent"));
 
                 DaytimeEnergyConsumer daytimeEnergyConsumer = new DaytimeEnergyConsumer(name, quantity, priceAtDay, decreaseAtNightInPercent);
-                daytimeEnergyConsumer.setEnergieOnlyMarketOperator(energyOnlyMarketOperator);
+                daytimeEnergyConsumer.setEOMOperator(energyOnlyMarketOperator);
                 context.add(daytimeEnergyConsumer);
 
                 BidSummary bidSummary = BidSummaryFactory.create(name);
-                daytimeEnergyConsumer.setBidSummary(bidSummary);
+                daytimeEnergyConsumer.setEOMBidSummary(bidSummary);
                 log.info("CombinedEnergyProducer Build done: " + name);
             } catch (NumberFormatException e) {
                 log.error(e.getMessage(), e);

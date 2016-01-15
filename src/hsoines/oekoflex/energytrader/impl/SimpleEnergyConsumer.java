@@ -3,8 +3,8 @@ package hsoines.oekoflex.energytrader.impl;
 import hsoines.oekoflex.bid.Bid;
 import hsoines.oekoflex.bid.Demand;
 import hsoines.oekoflex.energytrader.EOMTrader;
-import hsoines.oekoflex.energytrader.MarketOperatorListener;
-import hsoines.oekoflex.marketoperator.EnergyOnlyMarketOperator;
+import hsoines.oekoflex.energytrader.EnergyTradeHistory;
+import hsoines.oekoflex.marketoperator.EOMOperator;
 import hsoines.oekoflex.summary.BidSummary;
 
 import java.util.Date;
@@ -15,9 +15,9 @@ import java.util.Date;
  * Date: 03/12/15
  * Time: 08:28
  */
-public final class SimpleEnergyConsumer implements MarketOperatorListener, EOMTrader {
+public final class SimpleEnergyConsumer implements EOMTrader {
     private final String name;
-    private EnergyOnlyMarketOperator marketOperator;
+    private EOMOperator marketOperator;
     private float clearedPrice;
     private float lastAssignmentRate;
 
@@ -28,7 +28,7 @@ public final class SimpleEnergyConsumer implements MarketOperatorListener, EOMTr
     }
 
     @Override
-    public void setEnergieOnlyMarketOperator(final EnergyOnlyMarketOperator marketOperator) {
+    public void setEOMOperator(final EOMOperator marketOperator) {
         this.marketOperator = marketOperator;
     }
 
@@ -40,7 +40,7 @@ public final class SimpleEnergyConsumer implements MarketOperatorListener, EOMTr
     }
 
     @Override
-    public void notifyClearingDone(final float clearedPrice, final float rate, final Bid bid, final Date currentDate) {
+    public void notifyEOMClearingDone(final float clearedPrice, final float rate, final Bid bid, final Date currentDate) {
         this.clearedPrice = clearedPrice;
         lastAssignmentRate = rate;
     }
@@ -58,7 +58,12 @@ public final class SimpleEnergyConsumer implements MarketOperatorListener, EOMTr
     }
 
     @Override
-    public void setBidSummary(final BidSummary bidSummary) {
+    public EnergyTradeHistory getProducedEnergyTradeHistory() {
+        return null;
+    }
+
+    @Override
+    public void setEOMBidSummary(final BidSummary bidSummary) {
     }
 
 

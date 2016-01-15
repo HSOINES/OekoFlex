@@ -7,9 +7,18 @@ package hsoines.oekoflex.bid;
  * Time: 19:13
  */
 public interface Bid {
+    interface BidVisitor {
+        void visit(Demand demand);
+
+        void visit(Supply supply);
+    }
+
+    void accept(BidVisitor bidVisitor);  //todo
+
     float getPrice();
 
     float getQuantity();
 
     String getTypeString();
+
 }
