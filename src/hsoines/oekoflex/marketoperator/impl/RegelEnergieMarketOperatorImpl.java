@@ -58,7 +58,7 @@ public final class RegelEnergieMarketOperatorImpl implements RegelEnergieMarketO
             } else if (totalClearedQuantity >= quantity) {
                 break;
             } else {
-                lastAssignmentRate = (quantity - totalClearedQuantity) / supply.getQuantity();
+                lastAssignmentRate = (quantity - totalClearedQuantity) / (float) supply.getQuantity();
                 doNotify(supply, marketOperatorListener, lastAssignmentRate);
                 totalClearedQuantity += supply.getQuantity() * lastAssignmentRate;
             }

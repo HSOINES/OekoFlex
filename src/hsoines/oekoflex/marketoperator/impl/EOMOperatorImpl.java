@@ -121,10 +121,10 @@ public class EOMOperatorImpl implements EOMOperator, OekoflexAgent {
 
         clearedQuantity = Math.min(totalDemandQuantity, totalSupplyQuantity);
         if (balance < 0) {
-            lastAssignmentRate = (supply.getQuantity() + balance) / supply.getQuantity();
+            lastAssignmentRate = ((float) supply.getQuantity() + balance) / supply.getQuantity();
             lastAssignmentType = AssignmentType.PartialSupply;
         } else if (balance > 0) {
-            lastAssignmentRate = (demand.getQuantity() - balance) / demand.getQuantity();
+            lastAssignmentRate = ((float) demand.getQuantity() - balance) / demand.getQuantity();
             lastAssignmentType = AssignmentType.PartialDemand;
         } else {
             lastAssignmentRate = 1;

@@ -3,11 +3,12 @@ package hsoines.oekoflex.energytrader.impl;
 import hsoines.oekoflex.bid.Bid;
 import hsoines.oekoflex.bid.Demand;
 import hsoines.oekoflex.energytrader.EOMTrader;
-import hsoines.oekoflex.energytrader.EnergyTradeHistory;
 import hsoines.oekoflex.marketoperator.EOMOperator;
-import hsoines.oekoflex.summary.BidSummary;
+import hsoines.oekoflex.util.TimeUtilities;
 
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -22,6 +23,7 @@ public final class SimpleEnergyConsumer implements EOMTrader {
     private float lastAssignmentRate;
 
     private float lastBidPrice;
+    private int lastQuantity;
 
     public SimpleEnergyConsumer(String name) {
         this.name = name;
@@ -43,10 +45,16 @@ public final class SimpleEnergyConsumer implements EOMTrader {
     public void notifyEOMClearingDone(final float clearedPrice, final float rate, final Bid bid, final Date currentDate) {
         this.clearedPrice = clearedPrice;
         lastAssignmentRate = rate;
+        this.lastQuantity = bid.getQuantity();
     }
 
     public float getLastAssignmentRate() {
         return lastAssignmentRate;
+    }
+
+    @Override
+    public List<EnergyTradeHistoryImpl.EnergyTradeHistoryElement> getCurrentAssignments() {
+        return Collections.singletonList(new EnergyTradeHistoryImpl.EnergyTradeHistoryElement(clearedPrice, TimeUtilities.getCurrentTick(), lastQuantity, 2000));
     }
 
     public float getLastClearedPrice() {
@@ -56,16 +64,6 @@ public final class SimpleEnergyConsumer implements EOMTrader {
     public float getLastBidPrice() {
         return lastBidPrice;
     }
-
-    @Override
-    public EnergyTradeHistory getProducedEnergyTradeHistory() {
-        return null;
-    }
-
-    @Override
-    public void setEOMBidSummary(final BidSummary bidSummary) {
-    }
-
 
     @Override
     public String getName() {

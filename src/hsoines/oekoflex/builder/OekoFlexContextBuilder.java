@@ -6,6 +6,7 @@ import hsoines.oekoflex.energytrader.impl.SimpleEnergyProducer;
 import hsoines.oekoflex.marketoperator.RegelEnergieMarketOperator;
 import hsoines.oekoflex.marketoperator.impl.EOMOperatorImpl;
 import hsoines.oekoflex.marketoperator.impl.RegelEnergieMarketOperatorImpl;
+import hsoines.oekoflex.summary.EnergyTraderTypeLogger;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import repast.simphony.context.Context;
@@ -36,6 +37,8 @@ public class OekoFlexContextBuilder implements ContextBuilder<OekoflexAgent> {
             re.endRun();
         }
 
+        EnergyTraderTypeLogger energyTraderTypeLogger = new EnergyTraderTypeLogger(context);
+        context.add(energyTraderTypeLogger);
 
         EOMOperatorImpl energyOnlyMarketOperator = new EOMOperatorImpl("EOM_Operator");
         RegelEnergieMarketOperator regelenergieMarketOperator = new RegelEnergieMarketOperatorImpl("RegelEnergieMarketOperator");
@@ -56,24 +59,11 @@ public class OekoFlexContextBuilder implements ContextBuilder<OekoflexAgent> {
             context.add(prod);
         }
 
-//        for (int i = 0; i < 45; i++) {
-//            DaytimeEnergyConsumer consumer = new DaytimeEnergyConsumer("DaytimeEnergyConsumer_" + i);
-//            consumer.setEnergieOnlyMarketOperator(energyOnlyMarketOperator);
-//            context.add(consumer);
-//        }
-
         for (int i = 0; i < 50; i++) {
             ParametrizableEnergyProducer producer = new ParametrizableEnergyProducer("ParametrizableEnergyProducer_" + i);
             producer.setEOMOperator(energyOnlyMarketOperator);
             context.add(producer);
         }
-
-//        for (int i = 0; i < 3; i++) {
-//            CombinedEnergyProducer producer = new CombinedEnergyProducer("CombinedEnergyProducer_" + i);
-//            producer.setEnergieOnlyMarketOperator(energyOnlyMarketOperator);
-//            producer.setRegelEnergieMarketOperator(regelEnergieMarketOperator);
-//            context.add(producer);
-//        }
 
         return context;
     }

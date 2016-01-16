@@ -2,7 +2,6 @@ package hsoines.oekoflex.energytrader;
 
 import hsoines.oekoflex.domain.SequenceDefinition;
 import hsoines.oekoflex.marketoperator.EOMOperator;
-import hsoines.oekoflex.summary.BidSummary;
 import repast.simphony.engine.schedule.ScheduledMethod;
 
 /**
@@ -15,9 +14,6 @@ public interface EOMTrader extends MarketTrader, EOMOperatorListener {
 
     @ScheduledMethod(start = 1, interval = SequenceDefinition.EOMInterval, priority = SequenceDefinition.EOMBidPriority)
     void makeBidEOM();
-
-    void setEOMBidSummary(BidSummary bidSummary);
-
 
     @Override
     default void accept(final MarketTraderVisitor visitor) {

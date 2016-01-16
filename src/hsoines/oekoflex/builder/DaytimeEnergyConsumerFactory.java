@@ -3,8 +3,6 @@ package hsoines.oekoflex.builder;
 import hsoines.oekoflex.OekoflexAgent;
 import hsoines.oekoflex.energytrader.impl.DaytimeEnergyConsumer;
 import hsoines.oekoflex.marketoperator.impl.EOMOperatorImpl;
-import hsoines.oekoflex.summary.BidSummary;
-import hsoines.oekoflex.summary.BidSummaryFactory;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
@@ -39,8 +37,6 @@ public final class DaytimeEnergyConsumerFactory {
                 daytimeEnergyConsumer.setEOMOperator(energyOnlyMarketOperator);
                 context.add(daytimeEnergyConsumer);
 
-                BidSummary bidSummary = BidSummaryFactory.create(name);
-                daytimeEnergyConsumer.setEOMBidSummary(bidSummary);
                 log.info("CombinedEnergyProducer Build done: " + name);
             } catch (NumberFormatException e) {
                 log.error(e.getMessage(), e);

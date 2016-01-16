@@ -4,8 +4,6 @@ import hsoines.oekoflex.OekoflexAgent;
 import hsoines.oekoflex.energytrader.impl.CombinedEnergyProducer;
 import hsoines.oekoflex.marketoperator.RegelEnergieMarketOperator;
 import hsoines.oekoflex.marketoperator.impl.EOMOperatorImpl;
-import hsoines.oekoflex.summary.BidSummary;
-import hsoines.oekoflex.summary.BidSummaryFactory;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
@@ -47,8 +45,6 @@ public final class CombinedEnergyProducerFactory {
 
                 context.add(combinedEnergyProducer);
 
-                BidSummary bidSummary = BidSummaryFactory.create(name);
-                combinedEnergyProducer.setEOMBidSummary(bidSummary);
                 CombinedEnergyProducerFactory.log.info("CombinedEnergyProducer Build done: " + name);
             } catch (NumberFormatException e) {
                 log.error(e.getMessage(), e);

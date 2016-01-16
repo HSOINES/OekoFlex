@@ -57,4 +57,7 @@ public final class TimeUtilities {
     }
 
 
+    public static long getCurrentTick() {
+        return getTick(getCurrentDate());
+    }
 }

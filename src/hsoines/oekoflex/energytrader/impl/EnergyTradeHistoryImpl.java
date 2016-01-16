@@ -38,12 +38,6 @@ public final class EnergyTradeHistoryImpl implements hsoines.oekoflex.energytrad
     }
 
     @Override
-    public void resetSlot(final Date date) {
-        long slotIndex = TimeUtilities.getTick(date);
-        assignedSlotList.remove(slotIndex);
-    }
-
-    @Override
     public int getRemainingCapacity(final Date date, final Duration duration) {
         long slotIndex = TimeUtilities.getTick(date);
         int minCapacity = Integer.MAX_VALUE;
@@ -93,7 +87,7 @@ public final class EnergyTradeHistoryImpl implements hsoines.oekoflex.energytrad
         if (remainingCapacity < quantity) {
             throw new IllegalStateException("Assigned quantity should not exceed the maximum quantity.");
         } else {
-            assignedSlotList.add(new EnergyTradeHistoryElement(price, tick, quantity));
+            assignedSlotList.add(new EnergyTradeHistoryElement(price, tick, quantity, capacities.get(tick)));
         }
     }
 
@@ -101,11 +95,13 @@ public final class EnergyTradeHistoryImpl implements hsoines.oekoflex.energytrad
         float price;
         long tick;
         int quantity;
+        private int capacity;
 
-        public EnergyTradeHistoryElement(final float price, final long tick, final int quantity) {
+        public EnergyTradeHistoryElement(final float price, final long tick, final int quantity, final int capacity) {
             this.price = price;
             this.tick = tick;
             this.quantity = quantity;
+            this.capacity = capacity;
         }
 
         public float getPrice() {
@@ -118,6 +114,10 @@ public final class EnergyTradeHistoryImpl implements hsoines.oekoflex.energytrad
 
         public int getQuantity() {
             return quantity;
+        }
+
+        public int getCapacity() {
+            return capacity;
         }
     }
 }

@@ -3,13 +3,12 @@ package hsoines.oekoflex.energytrader.impl;
 import hsoines.oekoflex.bid.Bid;
 import hsoines.oekoflex.bid.Supply;
 import hsoines.oekoflex.energytrader.EOMTrader;
-import hsoines.oekoflex.energytrader.EnergyTradeHistory;
 import hsoines.oekoflex.marketoperator.EOMOperator;
-import hsoines.oekoflex.summary.BidSummary;
 import repast.simphony.engine.environment.RunEnvironment;
 import repast.simphony.parameter.Parameters;
 
 import java.util.Date;
+import java.util.List;
 
 public class ParametrizableEnergyProducer implements EOMTrader {
 
@@ -21,7 +20,7 @@ public class ParametrizableEnergyProducer implements EOMTrader {
     private float bidPrice;
     private final int supplyCapacity;
     private final int supplyDelay;
-    private float bidQuantity;
+    private int bidQuantity;
 
     public ParametrizableEnergyProducer(String name) {
         this.name = name;
@@ -68,24 +67,15 @@ public class ParametrizableEnergyProducer implements EOMTrader {
     }
 
     @Override
-    public float getLastClearedPrice() {
-        return lastClearedPrice;
-    }
-
-    @Override
-    public float getLastBidPrice() {
-        return bidPrice;
-    }
-
-    @Override
-    public EnergyTradeHistory getProducedEnergyTradeHistory() {
+    public List<EnergyTradeHistoryImpl.EnergyTradeHistoryElement> getCurrentAssignments() {
         return null;
     }
 
     @Override
-    public void setEOMBidSummary(final BidSummary bidSummary) {
-
+    public float getLastClearedPrice() {
+        return lastClearedPrice;
     }
+
 
     @Override
     public String getName() {

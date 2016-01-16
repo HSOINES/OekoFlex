@@ -6,6 +6,8 @@ package hsoines.oekoflex.domain;
  * Time: 12:25
  */
 public final class SequenceDefinition {
+    public static final int ReportingPriority = 1000;
+
     public static final int RegelenergieMarketBidPriority = 100;
     public static final int EOMBidPriority = 50;
 

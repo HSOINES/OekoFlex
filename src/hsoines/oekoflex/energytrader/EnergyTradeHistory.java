@@ -28,8 +28,6 @@ public interface EnergyTradeHistory {
      */
     void addAssignedQuantity(Date date, final Duration duration, int quantity, final float price);
 
-    void resetSlot(Date date);
-
     /* Energy, die zum entsprechenden Zeitpunkt vorhanden war */
     int getRemainingCapacity(Date date, final Duration duration);
 

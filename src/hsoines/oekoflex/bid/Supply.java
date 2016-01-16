@@ -12,10 +12,10 @@ import java.util.Comparator;
  */
 public final class Supply implements Bid, MarketOperatorListenerProvider {
     private final float price;
-    private final float quantity;
+    private final int quantity;
     private final EOMOperatorListener marketOperatorListener;
 
-    public Supply(float price, float quantity, EOMOperatorListener marketOperatorListener) {
+    public Supply(float price, int quantity, EOMOperatorListener marketOperatorListener) {
         this.price = price;
         this.quantity = quantity;
         this.marketOperatorListener = marketOperatorListener;
@@ -37,7 +37,7 @@ public final class Supply implements Bid, MarketOperatorListenerProvider {
      }
 
      @Override
-     public float getQuantity() {
+     public int getQuantity() {
          return quantity;
      }
 
