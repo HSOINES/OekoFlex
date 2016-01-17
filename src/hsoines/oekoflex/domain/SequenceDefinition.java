@@ -8,12 +8,13 @@ package hsoines.oekoflex.domain;
 public final class SequenceDefinition {
     public static final int ReportingPriority = 1000;
 
+    //Priorities
     public static final int RegelenergieMarketBidPriority = 100;
-    public static final int EOMBidPriority = 50;
-
     public static final int RegelenergieMarketClearingPriority = 99;
+    public static final int EOMBidPriority = 50;
     public static final int EOMClearingPriority = 49;
 
-    public static final int EOMInterval = 1;
+    //Intervals
     public static final int RegelenergieMarketInterval = 16;
+    public static final int EOMInterval = 1;
 }

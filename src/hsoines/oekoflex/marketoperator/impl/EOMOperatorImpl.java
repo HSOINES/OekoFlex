@@ -3,8 +3,9 @@ package hsoines.oekoflex.marketoperator.impl;
 import hsoines.oekoflex.OekoflexAgent;
 import hsoines.oekoflex.bid.Demand;
 import hsoines.oekoflex.bid.Supply;
-import hsoines.oekoflex.energytrader.EOMOperatorListener;
+import hsoines.oekoflex.energytrader.MarketOperatorListener;
 import hsoines.oekoflex.marketoperator.EOMOperator;
+import hsoines.oekoflex.util.Duration;
 import hsoines.oekoflex.util.TimeUtilities;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -150,7 +151,7 @@ public class EOMOperatorImpl implements EOMOperator, OekoflexAgent {
                 .append(getTotalClearedQuantity()).append(",");
         Date date = TimeUtilities.getCurrentDate();
         for (Demand demand : demands) {
-            EOMOperatorListener marketOperatorListener = demand.getMarketOperatorListener();
+            MarketOperatorListener marketOperatorListener = demand.getMarketOperatorListener();
             if (marketOperatorListener != null) {
                 float assignmentRate;
                 if (demand.getPrice() > clearedPrice) {
@@ -160,14 +161,14 @@ public class EOMOperatorImpl implements EOMOperator, OekoflexAgent {
                 } else {
                     assignmentRate = 0;
                 }
-                marketOperatorListener.notifyEOMClearingDone(clearedPrice, assignmentRate, demand, date);
+                marketOperatorListener.notifyClearingDone(clearedPrice, assignmentRate, demand, date, Duration.QUARTER_HOUR);
                 logString.append(assignmentRate).append(",")
                         .append(demand.getPrice()).append(",")
                         .append(demand.getQuantity()).append(",");
             }
         }
         for (Supply supply : this.supplies) {
-            EOMOperatorListener marketOperatorListener = supply.getMarketOperatorListener();
+            MarketOperatorListener marketOperatorListener = supply.getMarketOperatorListener();
             if (marketOperatorListener != null) {
                 float assignmentRate = 0;
                 if (supply.getPrice() < clearedPrice) {
@@ -177,7 +178,7 @@ public class EOMOperatorImpl implements EOMOperator, OekoflexAgent {
                 } else {
                     assignmentRate = 0;
                 }
-                marketOperatorListener.notifyEOMClearingDone(clearedPrice, assignmentRate, supply, date);
+                marketOperatorListener.notifyClearingDone(clearedPrice, assignmentRate, supply, date, Duration.QUARTER_HOUR);
                 logString.append(assignmentRate).append(",")
                         .append(supply.getPrice()).append(",")
                         .append(supply.getQuantity()).append(",");

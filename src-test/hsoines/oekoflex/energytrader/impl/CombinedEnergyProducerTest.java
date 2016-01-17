@@ -1,5 +1,6 @@
 package hsoines.oekoflex.energytrader.impl;
 
+import hsoines.oekoflex.energytrader.impl.test.CombinedEnergyProducer;
 import hsoines.oekoflex.marketoperator.EOMOperator;
 import hsoines.oekoflex.marketoperator.RegelEnergieMarketOperator;
 import hsoines.oekoflex.tools.RepastTestInitializer;

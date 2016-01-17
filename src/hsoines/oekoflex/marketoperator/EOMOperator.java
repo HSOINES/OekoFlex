@@ -5,12 +5,13 @@ import hsoines.oekoflex.bid.Supply;
 import repast.simphony.engine.schedule.ScheduledMethod;
 
 import static hsoines.oekoflex.domain.SequenceDefinition.EOMClearingPriority;
+import static hsoines.oekoflex.domain.SequenceDefinition.EOMInterval;
 
 public interface EOMOperator {
 	public void addDemand(Demand demand);
 	public void addSupply(Supply supply);
 
-	@ScheduledMethod(start = 1, interval = EOMClearingPriority, priority = 1)
+	@ScheduledMethod(start = 0, interval = EOMInterval, priority = EOMClearingPriority)
 	void clearMarket();
 
 	int getTotalClearedQuantity();

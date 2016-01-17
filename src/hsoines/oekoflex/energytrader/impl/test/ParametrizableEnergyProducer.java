@@ -1,17 +1,21 @@
-package hsoines.oekoflex.energytrader.impl;
+package hsoines.oekoflex.energytrader.impl.test;
 
 import hsoines.oekoflex.bid.Bid;
 import hsoines.oekoflex.bid.Supply;
 import hsoines.oekoflex.energytrader.EOMTrader;
+import hsoines.oekoflex.energytrader.EnergyTradeHistory;
 import hsoines.oekoflex.marketoperator.EOMOperator;
+import hsoines.oekoflex.util.Duration;
 import repast.simphony.engine.environment.RunEnvironment;
 import repast.simphony.parameter.Parameters;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 public class ParametrizableEnergyProducer implements EOMTrader {
 
+    public static final int INITIALCAPACITY = 200;
     private final String name;
     private EOMOperator marketOperator;
     private float lastClearedPrice;
@@ -21,6 +25,7 @@ public class ParametrizableEnergyProducer implements EOMTrader {
     private final int supplyCapacity;
     private final int supplyDelay;
     private int bidQuantity;
+    private EnergyTradeHistory energyTradeHistory = new EnergyTradeRegistryImpl(EnergyTradeHistory.Type.PRODUCE, INITIALCAPACITY);
 
     public ParametrizableEnergyProducer(String name) {
         this.name = name;
@@ -47,7 +52,7 @@ public class ParametrizableEnergyProducer implements EOMTrader {
             	bidQuantity = 20;
             }
         }
-        marketOperator.addSupply(new Supply(bidPrice, bidQuantity, this));
+        marketOperator.addSupply(new Supply(bidPrice, Math.max(bidQuantity, INITIALCAPACITY), this));
     }
 
     @Override
@@ -56,9 +61,10 @@ public class ParametrizableEnergyProducer implements EOMTrader {
     }
 
     @Override
-    public void notifyEOMClearingDone(final float clearedPrice, final float rate, final Bid bid, final Date currentDate) {
+    public void notifyClearingDone(final float clearedPrice, final float rate, final Bid bid, final Date currentDate, final Duration duration) {
         this.lastClearedPrice = clearedPrice;
         lastAssignmentRate = rate;
+
     }
 
     @Override
@@ -67,8 +73,8 @@ public class ParametrizableEnergyProducer implements EOMTrader {
     }
 
     @Override
-    public List<EnergyTradeHistoryImpl.EnergyTradeHistoryElement> getCurrentAssignments() {
-        return null;
+    public List<EnergyTradeRegistryImpl.EnergyTradeElement> getCurrentAssignments() {
+        return new ArrayList<>();
     }
 
     @Override

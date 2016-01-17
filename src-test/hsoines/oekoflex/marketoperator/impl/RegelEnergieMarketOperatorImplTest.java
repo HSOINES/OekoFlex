@@ -3,7 +3,8 @@ package hsoines.oekoflex.marketoperator.impl;
 import hsoines.oekoflex.bid.Bid;
 import hsoines.oekoflex.bid.Supply;
 import hsoines.oekoflex.domain.SequenceDefinition;
-import hsoines.oekoflex.energytrader.EOMOperatorListener;
+import hsoines.oekoflex.energytrader.MarketOperatorListener;
+import hsoines.oekoflex.util.Duration;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -27,12 +28,12 @@ import static org.mockito.Mockito.*;
 public class RegelEnergieMarketOperatorImplTest {
 
     private RegelEnergieMarketOperatorImpl operator;
-    private EOMOperatorListener listener;
+    private MarketOperatorListener listener;
 
     @Before
     public void setUp() throws Exception {
         operator = new RegelEnergieMarketOperatorImpl(10000);
-        listener = mock(EOMOperatorListener.class);
+        listener = mock(MarketOperatorListener.class);
 
         Schedule schedule = new Schedule();
         RunEnvironment.init(schedule, null, null, true);
@@ -49,11 +50,11 @@ public class RegelEnergieMarketOperatorImplTest {
 
         operator.clearMarket();
 
-        verify(listener, times(SequenceDefinition.RegelenergieMarketInterval)).notifyEOMClearingDone(Matchers.eq(10f), Matchers.eq(1f), Matchers.<Bid>any(), Matchers.any());
-        verify(listener, times(SequenceDefinition.RegelenergieMarketInterval)).notifyEOMClearingDone(Matchers.eq(20f), Matchers.eq(1f), Matchers.<Bid>any(), Matchers.any());
-        verify(listener, times(SequenceDefinition.RegelenergieMarketInterval)).notifyEOMClearingDone(Matchers.eq(30f), Matchers.eq(1f), Matchers.<Bid>any(), Matchers.any());
-        verify(listener, times(SequenceDefinition.RegelenergieMarketInterval)).notifyEOMClearingDone(Matchers.eq(40f), Matchers.eq(1f), Matchers.<Bid>any(), Matchers.any());
-        verify(listener, times(64)).notifyEOMClearingDone(Matchers.anyFloat(), Matchers.anyFloat(), Matchers.<Bid>any(), Matchers.any());
+        verify(listener, times(SequenceDefinition.RegelenergieMarketInterval)).notifyClearingDone(Matchers.eq(10f), Matchers.eq(1f), Matchers.<Bid>any(), Matchers.any(), Matchers.eq(Duration.FOUR_HOURS));
+        verify(listener, times(SequenceDefinition.RegelenergieMarketInterval)).notifyClearingDone(Matchers.eq(20f), Matchers.eq(1f), Matchers.<Bid>any(), Matchers.any(), Matchers.eq(Duration.FOUR_HOURS));
+        verify(listener, times(SequenceDefinition.RegelenergieMarketInterval)).notifyClearingDone(Matchers.eq(30f), Matchers.eq(1f), Matchers.<Bid>any(), Matchers.any(), Matchers.eq(Duration.FOUR_HOURS));
+        verify(listener, times(SequenceDefinition.RegelenergieMarketInterval)).notifyClearingDone(Matchers.eq(40f), Matchers.eq(1f), Matchers.<Bid>any(), Matchers.any(), Matchers.eq(Duration.FOUR_HOURS));
+        verify(listener, times(64)).notifyClearingDone(Matchers.anyFloat(), Matchers.anyFloat(), Matchers.<Bid>any(), Matchers.any(), Matchers.eq(Duration.FOUR_HOURS));
     }
 
     @Test
@@ -62,10 +63,14 @@ public class RegelEnergieMarketOperatorImplTest {
 
         operator.clearMarket();
 
-        verify(listener, times(1)).notifyEOMClearingDone(Matchers.eq(10f), Matchers.eq(1f), Matchers.<Bid>any(), argThat(new DateMatcher(new Date(0))));
-        verify(listener, times(1)).notifyEOMClearingDone(Matchers.eq(10f), Matchers.eq(1f), Matchers.<Bid>any(), argThat(new DateMatcher(new Date(15 * 60 * 1000))));
-        verify(listener, times(1)).notifyEOMClearingDone(Matchers.eq(10f), Matchers.eq(1f), Matchers.<Bid>any(), argThat(new DateMatcher(new Date(30 * 60 * 1000))));
-        verify(listener, times(1)).notifyEOMClearingDone(Matchers.eq(10f), Matchers.eq(1f), Matchers.<Bid>any(), argThat(new DateMatcher(new Date(45 * 60 * 1000))));
+//        verify(listener, times(1)).notifyClearingDone(Matchers.eq(10f), Matchers.eq(1f), Matchers.<Bid>any(), argThat(new DateMatcher(new Date(0))), Duration.FOUR_HOURS);
+//        verify(listener, times(1)).notifyClearingDone(Matchers.eq(10f), Matchers.eq(1f), Matchers.<Bid>any(), argThat(new DateMatcher(new Date(15 * 60 * 1000))), Duration.FOUR_HOURS);
+//        verify(listener, times(1)).notifyClearingDone(Matchers.eq(10f), Matchers.eq(1f), Matchers.<Bid>any(), argThat(new DateMatcher(new Date(30 * 60 * 1000))), Duration.FOUR_HOURS);
+//        verify(listener, times(1)).notifyClearingDone(Matchers.eq(10f), Matchers.eq(1f), Matchers.<Bid>any(), argThat(new DateMatcher(new Date(45 * 60 * 1000))), Duration.FOUR_HOURS);
+        verify(listener, times(1)).notifyClearingDone(Matchers.eq(10f), Matchers.eq(1f), Matchers.<Bid>any(), argThat(new DateMatcher(new Date(0))), Matchers.eq(Duration.FOUR_HOURS));
+        verify(listener, times(1)).notifyClearingDone(Matchers.eq(10f), Matchers.eq(1f), Matchers.<Bid>any(), argThat(new DateMatcher(new Date(15 * 60 * 1000))), Matchers.eq(Duration.FOUR_HOURS));
+        verify(listener, times(1)).notifyClearingDone(Matchers.eq(10f), Matchers.eq(1f), Matchers.<Bid>any(), argThat(new DateMatcher(new Date(30 * 60 * 1000))), Matchers.eq(Duration.FOUR_HOURS));
+        verify(listener, times(1)).notifyClearingDone(Matchers.eq(10f), Matchers.eq(1f), Matchers.<Bid>any(), argThat(new DateMatcher(new Date(45 * 60 * 1000))), Matchers.eq(Duration.FOUR_HOURS));
     }
 
     @Test
@@ -77,11 +82,11 @@ public class RegelEnergieMarketOperatorImplTest {
 
         operator.clearMarket();
 
-        verify(listener, times(SequenceDefinition.RegelenergieMarketInterval)).notifyEOMClearingDone(Matchers.eq(10f), Matchers.eq(1f), Matchers.<Bid>any(), Matchers.any());
-        verify(listener, times(SequenceDefinition.RegelenergieMarketInterval)).notifyEOMClearingDone(Matchers.eq(20f), Matchers.eq(1f), Matchers.<Bid>any(), Matchers.any());
-        verify(listener, times(SequenceDefinition.RegelenergieMarketInterval)).notifyEOMClearingDone(Matchers.eq(30f), Matchers.eq(1f), Matchers.<Bid>any(), Matchers.any());
-        verify(listener, times(SequenceDefinition.RegelenergieMarketInterval)).notifyEOMClearingDone(Matchers.eq(40f), Matchers.eq(1f), Matchers.<Bid>any(), Matchers.any());
-        verify(listener, times(64)).notifyEOMClearingDone(Matchers.anyFloat(), Matchers.anyFloat(), Matchers.<Bid>any(), Matchers.any());
+        verify(listener, times(SequenceDefinition.RegelenergieMarketInterval)).notifyClearingDone(Matchers.eq(10f), Matchers.eq(1f), Matchers.<Bid>any(), Matchers.any(), Matchers.eq(Duration.FOUR_HOURS));
+        verify(listener, times(SequenceDefinition.RegelenergieMarketInterval)).notifyClearingDone(Matchers.eq(20f), Matchers.eq(1f), Matchers.<Bid>any(), Matchers.any(), Matchers.eq(Duration.FOUR_HOURS));
+        verify(listener, times(SequenceDefinition.RegelenergieMarketInterval)).notifyClearingDone(Matchers.eq(30f), Matchers.eq(1f), Matchers.<Bid>any(), Matchers.any(), Matchers.eq(Duration.FOUR_HOURS));
+        verify(listener, times(SequenceDefinition.RegelenergieMarketInterval)).notifyClearingDone(Matchers.eq(40f), Matchers.eq(1f), Matchers.<Bid>any(), Matchers.any(), Matchers.eq(Duration.FOUR_HOURS));
+        verify(listener, times(64)).notifyClearingDone(Matchers.anyFloat(), Matchers.anyFloat(), Matchers.<Bid>any(), Matchers.any(), Matchers.eq(Duration.FOUR_HOURS));
     }
 
     @Test
@@ -93,12 +98,12 @@ public class RegelEnergieMarketOperatorImplTest {
 
         operator.clearMarket();
 
-        verify(listener, times(SequenceDefinition.RegelenergieMarketInterval)).notifyEOMClearingDone(Matchers.eq(10f), Matchers.eq(1f), Matchers.<Bid>any(), Matchers.any());
-        verify(listener, times(SequenceDefinition.RegelenergieMarketInterval)).notifyEOMClearingDone(Matchers.eq(20f), Matchers.eq(1f), Matchers.<Bid>any(), Matchers.any());
-        verify(listener, times(SequenceDefinition.RegelenergieMarketInterval)).notifyEOMClearingDone(Matchers.eq(30f), Matchers.eq(1f), Matchers.<Bid>any(), Matchers.any());
-        verify(listener, times(SequenceDefinition.RegelenergieMarketInterval)).notifyEOMClearingDone(Matchers.eq(40f), Matchers.eq(.5f), Matchers.<Bid>any(), Matchers.any());
+        verify(listener, times(SequenceDefinition.RegelenergieMarketInterval)).notifyClearingDone(Matchers.eq(10f), Matchers.eq(1f), Matchers.<Bid>any(), Matchers.any(), Matchers.eq(Duration.FOUR_HOURS));
+        verify(listener, times(SequenceDefinition.RegelenergieMarketInterval)).notifyClearingDone(Matchers.eq(20f), Matchers.eq(1f), Matchers.<Bid>any(), Matchers.any(), Matchers.eq(Duration.FOUR_HOURS));
+        verify(listener, times(SequenceDefinition.RegelenergieMarketInterval)).notifyClearingDone(Matchers.eq(30f), Matchers.eq(1f), Matchers.<Bid>any(), Matchers.any(), Matchers.eq(Duration.FOUR_HOURS));
+        verify(listener, times(SequenceDefinition.RegelenergieMarketInterval)).notifyClearingDone(Matchers.eq(40f), Matchers.eq(.5f), Matchers.<Bid>any(), Matchers.any(), Matchers.eq(Duration.FOUR_HOURS));
 
-        verify(listener, times(64)).notifyEOMClearingDone(Matchers.anyFloat(), Matchers.anyFloat(), Matchers.<Bid>any(), Matchers.any());
+        verify(listener, times(64)).notifyClearingDone(Matchers.anyFloat(), Matchers.anyFloat(), Matchers.<Bid>any(), Matchers.any(), Matchers.eq(Duration.FOUR_HOURS));
 
     }
 
@@ -115,11 +120,11 @@ public class RegelEnergieMarketOperatorImplTest {
 
         operator.clearMarket();
 
-        verify(listener, times(SequenceDefinition.RegelenergieMarketInterval)).notifyEOMClearingDone(Matchers.eq(10f), Matchers.eq(1f), Matchers.<Bid>any(), Matchers.any());
-        verify(listener, times(SequenceDefinition.RegelenergieMarketInterval)).notifyEOMClearingDone(Matchers.eq(20f), Matchers.eq(1f), Matchers.<Bid>any(), Matchers.any());
-        verify(listener, times(SequenceDefinition.RegelenergieMarketInterval)).notifyEOMClearingDone(Matchers.eq(30f), Matchers.eq(1f), Matchers.<Bid>any(), Matchers.any());
-        verify(listener, times(SequenceDefinition.RegelenergieMarketInterval)).notifyEOMClearingDone(Matchers.eq(40f), Matchers.eq(.5f), Matchers.<Bid>any(), Matchers.any());
-        verify(listener, times(64)).notifyEOMClearingDone(Matchers.anyFloat(), Matchers.anyFloat(), Matchers.<Bid>any(), Matchers.any());
+        verify(listener, times(SequenceDefinition.RegelenergieMarketInterval)).notifyClearingDone(Matchers.eq(10f), Matchers.eq(1f), Matchers.<Bid>any(), Matchers.any(), Matchers.eq(Duration.FOUR_HOURS));
+        verify(listener, times(SequenceDefinition.RegelenergieMarketInterval)).notifyClearingDone(Matchers.eq(20f), Matchers.eq(1f), Matchers.<Bid>any(), Matchers.any(), Matchers.eq(Duration.FOUR_HOURS));
+        verify(listener, times(SequenceDefinition.RegelenergieMarketInterval)).notifyClearingDone(Matchers.eq(30f), Matchers.eq(1f), Matchers.<Bid>any(), Matchers.any(), Matchers.eq(Duration.FOUR_HOURS));
+        verify(listener, times(SequenceDefinition.RegelenergieMarketInterval)).notifyClearingDone(Matchers.eq(40f), Matchers.eq(.5f), Matchers.<Bid>any(), Matchers.any(), Matchers.eq(Duration.FOUR_HOURS));
+        verify(listener, times(64)).notifyClearingDone(Matchers.anyFloat(), Matchers.anyFloat(), Matchers.<Bid>any(), Matchers.any(), Matchers.eq(Duration.FOUR_HOURS));
     }
 
 

@@ -1,9 +1,6 @@
 package hsoines.oekoflex.summary;
 
-import org.apache.log4j.FileAppender;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
-import org.apache.log4j.SimpleLayout;
+import org.apache.log4j.*;
 import org.apache.log4j.spi.LoggingEvent;
 import org.apache.log4j.spi.RootLogger;
 
@@ -17,13 +14,13 @@ import java.io.IOException;
 public final class LoggerFile {
 
     private final Logger logger;
-    private final FileAppender newAppender;
+    private final FileAppender appender;
 
     public LoggerFile(final String name) throws IOException {
         String loggerFilename = "run/summary-logs/" + name + ".log";
-        newAppender = new FileAppender(new SimpleLayout(), loggerFilename);
+        appender = new FileAppender(new SimpleLayout(), loggerFilename);
         logger = RootLogger.getLogger(name);
-        newAppender.doAppend(buildEvent("starting."));
+        appender.setLayout(new PatternLayout("%m"));
     }
 
 //    public String buildSummary(final float clearedPrice, final float rate, final Bid bid, final Date currentDate) {
@@ -32,14 +29,14 @@ public final class LoggerFile {
 
 //    public void add(final float clearedPrice, final float rate, final Bid bid, final Date currentDate) {
 //        String logMessage = buildSummary(clearedPrice, rate, bid, currentDate);
-//        newAppender.doAppend(buildEvent(logMessage));
+//        appender.doAppend(buildEvent(logMessage));
 //    }
 
     public void log(String text) {
-        newAppender.doAppend(buildEvent(text));
+        appender.doAppend(buildEvent(text));
     }
 
     LoggingEvent buildEvent(final String s) {
-        return new LoggingEvent("", logger, Level.toLevel("INFO"), s, null);
+        return new LoggingEvent("", logger, Level.toLevel("INFO"), s + System.getProperty("line.separator"), null);
     }
 }

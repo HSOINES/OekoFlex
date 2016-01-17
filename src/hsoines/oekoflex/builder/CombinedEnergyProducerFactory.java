@@ -1,10 +1,9 @@
 package hsoines.oekoflex.builder;
 
 import hsoines.oekoflex.OekoflexAgent;
-import hsoines.oekoflex.energytrader.impl.CombinedEnergyProducer;
+import hsoines.oekoflex.energytrader.impl.test.CombinedEnergyProducer;
 import hsoines.oekoflex.marketoperator.RegelEnergieMarketOperator;
 import hsoines.oekoflex.marketoperator.impl.EOMOperatorImpl;
-import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.logging.Log;
@@ -26,7 +25,7 @@ public final class CombinedEnergyProducerFactory {
     public static void build(final File configDir, final Context<OekoflexAgent> context, final EOMOperatorImpl energyOnlyMarketOperator, final RegelEnergieMarketOperator regelenergieMarketOperator) throws IOException {
         File configFile = new File(configDir + "/CombinedEnergyProducer.cfg.csv");
         FileReader reader = new FileReader(configFile);
-        CSVParser format = CSVFormat.DEFAULT.withHeader().parse(reader);
+        CSVParser format = CSVParameter.getCSVFormat().parse(reader);
         for (CSVRecord parameters : format) {
             try {
                 String name = parameters.get("name");// + "_" + Long.toHexString(System.currentTimeMillis());

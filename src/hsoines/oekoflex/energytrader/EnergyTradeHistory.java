@@ -1,6 +1,6 @@
 package hsoines.oekoflex.energytrader;
 
-import hsoines.oekoflex.energytrader.impl.EnergyTradeHistoryImpl;
+import hsoines.oekoflex.energytrader.impl.test.EnergyTradeRegistryImpl;
 import hsoines.oekoflex.util.Duration;
 
 import java.util.Date;
@@ -18,23 +18,26 @@ import java.util.List;
  */
 public interface EnergyTradeHistory {
 
-    enum Type {PRODUCE, CONSUM}
 
+    enum Type {PRODUCE, CONSUM;}
     Type getType();
 
     /*
         Adds new assigned quantity to the History
         @return the quantity added, if bigger than max quantity, an error is thrown.
      */
-    void addAssignedQuantity(Date date, final Duration duration, int quantity, final float price);
+    void addAssignedQuantity(final Date date, final Duration duration, final float offeredPrice, final float assignedPrice, final int offeredQuantity, float assignedRate);
 
     /* Energy, die zum entsprechenden Zeitpunkt vorhanden war */
     int getRemainingCapacity(Date date, final Duration duration);
 
-    /* Energy, die zum entsprechenden Zeitpunkt abgerufen wurde */
+    /* Energy, die zum entsprechenden Zeitpunkt abgerufen/geliefert wurde */
     int getEnergyUsed(Date date);
 
     /* Preis zu dem die Energie zugewiesen wurde, falls mehrere Zuweisungen  */
-    List<EnergyTradeHistoryImpl.EnergyTradeHistoryElement> getHistoryElements(Date date);
+    List<EnergyTradeRegistryImpl.EnergyTradeElement> getEnergyTradeElements(Date date);
+
+    /* Setzen der Kapazität */
+    void setCapacity(long tick, int demand);
 
 }

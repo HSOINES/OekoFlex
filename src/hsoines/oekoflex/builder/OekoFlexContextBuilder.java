@@ -1,8 +1,8 @@
 package hsoines.oekoflex.builder;
 
 import hsoines.oekoflex.OekoflexAgent;
-import hsoines.oekoflex.energytrader.impl.ParametrizableEnergyProducer;
-import hsoines.oekoflex.energytrader.impl.SimpleEnergyProducer;
+import hsoines.oekoflex.energytrader.impl.FixedDemandConsumer;
+import hsoines.oekoflex.energytrader.impl.test.ParametrizableEnergyProducer;
 import hsoines.oekoflex.marketoperator.RegelEnergieMarketOperator;
 import hsoines.oekoflex.marketoperator.impl.EOMOperatorImpl;
 import hsoines.oekoflex.marketoperator.impl.RegelEnergieMarketOperatorImpl;
@@ -40,30 +40,27 @@ public class OekoFlexContextBuilder implements ContextBuilder<OekoflexAgent> {
         EnergyTraderTypeLogger energyTraderTypeLogger = new EnergyTraderTypeLogger(context);
         context.add(energyTraderTypeLogger);
 
-        EOMOperatorImpl energyOnlyMarketOperator = new EOMOperatorImpl("EOM_Operator");
+        EOMOperatorImpl eomOperator = new EOMOperatorImpl("EOM_Operator");
         RegelEnergieMarketOperator regelenergieMarketOperator = new RegelEnergieMarketOperatorImpl("RegelEnergieMarketOperator");
-        context.add(energyOnlyMarketOperator);
+        context.add(eomOperator);
         context.add(regelenergieMarketOperator);
 
         try {
-            CombinedEnergyProducerFactory.build(configDir, context, energyOnlyMarketOperator, regelenergieMarketOperator);
-            DaytimeEnergyConsumerFactory.build(configDir, context, energyOnlyMarketOperator);
+            CombinedEnergyProducerFactory.build(configDir, context, eomOperator, regelenergieMarketOperator);
+            DaytimeEnergyConsumerFactory.build(configDir, context, eomOperator);
+            FixedDemandConsumer fixedDemandConsumer = new FixedDemandConsumer(new File(configDir, "FixedDemand1.csv"));
+            fixedDemandConsumer.setEOMOperator(eomOperator);
         } catch (IOException e) {
             log.error(e.toString(), e);
             re.endRun();
         }
 
-        for (int i = 0; i < 5; i++) {
-            SimpleEnergyProducer prod = new SimpleEnergyProducer("SimpleEnergyProducer_" + i);
-            prod.setEOMOperator(energyOnlyMarketOperator);
-            context.add(prod);
-        }
-
         for (int i = 0; i < 50; i++) {
             ParametrizableEnergyProducer producer = new ParametrizableEnergyProducer("ParametrizableEnergyProducer_" + i);
-            producer.setEOMOperator(energyOnlyMarketOperator);
+            producer.setEOMOperator(eomOperator);
             context.add(producer);
         }
+
 
         return context;
     }

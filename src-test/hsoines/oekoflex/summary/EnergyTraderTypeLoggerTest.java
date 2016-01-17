@@ -3,9 +3,10 @@ package hsoines.oekoflex.summary;
 import hsoines.oekoflex.bid.Bid;
 import hsoines.oekoflex.energytrader.EOMTrader;
 import hsoines.oekoflex.energytrader.RegelenergieMarketTrader;
-import hsoines.oekoflex.energytrader.impl.EnergyTradeHistoryImpl;
+import hsoines.oekoflex.energytrader.impl.test.EnergyTradeRegistryImpl;
 import hsoines.oekoflex.marketoperator.EOMOperator;
 import hsoines.oekoflex.marketoperator.RegelEnergieMarketOperator;
+import hsoines.oekoflex.util.Duration;
 import org.junit.Before;
 import org.junit.Test;
 import repast.simphony.context.DefaultContext;
@@ -36,8 +37,8 @@ public class EnergyTraderTypeLoggerTest {
         CountDownLatch countDownLatch = new CountDownLatch(2);
         MyEOMTrader myEOMTrader = new MyEOMTrader(countDownLatch);
         MyRegelenergieMarketTrader myRegelenergieMarketTrader = new MyRegelenergieMarketTrader(countDownLatch);
-        energyTraderTypeLogger.add(myEOMTrader);
-        energyTraderTypeLogger.add(myRegelenergieMarketTrader);
+        energyTraderTypeLogger.addIfNecessary(myEOMTrader);
+        energyTraderTypeLogger.addIfNecessary(myRegelenergieMarketTrader);
 
         energyTraderTypeLogger.execute();
         try {
@@ -70,14 +71,14 @@ public class EnergyTraderTypeLoggerTest {
         }
 
         @Override
-        public List<EnergyTradeHistoryImpl.EnergyTradeHistoryElement> getCurrentAssignments() {
+        public List<EnergyTradeRegistryImpl.EnergyTradeElement> getCurrentAssignments() {
             countDownLatch.countDown();
             return null;
         }
 
 
         @Override
-        public void notifyEOMClearingDone(final float clearedPrice, final float rate, final Bid bid, final Date currentDate) {
+        public void notifyClearingDone(final float clearedPrice, final float rate, final Bid bid, final Date currentDate, final Duration duration) {
 
         }
 
@@ -100,10 +101,6 @@ public class EnergyTraderTypeLoggerTest {
             this.countDownLatch = countDownLatch;
         }
 
-        @Override
-        public void notifyRegelenergieClearingDone(final float clearedPrice, final float rate, final Bid bid, final Date currentDate) {
-
-        }
 
         @Override
         public String getName() {
@@ -121,7 +118,7 @@ public class EnergyTraderTypeLoggerTest {
         }
 
         @Override
-        public List<EnergyTradeHistoryImpl.EnergyTradeHistoryElement> getCurrentAssignments() {
+        public List<EnergyTradeRegistryImpl.EnergyTradeElement> getCurrentAssignments() {
             countDownLatch.countDown();
             return null;
         }
@@ -133,6 +130,11 @@ public class EnergyTraderTypeLoggerTest {
 
         @Override
         public void setRegelenergieMarketOperator(final RegelEnergieMarketOperator marketOperator) {
+
+        }
+
+        @Override
+        public void notifyClearingDone(final float clearedPrice, final float rate, final Bid bid, final Date currentDate, final Duration duration) {
 
         }
     }

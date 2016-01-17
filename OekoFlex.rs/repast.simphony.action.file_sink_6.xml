@@ -6,7 +6,7 @@
   <sourceIds class="linked-hash-set">
     <string>tick</string>
     <string>Name</string>
-    <string>LastBidPrice</string>
+    <!--<string>LastBidPrice</string>-->
     <string>LastClearedPrice</string>
     <string>LastAssignmentRate</string>
   </sourceIds>
