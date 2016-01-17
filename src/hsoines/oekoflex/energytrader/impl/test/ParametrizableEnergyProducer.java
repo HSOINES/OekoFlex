@@ -3,7 +3,7 @@ package hsoines.oekoflex.energytrader.impl.test;
 import hsoines.oekoflex.bid.Bid;
 import hsoines.oekoflex.bid.Supply;
 import hsoines.oekoflex.energytrader.EOMTrader;
-import hsoines.oekoflex.energytrader.EnergyTradeHistory;
+import hsoines.oekoflex.energytrader.EnergyTradeRegistry;
 import hsoines.oekoflex.marketoperator.EOMOperator;
 import hsoines.oekoflex.util.Duration;
 import repast.simphony.engine.environment.RunEnvironment;
@@ -25,7 +25,7 @@ public class ParametrizableEnergyProducer implements EOMTrader {
     private final int supplyCapacity;
     private final int supplyDelay;
     private int bidQuantity;
-    private EnergyTradeHistory energyTradeHistory = new EnergyTradeRegistryImpl(EnergyTradeHistory.Type.PRODUCE, INITIALCAPACITY);
+    private EnergyTradeRegistry energyTradeRegistry = new EnergyTradeRegistryImpl(EnergyTradeRegistry.Type.PRODUCE, INITIALCAPACITY);
 
     public ParametrizableEnergyProducer(String name) {
         this.name = name;

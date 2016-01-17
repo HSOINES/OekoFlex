@@ -3,6 +3,7 @@ package hsoines.oekoflex.energytrader.impl.test;
 import hsoines.oekoflex.bid.Bid;
 import hsoines.oekoflex.bid.Demand;
 import hsoines.oekoflex.energytrader.EOMTrader;
+import hsoines.oekoflex.energytrader.EnergyTradeRegistry;
 import hsoines.oekoflex.marketoperator.EOMOperator;
 import hsoines.oekoflex.strategies.DaytimePriceStrategy;
 import hsoines.oekoflex.strategies.PriceStrategy;
@@ -26,7 +27,7 @@ public final class DaytimeEnergyConsumer implements EOMTrader {
     private float lastAssignmentRate;
 
     private float lastBidPrice;
-    private hsoines.oekoflex.energytrader.EnergyTradeHistory energyTradeHistory;
+    private EnergyTradeRegistry energyTradeRegistry;
     private final PriceStrategy priceStrategy;
     private int lastQuantity;
 
@@ -34,7 +35,7 @@ public final class DaytimeEnergyConsumer implements EOMTrader {
         this.name = name;
         this.quantity = quantity;
         priceStrategy = new DaytimePriceStrategy(priceAtDay, decreaseAtNight);
-        energyTradeHistory = new EnergyTradeRegistryImpl(hsoines.oekoflex.energytrader.EnergyTradeHistory.Type.CONSUM, quantity);
+        energyTradeRegistry = new EnergyTradeRegistryImpl(EnergyTradeRegistry.Type.CONSUM, quantity);
     }
 
     @Override
@@ -47,7 +48,7 @@ public final class DaytimeEnergyConsumer implements EOMTrader {
         Date date = TimeUtilities.getCurrentDate();
         if (marketOperator != null) {
             lastBidPrice = priceStrategy.getPrice(date);
-            int offeredQuantity = energyTradeHistory.getRemainingCapacity(date, Duration.QUARTER_HOUR);
+            int offeredQuantity = energyTradeRegistry.getRemainingCapacity(date, Duration.QUARTER_HOUR);
             marketOperator.addDemand(new Demand(lastBidPrice, offeredQuantity, this));
         }
     }
@@ -59,7 +60,7 @@ public final class DaytimeEnergyConsumer implements EOMTrader {
         this.clearedPrice = clearedPrice;
         lastAssignmentRate = rate;
         this.lastQuantity = bid.getQuantity();
-        energyTradeHistory.addAssignedQuantity(date, Duration.QUARTER_HOUR, bid.getPrice(), clearedPrice, bid.getQuantity(), rate);
+        energyTradeRegistry.addAssignedQuantity(date, Duration.QUARTER_HOUR, bid.getPrice(), clearedPrice, bid.getQuantity(), rate);
     }
 
     public float getLastAssignmentRate() {

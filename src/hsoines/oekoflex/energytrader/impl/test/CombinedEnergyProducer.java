@@ -3,7 +3,7 @@ package hsoines.oekoflex.energytrader.impl.test;
 import hsoines.oekoflex.bid.Bid;
 import hsoines.oekoflex.bid.Supply;
 import hsoines.oekoflex.energytrader.EOMTrader;
-import hsoines.oekoflex.energytrader.EnergyTradeHistory;
+import hsoines.oekoflex.energytrader.EnergyTradeRegistry;
 import hsoines.oekoflex.energytrader.MarketTraderVisitor;
 import hsoines.oekoflex.energytrader.RegelenergieMarketTrader;
 import hsoines.oekoflex.marketoperator.EOMOperator;
@@ -19,7 +19,7 @@ import java.util.List;
 public class CombinedEnergyProducer implements RegelenergieMarketTrader, EOMTrader {
 
     private final String name;
-    private hsoines.oekoflex.energytrader.EnergyTradeHistory produceHistory;
+    private EnergyTradeRegistry energyTradeRegistry;
     private PriceStrategy regelMarktPriceStrategy;
     private ConstantPriceStrategy energyOnlyPriceStrategy;
     private EOMOperator EOMOperator;
@@ -33,7 +33,7 @@ public class CombinedEnergyProducer implements RegelenergieMarketTrader, EOMTrad
 
     public CombinedEnergyProducer(String name) {
         this.name = name;
-        produceHistory = new EnergyTradeRegistryImpl(EnergyTradeHistory.Type.PRODUCE, 10000);
+        energyTradeRegistry = new EnergyTradeRegistryImpl(EnergyTradeRegistry.Type.PRODUCE, 10000);
     }
 
     @Override
@@ -46,14 +46,14 @@ public class CombinedEnergyProducer implements RegelenergieMarketTrader, EOMTrad
     public void makeBidEOM() {
         Date date = TimeUtilities.getCurrentDate();
         lastBidPrice = energyOnlyPriceStrategy.getPrice(date);
-        int offerCapacity = produceHistory.getRemainingCapacity(date, Duration.FOUR_HOURS);
+        int offerCapacity = energyTradeRegistry.getRemainingCapacity(date, Duration.FOUR_HOURS);
         EOMOperator.addSupply(new Supply(lastBidPrice, offerCapacity, this));
     }
 
     @Override
     public void makeBidRegelenergie() {
         Date date = TimeUtilities.getCurrentDate();
-        int offerCapacity = (int) (produceHistory.getRemainingCapacity(date, Duration.FOUR_HOURS) * quantityPercentageOnRegelMarkt);
+        int offerCapacity = (int) (energyTradeRegistry.getRemainingCapacity(date, Duration.FOUR_HOURS) * quantityPercentageOnRegelMarkt);
         regelenergieMarketOperator.addSupply(new Supply(regelMarktPriceStrategy.getPrice(date), offerCapacity, this));
     }
 
@@ -66,7 +66,7 @@ public class CombinedEnergyProducer implements RegelenergieMarketTrader, EOMTrad
     public void notifyClearingDone(final float clearedPrice, final float rate, final Bid bid, final Date currentDate, final Duration duration) {
         this.lastClearedPrice = clearedPrice;
         lastAssignmentRate = rate;
-        produceHistory.addAssignedQuantity(currentDate, Duration.QUARTER_HOUR, bid.getPrice(), clearedPrice, bid.getQuantity(), rate);
+        energyTradeRegistry.addAssignedQuantity(currentDate, Duration.QUARTER_HOUR, bid.getPrice(), clearedPrice, bid.getQuantity(), rate);
     }
 
     @Override
@@ -76,7 +76,7 @@ public class CombinedEnergyProducer implements RegelenergieMarketTrader, EOMTrad
 
     @Override
     public List<EnergyTradeRegistryImpl.EnergyTradeElement> getCurrentAssignments() {
-        return produceHistory.getEnergyTradeElements(TimeUtilities.getCurrentDate());
+        return energyTradeRegistry.getEnergyTradeElements(TimeUtilities.getCurrentDate());
     }
 
     @Override
@@ -96,7 +96,7 @@ public class CombinedEnergyProducer implements RegelenergieMarketTrader, EOMTrad
 
     public void setCapacity(final int capacity) {
         this.capacity = capacity;
-        produceHistory = new EnergyTradeRegistryImpl(hsoines.oekoflex.energytrader.EnergyTradeHistory.Type.PRODUCE, capacity);
+        energyTradeRegistry = new EnergyTradeRegistryImpl(EnergyTradeRegistry.Type.PRODUCE, capacity);
     }
 
     public void setPriceRegelMarkt(final float priceRegelMarkt) {

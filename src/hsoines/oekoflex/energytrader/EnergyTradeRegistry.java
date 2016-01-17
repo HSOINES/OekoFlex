@@ -16,7 +16,7 @@ import java.util.List;
  * offered quantities: quantities are offered to a marketoperator
  * assigned quantities: quantities are assigned by a marketoperator
  */
-public interface EnergyTradeHistory {
+public interface EnergyTradeRegistry {
 
 
     enum Type {PRODUCE, CONSUM;}

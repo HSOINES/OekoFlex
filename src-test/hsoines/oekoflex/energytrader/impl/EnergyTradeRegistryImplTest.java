@@ -1,5 +1,6 @@
 package hsoines.oekoflex.energytrader.impl;
 
+import hsoines.oekoflex.energytrader.EnergyTradeRegistry;
 import hsoines.oekoflex.energytrader.impl.test.EnergyTradeRegistryImpl;
 import hsoines.oekoflex.util.Duration;
 import hsoines.oekoflex.util.TimeUtilities;
@@ -7,6 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Date;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
@@ -17,7 +19,8 @@ import static org.junit.Assert.assertEquals;
  */
 public class EnergyTradeRegistryImplTest {
 
-    private EnergyTradeRegistryImpl energyTradeHistory;
+    public static final int INITIALCAPACITY = 1000;
+    private EnergyTradeRegistryImpl energyTradeRegistry;
 
     private Date date0;
     private Date date1;
@@ -30,39 +33,44 @@ public class EnergyTradeRegistryImplTest {
         date1 = TimeUtilities.getDate(1);
         date2 = TimeUtilities.getDate(2);
         date3 = TimeUtilities.getDate(3);
-        energyTradeHistory = new EnergyTradeRegistryImpl(hsoines.oekoflex.energytrader.EnergyTradeHistory.Type.CONSUM, 1000);
+        energyTradeRegistry = new EnergyTradeRegistryImpl(EnergyTradeRegistry.Type.CONSUM, INITIALCAPACITY);
     }
 
     @Test
     public void testAssignmentQuarterHour() throws Exception {
-//        energyTradeHistory.addAssignedQuantity(date0, Duration.QUARTER_HOUR, 100, 10.0f);
-//        energyTradeHistory.addAssignedQuantity(date1, Duration.QUARTER_HOUR, 100, 11.0f);
-//        energyTradeHistory.addAssignedQuantity(date1, Duration.QUARTER_HOUR, 100, 12.0f);
-        energyTradeHistory.addAssignedQuantity(date0, Duration.QUARTER_HOUR, 1f, 1f, 100, 1f);
-        energyTradeHistory.addAssignedQuantity(date1, Duration.QUARTER_HOUR, 1f, 1f, 100, 1f);
-        energyTradeHistory.addAssignedQuantity(date1, Duration.QUARTER_HOUR, 1f, 1f, 100, 1f);
-        assertEquals(100, energyTradeHistory.getEnergyUsed(date0));
-        assertEquals(200, energyTradeHistory.getEnergyUsed(date1));
+        energyTradeRegistry.addAssignedQuantity(date0, Duration.QUARTER_HOUR, 1f, 1f, 100, 1f);
+        energyTradeRegistry.addAssignedQuantity(date1, Duration.QUARTER_HOUR, 1f, 1f, 100, 1f);
+        energyTradeRegistry.addAssignedQuantity(date1, Duration.QUARTER_HOUR, 1f, 1f, 100, 1f);
+        assertEquals(100, energyTradeRegistry.getEnergyUsed(date0));
+        assertEquals(200, energyTradeRegistry.getEnergyUsed(date1));
     }
 
     @Test
     public void testAssignmentFourHours() throws Exception {
-        energyTradeHistory.addAssignedQuantity(date0, Duration.FOUR_HOURS, 10f, 10f, 100, 1f);
-        energyTradeHistory.addAssignedQuantity(date1, Duration.QUARTER_HOUR, 10f, 10f, 100, 1f);
-        assertEquals(100, energyTradeHistory.getEnergyUsed(date0));
-        assertEquals(200, energyTradeHistory.getEnergyUsed(date1));
-        assertEquals(100, energyTradeHistory.getEnergyUsed(date2));
-        assertEquals(100, energyTradeHistory.getEnergyUsed(date3));
+        energyTradeRegistry.addAssignedQuantity(date0, Duration.FOUR_HOURS, 10f, 10f, 100, 1f);
+        energyTradeRegistry.addAssignedQuantity(date1, Duration.QUARTER_HOUR, 10f, 10f, 100, 1f);
+        assertEquals(100, energyTradeRegistry.getEnergyUsed(date0));
+        assertEquals(200, energyTradeRegistry.getEnergyUsed(date1));
+        assertEquals(100, energyTradeRegistry.getEnergyUsed(date2));
+        assertEquals(100, energyTradeRegistry.getEnergyUsed(date3));
 
-        assertEquals(10f, energyTradeHistory.getEnergyTradeElements(date0).get(0).getAssignedPrice(), 0.00001);
-        assertEquals(10f, energyTradeHistory.getEnergyTradeElements(date1).get(0).getAssignedPrice(), 0.00001);
-        assertEquals(10f, energyTradeHistory.getEnergyTradeElements(date1).get(1).getAssignedPrice(), 0.00001);
+        assertEquals(10f, energyTradeRegistry.getEnergyTradeElements(date0).get(0).getAssignedPrice(), 0.00001);
+        assertEquals(10f, energyTradeRegistry.getEnergyTradeElements(date1).get(0).getAssignedPrice(), 0.00001);
+        assertEquals(10f, energyTradeRegistry.getEnergyTradeElements(date1).get(1).getAssignedPrice(), 0.00001);
 
-        assertEquals(900, energyTradeHistory.getRemainingCapacity(date0, Duration.QUARTER_HOUR));
-        assertEquals(800, energyTradeHistory.getRemainingCapacity(date1, Duration.QUARTER_HOUR));
-        assertEquals(900, energyTradeHistory.getRemainingCapacity(date2, Duration.QUARTER_HOUR));
-        assertEquals(900, energyTradeHistory.getRemainingCapacity(date3, Duration.QUARTER_HOUR));
+        assertEquals(900, energyTradeRegistry.getRemainingCapacity(date0, Duration.QUARTER_HOUR));
+        assertEquals(800, energyTradeRegistry.getRemainingCapacity(date1, Duration.QUARTER_HOUR));
+        assertEquals(900, energyTradeRegistry.getRemainingCapacity(date2, Duration.QUARTER_HOUR));
+        assertEquals(900, energyTradeRegistry.getRemainingCapacity(date3, Duration.QUARTER_HOUR));
 
-        assertEquals(800, energyTradeHistory.getRemainingCapacity(date0, Duration.FOUR_HOURS));
+        assertEquals(800, energyTradeRegistry.getRemainingCapacity(date0, Duration.FOUR_HOURS));
+    }
+
+    @Test
+    public void testQuantityInRegistry() throws Exception {
+        energyTradeRegistry.addAssignedQuantity(date0, Duration.FOUR_HOURS, 10f, 10f, 100, 1f);
+        List<EnergyTradeRegistryImpl.EnergyTradeElement> energyTradeElements = energyTradeRegistry.getEnergyTradeElements(date0);
+        assertEquals(INITIALCAPACITY, energyTradeElements.get(0).getCapacity());
+
     }
 }

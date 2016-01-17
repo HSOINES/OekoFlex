@@ -1,5 +1,6 @@
 package hsoines.oekoflex.energytrader.impl.test;
 
+import hsoines.oekoflex.energytrader.EnergyTradeRegistry;
 import hsoines.oekoflex.util.Duration;
 import hsoines.oekoflex.util.TimeUtilities;
 import org.apache.commons.logging.Log;
@@ -15,7 +16,7 @@ import java.util.List;
  * Date: 17/12/15
  * Time: 08:08
  */
-public final class EnergyTradeRegistryImpl implements hsoines.oekoflex.energytrader.EnergyTradeHistory {
+public final class EnergyTradeRegistryImpl implements EnergyTradeRegistry {
     private static final Log log = LogFactory.getLog(EnergyTradeRegistryImpl.class);
 
     private final List<EnergyTradeElement> tradeElements;
@@ -107,7 +108,11 @@ public final class EnergyTradeRegistryImpl implements hsoines.oekoflex.energytra
         if (remainingCapacity < assignedQuantity) {
             throw new IllegalStateException("Assigned quantity should not exceed the maximum quantity.");
         } else {
-            tradeElements.add(new EnergyTradeElement(tick, offeredPrice, clearedprice, offeredQuantity, rate, capacities.get(tick)));
+            Integer capacity = capacities.get(tick);
+            if (capacity == null) {
+                capacity = initialcapacity;
+            }
+            tradeElements.add(new EnergyTradeElement(tick, offeredPrice, clearedprice, offeredQuantity, rate, capacity));
         }
     }
 
@@ -120,7 +125,7 @@ public final class EnergyTradeRegistryImpl implements hsoines.oekoflex.energytra
         private final float rate;
         private final Integer capacity;
 
-        public EnergyTradeElement(final long tick, final float offeredPrice, final float assignedPrice, final int offeredQuantity, final float rate, final Integer capacity) {
+        public EnergyTradeElement(final long tick, final float offeredPrice, final float assignedPrice, final int offeredQuantity, final float rate, final int capacity) {
 
             this.tick = tick;
             this.offeredPrice = offeredPrice;
@@ -150,7 +155,7 @@ public final class EnergyTradeRegistryImpl implements hsoines.oekoflex.energytra
             return rate;
         }
 
-        public Integer getCapacity() {
+        public int getCapacity() {
             return capacity;
         }
     }

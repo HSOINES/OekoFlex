@@ -4,7 +4,7 @@ import hsoines.oekoflex.bid.Bid;
 import hsoines.oekoflex.bid.Demand;
 import hsoines.oekoflex.builder.CSVParameter;
 import hsoines.oekoflex.energytrader.EOMTrader;
-import hsoines.oekoflex.energytrader.EnergyTradeHistory;
+import hsoines.oekoflex.energytrader.EnergyTradeRegistry;
 import hsoines.oekoflex.energytrader.impl.test.EnergyTradeRegistryImpl;
 import hsoines.oekoflex.marketoperator.EOMOperator;
 import hsoines.oekoflex.util.Duration;
@@ -33,7 +33,7 @@ public final class FixedDemandConsumer implements EOMTrader {
     private EOMOperator marketOperator;
 
     public FixedDemandConsumer(final File csvFile) throws IOException {
-        energyTradeRegistry = new EnergyTradeRegistryImpl(EnergyTradeHistory.Type.CONSUM, 0);
+        energyTradeRegistry = new EnergyTradeRegistryImpl(EnergyTradeRegistry.Type.CONSUM, 0);
         FileReader reader = new FileReader(csvFile);
         CSVParser parser = CSVParameter.getCSVFormat().parse(reader);
         for (CSVRecord parameters : parser) {
