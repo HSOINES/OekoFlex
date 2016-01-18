@@ -5,12 +5,12 @@ package hsoines.oekoflex.util;
  * Date: 07/01/16
  * Time: 13:52
  */
-public enum Duration {
-    QUARTER_HOUR(1), FOUR_HOURS(16);
+public enum Market {
+    EOM_MARKET(1), REGELENERGIE_MARKET(16);
 
     private final int ticks;
 
-    Duration(final int ticks) {
+    Market(final int ticks) {
         this.ticks = ticks;
     }
 

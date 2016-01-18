@@ -1,8 +1,7 @@
 package hsoines.oekoflex.energytrader.impl;
 
 import hsoines.oekoflex.energytrader.EnergyTradeRegistry;
-import hsoines.oekoflex.energytrader.impl.test.EnergyTradeRegistryImpl;
-import hsoines.oekoflex.util.Duration;
+import hsoines.oekoflex.util.Market;
 import hsoines.oekoflex.util.TimeUtilities;
 import org.junit.Before;
 import org.junit.Test;
@@ -36,29 +35,29 @@ public class EnergySlotListImplTest {
     @Test
     public void testSlotAssignCapacity() throws Exception {
         Date date = new Date(0);
-        assertEquals(1000, energySlotList.getRemainingCapacity(date, Duration.QUARTER_HOUR));
-        energySlotList.addAssignedQuantity(date, Duration.QUARTER_HOUR, 10f, 12.3f, 100, 1);
-        assertEquals(900, energySlotList.getRemainingCapacity(date, Duration.QUARTER_HOUR));
+        assertEquals(1000, energySlotList.getRemainingCapacity(date, Market.EOM_MARKET));
+        energySlotList.addAssignedQuantity(date, Market.EOM_MARKET, 10f, 12.3f, 100, 1);
+        assertEquals(900, energySlotList.getRemainingCapacity(date, Market.EOM_MARKET));
     }
 
     @Test
     public void testSlotAssigning() throws Exception {
-        energySlotList.addAssignedQuantity(date0, Duration.QUARTER_HOUR, 10f, 12f, 100, 1);
-        assertEquals(900, energySlotList.getRemainingCapacity(date0, Duration.QUARTER_HOUR));
+        energySlotList.addAssignedQuantity(date0, Market.EOM_MARKET, 10f, 12f, 100, 1);
+        assertEquals(900, energySlotList.getRemainingCapacity(date0, Market.EOM_MARKET));
     }
 
     @Test(expected = IllegalStateException.class)
     public void testSlotAssignedException() {
-        energySlotList.addAssignedQuantity(date0, Duration.QUARTER_HOUR, 10f, 10f, 500, 1f);
-        energySlotList.addAssignedQuantity(date0, Duration.QUARTER_HOUR, 10f, 10f, 500, 1f);
-        energySlotList.addAssignedQuantity(date0, Duration.QUARTER_HOUR, 10f, 10f, 1, 1f);
+        energySlotList.addAssignedQuantity(date0, Market.EOM_MARKET, 10f, 10f, 500, 1f);
+        energySlotList.addAssignedQuantity(date0, Market.EOM_MARKET, 10f, 10f, 500, 1f);
+        energySlotList.addAssignedQuantity(date0, Market.EOM_MARKET, 10f, 10f, 1, 1f);
     }
 
     @Test
     public void testSlotAssigning2() throws Exception {
-        energySlotList.addAssignedQuantity(date0, Duration.QUARTER_HOUR, 10f, 10f, 300, 1f);
-        assertEquals(700, energySlotList.getRemainingCapacity(date0, Duration.QUARTER_HOUR));
-        energySlotList.addAssignedQuantity(date0, Duration.QUARTER_HOUR, 10f, 10f, 700, 1f);
-        assertEquals(0, energySlotList.getRemainingCapacity(date0, Duration.QUARTER_HOUR));
+        energySlotList.addAssignedQuantity(date0, Market.EOM_MARKET, 10f, 10f, 300, 1f);
+        assertEquals(700, energySlotList.getRemainingCapacity(date0, Market.EOM_MARKET));
+        energySlotList.addAssignedQuantity(date0, Market.EOM_MARKET, 10f, 10f, 700, 1f);
+        assertEquals(0, energySlotList.getRemainingCapacity(date0, Market.EOM_MARKET));
     }
 }

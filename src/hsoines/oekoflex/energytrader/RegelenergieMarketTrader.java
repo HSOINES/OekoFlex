@@ -10,7 +10,7 @@ import repast.simphony.engine.schedule.ScheduledMethod;
  * Time: 08:29
  */
 public interface RegelenergieMarketTrader extends MarketTrader, MarketOperatorListener {
-    @ScheduledMethod(start = 0, interval = SequenceDefinition.RegelenergieMarketInterval, priority = SequenceDefinition.RegelenergieMarketBidPriority)
+    @ScheduledMethod(start = SequenceDefinition.SimulationStart, interval = SequenceDefinition.RegelenergieMarketInterval, priority = SequenceDefinition.RegelenergieMarketBidPriority)
     void makeBidRegelenergie();
 
     void setRegelenergieMarketOperator(RegelEnergieMarketOperator marketOperator);

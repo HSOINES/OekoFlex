@@ -1,7 +1,6 @@
 package hsoines.oekoflex.builder;
 
 import hsoines.oekoflex.OekoflexAgent;
-import hsoines.oekoflex.energytrader.impl.FixedDemandConsumer;
 import hsoines.oekoflex.energytrader.impl.test.ParametrizableEnergyProducer;
 import hsoines.oekoflex.marketoperator.RegelEnergieMarketOperator;
 import hsoines.oekoflex.marketoperator.impl.EOMOperatorImpl;
@@ -37,9 +36,6 @@ public class OekoFlexContextBuilder implements ContextBuilder<OekoflexAgent> {
             re.endRun();
         }
 
-        EnergyTraderTypeLogger energyTraderTypeLogger = new EnergyTraderTypeLogger(context);
-        context.add(energyTraderTypeLogger);
-
         EOMOperatorImpl eomOperator = new EOMOperatorImpl("EOM_Operator");
         RegelEnergieMarketOperator regelenergieMarketOperator = new RegelEnergieMarketOperatorImpl("RegelEnergieMarketOperator");
         context.add(eomOperator);
@@ -48,19 +44,20 @@ public class OekoFlexContextBuilder implements ContextBuilder<OekoflexAgent> {
         try {
             CombinedEnergyProducerFactory.build(configDir, context, eomOperator, regelenergieMarketOperator);
             DaytimeEnergyConsumerFactory.build(configDir, context, eomOperator);
-            FixedDemandConsumer fixedDemandConsumer = new FixedDemandConsumer(new File(configDir, "FixedDemand1.csv"));
-            fixedDemandConsumer.setEOMOperator(eomOperator);
+            FixedDemandConsumerFactory.build(configDir, context, eomOperator);
         } catch (IOException e) {
             log.error(e.toString(), e);
             re.endRun();
         }
 
-        for (int i = 0; i < 50; i++) {
+        for (int i = 0; i < 3; i++) {
             ParametrizableEnergyProducer producer = new ParametrizableEnergyProducer("ParametrizableEnergyProducer_" + i);
             producer.setEOMOperator(eomOperator);
             context.add(producer);
         }
 
+        EnergyTraderTypeLogger energyTraderTypeLogger = new EnergyTraderTypeLogger(context);
+        context.add(energyTraderTypeLogger);
 
         return context;
     }

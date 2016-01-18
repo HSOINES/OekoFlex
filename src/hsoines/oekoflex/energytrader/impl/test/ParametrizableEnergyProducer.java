@@ -4,12 +4,13 @@ import hsoines.oekoflex.bid.Bid;
 import hsoines.oekoflex.bid.Supply;
 import hsoines.oekoflex.energytrader.EOMTrader;
 import hsoines.oekoflex.energytrader.EnergyTradeRegistry;
+import hsoines.oekoflex.energytrader.impl.EnergyTradeRegistryImpl;
 import hsoines.oekoflex.marketoperator.EOMOperator;
-import hsoines.oekoflex.util.Duration;
+import hsoines.oekoflex.util.Market;
+import hsoines.oekoflex.util.TimeUtilities;
 import repast.simphony.engine.environment.RunEnvironment;
 import repast.simphony.parameter.Parameters;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -61,7 +62,7 @@ public class ParametrizableEnergyProducer implements EOMTrader {
     }
 
     @Override
-    public void notifyClearingDone(final float clearedPrice, final float rate, final Bid bid, final Date currentDate, final Duration duration) {
+    public void notifyClearingDone(final Date currentDate, final Market market, final Bid bid, final float clearedPrice, final float rate) {
         this.lastClearedPrice = clearedPrice;
         lastAssignmentRate = rate;
 
@@ -74,7 +75,7 @@ public class ParametrizableEnergyProducer implements EOMTrader {
 
     @Override
     public List<EnergyTradeRegistryImpl.EnergyTradeElement> getCurrentAssignments() {
-        return new ArrayList<>();
+        return energyTradeRegistry.getEnergyTradeElements(TimeUtilities.getCurrentDate());
     }
 
     @Override

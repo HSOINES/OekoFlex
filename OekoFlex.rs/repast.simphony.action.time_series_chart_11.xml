@@ -3,7 +3,7 @@
     <dataSet>RegelEnergieMarktOperatorDataSet</dataSet>
     <xAxisLabel>Tick Count</xAxisLabel>
     <yAxisLabel></yAxisLabel>
-    <chartTitle>RegelEnergieMarkt Quantity</chartTitle>
+    <chartTitle>RegelEnergieMarket Quantity</chartTitle>
     <type>TIME_SERIES</type>
     <background>
         <red>192</red>

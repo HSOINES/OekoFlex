@@ -8,13 +8,11 @@ import repast.simphony.engine.schedule.ScheduledMethod;
 public interface RegelEnergieMarketOperator extends OekoflexAgent {
 	void addSupply(Supply supply);
 
-	@ScheduledMethod(start = 0, interval = SequenceDefinition.RegelenergieMarketInterval, priority = SequenceDefinition.RegelenergieMarketClearingPriority)
+	@ScheduledMethod(start = SequenceDefinition.SimulationStart, interval = SequenceDefinition.RegelenergieMarketInterval, priority = SequenceDefinition.RegelenergieMarketClearingPriority)
 	void clearMarket();
 
 
 	long getTotalClearedQuantity();
-
-//	float getLastClearedPrice(); // nicht am Regelenergiemarkt!
 
 	float getLastAssignmentRate();
 }

@@ -1,7 +1,7 @@
 package hsoines.oekoflex.energytrader;
 
-import hsoines.oekoflex.energytrader.impl.test.EnergyTradeRegistryImpl;
-import hsoines.oekoflex.util.Duration;
+import hsoines.oekoflex.energytrader.impl.EnergyTradeRegistryImpl;
+import hsoines.oekoflex.util.Market;
 
 import java.util.Date;
 import java.util.List;
@@ -26,10 +26,10 @@ public interface EnergyTradeRegistry {
         Adds new assigned quantity to the History
         @return the quantity added, if bigger than max quantity, an error is thrown.
      */
-    void addAssignedQuantity(final Date date, final Duration duration, final float offeredPrice, final float assignedPrice, final int offeredQuantity, float assignedRate);
+    void addAssignedQuantity(final Date date, final Market market, final float offeredPrice, final float assignedPrice, final int offeredQuantity, float assignedRate);
 
     /* Energy, die zum entsprechenden Zeitpunkt vorhanden war */
-    int getRemainingCapacity(Date date, final Duration duration);
+    int getRemainingCapacity(Date date, final Market market);
 
     /* Energy, die zum entsprechenden Zeitpunkt abgerufen/geliefert wurde */
     int getEnergyUsed(Date date);

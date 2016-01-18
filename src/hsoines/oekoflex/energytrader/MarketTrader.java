@@ -1,7 +1,7 @@
 package hsoines.oekoflex.energytrader;
 
 import hsoines.oekoflex.OekoflexAgent;
-import hsoines.oekoflex.energytrader.impl.test.EnergyTradeRegistryImpl;
+import hsoines.oekoflex.energytrader.impl.EnergyTradeRegistryImpl;
 
 import java.util.List;
 

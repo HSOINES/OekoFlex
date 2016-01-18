@@ -6,7 +6,7 @@ import hsoines.oekoflex.energytrader.EOMTrader;
 import hsoines.oekoflex.energytrader.MarketTrader;
 import hsoines.oekoflex.energytrader.MarketTraderVisitor;
 import hsoines.oekoflex.energytrader.RegelenergieMarketTrader;
-import hsoines.oekoflex.energytrader.impl.test.EnergyTradeRegistryImpl;
+import hsoines.oekoflex.energytrader.impl.EnergyTradeRegistryImpl;
 import hsoines.oekoflex.util.TimeUtilities;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -34,10 +34,21 @@ public final class EnergyTraderTypeLogger implements MarketTraderVisitor, Oekofl
         this.context = context;
     }
 
+    @ScheduledMethod(start = SequenceDefinition.SimulationStart, interval = 1, priority = SequenceDefinition.ReportingPriority)
+    public void execute() {
+        IndexedIterable<OekoflexAgent> oekoflexAgents = context.getObjects(MarketTrader.class);
+        for (OekoflexAgent oekoflexAgent : oekoflexAgents) {
+            MarketTrader marketTrader = (MarketTrader) oekoflexAgent;
+            addIfNecessary(marketTrader);
+            marketTrader.accept(this);
+        }
+    }
+
     public void addIfNecessary(final MarketTrader marketTrader) {
-        if (!loggerFiles.keySet().contains(loggerFiles.getClass())) {
+        if (!loggerFiles.keySet().contains(marketTrader.getClass())) {
             LoggerFile loggerFile = null;
             try {
+
                 String header = buildHeaderString(marketTrader);
                 loggerFile = new LoggerFile(marketTrader.getClass().getSimpleName() + "s");
                 loggerFiles.put(marketTrader.getClass(), loggerFile);
@@ -50,12 +61,12 @@ public final class EnergyTraderTypeLogger implements MarketTraderVisitor, Oekofl
 
     String buildHeaderString(final MarketTrader marketTrader) {
         final StringBuilder header = new StringBuilder();
-        header.append("tick;ClassName;InstanceName;PriceOffered;PriceClearedCapacity;QuantityOffered;QuantityAssigned;Capacity");
+        header.append("tick;ClassName;InstanceName;Market;PriceOffered;PriceCleared;QuantityOffered;QuantityAssigned;Capacity");
 
         marketTrader.accept(new MarketTraderVisitor() {
             @Override
             public void visit(final EOMTrader eomTrader) {
-                header.append("ClearedPrice;");
+//  header.append("ClearedPrice;");
             }
 
             @Override
@@ -89,21 +100,12 @@ public final class EnergyTraderTypeLogger implements MarketTraderVisitor, Oekofl
             loggerFile.log(TimeUtilities.getTick(TimeUtilities.getCurrentDate()) + ";"
                     + marketTrader.getClass().getSimpleName() + ";"
                     + marketTrader.getName() + ";"
+                    + currentAssignment.getMarket() + ";"
                     + currentAssignment.getOfferedPrice() + ";"
                     + currentAssignment.getAssignedPrice() + ";"
                     + currentAssignment.getOfferedQuantity() + ";"
                     + assignedQuantity + ";"
                     + capacity + ";");
-        }
-    }
-
-    @ScheduledMethod(start = 0, interval = 1, priority = SequenceDefinition.ReportingPriority)
-    public void execute() {
-        IndexedIterable<OekoflexAgent> oekoflexAgents = context.getObjects(MarketTrader.class);
-        for (OekoflexAgent oekoflexAgent : oekoflexAgents) {
-            MarketTrader marketTrader = (MarketTrader) oekoflexAgent;
-            addIfNecessary(marketTrader);
-            marketTrader.accept(this);
         }
     }
 

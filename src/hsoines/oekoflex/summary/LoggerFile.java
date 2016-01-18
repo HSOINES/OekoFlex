@@ -24,7 +24,7 @@ public final class LoggerFile {
     }
 
 //    public String buildSummary(final float clearedPrice, final float rate, final Bid bid, final Date currentDate) {
-//        return TimeUtilities.dateFormatter.format(currentDate) + "," + TimeUtilities.getTick(currentDate) + "," + clearedPrice + "," + rate + "," + bid.getQuantity() + "," + bid.getTypeString();
+//        return TimeUtilities.dateFormat.format(currentDate) + "," + TimeUtilities.getTick(currentDate) + "," + clearedPrice + "," + rate + "," + bid.getQuantity() + "," + bid.getTypeString();
 //    }
 
 //    public void add(final float clearedPrice, final float rate, final Bid bid, final Date currentDate) {

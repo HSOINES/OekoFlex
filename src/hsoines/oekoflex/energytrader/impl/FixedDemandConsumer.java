@@ -5,9 +5,8 @@ import hsoines.oekoflex.bid.Demand;
 import hsoines.oekoflex.builder.CSVParameter;
 import hsoines.oekoflex.energytrader.EOMTrader;
 import hsoines.oekoflex.energytrader.EnergyTradeRegistry;
-import hsoines.oekoflex.energytrader.impl.test.EnergyTradeRegistryImpl;
 import hsoines.oekoflex.marketoperator.EOMOperator;
-import hsoines.oekoflex.util.Duration;
+import hsoines.oekoflex.util.Market;
 import hsoines.oekoflex.util.TimeUtilities;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
@@ -27,12 +26,16 @@ import java.util.List;
  */
 public final class FixedDemandConsumer implements EOMTrader {
     private static final Log log = LogFactory.getLog(FixedDemandConsumer.class);
-    public static final float PRICE = 1f;
+    public static final float FIXED_PRICE = 3000f;
     private final EnergyTradeRegistryImpl energyTradeRegistry;
+    private final String name;
 
     private EOMOperator marketOperator;
+    private float lastClearedPrice;
+    private float lastAssignmentRate;
 
-    public FixedDemandConsumer(final File csvFile) throws IOException {
+    public FixedDemandConsumer(final String name, final File csvFile) throws IOException {
+        this.name = name;
         energyTradeRegistry = new EnergyTradeRegistryImpl(EnergyTradeRegistry.Type.CONSUM, 0);
         FileReader reader = new FileReader(csvFile);
         CSVParser parser = CSVParameter.getCSVFormat().parse(reader);
@@ -54,32 +57,34 @@ public final class FixedDemandConsumer implements EOMTrader {
 
     @Override
     public void makeBidEOM() {
-        int remainingCapacity = energyTradeRegistry.getRemainingCapacity(TimeUtilities.getCurrentDate(), Duration.QUARTER_HOUR);
-        marketOperator.addDemand(new Demand(PRICE, remainingCapacity, this));
+        int remainingCapacity = energyTradeRegistry.getRemainingCapacity(TimeUtilities.getCurrentDate(), Market.EOM_MARKET);
+        marketOperator.addDemand(new Demand(FIXED_PRICE, remainingCapacity, this));
     }
 
     @Override
-    public void notifyClearingDone(final float clearedPrice, final float rate, final Bid bid, final Date currentDate, final Duration duration) {
-        energyTradeRegistry.addAssignedQuantity(currentDate, Duration.QUARTER_HOUR, bid.getPrice(), clearedPrice, bid.getQuantity(), rate);
+    public void notifyClearingDone(final Date currentDate, final Market market, final Bid bid, final float clearedPrice, final float rate) {
+        energyTradeRegistry.addAssignedQuantity(currentDate, market, bid.getPrice(), clearedPrice, bid.getQuantity(), rate);
+        lastClearedPrice = clearedPrice;
+        lastAssignmentRate = rate;
     }
 
     @Override
     public float getLastClearedPrice() {
-        return 0;
+        return lastClearedPrice;
     }
 
     @Override
     public float getLastAssignmentRate() {
-        return 0;
+        return lastAssignmentRate;
     }
 
     @Override
     public List<EnergyTradeRegistryImpl.EnergyTradeElement> getCurrentAssignments() {
-        return null;
+        return energyTradeRegistry.getEnergyTradeElements(TimeUtilities.getCurrentDate());
     }
 
     @Override
     public String getName() {
-        return null;
+        return name;
     }
 }

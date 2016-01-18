@@ -1,8 +1,7 @@
 package hsoines.oekoflex.energytrader.impl;
 
 import hsoines.oekoflex.energytrader.EnergyTradeRegistry;
-import hsoines.oekoflex.energytrader.impl.test.EnergyTradeRegistryImpl;
-import hsoines.oekoflex.util.Duration;
+import hsoines.oekoflex.util.Market;
 import hsoines.oekoflex.util.TimeUtilities;
 import org.junit.Before;
 import org.junit.Test;
@@ -38,17 +37,17 @@ public class EnergyTradeRegistryImplTest {
 
     @Test
     public void testAssignmentQuarterHour() throws Exception {
-        energyTradeRegistry.addAssignedQuantity(date0, Duration.QUARTER_HOUR, 1f, 1f, 100, 1f);
-        energyTradeRegistry.addAssignedQuantity(date1, Duration.QUARTER_HOUR, 1f, 1f, 100, 1f);
-        energyTradeRegistry.addAssignedQuantity(date1, Duration.QUARTER_HOUR, 1f, 1f, 100, 1f);
+        energyTradeRegistry.addAssignedQuantity(date0, Market.EOM_MARKET, 1f, 1f, 100, 1f);
+        energyTradeRegistry.addAssignedQuantity(date1, Market.EOM_MARKET, 1f, 1f, 100, 1f);
+        energyTradeRegistry.addAssignedQuantity(date1, Market.EOM_MARKET, 1f, 1f, 100, 1f);
         assertEquals(100, energyTradeRegistry.getEnergyUsed(date0));
         assertEquals(200, energyTradeRegistry.getEnergyUsed(date1));
     }
 
     @Test
     public void testAssignmentFourHours() throws Exception {
-        energyTradeRegistry.addAssignedQuantity(date0, Duration.FOUR_HOURS, 10f, 10f, 100, 1f);
-        energyTradeRegistry.addAssignedQuantity(date1, Duration.QUARTER_HOUR, 10f, 10f, 100, 1f);
+        energyTradeRegistry.addAssignedQuantity(date0, Market.REGELENERGIE_MARKET, 10f, 10f, 100, 1f);
+        energyTradeRegistry.addAssignedQuantity(date1, Market.EOM_MARKET, 10f, 10f, 100, 1f);
         assertEquals(100, energyTradeRegistry.getEnergyUsed(date0));
         assertEquals(200, energyTradeRegistry.getEnergyUsed(date1));
         assertEquals(100, energyTradeRegistry.getEnergyUsed(date2));
@@ -58,17 +57,17 @@ public class EnergyTradeRegistryImplTest {
         assertEquals(10f, energyTradeRegistry.getEnergyTradeElements(date1).get(0).getAssignedPrice(), 0.00001);
         assertEquals(10f, energyTradeRegistry.getEnergyTradeElements(date1).get(1).getAssignedPrice(), 0.00001);
 
-        assertEquals(900, energyTradeRegistry.getRemainingCapacity(date0, Duration.QUARTER_HOUR));
-        assertEquals(800, energyTradeRegistry.getRemainingCapacity(date1, Duration.QUARTER_HOUR));
-        assertEquals(900, energyTradeRegistry.getRemainingCapacity(date2, Duration.QUARTER_HOUR));
-        assertEquals(900, energyTradeRegistry.getRemainingCapacity(date3, Duration.QUARTER_HOUR));
+        assertEquals(900, energyTradeRegistry.getRemainingCapacity(date0, Market.EOM_MARKET));
+        assertEquals(800, energyTradeRegistry.getRemainingCapacity(date1, Market.EOM_MARKET));
+        assertEquals(900, energyTradeRegistry.getRemainingCapacity(date2, Market.EOM_MARKET));
+        assertEquals(900, energyTradeRegistry.getRemainingCapacity(date3, Market.EOM_MARKET));
 
-        assertEquals(800, energyTradeRegistry.getRemainingCapacity(date0, Duration.FOUR_HOURS));
+        assertEquals(800, energyTradeRegistry.getRemainingCapacity(date0, Market.REGELENERGIE_MARKET));
     }
 
     @Test
     public void testQuantityInRegistry() throws Exception {
-        energyTradeRegistry.addAssignedQuantity(date0, Duration.FOUR_HOURS, 10f, 10f, 100, 1f);
+        energyTradeRegistry.addAssignedQuantity(date0, Market.REGELENERGIE_MARKET, 10f, 10f, 100, 1f);
         List<EnergyTradeRegistryImpl.EnergyTradeElement> energyTradeElements = energyTradeRegistry.getEnergyTradeElements(date0);
         assertEquals(INITIALCAPACITY, energyTradeElements.get(0).getCapacity());
 

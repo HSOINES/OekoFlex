@@ -3,10 +3,10 @@ package hsoines.oekoflex.summary;
 import hsoines.oekoflex.bid.Bid;
 import hsoines.oekoflex.energytrader.EOMTrader;
 import hsoines.oekoflex.energytrader.RegelenergieMarketTrader;
-import hsoines.oekoflex.energytrader.impl.test.EnergyTradeRegistryImpl;
+import hsoines.oekoflex.energytrader.impl.EnergyTradeRegistryImpl;
 import hsoines.oekoflex.marketoperator.EOMOperator;
 import hsoines.oekoflex.marketoperator.RegelEnergieMarketOperator;
-import hsoines.oekoflex.util.Duration;
+import hsoines.oekoflex.util.Market;
 import org.junit.Before;
 import org.junit.Test;
 import repast.simphony.context.DefaultContext;
@@ -78,7 +78,7 @@ public class EnergyTraderTypeLoggerTest {
 
 
         @Override
-        public void notifyClearingDone(final float clearedPrice, final float rate, final Bid bid, final Date currentDate, final Duration duration) {
+        public void notifyClearingDone(final Date currentDate, final Market market, final Bid bid, final float clearedPrice, final float rate) {
 
         }
 
@@ -134,7 +134,7 @@ public class EnergyTraderTypeLoggerTest {
         }
 
         @Override
-        public void notifyClearingDone(final float clearedPrice, final float rate, final Bid bid, final Date currentDate, final Duration duration) {
+        public void notifyClearingDone(final Date currentDate, final Market market, final Bid bid, final float clearedPrice, final float rate) {
 
         }
     }

@@ -4,10 +4,11 @@ import hsoines.oekoflex.bid.Bid;
 import hsoines.oekoflex.bid.Demand;
 import hsoines.oekoflex.energytrader.EOMTrader;
 import hsoines.oekoflex.energytrader.EnergyTradeRegistry;
+import hsoines.oekoflex.energytrader.impl.EnergyTradeRegistryImpl;
 import hsoines.oekoflex.marketoperator.EOMOperator;
 import hsoines.oekoflex.strategies.DaytimePriceStrategy;
 import hsoines.oekoflex.strategies.PriceStrategy;
-import hsoines.oekoflex.util.Duration;
+import hsoines.oekoflex.util.Market;
 import hsoines.oekoflex.util.TimeUtilities;
 
 import java.util.Date;
@@ -48,19 +49,19 @@ public final class DaytimeEnergyConsumer implements EOMTrader {
         Date date = TimeUtilities.getCurrentDate();
         if (marketOperator != null) {
             lastBidPrice = priceStrategy.getPrice(date);
-            int offeredQuantity = energyTradeRegistry.getRemainingCapacity(date, Duration.QUARTER_HOUR);
+            int offeredQuantity = energyTradeRegistry.getRemainingCapacity(date, Market.EOM_MARKET);
             marketOperator.addDemand(new Demand(lastBidPrice, offeredQuantity, this));
         }
     }
 
     @Override
-    public void notifyClearingDone(final float clearedPrice, final float rate, final Bid bid, final Date currentDate, final Duration duration) {
+    public void notifyClearingDone(final Date currentDate, final Market market, final Bid bid, final float clearedPrice, final float rate) {
         Date date = TimeUtilities.getCurrentDate();
 
         this.clearedPrice = clearedPrice;
         lastAssignmentRate = rate;
         this.lastQuantity = bid.getQuantity();
-        energyTradeRegistry.addAssignedQuantity(date, Duration.QUARTER_HOUR, bid.getPrice(), clearedPrice, bid.getQuantity(), rate);
+        energyTradeRegistry.addAssignedQuantity(date, market, bid.getPrice(), clearedPrice, bid.getQuantity(), rate);
     }
 
     public float getLastAssignmentRate() {
@@ -69,7 +70,7 @@ public final class DaytimeEnergyConsumer implements EOMTrader {
 
     @Override
     public List<EnergyTradeRegistryImpl.EnergyTradeElement> getCurrentAssignments() {
-        return null;
+        return energyTradeRegistry.getEnergyTradeElements(TimeUtilities.getCurrentDate());
     }
 
     public float getLastClearedPrice() {

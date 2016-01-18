@@ -6,11 +6,12 @@ import hsoines.oekoflex.energytrader.EOMTrader;
 import hsoines.oekoflex.energytrader.EnergyTradeRegistry;
 import hsoines.oekoflex.energytrader.MarketTraderVisitor;
 import hsoines.oekoflex.energytrader.RegelenergieMarketTrader;
+import hsoines.oekoflex.energytrader.impl.EnergyTradeRegistryImpl;
 import hsoines.oekoflex.marketoperator.EOMOperator;
 import hsoines.oekoflex.marketoperator.RegelEnergieMarketOperator;
 import hsoines.oekoflex.strategies.ConstantPriceStrategy;
 import hsoines.oekoflex.strategies.PriceStrategy;
-import hsoines.oekoflex.util.Duration;
+import hsoines.oekoflex.util.Market;
 import hsoines.oekoflex.util.TimeUtilities;
 
 import java.util.Date;
@@ -46,14 +47,14 @@ public class CombinedEnergyProducer implements RegelenergieMarketTrader, EOMTrad
     public void makeBidEOM() {
         Date date = TimeUtilities.getCurrentDate();
         lastBidPrice = energyOnlyPriceStrategy.getPrice(date);
-        int offerCapacity = energyTradeRegistry.getRemainingCapacity(date, Duration.FOUR_HOURS);
+        int offerCapacity = energyTradeRegistry.getRemainingCapacity(date, Market.REGELENERGIE_MARKET);
         EOMOperator.addSupply(new Supply(lastBidPrice, offerCapacity, this));
     }
 
     @Override
     public void makeBidRegelenergie() {
         Date date = TimeUtilities.getCurrentDate();
-        int offerCapacity = (int) (energyTradeRegistry.getRemainingCapacity(date, Duration.FOUR_HOURS) * quantityPercentageOnRegelMarkt);
+        int offerCapacity = (int) (energyTradeRegistry.getRemainingCapacity(date, Market.REGELENERGIE_MARKET) * quantityPercentageOnRegelMarkt);
         regelenergieMarketOperator.addSupply(new Supply(regelMarktPriceStrategy.getPrice(date), offerCapacity, this));
     }
 
@@ -63,10 +64,10 @@ public class CombinedEnergyProducer implements RegelenergieMarketTrader, EOMTrad
     }
 
     @Override
-    public void notifyClearingDone(final float clearedPrice, final float rate, final Bid bid, final Date currentDate, final Duration duration) {
+    public void notifyClearingDone(final Date currentDate, final Market market, final Bid bid, final float clearedPrice, final float rate) {
         this.lastClearedPrice = clearedPrice;
         lastAssignmentRate = rate;
-        energyTradeRegistry.addAssignedQuantity(currentDate, Duration.QUARTER_HOUR, bid.getPrice(), clearedPrice, bid.getQuantity(), rate);
+        energyTradeRegistry.addAssignedQuantity(currentDate, market, bid.getPrice(), clearedPrice, bid.getQuantity(), rate);
     }
 
     @Override

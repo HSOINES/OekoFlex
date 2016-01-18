@@ -6,7 +6,7 @@ import hsoines.oekoflex.bid.Supply;
 import hsoines.oekoflex.energytrader.impl.test.CombinedEnergyProducer;
 import hsoines.oekoflex.energytrader.impl.test.DaytimeEnergyConsumer;
 import hsoines.oekoflex.tools.RepastTestInitializer;
-import hsoines.oekoflex.util.Duration;
+import hsoines.oekoflex.util.Market;
 import org.junit.Before;
 import org.junit.Test;
 import repast.simphony.context.Context;
@@ -31,8 +31,8 @@ public class EnergyTraderTypeLoggerTest2 {
         context.add(combinedTest);
         energyTraderTypeLogger = new EnergyTraderTypeLogger(context);
 
-        test.notifyClearingDone(10.0f, 1f, new Demand(10f, 1000, null), new Date(), Duration.QUARTER_HOUR);
-        combinedTest.notifyClearingDone(1f, .4f, new Supply(12f, 200, null), new Date(), Duration.QUARTER_HOUR);
+        test.notifyClearingDone(new Date(), Market.EOM_MARKET, new Demand(10f, 1000, null), 10.0f, 1f);
+        combinedTest.notifyClearingDone(new Date(), Market.EOM_MARKET, new Supply(12f, 200, null), 1f, .4f);
 
     }
 

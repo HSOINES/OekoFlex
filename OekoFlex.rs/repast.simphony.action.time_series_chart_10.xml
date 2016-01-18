@@ -3,7 +3,7 @@
     <dataSet>EnergieOnlyMarketOperator</dataSet>
     <xAxisLabel>Tick Count</xAxisLabel>
     <yAxisLabel></yAxisLabel>
-    <chartTitle>TotalClearedQuantity</chartTitle>
+    <chartTitle>EOM Market Quantity</chartTitle>
     <type>TIME_SERIES</type>
     <background>
         <red>192</red>

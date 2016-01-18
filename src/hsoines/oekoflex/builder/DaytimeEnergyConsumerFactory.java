@@ -36,7 +36,7 @@ public final class DaytimeEnergyConsumerFactory {
                 daytimeEnergyConsumer.setEOMOperator(energyOnlyMarketOperator);
                 context.add(daytimeEnergyConsumer);
 
-                log.info("CombinedEnergyProducer Build done: " + name);
+                log.info("DaytimeEnergyConsumer Build done: " + name);
             } catch (NumberFormatException e) {
                 log.error(e.getMessage(), e);
             }

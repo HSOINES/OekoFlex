@@ -1,7 +1,7 @@
 package hsoines.oekoflex.energytrader;
 
 import hsoines.oekoflex.bid.Bid;
-import hsoines.oekoflex.util.Duration;
+import hsoines.oekoflex.util.Market;
 
 import java.util.Date;
 
@@ -11,5 +11,5 @@ import java.util.Date;
  * Time: 19:12
  */
 public interface MarketOperatorListener {
-    void notifyClearingDone(float clearedPrice, float rate, Bid bid, final Date currentDate, final Duration duration);
+    void notifyClearingDone(final Date currentDate, final Market market, Bid bid, float clearedPrice, float rate);
 }

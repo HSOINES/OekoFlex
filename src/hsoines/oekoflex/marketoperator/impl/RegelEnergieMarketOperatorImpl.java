@@ -3,7 +3,7 @@ package hsoines.oekoflex.marketoperator.impl;
 import hsoines.oekoflex.bid.Supply;
 import hsoines.oekoflex.energytrader.MarketOperatorListener;
 import hsoines.oekoflex.marketoperator.RegelEnergieMarketOperator;
-import hsoines.oekoflex.util.Duration;
+import hsoines.oekoflex.util.Market;
 import hsoines.oekoflex.util.TimeUtilities;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -34,9 +34,9 @@ public final class RegelEnergieMarketOperatorImpl implements RegelEnergieMarketO
         this.quantity = (int) p.getValue("rigidDemandEnergyOnlyMarket");
     }
 
-    RegelEnergieMarketOperatorImpl(int quantity) {
+    public RegelEnergieMarketOperatorImpl(final String name, int quantity) {
         this.quantity = quantity;
-        this.name = "test_only";
+        this.name = name;
     }
 
     @Override
@@ -63,6 +63,7 @@ public final class RegelEnergieMarketOperatorImpl implements RegelEnergieMarketO
                 totalClearedQuantity += supply.getQuantity() * lastAssignmentRate;
             }
         }
+        log.info("Clearing done.");
         supplies.clear();
     }
 
@@ -79,9 +80,7 @@ public final class RegelEnergieMarketOperatorImpl implements RegelEnergieMarketO
 
     void doNotify(final Supply supply, final MarketOperatorListener marketOperatorListener, float assignRate) {
         long tick = TimeUtilities.getTick(TimeUtilities.getCurrentDate());
-        for (int i = 0; i < Duration.FOUR_HOURS.getTicks(); i++) {
-            marketOperatorListener.notifyClearingDone(supply.getPrice(), assignRate, supply, TimeUtilities.getDate(tick + i), Duration.FOUR_HOURS);
-        }
+        marketOperatorListener.notifyClearingDone(TimeUtilities.getDate(tick), Market.REGELENERGIE_MARKET, supply, supply.getPrice(), assignRate);
         lastClearedMaxPrice = supply.getPrice();
     }
 

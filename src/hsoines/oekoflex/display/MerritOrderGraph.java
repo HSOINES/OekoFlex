@@ -77,7 +77,7 @@ public class MerritOrderGraph implements IDisplay {
         chart.getStyleManager().setAxisTitlesVisible(false);
 
         Date date = TimeUtilities.getCurrentDate();
-        String info = "Date: " + TimeUtilities.dateFormatter.format(date) +
+        String info = "Date: " + TimeUtilities.dateFormat.format(date) +
                 ", Last Cleared Price:" + eomOperator.getLastClearedPrice() +
                 ", Assignment Type: " + eomOperator.getLastAssignmentType().toString() +
                 " ";

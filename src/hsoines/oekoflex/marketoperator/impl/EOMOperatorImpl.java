@@ -5,7 +5,7 @@ import hsoines.oekoflex.bid.Demand;
 import hsoines.oekoflex.bid.Supply;
 import hsoines.oekoflex.energytrader.MarketOperatorListener;
 import hsoines.oekoflex.marketoperator.EOMOperator;
-import hsoines.oekoflex.util.Duration;
+import hsoines.oekoflex.util.Market;
 import hsoines.oekoflex.util.TimeUtilities;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -161,7 +161,7 @@ public class EOMOperatorImpl implements EOMOperator, OekoflexAgent {
                 } else {
                     assignmentRate = 0;
                 }
-                marketOperatorListener.notifyClearingDone(clearedPrice, assignmentRate, demand, date, Duration.QUARTER_HOUR);
+                marketOperatorListener.notifyClearingDone(date, Market.EOM_MARKET, demand, clearedPrice, assignmentRate);
                 logString.append(assignmentRate).append(",")
                         .append(demand.getPrice()).append(",")
                         .append(demand.getQuantity()).append(",");
@@ -178,7 +178,7 @@ public class EOMOperatorImpl implements EOMOperator, OekoflexAgent {
                 } else {
                     assignmentRate = 0;
                 }
-                marketOperatorListener.notifyClearingDone(clearedPrice, assignmentRate, supply, date, Duration.QUARTER_HOUR);
+                marketOperatorListener.notifyClearingDone(date, Market.EOM_MARKET, supply, clearedPrice, assignmentRate);
                 logString.append(assignmentRate).append(",")
                         .append(supply.getPrice()).append(",")
                         .append(supply.getQuantity()).append(",");
