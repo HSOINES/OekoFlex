@@ -7,7 +7,7 @@ import hsoines.oekoflex.energytrader.EOMTrader;
 import hsoines.oekoflex.energytrader.EnergyTradeRegistry;
 import hsoines.oekoflex.marketoperator.EOMOperator;
 import hsoines.oekoflex.util.Market;
-import hsoines.oekoflex.util.TimeUtilities;
+import hsoines.oekoflex.util.TimeUtil;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.logging.Log;
@@ -57,7 +57,7 @@ public final class FixedDemandConsumer implements EOMTrader {
 
     @Override
     public void makeBidEOM() {
-        int remainingCapacity = energyTradeRegistry.getRemainingCapacity(TimeUtilities.getCurrentDate(), Market.EOM_MARKET);
+        int remainingCapacity = energyTradeRegistry.getRemainingCapacity(TimeUtil.getCurrentDate(), Market.EOM_MARKET);
         marketOperator.addDemand(new Demand(FIXED_PRICE, remainingCapacity, this));
     }
 
@@ -80,7 +80,7 @@ public final class FixedDemandConsumer implements EOMTrader {
 
     @Override
     public List<EnergyTradeRegistryImpl.EnergyTradeElement> getCurrentAssignments() {
-        return energyTradeRegistry.getEnergyTradeElements(TimeUtilities.getCurrentDate());
+        return energyTradeRegistry.getEnergyTradeElements(TimeUtil.getCurrentDate());
     }
 
     @Override

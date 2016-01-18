@@ -19,7 +19,7 @@ public class EOMOperatorTest {
     @Before
     public void setUp() throws Exception {
         RepastTestInitializer.init();
-        energyOnlyMarketOperator = new EOMOperatorImpl("test");
+        energyOnlyMarketOperator = new EOMOperatorImpl("test", "run/summary-logs/test");
     }
 
     @org.junit.Test

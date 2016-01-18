@@ -32,7 +32,7 @@ public class CombinedEnergyProducerTest {
 
     @Test
     public void testAssignEnergy() throws Exception {
-        RegelEnergieMarketOperatorImpl testOperator = new RegelEnergieMarketOperatorImpl("test", 1000);
+        RegelEnergieMarketOperatorImpl testOperator = new RegelEnergieMarketOperatorImpl("test", "run/summary-logs/test", 1000);
         CombinedEnergyProducer testProducer = new CombinedEnergyProducer("test_producer");
         testProducer.setQuantityPercentageOnRegelMarkt(0.6f);
         testProducer.setPriceRegelMarkt(1f);

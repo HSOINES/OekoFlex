@@ -1,25 +1,29 @@
 package hsoines.oekoflex.marketoperator.impl;
 
-import hsoines.oekoflex.OekoflexAgent;
+import hsoines.oekoflex.bid.Bid;
 import hsoines.oekoflex.bid.Demand;
 import hsoines.oekoflex.bid.Supply;
 import hsoines.oekoflex.energytrader.MarketOperatorListener;
 import hsoines.oekoflex.marketoperator.EOMOperator;
+import hsoines.oekoflex.summary.LoggerFile;
 import hsoines.oekoflex.util.Market;
-import hsoines.oekoflex.util.TimeUtilities;
+import hsoines.oekoflex.util.NumberFormatUtil;
+import hsoines.oekoflex.util.TimeUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
-public class EOMOperatorImpl implements EOMOperator, OekoflexAgent {
+public class EOMOperatorImpl implements EOMOperator {
     private static final Log log = LogFactory.getLog(EOMOperatorImpl.class);
 
     private final List<Demand> demands;
     private final List<Supply> supplies;
+    private final LoggerFile logger;
     private List<Demand> lastDemands;
     private List<Supply> lastSupplies;
     private final String name;
@@ -28,11 +32,14 @@ public class EOMOperatorImpl implements EOMOperator, OekoflexAgent {
     private float lastAssignmentRate;
     private AssignmentType lastAssignmentType;
 
-    public EOMOperatorImpl(String name) {
+    public EOMOperatorImpl(String name, final String logDirName) throws IOException {
         this.name = name;
 
-        demands = new ArrayList<Demand>();
-        supplies = new ArrayList<Supply>();
+        demands = new ArrayList<>();
+        supplies = new ArrayList<>();
+
+        logger = new LoggerFile(this.getClass().getSimpleName(), logDirName);
+        logger.log("tick;traderType;traderName;bidType;offeredPrice;clearedPrice;offeredQuantity;assignmentRate");
     }
 
     @Override
@@ -135,7 +142,7 @@ public class EOMOperatorImpl implements EOMOperator, OekoflexAgent {
             throw new IllegalStateException("lastAssignmentRate: " + lastAssignmentRate);
         }
 
-        notifyExecutionRate();
+        notifyAssignmentRate();
 
         lastDemands = new ArrayList<>(demands);
         lastSupplies = new ArrayList<>(supplies);
@@ -143,13 +150,13 @@ public class EOMOperatorImpl implements EOMOperator, OekoflexAgent {
         demands.clear();
     }
 
-    private void notifyExecutionRate() {
+    private void notifyAssignmentRate() {
         StringBuilder logString = new StringBuilder();
         logString.append(getName()).append(",")
                 .append(getLastClearedPrice()).append(",")
                 .append(getLastAssignmentRate()).append(",")
                 .append(getTotalClearedQuantity()).append(",");
-        Date date = TimeUtilities.getCurrentDate();
+        Date date = TimeUtil.getCurrentDate();
         for (Demand demand : demands) {
             MarketOperatorListener marketOperatorListener = demand.getMarketOperatorListener();
             if (marketOperatorListener != null) {
@@ -162,6 +169,7 @@ public class EOMOperatorImpl implements EOMOperator, OekoflexAgent {
                     assignmentRate = 0;
                 }
                 marketOperatorListener.notifyClearingDone(date, Market.EOM_MARKET, demand, clearedPrice, assignmentRate);
+                logSummary(demand, assignmentRate);
                 logString.append(assignmentRate).append(",")
                         .append(demand.getPrice()).append(",")
                         .append(demand.getQuantity()).append(",");
@@ -179,6 +187,7 @@ public class EOMOperatorImpl implements EOMOperator, OekoflexAgent {
                     assignmentRate = 0;
                 }
                 marketOperatorListener.notifyClearingDone(date, Market.EOM_MARKET, supply, clearedPrice, assignmentRate);
+                logSummary(supply, assignmentRate);
                 logString.append(assignmentRate).append(",")
                         .append(supply.getPrice()).append(",")
                         .append(supply.getQuantity()).append(",");
@@ -186,6 +195,18 @@ public class EOMOperatorImpl implements EOMOperator, OekoflexAgent {
             Log allInOneLine = LogFactory.getLog("ALL_IN_ONE_LINE");
             allInOneLine.info(logString.toString());
         }
+    }
+
+    private void logSummary(final Bid bid, final float assignmentRate) {
+        logger.log(TimeUtil.getCurrentTick() + ";"
+                        + bid.getMarketOperatorListener().getClass().getSimpleName() + ";"
+                        + bid.getMarketOperatorListener().getName() + ";"
+                        + bid.getClass().getSimpleName() + ";"
+                        + NumberFormatUtil.format(bid.getPrice()) + ";"
+                        + NumberFormatUtil.format(clearedPrice) + ";"
+                        + bid.getQuantity() + ";"
+                        + NumberFormatUtil.format(assignmentRate) + ";"
+        );
     }
 
     @Override

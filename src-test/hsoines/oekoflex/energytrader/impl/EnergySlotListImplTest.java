@@ -2,7 +2,7 @@ package hsoines.oekoflex.energytrader.impl;
 
 import hsoines.oekoflex.energytrader.EnergyTradeRegistry;
 import hsoines.oekoflex.util.Market;
-import hsoines.oekoflex.util.TimeUtilities;
+import hsoines.oekoflex.util.TimeUtil;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -26,10 +26,10 @@ public class EnergySlotListImplTest {
     @Before
     public void setUp() throws Exception {
         energySlotList = new EnergyTradeRegistryImpl(EnergyTradeRegistry.Type.PRODUCE, 1000);
-        date0 = TimeUtilities.getDate(0);
-        date1 = TimeUtilities.getDate(1);
-        date2 = TimeUtilities.getDate(2);
-        date3 = TimeUtilities.getDate(3);
+        date0 = TimeUtil.getDate(0);
+        date1 = TimeUtil.getDate(1);
+        date2 = TimeUtil.getDate(2);
+        date3 = TimeUtil.getDate(3);
     }
 
     @Test

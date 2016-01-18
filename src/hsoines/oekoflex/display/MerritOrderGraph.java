@@ -4,7 +4,7 @@ import hsoines.oekoflex.OekoflexAgent;
 import hsoines.oekoflex.bid.Demand;
 import hsoines.oekoflex.bid.Supply;
 import hsoines.oekoflex.marketoperator.impl.EOMOperatorImpl;
-import hsoines.oekoflex.util.TimeUtilities;
+import hsoines.oekoflex.util.TimeUtil;
 import org.knowm.xchart.Chart;
 import org.knowm.xchart.ChartBuilder;
 import org.knowm.xchart.StyleManager;
@@ -76,8 +76,8 @@ public class MerritOrderGraph implements IDisplay {
         chart.getStyleManager().setLegendPosition(StyleManager.LegendPosition.InsideNW);
         chart.getStyleManager().setAxisTitlesVisible(false);
 
-        Date date = TimeUtilities.getCurrentDate();
-        String info = "Date: " + TimeUtilities.dateFormat.format(date) +
+        Date date = TimeUtil.getCurrentDate();
+        String info = "Date: " + TimeUtil.dateFormat.format(date) +
                 ", Last Cleared Price:" + eomOperator.getLastClearedPrice() +
                 ", Assignment Type: " + eomOperator.getLastAssignmentType().toString() +
                 " ";

@@ -4,7 +4,7 @@ import hsoines.oekoflex.bid.Bid;
 import hsoines.oekoflex.bid.Supply;
 import hsoines.oekoflex.energytrader.MarketOperatorListener;
 import hsoines.oekoflex.util.Market;
-import hsoines.oekoflex.util.TimeUtilities;
+import hsoines.oekoflex.util.TimeUtil;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -32,7 +32,7 @@ public class RegelEnergieMarketImplTest {
 
     @Before
     public void setUp() throws Exception {
-        operator = new RegelEnergieMarketOperatorImpl("test", 10000);
+        operator = new RegelEnergieMarketOperatorImpl("test", "run/summary-logs/test", 10000);
         listener = mock(MarketOperatorListener.class);
 
         Schedule schedule = new Schedule();
@@ -63,7 +63,7 @@ public class RegelEnergieMarketImplTest {
 
         operator.clearMarket();
 
-        verify(listener, times(1)).notifyClearingDone(argThat(new DateMatcher(TimeUtilities.getDateWithMinutesOffset(-15))), Matchers.eq(Market.REGELENERGIE_MARKET), Matchers.<Bid>any(), Matchers.eq(10f), Matchers.eq(1f));
+        verify(listener, times(1)).notifyClearingDone(argThat(new DateMatcher(TimeUtil.getDateWithMinutesOffset(-15))), Matchers.eq(Market.REGELENERGIE_MARKET), Matchers.<Bid>any(), Matchers.eq(10f), Matchers.eq(1f));
     }
 
     @Test
@@ -117,7 +117,7 @@ public class RegelEnergieMarketImplTest {
         verify(listener, times(1)).notifyClearingDone(Matchers.any(), Matchers.eq(Market.REGELENERGIE_MARKET), Matchers.<Bid>any(), Matchers.eq(20f), Matchers.eq(1f));
         verify(listener, times(1)).notifyClearingDone(Matchers.any(), Matchers.eq(Market.REGELENERGIE_MARKET), Matchers.<Bid>any(), Matchers.eq(30f), Matchers.eq(1f));
         verify(listener, times(1)).notifyClearingDone(Matchers.any(), Matchers.eq(Market.REGELENERGIE_MARKET), Matchers.<Bid>any(), Matchers.eq(40f), Matchers.eq(.5f));
-        verify(listener, times(4)).notifyClearingDone(Matchers.any(), Matchers.eq(Market.REGELENERGIE_MARKET), Matchers.<Bid>any(), Matchers.anyFloat(), Matchers.anyFloat());
+        verify(listener, times(8)).notifyClearingDone(Matchers.any(), Matchers.eq(Market.REGELENERGIE_MARKET), Matchers.<Bid>any(), Matchers.anyFloat(), Matchers.anyFloat());
     }
 
 

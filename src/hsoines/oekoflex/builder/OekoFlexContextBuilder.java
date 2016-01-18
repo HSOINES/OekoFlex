@@ -29,35 +29,40 @@ public class OekoFlexContextBuilder implements ContextBuilder<OekoflexAgent> {
         int daysToRun = (int) p.getValue("daysToRun");
         re.endAt(daysToRun * 96);
 
-        String configDirString = (String) p.getValue("runConfigDir");
-        File configDir = new File(configDirString);
+        String scenario = (String) p.getValue("scenario");
+        String logDirName = "run/summary-logs/" + scenario;
+        String configDirName = "run-config/" + scenario;
+        File configDir = new File(configDirName);
         if (!configDir.exists()) {
-            log.error("Configuration directory is not existing: " + configDirString);
+            log.error("Configuration directory is not existing: " + scenario);
             re.endRun();
         }
 
-        EOMOperatorImpl eomOperator = new EOMOperatorImpl("EOM_Operator");
-        RegelEnergieMarketOperator regelenergieMarketOperator = new RegelEnergieMarketOperatorImpl("RegelEnergieMarketOperator");
-        context.add(eomOperator);
-        context.add(regelenergieMarketOperator);
+        //loescht log-dirs
+        EnergyTraderTypeLogger energyTraderTypeLogger = new EnergyTraderTypeLogger(context, logDirName);
+        context.add(energyTraderTypeLogger);
+
 
         try {
+            EOMOperatorImpl eomOperator = new EOMOperatorImpl("EOM_Operator", logDirName);
+            RegelEnergieMarketOperator regelenergieMarketOperator = new RegelEnergieMarketOperatorImpl("RegelEnergieMarketOperator", logDirName);
+            context.add(eomOperator);
+            context.add(regelenergieMarketOperator);
+
             CombinedEnergyProducerFactory.build(configDir, context, eomOperator, regelenergieMarketOperator);
             DaytimeEnergyConsumerFactory.build(configDir, context, eomOperator);
             FixedDemandConsumerFactory.build(configDir, context, eomOperator);
+
+            for (int i = 0; i < 3; i++) {
+                ParametrizableEnergyProducer producer = new ParametrizableEnergyProducer("ParametrizableEnergyProducer_" + i);
+                producer.setEOMOperator(eomOperator);
+                context.add(producer);
+            }
         } catch (IOException e) {
             log.error(e.toString(), e);
             re.endRun();
         }
 
-        for (int i = 0; i < 3; i++) {
-            ParametrizableEnergyProducer producer = new ParametrizableEnergyProducer("ParametrizableEnergyProducer_" + i);
-            producer.setEOMOperator(eomOperator);
-            context.add(producer);
-        }
-
-        EnergyTraderTypeLogger energyTraderTypeLogger = new EnergyTraderTypeLogger(context);
-        context.add(energyTraderTypeLogger);
 
         return context;
     }

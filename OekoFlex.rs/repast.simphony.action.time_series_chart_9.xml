@@ -3,7 +3,7 @@
   <dataSet>EnergieOnlyMarketOperator</dataSet>
   <xAxisLabel>Tick Count</xAxisLabel>
   <yAxisLabel></yAxisLabel>
-  <chartTitle>LastAssignmentRate</chartTitle>
+  <chartTitle>EOM LastAssignmentRate</chartTitle>
   <type>TIME_SERIES</type>
   <background>
     <red>192</red>

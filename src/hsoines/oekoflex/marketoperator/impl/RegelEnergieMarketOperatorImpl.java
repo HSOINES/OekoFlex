@@ -3,13 +3,16 @@ package hsoines.oekoflex.marketoperator.impl;
 import hsoines.oekoflex.bid.Supply;
 import hsoines.oekoflex.energytrader.MarketOperatorListener;
 import hsoines.oekoflex.marketoperator.RegelEnergieMarketOperator;
+import hsoines.oekoflex.summary.LoggerFile;
 import hsoines.oekoflex.util.Market;
-import hsoines.oekoflex.util.TimeUtilities;
+import hsoines.oekoflex.util.NumberFormatUtil;
+import hsoines.oekoflex.util.TimeUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import repast.simphony.engine.environment.RunEnvironment;
 import repast.simphony.parameter.Parameters;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,16 +30,24 @@ public final class RegelEnergieMarketOperatorImpl implements RegelEnergieMarketO
     private long totalClearedQuantity;
     private float lastClearedMaxPrice;
     private float lastAssignmentRate;
+    private LoggerFile logger;
 
-    public RegelEnergieMarketOperatorImpl(String name) {
+    public RegelEnergieMarketOperatorImpl(String name, String logDirName) throws IOException {
         this.name = name;
         Parameters p = RunEnvironment.getInstance().getParameters();
         this.quantity = (int) p.getValue("rigidDemandEnergyOnlyMarket");
+        init(logDirName);
     }
 
-    public RegelEnergieMarketOperatorImpl(final String name, int quantity) {
+    public RegelEnergieMarketOperatorImpl(final String name, String logDirName, int quantity) throws IOException {
         this.quantity = quantity;
         this.name = name;
+        init(logDirName);
+    }
+
+    private void init(final String logDirName) throws IOException {
+        logger = new LoggerFile(this.getClass().getSimpleName(), logDirName);
+        logger.log("tick;traderType;traderName;offeredPrice;offeredQuantity;assignedQuantity");
     }
 
     @Override
@@ -56,7 +67,7 @@ public final class RegelEnergieMarketOperatorImpl implements RegelEnergieMarketO
                 lastAssignmentRate = 1;
                 doNotify(supply, marketOperatorListener, 1);
             } else if (totalClearedQuantity >= quantity) {
-                break;
+                doNotify(supply, marketOperatorListener, 0);
             } else {
                 lastAssignmentRate = (quantity - totalClearedQuantity) / (float) supply.getQuantity();
                 doNotify(supply, marketOperatorListener, lastAssignmentRate);
@@ -79,9 +90,16 @@ public final class RegelEnergieMarketOperatorImpl implements RegelEnergieMarketO
     }
 
     void doNotify(final Supply supply, final MarketOperatorListener marketOperatorListener, float assignRate) {
-        long tick = TimeUtilities.getTick(TimeUtilities.getCurrentDate());
-        marketOperatorListener.notifyClearingDone(TimeUtilities.getDate(tick), Market.REGELENERGIE_MARKET, supply, supply.getPrice(), assignRate);
+        long tick = TimeUtil.getCurrentTick();
+        marketOperatorListener.notifyClearingDone(TimeUtil.getDate(tick), Market.REGELENERGIE_MARKET, supply, supply.getPrice(), assignRate);
         lastClearedMaxPrice = supply.getPrice();
+
+        logger.log(String.valueOf(tick) + ";"
+                + supply.getMarketOperatorListener().getClass().getSimpleName() + ";"
+                + supply.getMarketOperatorListener().getName() + ";"
+                + NumberFormatUtil.format(supply.getPrice()) + ";"
+                + supply.getQuantity() + ";"
+                + (int) (supply.getQuantity() * assignRate) + ";");
     }
 
     @Override

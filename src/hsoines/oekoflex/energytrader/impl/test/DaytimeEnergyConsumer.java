@@ -9,7 +9,7 @@ import hsoines.oekoflex.marketoperator.EOMOperator;
 import hsoines.oekoflex.strategies.DaytimePriceStrategy;
 import hsoines.oekoflex.strategies.PriceStrategy;
 import hsoines.oekoflex.util.Market;
-import hsoines.oekoflex.util.TimeUtilities;
+import hsoines.oekoflex.util.TimeUtil;
 
 import java.util.Date;
 import java.util.List;
@@ -46,7 +46,7 @@ public final class DaytimeEnergyConsumer implements EOMTrader {
 
     @Override
     public void makeBidEOM() {
-        Date date = TimeUtilities.getCurrentDate();
+        Date date = TimeUtil.getCurrentDate();
         if (marketOperator != null) {
             lastBidPrice = priceStrategy.getPrice(date);
             int offeredQuantity = energyTradeRegistry.getRemainingCapacity(date, Market.EOM_MARKET);
@@ -56,7 +56,7 @@ public final class DaytimeEnergyConsumer implements EOMTrader {
 
     @Override
     public void notifyClearingDone(final Date currentDate, final Market market, final Bid bid, final float clearedPrice, final float rate) {
-        Date date = TimeUtilities.getCurrentDate();
+        Date date = TimeUtil.getCurrentDate();
 
         this.clearedPrice = clearedPrice;
         lastAssignmentRate = rate;
@@ -70,7 +70,7 @@ public final class DaytimeEnergyConsumer implements EOMTrader {
 
     @Override
     public List<EnergyTradeRegistryImpl.EnergyTradeElement> getCurrentAssignments() {
-        return energyTradeRegistry.getEnergyTradeElements(TimeUtilities.getCurrentDate());
+        return energyTradeRegistry.getEnergyTradeElements(TimeUtil.getCurrentDate());
     }
 
     public float getLastClearedPrice() {

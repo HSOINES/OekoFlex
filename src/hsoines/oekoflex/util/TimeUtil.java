@@ -14,8 +14,8 @@ import java.util.TimeZone;
  * Date: 17/12/15
  * Time: 07:58
  */
-public final class TimeUtilities {
-    private static final Log log = LogFactory.getLog(TimeUtilities.class);
+public final class TimeUtil {
+    private static final Log log = LogFactory.getLog(TimeUtil.class);
 
     private static long quarterHoursUntilSimulationStart;
     public static final int QUARTER_HOUR_IN_MILLIS = 15 * 60 * 1000;
@@ -25,12 +25,12 @@ public final class TimeUtilities {
     static {
         TimeZone.setDefault(TimeZone.getTimeZone("GMT"));
         try {
-            startDate = TimeUtilities.dateFormat.parse("2016-01-01 00:00:00");
+            startDate = TimeUtil.dateFormat.parse("2016-01-01 00:00:00");
         } catch (ParseException e) {
             log.error(e.toString(), e);
         }
         long diffMillis = startDate.getTime();
-        quarterHoursUntilSimulationStart = (diffMillis / TimeUtilities.QUARTER_HOUR_IN_MILLIS);
+        quarterHoursUntilSimulationStart = (diffMillis / TimeUtil.QUARTER_HOUR_IN_MILLIS);
     }
 
     public static boolean isEnergyTimeZone(Market market) {

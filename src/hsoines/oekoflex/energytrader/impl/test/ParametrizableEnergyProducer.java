@@ -7,7 +7,7 @@ import hsoines.oekoflex.energytrader.EnergyTradeRegistry;
 import hsoines.oekoflex.energytrader.impl.EnergyTradeRegistryImpl;
 import hsoines.oekoflex.marketoperator.EOMOperator;
 import hsoines.oekoflex.util.Market;
-import hsoines.oekoflex.util.TimeUtilities;
+import hsoines.oekoflex.util.TimeUtil;
 import repast.simphony.engine.environment.RunEnvironment;
 import repast.simphony.parameter.Parameters;
 
@@ -75,7 +75,7 @@ public class ParametrizableEnergyProducer implements EOMTrader {
 
     @Override
     public List<EnergyTradeRegistryImpl.EnergyTradeElement> getCurrentAssignments() {
-        return energyTradeRegistry.getEnergyTradeElements(TimeUtilities.getCurrentDate());
+        return energyTradeRegistry.getEnergyTradeElements(TimeUtil.getCurrentDate());
     }
 
     @Override

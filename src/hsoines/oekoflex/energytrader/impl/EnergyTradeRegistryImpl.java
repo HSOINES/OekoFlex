@@ -2,7 +2,7 @@ package hsoines.oekoflex.energytrader.impl;
 
 import hsoines.oekoflex.energytrader.EnergyTradeRegistry;
 import hsoines.oekoflex.util.Market;
-import hsoines.oekoflex.util.TimeUtilities;
+import hsoines.oekoflex.util.TimeUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -38,7 +38,7 @@ public final class EnergyTradeRegistryImpl implements EnergyTradeRegistry {
 
     @Override
     public void addAssignedQuantity(final Date date, final Market market, final float offeredPrice, final float assignedPrice, final int offeredQuantity, float assignedRate) {
-        Long slotIndex = TimeUtilities.getTick(date);
+        Long slotIndex = TimeUtil.getTick(date);
         for (int i = 0; i < market.getTicks(); i++) {
             addQuantity(slotIndex + i, market, offeredPrice, assignedPrice, offeredQuantity, assignedRate);
         }
@@ -46,7 +46,7 @@ public final class EnergyTradeRegistryImpl implements EnergyTradeRegistry {
 
     @Override
     public int getRemainingCapacity(final Date date, final Market market) {
-        long slotIndex = TimeUtilities.getTick(date);
+        long slotIndex = TimeUtil.getTick(date);
         int minCapacity = Integer.MAX_VALUE;
         for (int i = 0; i < market.getTicks(); i++) {
             int capacity = getRemainingCapacity(slotIndex + i);
@@ -59,7 +59,7 @@ public final class EnergyTradeRegistryImpl implements EnergyTradeRegistry {
 
     @Override
     public int getEnergyUsed(final Date date) {
-        long tick = TimeUtilities.getTick(date);
+        long tick = TimeUtil.getTick(date);
         Integer capacity = getSafeAndSetInitialValue(tick);
         return capacity - getRemainingCapacity(date, Market.EOM_MARKET);
     }
@@ -76,7 +76,7 @@ public final class EnergyTradeRegistryImpl implements EnergyTradeRegistry {
     public List<EnergyTradeElement> getEnergyTradeElements(final Date date) {
         List<EnergyTradeElement> energyTradeElements = new ArrayList<>();
         for (EnergyTradeElement energyTradeElement : tradeElements) {
-            if (TimeUtilities.getTick(date) == energyTradeElement.getTick()) {
+            if (TimeUtil.getTick(date) == energyTradeElement.getTick()) {
                 energyTradeElements.add(energyTradeElement);
             }
         }

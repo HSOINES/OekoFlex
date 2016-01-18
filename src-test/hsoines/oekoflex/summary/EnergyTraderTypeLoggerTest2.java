@@ -29,7 +29,7 @@ public class EnergyTraderTypeLoggerTest2 {
         context.add(test);
         CombinedEnergyProducer combinedTest = new CombinedEnergyProducer("combinedTest");
         context.add(combinedTest);
-        energyTraderTypeLogger = new EnergyTraderTypeLogger(context);
+        energyTraderTypeLogger = new EnergyTraderTypeLogger(context, "run/summary-logs/test");
 
         test.notifyClearingDone(new Date(), Market.EOM_MARKET, new Demand(10f, 1000, null), 10.0f, 1f);
         combinedTest.notifyClearingDone(new Date(), Market.EOM_MARKET, new Supply(12f, 200, null), 1f, .4f);

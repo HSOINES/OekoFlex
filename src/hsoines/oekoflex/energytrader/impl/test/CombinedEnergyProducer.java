@@ -12,7 +12,7 @@ import hsoines.oekoflex.marketoperator.RegelEnergieMarketOperator;
 import hsoines.oekoflex.strategies.ConstantPriceStrategy;
 import hsoines.oekoflex.strategies.PriceStrategy;
 import hsoines.oekoflex.util.Market;
-import hsoines.oekoflex.util.TimeUtilities;
+import hsoines.oekoflex.util.TimeUtil;
 
 import java.util.Date;
 import java.util.List;
@@ -34,18 +34,17 @@ public class CombinedEnergyProducer implements RegelenergieMarketTrader, EOMTrad
 
     public CombinedEnergyProducer(String name) {
         this.name = name;
-        energyTradeRegistry = new EnergyTradeRegistryImpl(EnergyTradeRegistry.Type.PRODUCE, 10000);
+        energyTradeRegistry = new EnergyTradeRegistryImpl(EnergyTradeRegistry.Type.PRODUCE, 5000);
     }
 
     @Override
     public void accept(final MarketTraderVisitor visitor) {
         visitor.visit((EOMTrader) this);
-        visitor.visit((RegelenergieMarketTrader) this);
     }
 
     @Override
     public void makeBidEOM() {
-        Date date = TimeUtilities.getCurrentDate();
+        Date date = TimeUtil.getCurrentDate();
         lastBidPrice = energyOnlyPriceStrategy.getPrice(date);
         int offerCapacity = energyTradeRegistry.getRemainingCapacity(date, Market.REGELENERGIE_MARKET);
         EOMOperator.addSupply(new Supply(lastBidPrice, offerCapacity, this));
@@ -53,7 +52,7 @@ public class CombinedEnergyProducer implements RegelenergieMarketTrader, EOMTrad
 
     @Override
     public void makeBidRegelenergie() {
-        Date date = TimeUtilities.getCurrentDate();
+        Date date = TimeUtil.getCurrentDate();
         int offerCapacity = (int) (energyTradeRegistry.getRemainingCapacity(date, Market.REGELENERGIE_MARKET) * quantityPercentageOnRegelMarkt);
         regelenergieMarketOperator.addSupply(new Supply(regelMarktPriceStrategy.getPrice(date), offerCapacity, this));
     }
@@ -77,7 +76,7 @@ public class CombinedEnergyProducer implements RegelenergieMarketTrader, EOMTrad
 
     @Override
     public List<EnergyTradeRegistryImpl.EnergyTradeElement> getCurrentAssignments() {
-        return energyTradeRegistry.getEnergyTradeElements(TimeUtilities.getCurrentDate());
+        return energyTradeRegistry.getEnergyTradeElements(TimeUtil.getCurrentDate());
     }
 
     @Override

@@ -29,7 +29,7 @@ public class EnergyTraderTypeLoggerTest {
 
     @Before
     public void setUp() throws Exception {
-        energyTraderTypeLogger = new EnergyTraderTypeLogger(new DefaultContext<>());
+        energyTraderTypeLogger = new EnergyTraderTypeLogger(new DefaultContext<>(), "run/summary-logs/test");
     }
 
     @Test
