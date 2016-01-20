@@ -1,7 +1,7 @@
 package hsoines.oekoflex.builder;
 
 import hsoines.oekoflex.OekoflexAgent;
-import hsoines.oekoflex.energytrader.impl.FixedDemandConsumer;
+import hsoines.oekoflex.energytrader.impl.FixedDemand;
 import hsoines.oekoflex.marketoperator.impl.EOMOperatorImpl;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
@@ -31,9 +31,9 @@ public final class FixedDemandConsumerFactory {
                 String demandFileName = parameters.get("demandFile");
                 File demandFile = new File(configDir, demandFileName);
 
-                FixedDemandConsumer fixedDemandConsumer = new FixedDemandConsumer(name, demandFile);
-                fixedDemandConsumer.setEOMOperator(energyOnlyMarketOperator);
-                context.add(fixedDemandConsumer);
+                FixedDemand fixedDemand = new FixedDemand(name, demandFile);
+                fixedDemand.setEOMOperator(energyOnlyMarketOperator);
+                context.add(fixedDemand);
 
                 log.info("FixedDemandConsumer Build done: " + name);
             } catch (NumberFormatException e) {

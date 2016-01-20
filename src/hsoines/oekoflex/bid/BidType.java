@@ -1,4 +1,4 @@
-package hsoines.oekoflex.energytrader.impl;
+package hsoines.oekoflex.bid;
 
 /**
  * User: jh

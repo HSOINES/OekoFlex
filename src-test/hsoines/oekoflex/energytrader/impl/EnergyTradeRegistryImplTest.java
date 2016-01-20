@@ -1,5 +1,6 @@
 package hsoines.oekoflex.energytrader.impl;
 
+import hsoines.oekoflex.bid.BidType;
 import hsoines.oekoflex.energytrader.EnergyTradeRegistry;
 import hsoines.oekoflex.util.Market;
 import hsoines.oekoflex.util.TimeUtil;

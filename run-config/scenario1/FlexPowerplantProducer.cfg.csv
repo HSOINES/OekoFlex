@@ -1,3 +1,3 @@
 name;capacity;costs;quantityDelay
-flexPowerplant1;1000;1000;10
-flexPowerplant2;1000;1600;10
+flexPowerplant1;1600;1000;10
+flexPowerplant2;1600;1000;10

@@ -1,7 +1,6 @@
 package hsoines.oekoflex.bid;
 
 import hsoines.oekoflex.energytrader.MarketOperatorListener;
-import hsoines.oekoflex.energytrader.impl.BidType;
 
 import java.util.Comparator;
 

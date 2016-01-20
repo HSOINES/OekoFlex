@@ -19,7 +19,7 @@ import java.util.List;
  * Date: 18/01/16
  * Time: 16:14
  */
-public final class FlexPowerplantProducer implements EOMTrader, RegelenergieMarketTrader, MarketOperatorListener {
+public final class FlexPowerplant implements EOMTrader, RegelenergieMarketTrader, MarketOperatorListener {
     private final String name;
     private final float costs;
     private final float supplyDelay;
@@ -29,7 +29,7 @@ public final class FlexPowerplantProducer implements EOMTrader, RegelenergieMark
     private float lastAssignmentRate;
     private float lastClearedPrice;
 
-    public FlexPowerplantProducer(String name, int capacity, float costs, float supplyDelay) {
+    public FlexPowerplant(String name, int capacity, float costs, float supplyDelay) {
         this.name = name;
         this.costs = costs;
         this.supplyDelay = supplyDelay;
