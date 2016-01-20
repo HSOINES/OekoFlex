@@ -11,9 +11,6 @@ import java.util.List;
  * Time: 15:39
  */
 public interface MarketTrader extends OekoflexAgent {
-    void accept(MarketTraderVisitor visitor);
-
-    float getLastClearedPrice();
 
     float getLastAssignmentRate();
 

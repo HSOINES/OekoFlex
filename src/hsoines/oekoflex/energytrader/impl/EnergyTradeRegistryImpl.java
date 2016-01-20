@@ -37,10 +37,10 @@ public final class EnergyTradeRegistryImpl implements EnergyTradeRegistry {
     }
 
     @Override
-    public void addAssignedQuantity(final Date date, final Market market, final float offeredPrice, final float assignedPrice, final int offeredQuantity, float assignedRate) {
+    public void addAssignedQuantity(final Date date, final Market market, final float offeredPrice, final float assignedPrice, final int offeredQuantity, float assignedRate, final BidType bidType) {
         Long slotIndex = TimeUtil.getTick(date);
         for (int i = 0; i < market.getTicks(); i++) {
-            addQuantity(slotIndex + i, market, offeredPrice, assignedPrice, offeredQuantity, assignedRate);
+            addQuantity(slotIndex + i, market, offeredPrice, assignedPrice, offeredQuantity, assignedRate, bidType);
         }
     }
 
@@ -58,18 +58,10 @@ public final class EnergyTradeRegistryImpl implements EnergyTradeRegistry {
     }
 
     @Override
-    public int getEnergyUsed(final Date date) {
+    public int getQuantityUsed(final Date date) {
         long tick = TimeUtil.getTick(date);
-        Integer capacity = getSafeAndSetInitialValue(tick);
+        Integer capacity = getSafeAndSetInitialCapacity(tick);
         return capacity - getRemainingCapacity(date, Market.EOM_MARKET);
-    }
-
-    Integer getSafeAndSetInitialValue(final long tick) {
-        Integer capacity = capacities.get(tick);
-        if (capacity == null) {
-            capacity = initialcapacity;
-        }
-        return capacity;
     }
 
     @Override
@@ -91,6 +83,21 @@ public final class EnergyTradeRegistryImpl implements EnergyTradeRegistry {
         capacities.put(tick, demand);
     }
 
+    @Override
+    public int getCapacity(final Date date) {
+        long tick = TimeUtil.getTick(date);
+        Integer capacity = getSafeAndSetInitialCapacity(tick);
+        return capacity;
+    }
+
+    Integer getSafeAndSetInitialCapacity(final long tick) {
+        Integer capacity = capacities.get(tick);
+        if (capacity == null) {
+            capacity = initialcapacity;
+        }
+        return capacity;
+    }
+
     private int getRemainingCapacity(final long tick) {
         int assigned = 0;
         for (EnergyTradeElement energyTradeElement : tradeElements) {
@@ -98,11 +105,11 @@ public final class EnergyTradeRegistryImpl implements EnergyTradeRegistry {
                 assigned += energyTradeElement.getOfferedQuantity() * energyTradeElement.getRate();
             }
         }
-        Integer capacity = getSafeAndSetInitialValue(tick);
+        Integer capacity = getSafeAndSetInitialCapacity(tick);
         return capacity - assigned;
     }
 
-    private void addQuantity(final long tick, final Market market, float offeredPrice, final float clearedprice, int offeredQuantity, final float rate) {
+    private void addQuantity(final long tick, final Market market, float offeredPrice, final float clearedprice, int offeredQuantity, final float rate, final BidType bidType) {
         int remainingCapacity = getRemainingCapacity(tick);
         float assignedQuantity = (float) Math.floor(offeredQuantity * rate);
         if (remainingCapacity < assignedQuantity) {
@@ -112,7 +119,7 @@ public final class EnergyTradeRegistryImpl implements EnergyTradeRegistry {
             if (capacity == null) {
                 capacity = initialcapacity;
             }
-            tradeElements.add(new EnergyTradeElement(tick, market, offeredPrice, clearedprice, offeredQuantity, rate, capacity));
+            tradeElements.add(new EnergyTradeElement(tick, market, offeredPrice, clearedprice, offeredQuantity, rate, capacity, bidType));
         }
     }
 
@@ -125,8 +132,9 @@ public final class EnergyTradeRegistryImpl implements EnergyTradeRegistry {
         private final float rate;
         private final Integer capacity;
         private Market market;
+        private BidType bidType;
 
-        public EnergyTradeElement(final long tick, final Market market, final float offeredPrice, final float assignedPrice, final int offeredQuantity, final float rate, final int capacity) {
+        public EnergyTradeElement(final long tick, final Market market, final float offeredPrice, final float assignedPrice, final int offeredQuantity, final float rate, final int capacity, final BidType bidType) {
             this.tick = tick;
             this.market = market;
             this.offeredPrice = offeredPrice;
@@ -134,6 +142,7 @@ public final class EnergyTradeRegistryImpl implements EnergyTradeRegistry {
             this.offeredQuantity = offeredQuantity;
             this.rate = rate;
             this.capacity = capacity;
+            this.bidType = bidType;
         }
 
         public long getTick() {
@@ -162,6 +171,10 @@ public final class EnergyTradeRegistryImpl implements EnergyTradeRegistry {
 
         public Market getMarket() {
             return market;
+        }
+
+        public BidType getBidType() {
+            return bidType;
         }
     }
 }

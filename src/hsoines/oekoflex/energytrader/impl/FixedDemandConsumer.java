@@ -51,8 +51,8 @@ public final class FixedDemandConsumer implements EOMTrader {
     }
 
     @Override
-    public void setEOMOperator(final EOMOperator marketOperator) {
-        this.marketOperator = marketOperator;
+    public void setEOMOperator(final EOMOperator eomOperator) {
+        this.marketOperator = eomOperator;
     }
 
     @Override
@@ -63,7 +63,7 @@ public final class FixedDemandConsumer implements EOMTrader {
 
     @Override
     public void notifyClearingDone(final Date currentDate, final Market market, final Bid bid, final float clearedPrice, final float rate) {
-        energyTradeRegistry.addAssignedQuantity(currentDate, market, bid.getPrice(), clearedPrice, bid.getQuantity(), rate);
+        energyTradeRegistry.addAssignedQuantity(currentDate, market, bid.getPrice(), clearedPrice, bid.getQuantity(), rate, bid.getBidType());
         lastClearedPrice = clearedPrice;
         lastAssignmentRate = rate;
     }

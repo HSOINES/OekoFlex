@@ -40,8 +40,8 @@ public final class DaytimeEnergyConsumer implements EOMTrader {
     }
 
     @Override
-    public void setEOMOperator(final EOMOperator marketOperator) {
-        this.marketOperator = marketOperator;
+    public void setEOMOperator(final EOMOperator eomOperator) {
+        this.marketOperator = eomOperator;
     }
 
     @Override
@@ -61,7 +61,7 @@ public final class DaytimeEnergyConsumer implements EOMTrader {
         this.clearedPrice = clearedPrice;
         lastAssignmentRate = rate;
         this.lastQuantity = bid.getQuantity();
-        energyTradeRegistry.addAssignedQuantity(date, market, bid.getPrice(), clearedPrice, bid.getQuantity(), rate);
+        energyTradeRegistry.addAssignedQuantity(date, market, bid.getPrice(), clearedPrice, bid.getQuantity(), rate, bid.getBidType());
     }
 
     public float getLastAssignmentRate() {

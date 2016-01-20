@@ -83,7 +83,7 @@ public class EnergyTraderTypeLoggerTest {
         }
 
         @Override
-        public void setEOMOperator(final EOMOperator marketOperator) {
+        public void setEOMOperator(final EOMOperator eomOperator) {
 
         }
 
@@ -108,11 +108,6 @@ public class EnergyTraderTypeLoggerTest {
         }
 
         @Override
-        public float getLastClearedPrice() {
-            return 0;
-        }
-
-        @Override
         public float getLastAssignmentRate() {
             return 0;
         }
@@ -129,7 +124,7 @@ public class EnergyTraderTypeLoggerTest {
         }
 
         @Override
-        public void setRegelenergieMarketOperator(final RegelEnergieMarketOperator marketOperator) {
+        public void setRegelenergieMarketOperator(final RegelEnergieMarketOperator regelenergieMarketOperator) {
 
         }
 

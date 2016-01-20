@@ -70,7 +70,7 @@ public final class EnergyTraderTypeLogger implements OekoflexAgent {
 
     String buildHeaderString(final MarketTrader marketTrader) {
         final StringBuilder header = new StringBuilder();
-        header.append("tick;ClassName;InstanceName;Market;PriceOffered;PriceCleared;QuantityOffered;QuantityAssigned;Capacity");
+        header.append("tick;ClassName;InstanceName;Market;BidType;PriceOffered;PriceCleared;QuantityOffered;QuantityAssigned;Capacity");
 
         return header.toString();
     }
@@ -87,6 +87,7 @@ public final class EnergyTraderTypeLogger implements OekoflexAgent {
                     + marketTrader.getClass().getSimpleName() + ";"
                     + marketTrader.getName() + ";"
                     + currentAssignment.getMarket() + ";"
+                    + currentAssignment.getBidType() + ";"
                     + NumberFormatUtil.format(currentAssignment.getOfferedPrice()) + ";"
                     + NumberFormatUtil.format(currentAssignment.getAssignedPrice()) + ";"
                     + currentAssignment.getOfferedQuantity() + ";"

@@ -10,13 +10,12 @@ import repast.simphony.engine.schedule.ScheduledMethod;
  * Time: 08:29
  */
 public interface EOMTrader extends MarketTrader, MarketOperatorListener {
-    void setEOMOperator(EOMOperator marketOperator);
+    void setEOMOperator(EOMOperator eomOperator);
+
+    float getLastClearedPrice();
 
     @ScheduledMethod(start = SequenceDefinition.SimulationStart, interval = SequenceDefinition.EOMInterval, priority = SequenceDefinition.EOMBidPriority)
     void makeBidEOM();
 
-    @Override
-    default void accept(final MarketTraderVisitor visitor) {
-        visitor.visit(this);
-    }
+
 }

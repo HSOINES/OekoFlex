@@ -57,15 +57,14 @@ public class ParametrizableEnergyProducer implements EOMTrader {
     }
 
     @Override
-    public void setEOMOperator(final EOMOperator marketOperator) {
-        this.marketOperator = marketOperator;
+    public void setEOMOperator(final EOMOperator eomOperator) {
+        this.marketOperator = eomOperator;
     }
 
     @Override
     public void notifyClearingDone(final Date currentDate, final Market market, final Bid bid, final float clearedPrice, final float rate) {
         this.lastClearedPrice = clearedPrice;
         lastAssignmentRate = rate;
-
     }
 
     @Override

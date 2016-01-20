@@ -13,11 +13,7 @@ public interface RegelenergieMarketTrader extends MarketTrader, MarketOperatorLi
     @ScheduledMethod(start = SequenceDefinition.SimulationStart, interval = SequenceDefinition.RegelenergieMarketInterval, priority = SequenceDefinition.RegelenergieMarketBidPriority)
     void makeBidRegelenergie();
 
-    void setRegelenergieMarketOperator(RegelEnergieMarketOperator marketOperator);
+    void setRegelenergieMarketOperator(RegelEnergieMarketOperator regelenergieMarketOperator);
 
-    @Override
-    default void accept(final MarketTraderVisitor visitor) {
-        visitor.visit(this);
-    }
 
 }

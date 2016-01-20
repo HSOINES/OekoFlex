@@ -1,6 +1,7 @@
 package hsoines.oekoflex.bid;
 
 import hsoines.oekoflex.energytrader.MarketOperatorListener;
+import hsoines.oekoflex.energytrader.impl.BidType;
 
 import java.util.Comparator;
 
@@ -38,8 +39,8 @@ public final class Supply implements Bid {
 
 
     @Override
-    public String getTypeString() {
-        return "Supply";
+    public BidType getBidType() {
+        return BidType.SUPPLY;
     }
 
     public static class AscendingComparator implements Comparator<Supply> {

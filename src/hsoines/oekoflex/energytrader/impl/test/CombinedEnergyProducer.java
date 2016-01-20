@@ -4,7 +4,6 @@ import hsoines.oekoflex.bid.Bid;
 import hsoines.oekoflex.bid.Supply;
 import hsoines.oekoflex.energytrader.EOMTrader;
 import hsoines.oekoflex.energytrader.EnergyTradeRegistry;
-import hsoines.oekoflex.energytrader.MarketTraderVisitor;
 import hsoines.oekoflex.energytrader.RegelenergieMarketTrader;
 import hsoines.oekoflex.energytrader.impl.EnergyTradeRegistryImpl;
 import hsoines.oekoflex.marketoperator.EOMOperator;
@@ -38,11 +37,6 @@ public class CombinedEnergyProducer implements RegelenergieMarketTrader, EOMTrad
     }
 
     @Override
-    public void accept(final MarketTraderVisitor visitor) {
-        visitor.visit((EOMTrader) this);
-    }
-
-    @Override
     public void makeBidEOM() {
         Date date = TimeUtil.getCurrentDate();
         lastBidPrice = energyOnlyPriceStrategy.getPrice(date);
@@ -58,15 +52,15 @@ public class CombinedEnergyProducer implements RegelenergieMarketTrader, EOMTrad
     }
 
     @Override
-    public void setEOMOperator(final EOMOperator marketOperator) {
-        this.EOMOperator = marketOperator;
+    public void setEOMOperator(final EOMOperator eomOperator) {
+        this.EOMOperator = eomOperator;
     }
 
     @Override
     public void notifyClearingDone(final Date currentDate, final Market market, final Bid bid, final float clearedPrice, final float rate) {
         this.lastClearedPrice = clearedPrice;
         lastAssignmentRate = rate;
-        energyTradeRegistry.addAssignedQuantity(currentDate, market, bid.getPrice(), clearedPrice, bid.getQuantity(), rate);
+        energyTradeRegistry.addAssignedQuantity(currentDate, market, bid.getPrice(), clearedPrice, bid.getQuantity(), rate, bid.getBidType());
     }
 
     @Override
@@ -80,8 +74,8 @@ public class CombinedEnergyProducer implements RegelenergieMarketTrader, EOMTrad
     }
 
     @Override
-    public void setRegelenergieMarketOperator(RegelEnergieMarketOperator marketOperator) {
-        regelenergieMarketOperator = marketOperator;
+    public void setRegelenergieMarketOperator(RegelEnergieMarketOperator regelenergieMarketOperator) {
+        this.regelenergieMarketOperator = regelenergieMarketOperator;
     }
 
     @Override

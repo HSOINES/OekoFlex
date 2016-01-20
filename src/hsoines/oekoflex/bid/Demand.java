@@ -1,6 +1,7 @@
 package hsoines.oekoflex.bid;
 
 import hsoines.oekoflex.energytrader.MarketOperatorListener;
+import hsoines.oekoflex.energytrader.impl.BidType;
 
 import java.util.Comparator;
 
@@ -24,8 +25,8 @@ public class Demand implements Bid {
     }
 
     @Override
-    public String getTypeString() {
-        return "Demand";
+    public BidType getBidType() {
+        return BidType.DEMAND;
     }
 
     @Override

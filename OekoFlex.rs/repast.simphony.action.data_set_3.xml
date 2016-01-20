@@ -31,7 +31,7 @@
          <className>hsoines.oekoflex.energytrader.RegelenergieMarketTrader</className>
          <methodName>getLastBidPrice</methodName>
        </repast.simphony.data2.engine.MethodDataSourceDefinition>
-     </entry>-->
+     </entry>
     <entry>
       <string>LastClearedPrice</string>
       <repast.simphony.data2.engine.MethodDataSourceDefinition>
@@ -47,7 +47,7 @@
         <className>hsoines.oekoflex.energytrader.RegelenergieMarketTrader</className>
         <methodName>getLastAssignmentRate</methodName>
       </repast.simphony.data2.engine.MethodDataSourceDefinition>
-    </entry>
+    </entry>-->
   </methodDataSources>
   <countSources class="linked-hash-map"/>
   <customNADataSources class="linked-hash-map"/>

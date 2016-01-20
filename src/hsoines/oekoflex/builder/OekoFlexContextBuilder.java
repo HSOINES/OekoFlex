@@ -1,7 +1,6 @@
 package hsoines.oekoflex.builder;
 
 import hsoines.oekoflex.OekoflexAgent;
-import hsoines.oekoflex.energytrader.impl.test.ParametrizableEnergyProducer;
 import hsoines.oekoflex.marketoperator.RegelEnergieMarketOperator;
 import hsoines.oekoflex.marketoperator.impl.EOMOperatorImpl;
 import hsoines.oekoflex.marketoperator.impl.RegelEnergieMarketOperatorImpl;
@@ -52,12 +51,13 @@ public class OekoFlexContextBuilder implements ContextBuilder<OekoflexAgent> {
             CombinedEnergyProducerFactory.build(configDir, context, eomOperator, regelenergieMarketOperator);
             DaytimeEnergyConsumerFactory.build(configDir, context, eomOperator);
             FixedDemandConsumerFactory.build(configDir, context, eomOperator);
-
-            for (int i = 0; i < 3; i++) {
-                ParametrizableEnergyProducer producer = new ParametrizableEnergyProducer("ParametrizableEnergyProducer_" + i);
-                producer.setEOMOperator(eomOperator);
-                context.add(producer);
-            }
+            FlexPowerplantProducerFactory.build(configDir, context, eomOperator, regelenergieMarketOperator);
+            StorageFactory.build(configDir, context, eomOperator);
+//            for (int i = 0; i < 3; i++) {
+//                ParametrizableEnergyProducer producer = new ParametrizableEnergyProducer("ParametrizableEnergyProducer_" + i);
+//                producer.setEOMOperator(eomOperator);
+//                context.add(producer);
+//            }
         } catch (IOException e) {
             log.error(e.toString(), e);
             re.endRun();

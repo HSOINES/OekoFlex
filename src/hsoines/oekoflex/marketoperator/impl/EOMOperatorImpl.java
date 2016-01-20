@@ -58,7 +58,8 @@ public class EOMOperatorImpl implements EOMOperator {
         this.supplies.sort(new Supply.AscendingComparator());
 
         if (demands.size() < 1 || this.supplies.size() < 1) {
-            throw new IllegalStateException("Sizes unsufficient! SupportSize: " + this.supplies.size() + ", DemandSize: " + demands.size());
+            throw new IllegalStateException("Sizes unsufficient! SupportSize: "
+                    + this.supplies.size() + ", DemandSize: " + demands.size());
         }
         Iterator<Demand> demandIterator = demands.iterator();
         Iterator<Supply> supplyIterator = this.supplies.iterator();
@@ -85,13 +86,16 @@ public class EOMOperatorImpl implements EOMOperator {
                         clearedPrice = demand.getPrice();
                     }
                     totalSupplyQuantity += supply.getQuantity();
-                    logString = "Supply added. Price: " + supply.getPrice() + ", Quantity: " + supply.getQuantity();
+                    logString = "Supply assigned. Price: " + supply.getPrice() + ", Quantity: " + supply.getQuantity();
                 } else {
                     moreSupplies = false;
                 }
             } else if (balance < 0) {
                 if (demandIterator.hasNext()) {
                     demand = demandIterator.next();
+                    if (demand.getQuantity() < 0) {
+                        break;
+                    }
                     if (demand.getPrice() <= supply.getPrice()) {
                         break;
                     }
@@ -102,7 +106,7 @@ public class EOMOperatorImpl implements EOMOperator {
                         clearedPrice = supply.getPrice();
                     }
                     totalDemandQuantity += demand.getQuantity();
-                    logString = "Demand added. Price: " + demand.getPrice() + ", Quantity: " + demand.getQuantity();
+                    logString = "Demand assigned. Price: " + demand.getPrice() + ", Quantity: " + demand.getQuantity();
                 } else {
                     moreDemands = false;
                 }
@@ -118,9 +122,13 @@ public class EOMOperatorImpl implements EOMOperator {
                     clearedPrice = (supply != null) ? (demand.getPrice() + supply.getPrice()) / 2 : demand.getPrice();
                     balance += demand.getQuantity();
                     totalDemandQuantity += demand.getQuantity();
-                    logString = "Demand added. Price: " + demand.getPrice() + ", Quantity: " + demand.getQuantity();
+                    logString = "Demand assigned. Price: " + demand.getPrice() + ", Quantity: " + demand.getQuantity();
                 } else {
                     moreDemands = false;
+                    if (balance == 0) {
+                        log.warn("market stops. balance is 0, no more demands.");
+                        break;
+                    }
                 }
             }
             log.debug("                                                      " + logString + ", " + "Balance: " + balance);

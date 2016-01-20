@@ -22,6 +22,8 @@ public final class TimeUtil {
     public static Date startDate;
     public static OekoflexDateFormat dateFormat = new OekoflexDateFormat();
 
+    private static int testTick = -1;
+
     static {
         TimeZone.setDefault(TimeZone.getTimeZone("GMT"));
         try {
@@ -39,7 +41,12 @@ public final class TimeUtil {
     }
 
     public static Date getCurrentDate(){
-        double tickCount = RepastEssentials.GetTickCount();
+        double tickCount;
+        if (testTick >= 0) {
+            tickCount = testTick;
+        } else {
+            tickCount = RepastEssentials.GetTickCount();
+        }
         return getDate((long) tickCount);
     }
 
@@ -72,5 +79,18 @@ public final class TimeUtil {
     public static Date getDateWithMinutesOffset(final int minutesOffset) {
         Date date = new Date(startDate.getTime() + minutesOffset * 60 * 1000);
         return date;
+    }
+
+    public static Date precedingDate(final Date currentDate) {
+        return new Date(currentDate.getTime() - QUARTER_HOUR_IN_MILLIS);
+    }
+
+    public static Date getSucceedingDate(final Date currentDate) {
+        return new Date(currentDate.getTime() + QUARTER_HOUR_IN_MILLIS);
+    }
+
+    //only for test purposes!
+    public static void nextTick() {
+        testTick++;
     }
 }

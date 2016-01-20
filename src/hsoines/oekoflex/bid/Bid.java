@@ -1,6 +1,7 @@
 package hsoines.oekoflex.bid;
 
 import hsoines.oekoflex.energytrader.MarketOperatorListener;
+import hsoines.oekoflex.energytrader.impl.BidType;
 
 /**
  * Created by IntelliJ IDEA.
@@ -15,6 +16,6 @@ public interface Bid {
 
     int getQuantity();
 
-    String getTypeString();
+    BidType getBidType();
 
 }
