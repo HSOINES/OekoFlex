@@ -2,7 +2,7 @@ package hsoines.oekoflex.marketoperator;
 
 import hsoines.oekoflex.OekoflexAgent;
 import hsoines.oekoflex.bid.Demand;
-import hsoines.oekoflex.bid.Supply;
+import hsoines.oekoflex.bid.PositiveSupply;
 import hsoines.oekoflex.domain.SequenceDefinition;
 import repast.simphony.engine.schedule.ScheduledMethod;
 
@@ -11,7 +11,8 @@ import static hsoines.oekoflex.domain.SequenceDefinition.EOMInterval;
 
 public interface EOMOperator extends OekoflexAgent {
 	public void addDemand(Demand demand);
-	public void addSupply(Supply supply);
+
+	public void addSupply(PositiveSupply supply);
 
 	@ScheduledMethod(start = SequenceDefinition.SimulationStart, interval = EOMInterval, priority = EOMClearingPriority)
 	void clearMarket();

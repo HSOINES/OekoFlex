@@ -1,7 +1,7 @@
 package hsoines.oekoflex.energytrader.impl.test;
 
 import hsoines.oekoflex.bid.Bid;
-import hsoines.oekoflex.bid.Supply;
+import hsoines.oekoflex.bid.PositiveSupply;
 import hsoines.oekoflex.energytrader.EOMTrader;
 import hsoines.oekoflex.energytrader.EnergyTradeRegistry;
 import hsoines.oekoflex.energytrader.RegelenergieMarketTrader;
@@ -41,14 +41,14 @@ public class CombinedEnergyProducer implements RegelenergieMarketTrader, EOMTrad
         Date date = TimeUtil.getCurrentDate();
         lastBidPrice = energyOnlyPriceStrategy.getPrice(date);
         int offerCapacity = energyTradeRegistry.getRemainingCapacity(date, Market.REGELENERGIE_MARKET);
-        EOMOperator.addSupply(new Supply(lastBidPrice, offerCapacity, this));
+        EOMOperator.addSupply(new PositiveSupply(lastBidPrice, offerCapacity, this));
     }
 
     @Override
     public void makeBidRegelenergie() {
         Date date = TimeUtil.getCurrentDate();
         int offerCapacity = (int) (energyTradeRegistry.getRemainingCapacity(date, Market.REGELENERGIE_MARKET) * quantityPercentageOnRegelMarkt);
-        regelenergieMarketOperator.addSupply(new Supply(regelMarktPriceStrategy.getPrice(date), offerCapacity, this));
+        regelenergieMarketOperator.addSupply(new PositiveSupply(regelMarktPriceStrategy.getPrice(date), offerCapacity, this));
     }
 
     @Override

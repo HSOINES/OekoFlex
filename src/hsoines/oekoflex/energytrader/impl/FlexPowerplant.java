@@ -1,7 +1,7 @@
 package hsoines.oekoflex.energytrader.impl;
 
 import hsoines.oekoflex.bid.Bid;
-import hsoines.oekoflex.bid.Supply;
+import hsoines.oekoflex.bid.PositiveSupply;
 import hsoines.oekoflex.energytrader.EOMTrader;
 import hsoines.oekoflex.energytrader.EnergyTradeRegistry;
 import hsoines.oekoflex.energytrader.MarketOperatorListener;
@@ -45,14 +45,14 @@ public final class FlexPowerplant implements EOMTrader, RegelenergieMarketTrader
     public void makeBidEOM() {
         Date currentDate = TimeUtil.getCurrentDate();
         int supplyCapacity = getSupplyCapacity(currentDate, Market.EOM_MARKET);
-        eomMarketOperator.addSupply(new Supply(costs * 1f, supplyCapacity, this));
+        eomMarketOperator.addSupply(new PositiveSupply(costs * 1f, supplyCapacity, this));
     }
 
     @Override
     public void makeBidRegelenergie() {
         Date currentDate = TimeUtil.getCurrentDate();
         int supplyCapacity = getSupplyCapacity(currentDate, Market.REGELENERGIE_MARKET);
-        regelenergieMarketOperator.addSupply(new Supply(costs * 1.5f, supplyCapacity, this));
+        regelenergieMarketOperator.addSupply(new PositiveSupply(costs * 1.5f, supplyCapacity, this));
     }
 
     int getSupplyCapacity(final Date currentDate, final Market market) {     //test implementierung

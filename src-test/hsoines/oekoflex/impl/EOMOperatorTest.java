@@ -1,7 +1,7 @@
 package hsoines.oekoflex.impl;
 
 import hsoines.oekoflex.bid.Demand;
-import hsoines.oekoflex.bid.Supply;
+import hsoines.oekoflex.bid.PositiveSupply;
 import hsoines.oekoflex.marketoperator.impl.EOMOperatorImpl;
 import hsoines.oekoflex.tools.RepastTestInitializer;
 import org.junit.Before;
@@ -27,9 +27,9 @@ public class EOMOperatorTest {
         energyOnlyMarketOperator.addDemand(new Demand(9, 11, null));
         energyOnlyMarketOperator.addDemand(new Demand(7, 6, null));
 
-        energyOnlyMarketOperator.addSupply(new Supply(5, 10, null));
-        energyOnlyMarketOperator.addSupply(new Supply(6, 5, null));
-        energyOnlyMarketOperator.addSupply(new Supply(8, 5, null));
+        energyOnlyMarketOperator.addSupply(new PositiveSupply(5, 10, null));
+        energyOnlyMarketOperator.addSupply(new PositiveSupply(6, 5, null));
+        energyOnlyMarketOperator.addSupply(new PositiveSupply(8, 5, null));
 
         energyOnlyMarketOperator.clearMarket();
 
@@ -40,8 +40,8 @@ public class EOMOperatorTest {
 
     @org.junit.Test
     public void testClearingWithPartialSupport() throws Exception {
-        energyOnlyMarketOperator.addSupply(new Supply(9, 11, null));
-        energyOnlyMarketOperator.addSupply(new Supply(7, 6, null));
+        energyOnlyMarketOperator.addSupply(new PositiveSupply(9, 11, null));
+        energyOnlyMarketOperator.addSupply(new PositiveSupply(7, 6, null));
 
         energyOnlyMarketOperator.addDemand(new Demand(5, 10, null));
         energyOnlyMarketOperator.addDemand(new Demand(6, 5, null));
@@ -66,13 +66,13 @@ public class EOMOperatorTest {
         energyOnlyMarketOperator.addDemand(new Demand(500, 150, null));
         energyOnlyMarketOperator.addDemand(new Demand(400, 160, null));
 
-        energyOnlyMarketOperator.addSupply(new Supply(550, 60, null));
-        energyOnlyMarketOperator.addSupply(new Supply(650, 70, null));
-        energyOnlyMarketOperator.addSupply(new Supply(750, 80, null));
+        energyOnlyMarketOperator.addSupply(new PositiveSupply(550, 60, null));
+        energyOnlyMarketOperator.addSupply(new PositiveSupply(650, 70, null));
+        energyOnlyMarketOperator.addSupply(new PositiveSupply(750, 80, null));
 
-        energyOnlyMarketOperator.addSupply(new Supply(850, 90, null));
-        energyOnlyMarketOperator.addSupply(new Supply(950, 100, null));
-        energyOnlyMarketOperator.addSupply(new Supply(1050, 110, null));
+        energyOnlyMarketOperator.addSupply(new PositiveSupply(850, 90, null));
+        energyOnlyMarketOperator.addSupply(new PositiveSupply(950, 100, null));
+        energyOnlyMarketOperator.addSupply(new PositiveSupply(1050, 110, null));
 
         energyOnlyMarketOperator.clearMarket();
 
@@ -85,8 +85,8 @@ public class EOMOperatorTest {
     public void testAssignmentRateOnSequentialDemands() throws Exception {
         energyOnlyMarketOperator.addDemand(new Demand(10, 100, null));
 
-        energyOnlyMarketOperator.addSupply(new Supply(7.5f, 100, null));
-        energyOnlyMarketOperator.addSupply(new Supply(7.5f, 500, null));
+        energyOnlyMarketOperator.addSupply(new PositiveSupply(7.5f, 100, null));
+        energyOnlyMarketOperator.addSupply(new PositiveSupply(7.5f, 500, null));
 
         energyOnlyMarketOperator.addDemand(new Demand(9, 100, null));
         energyOnlyMarketOperator.addDemand(new Demand(8, 100, null));
@@ -102,15 +102,15 @@ public class EOMOperatorTest {
 
     @Test
     public void testAssignmentRateOnSequentialSupplies() throws Exception {
-        energyOnlyMarketOperator.addSupply(new Supply(5, 100, null));
+        energyOnlyMarketOperator.addSupply(new PositiveSupply(5, 100, null));
 
         energyOnlyMarketOperator.addDemand(new Demand(7.5f, 100, null));
         energyOnlyMarketOperator.addDemand(new Demand(7.5f, 500, null));
 
-        energyOnlyMarketOperator.addSupply(new Supply(6, 100, null));
-        energyOnlyMarketOperator.addSupply(new Supply(7, 100, null));
-        energyOnlyMarketOperator.addSupply(new Supply(8, 100, null));
-        energyOnlyMarketOperator.addSupply(new Supply(9, 100, null));
+        energyOnlyMarketOperator.addSupply(new PositiveSupply(6, 100, null));
+        energyOnlyMarketOperator.addSupply(new PositiveSupply(7, 100, null));
+        energyOnlyMarketOperator.addSupply(new PositiveSupply(8, 100, null));
+        energyOnlyMarketOperator.addSupply(new PositiveSupply(9, 100, null));
 
         energyOnlyMarketOperator.clearMarket();
 

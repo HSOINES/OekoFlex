@@ -2,7 +2,7 @@ package hsoines.oekoflex.energytrader.impl;
 
 import hsoines.oekoflex.bid.Bid;
 import hsoines.oekoflex.bid.Demand;
-import hsoines.oekoflex.bid.Supply;
+import hsoines.oekoflex.bid.PositiveSupply;
 import hsoines.oekoflex.energytrader.EOMTrader;
 import hsoines.oekoflex.energytrader.EnergyTradeRegistry;
 import hsoines.oekoflex.energytrader.MarketOperatorListener;
@@ -51,7 +51,7 @@ public final class Storage implements EOMTrader, MarketOperatorListener {
     public void makeBidEOM() {
         Date currentDate = TimeUtil.getCurrentDate();
         int capacity = batteryEnergyTradeRegistry.getCapacity(currentDate);
-        eomMarketOperator.addSupply(new Supply(costs * (1 + spread), batteryLevel, this));
+        eomMarketOperator.addSupply(new PositiveSupply(costs * (1 + spread), batteryLevel, this));
         eomMarketOperator.addDemand(new Demand(costs * (1 - spread), capacity - batteryLevel, this));
     }
 
@@ -61,7 +61,7 @@ public final class Storage implements EOMTrader, MarketOperatorListener {
         int assignedQuantity = (int) (bid.getQuantity() * rate);
         if (bid instanceof Demand) {
             batteryLevel += assignedQuantity;
-        } else if (bid instanceof Supply) {
+        } else if (bid instanceof PositiveSupply) {
             batteryLevel -= assignedQuantity;
         } else {
             log.error("not impemented.");

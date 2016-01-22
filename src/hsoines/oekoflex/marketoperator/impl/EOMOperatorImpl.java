@@ -2,7 +2,7 @@ package hsoines.oekoflex.marketoperator.impl;
 
 import hsoines.oekoflex.bid.Bid;
 import hsoines.oekoflex.bid.Demand;
-import hsoines.oekoflex.bid.Supply;
+import hsoines.oekoflex.bid.PositiveSupply;
 import hsoines.oekoflex.energytrader.MarketOperatorListener;
 import hsoines.oekoflex.marketoperator.EOMOperator;
 import hsoines.oekoflex.summary.LoggerFile;
@@ -22,10 +22,10 @@ public class EOMOperatorImpl implements EOMOperator {
     private static final Log log = LogFactory.getLog(EOMOperatorImpl.class);
 
     private final List<Demand> demands;
-    private final List<Supply> supplies;
+    private final List<PositiveSupply> supplies;
     private final LoggerFile logger;
     private List<Demand> lastDemands;
-    private List<Supply> lastSupplies;
+    private List<PositiveSupply> lastSupplies;
     private final String name;
     private int clearedQuantity;
     private float clearedPrice;
@@ -39,7 +39,7 @@ public class EOMOperatorImpl implements EOMOperator {
         supplies = new ArrayList<>();
 
         logger = new LoggerFile(this.getClass().getSimpleName(), logDirName);
-        logger.log("tick;traderType;traderName;bidType;offeredPrice;clearedPrice;offeredQuantity;assignmentRate");
+        logger.log("tick;traderType;traderName;bidType;offeredPrice;clearedPrice;offeredQuantity;assignedQuantity");
     }
 
     @Override
@@ -48,21 +48,21 @@ public class EOMOperatorImpl implements EOMOperator {
     }
 
     @Override
-    public void addSupply(Supply supply) {
+    public void addSupply(PositiveSupply supply) {
         this.supplies.add(supply);
     }
 
     @Override
     public void clearMarket() {
         demands.sort(new Demand.DescendingComparator());
-        this.supplies.sort(new Supply.AscendingComparator());
+        this.supplies.sort(new PositiveSupply.AscendingComparator());
 
         if (demands.size() < 1 || this.supplies.size() < 1) {
             throw new IllegalStateException("Sizes unsufficient! SupportSize: "
                     + this.supplies.size() + ", DemandSize: " + demands.size());
         }
         Iterator<Demand> demandIterator = demands.iterator();
-        Iterator<Supply> supplyIterator = this.supplies.iterator();
+        Iterator<PositiveSupply> supplyIterator = this.supplies.iterator();
         int totalSupplyQuantity = 0;
         int totalDemandQuantity = 0;
         clearedQuantity = 0;
@@ -70,7 +70,7 @@ public class EOMOperatorImpl implements EOMOperator {
         boolean moreSupplies = true;
         boolean moreDemands = true;
         Demand demand = null;
-        Supply supply = null;
+        PositiveSupply supply = null;
         do {
             String logString = "";
             if (balance > 0) {
@@ -183,7 +183,7 @@ public class EOMOperatorImpl implements EOMOperator {
                         .append(demand.getQuantity()).append(",");
             }
         }
-        for (Supply supply : this.supplies) {
+        for (PositiveSupply supply : this.supplies) {
             MarketOperatorListener marketOperatorListener = supply.getMarketOperatorListener();
             if (marketOperatorListener != null) {
                 float assignmentRate = 0;
@@ -213,7 +213,7 @@ public class EOMOperatorImpl implements EOMOperator {
                         + NumberFormatUtil.format(bid.getPrice()) + ";"
                         + NumberFormatUtil.format(clearedPrice) + ";"
                         + bid.getQuantity() + ";"
-                        + NumberFormatUtil.format(assignmentRate) + ";"
+                        + NumberFormatUtil.format(assignmentRate * bid.getQuantity()) + ";"
         );
     }
 
@@ -242,7 +242,7 @@ public class EOMOperatorImpl implements EOMOperator {
         return name;
     }
 
-    public List<Supply> getLastSupplies() {
+    public List<PositiveSupply> getLastSupplies() {
         return lastSupplies;
     }
 

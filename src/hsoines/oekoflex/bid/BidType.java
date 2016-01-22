@@ -6,5 +6,5 @@ package hsoines.oekoflex.bid;
  * Time: 22:35
  */
 public enum BidType {
-    DEMAND, SUPPLY
+    DEMAND, POSITIVE_SUPPLY
 }

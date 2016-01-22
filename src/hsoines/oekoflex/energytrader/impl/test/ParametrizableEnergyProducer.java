@@ -1,7 +1,7 @@
 package hsoines.oekoflex.energytrader.impl.test;
 
 import hsoines.oekoflex.bid.Bid;
-import hsoines.oekoflex.bid.Supply;
+import hsoines.oekoflex.bid.PositiveSupply;
 import hsoines.oekoflex.energytrader.EOMTrader;
 import hsoines.oekoflex.energytrader.EnergyTradeRegistry;
 import hsoines.oekoflex.energytrader.impl.EnergyTradeRegistryImpl;
@@ -53,7 +53,7 @@ public class ParametrizableEnergyProducer implements EOMTrader {
             	bidQuantity = 20;
             }
         }
-        marketOperator.addSupply(new Supply(bidPrice, Math.max(bidQuantity, INITIALCAPACITY), this));
+        marketOperator.addSupply(new PositiveSupply(bidPrice, Math.max(bidQuantity, INITIALCAPACITY), this));
     }
 
     @Override

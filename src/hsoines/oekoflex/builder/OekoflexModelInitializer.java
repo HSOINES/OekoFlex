@@ -13,44 +13,42 @@ import repast.simphony.scenario.ModelInitializer;
 import repast.simphony.scenario.Scenario;
 import repast.simphony.visualization.IDisplay;
 
-public class OekoflexModelInitializer  implements ModelInitializer  {
-	  private IDisplay display;
+public class OekoflexModelInitializer implements ModelInitializer {
+    private IDisplay display;
 
-	  static class DisplayUpdater implements IAction {
+    static class DisplayUpdater implements IAction {
 
-		    private IDisplay display;
+        private IDisplay display;
 
-		    public DisplayUpdater(IDisplay display) {
-		      this.display = display;
-		    }
+        public DisplayUpdater(IDisplay display) {
+            this.display = display;
+        }
 
-		    public void execute() {
-		      display.update();
-		    }
-		  }
-	  
-	@Override
-	public void initialize(Scenario scen, RunEnvironmentBuilder builder) {
-	    scen.addMasterControllerAction(new NullAbstractControllerAction() {
-	        @Override
-	        public void runInitialize(RunState runState, Context context, Parameters runParams) {
-	          display = new MerritOrderGraph(context);
-	          runState.getGUIRegistry().addDisplay("Merrit Order Graph", GUIRegistryType.OTHER, display);
-	          runState.getScheduleRegistry().getModelSchedule().schedule(ScheduleParameters.createRepeating(1, 1,
-	                  ScheduleParameters.END), new DisplayUpdater(display));
-	        }
+        public void execute() {
+            display.update();
+        }
+    }
 
-	        @Override
-	        public void runCleanup(RunState runState, Context context) {
-	          display.destroy();
-	          display = null;
-	        }
+    @Override
+    public void initialize(Scenario scen, RunEnvironmentBuilder builder) {
+        scen.addMasterControllerAction(new NullAbstractControllerAction() {
+            @Override
+            public void runInitialize(RunState runState, Context context, Parameters runParams) {
+                display = new MerritOrderGraph(context);
+                runState.getGUIRegistry().addDisplay("Merrit Order Graph", GUIRegistryType.OTHER, display);
+                runState.getScheduleRegistry().getModelSchedule().schedule(ScheduleParameters.createRepeating(1, 1,
+                        ScheduleParameters.END), new DisplayUpdater(display));
+            }
 
-	        public String toString() {
-	          return "Create a custom display";
-	        }
-	      });
+            @Override
+            public void runCleanup(RunState runState, Context context) {
+                display.destroy();
+                display = null;
+            }
 
-
-	    }
+            public String toString() {
+                return "Create a custom display";
+            }
+        });
+    }
 }

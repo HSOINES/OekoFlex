@@ -93,4 +93,9 @@ public final class TimeUtil {
     public static void nextTick() {
         testTick++;
     }
+
+    public static void reset() {
+        testTick = -1;
+
+    }
 }

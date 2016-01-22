@@ -2,7 +2,7 @@ package hsoines.oekoflex.display;
 
 import hsoines.oekoflex.OekoflexAgent;
 import hsoines.oekoflex.bid.Demand;
-import hsoines.oekoflex.bid.Supply;
+import hsoines.oekoflex.bid.PositiveSupply;
 import hsoines.oekoflex.marketoperator.impl.EOMOperatorImpl;
 import hsoines.oekoflex.util.TimeUtil;
 import org.knowm.xchart.Chart;
@@ -46,11 +46,11 @@ public class MerritOrderGraph implements IDisplay {
                 .width(800).height(600).title(getClass()
                         .getSimpleName()).xAxisTitle("Quantity").yAxisTitle("Bid").build();
         panel.add(new XChartPanel(chart), BorderLayout.CENTER);
-        List<Supply> lastSupplies = eomOperator.getLastSupplies();
+        List<PositiveSupply> lastSupplies = eomOperator.getLastSupplies();
         List<Float> quantityValues = new ArrayList<>();
         List<Float> priceValues = new ArrayList<>();
         float lastQuantity = 0;
-        for (Supply lastSupply : lastSupplies) {
+        for (PositiveSupply lastSupply : lastSupplies) {
             quantityValues.add(lastQuantity);
             quantityValues.add(lastQuantity + lastSupply.getQuantity());
             lastQuantity += lastSupply.getQuantity();

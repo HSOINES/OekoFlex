@@ -1,7 +1,7 @@
 package hsoines.oekoflex.energytrader.impl;
 
 import hsoines.oekoflex.bid.Demand;
-import hsoines.oekoflex.bid.Supply;
+import hsoines.oekoflex.bid.PositiveSupply;
 import hsoines.oekoflex.marketoperator.impl.EOMOperatorImpl;
 import hsoines.oekoflex.tools.RepastTestInitializer;
 import hsoines.oekoflex.util.TimeUtil;
@@ -31,9 +31,9 @@ public class StorageTest {
     @Test
     public void testBatteryEmpty() throws Exception {
         storage.makeBidEOM();
-        operator.addSupply(new Supply(0.8f, 500, null));
-        operator.addSupply(new Supply(0.8f, 500, null));
-        operator.addSupply(new Supply(0.8f, 500, null));
+        operator.addSupply(new PositiveSupply(0.8f, 500, null));
+        operator.addSupply(new PositiveSupply(0.8f, 500, null));
+        operator.addSupply(new PositiveSupply(0.8f, 500, null));
         operator.clearMarket();
 
         int load = storage.getBatteryLevel();
@@ -43,8 +43,8 @@ public class StorageTest {
     @Test
     public void testBatteryEmpty2() throws Exception {
         storage.makeBidEOM();
-        operator.addSupply(new Supply(0.8f, 500, null));
-        operator.addSupply(new Supply(1f, 300, null));
+        operator.addSupply(new PositiveSupply(0.8f, 500, null));
+        operator.addSupply(new PositiveSupply(1f, 300, null));
 
         operator.clearMarket();
         int load = storage.getBatteryLevel();
@@ -54,7 +54,7 @@ public class StorageTest {
     @Test
     public void test2Cycles() throws Exception {
         storage.makeBidEOM();
-        operator.addSupply(new Supply(0.8f, 400, null));
+        operator.addSupply(new PositiveSupply(0.8f, 400, null));
         operator.clearMarket();
         assertEquals(400, storage.getBatteryLevel());
         TimeUtil.nextTick();

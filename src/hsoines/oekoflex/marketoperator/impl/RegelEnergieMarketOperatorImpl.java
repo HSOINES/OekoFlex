@@ -1,6 +1,6 @@
 package hsoines.oekoflex.marketoperator.impl;
 
-import hsoines.oekoflex.bid.Supply;
+import hsoines.oekoflex.bid.PositiveSupply;
 import hsoines.oekoflex.energytrader.MarketOperatorListener;
 import hsoines.oekoflex.marketoperator.RegelEnergieMarketOperator;
 import hsoines.oekoflex.summary.LoggerFile;
@@ -21,12 +21,12 @@ import java.util.List;
  * Date: 07/01/16
  * Time: 10:55
  */
-public final class RegelEnergieMarketOperatorImpl implements RegelEnergieMarketOperator {
+public final class RegelEnergieMarketOperatorImpl implements RegelEnergieMarketOperator<PositiveSupply> {
     private static final Log log = LogFactory.getLog(RegelEnergieMarketOperatorImpl.class);
 
     private final String name;
     private final int quantity;
-    private final List<Supply> supplies = new ArrayList<Supply>();
+    private final List<PositiveSupply> supplies = new ArrayList<PositiveSupply>();
     private long totalClearedQuantity;
     private float lastClearedMaxPrice;
     private float lastAssignmentRate;
@@ -51,7 +51,7 @@ public final class RegelEnergieMarketOperatorImpl implements RegelEnergieMarketO
     }
 
     @Override
-    public void addSupply(final Supply supply) {
+    public void addSupply(final PositiveSupply supply) {
         supplies.add(supply);
     }
 
@@ -60,7 +60,7 @@ public final class RegelEnergieMarketOperatorImpl implements RegelEnergieMarketO
         supplies.sort((o1, o2) -> Float.compare(o1.getPrice(), o2.getPrice()));
         totalClearedQuantity = 0;
         lastAssignmentRate = 0;
-        for (Supply supply : supplies) {
+        for (PositiveSupply supply : supplies) {
             MarketOperatorListener marketOperatorListener = supply.getMarketOperatorListener();
             if (totalClearedQuantity + supply.getQuantity() < quantity) {
                 totalClearedQuantity += supply.getQuantity();
@@ -89,7 +89,7 @@ public final class RegelEnergieMarketOperatorImpl implements RegelEnergieMarketO
         return lastAssignmentRate;
     }
 
-    void doNotify(final Supply supply, final MarketOperatorListener marketOperatorListener, float assignRate) {
+    void doNotify(final PositiveSupply supply, final MarketOperatorListener marketOperatorListener, float assignRate) {
         long tick = TimeUtil.getCurrentTick();
         marketOperatorListener.notifyClearingDone(TimeUtil.getDate(tick), Market.REGELENERGIE_MARKET, supply, supply.getPrice(), assignRate);
         lastClearedMaxPrice = supply.getPrice();

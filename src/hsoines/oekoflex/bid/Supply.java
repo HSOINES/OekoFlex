@@ -5,17 +5,16 @@ import hsoines.oekoflex.energytrader.MarketOperatorListener;
 import java.util.Comparator;
 
 /**
- * Created by IntelliJ IDEA.
  * User: jh
- * Date: 03/12/15
- * Time: 08:27
+ * Date: 22/01/16
+ * Time: 22:27
  */
-public final class Supply implements Bid {
-    private final float price;
+public abstract class Supply implements Bid {
+    protected final float price;
     private final int quantity;
     private final MarketOperatorListener marketOperatorListener;
 
-    public Supply(float price, int quantity, MarketOperatorListener marketOperatorListener) {
+    public Supply(final float price, final int quantity, final MarketOperatorListener marketOperatorListener) {
         this.price = price;
         this.quantity = quantity;
         this.marketOperatorListener = marketOperatorListener;
@@ -37,16 +36,11 @@ public final class Supply implements Bid {
      }
 
 
-    @Override
-    public BidType getBidType() {
-        return BidType.SUPPLY;
-    }
+    public static class AscendingComparator implements Comparator<PositiveSupply> {
 
-    public static class AscendingComparator implements Comparator<Supply> {
         @Override
-        public int compare(Supply o1, Supply o2) {
+        public int compare(PositiveSupply o1, PositiveSupply o2) {
             return Float.compare(o1.getPrice(), o2.getPrice());
         }
     }
-
 }

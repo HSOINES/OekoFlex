@@ -2,7 +2,7 @@ package hsoines.oekoflex.marketoperator.impl;
 
 import hsoines.oekoflex.bid.Bid;
 import hsoines.oekoflex.bid.Demand;
-import hsoines.oekoflex.bid.Supply;
+import hsoines.oekoflex.bid.PositiveSupply;
 import hsoines.oekoflex.energytrader.MarketOperatorListener;
 import hsoines.oekoflex.tools.RepastTestInitializer;
 import hsoines.oekoflex.util.Market;
@@ -27,10 +27,10 @@ public class EOMOperatorImplTest {
     }
 
     @Test
-    public void testName() throws Exception {
+    public void testLog() throws Exception {
         MarketOperatorListener listener = new MyMarketOperatorListener();
         operator.addDemand(new Demand(10f, 100, listener));
-        operator.addSupply(new Supply(9f, 100, listener));
+        operator.addSupply(new PositiveSupply(9f, 50, listener));
         operator.clearMarket();
         //must write log in test
     }
