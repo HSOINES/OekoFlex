@@ -53,10 +53,9 @@ public final class FlexPowerplant implements EOMTrader, RegelenergieMarketTrader
         Date currentDate = TimeUtil.getCurrentDate();
         int supplyCapacity = getSupplyCapacity(currentDate, Market.REGELENERGIE_MARKET);
         regelenergieMarketOperator.addSupply(new Supply(costs * 1.5f, supplyCapacity, this));
-
     }
 
-    int getSupplyCapacity(final Date currentDate, final Market market) {
+    int getSupplyCapacity(final Date currentDate, final Market market) {     //test implementierung
         int lastProducedCapacity = Math.max(energyTradeRegistry.getQuantityUsed(TimeUtil.precedingDate(currentDate)), 200);
         int remainingCapacity = energyTradeRegistry.getRemainingCapacity(currentDate, market);
         return (int) Math.min(lastProducedCapacity * supplyDelay, remainingCapacity);

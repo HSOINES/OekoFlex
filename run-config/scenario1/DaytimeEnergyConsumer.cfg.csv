@@ -1,4 +1,4 @@
 "name";"quantity";"priceAtDay";"decreaseAtNightInPercent"
-daytimeConsumer1;1000;1000;.8
-daytimeConsumer2;2000;2000;.70
+daytimeConsumer1;1000;1200;.8
+daytimeConsumer2;2000;1500;.7
 
