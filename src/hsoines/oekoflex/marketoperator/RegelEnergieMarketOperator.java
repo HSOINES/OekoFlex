@@ -20,4 +20,10 @@ public interface RegelEnergieMarketOperator extends OekoflexAgent {
 	long getTotalClearedNegativeQuantity();
 
 	float getLastPositiveAssignmentRate();
+
+	float getLastClearedNegativeMaxPrice();
+
+	float getLastNegativeAssignmentRate();
+
+	float getLastClearedPositiveMaxPrice();
 }
