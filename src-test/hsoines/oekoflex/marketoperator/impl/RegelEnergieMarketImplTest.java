@@ -28,7 +28,7 @@ public class RegelEnergieMarketImplTest {
 
     @Before
     public void setUp() throws Exception {
-        operator = new RegelEnergieMarketOperatorImpl("test", "run/summary-logs/test", 10000);
+        operator = new RegelEnergieMarketOperatorImpl("test", "run/summary-logs/test", 10000, 0);
         listener = mock(MarketOperatorListener.class);
 
         RepastTestInitializer.init();
@@ -36,10 +36,10 @@ public class RegelEnergieMarketImplTest {
 
     @Test
     public void testClearingWithTooLittleSupplies() throws Exception {
-        operator.addSupply(new PositiveSupply(10, 1000, listener));
-        operator.addSupply(new PositiveSupply(20, 1000, listener));
-        operator.addSupply(new PositiveSupply(30, 1000, listener));
-        operator.addSupply(new PositiveSupply(40, 1000, listener));
+        operator.addPositiveSupply(new PositiveSupply(10, 1000, listener));
+        operator.addPositiveSupply(new PositiveSupply(20, 1000, listener));
+        operator.addPositiveSupply(new PositiveSupply(30, 1000, listener));
+        operator.addPositiveSupply(new PositiveSupply(40, 1000, listener));
 
         operator.clearMarket();
 
@@ -52,7 +52,7 @@ public class RegelEnergieMarketImplTest {
 
     @Test
     public void testFourTimesNotification() throws Exception {
-        operator.addSupply(new PositiveSupply(10, 1000, listener));
+        operator.addPositiveSupply(new PositiveSupply(10, 1000, listener));
 
         operator.clearMarket();
 
@@ -62,10 +62,10 @@ public class RegelEnergieMarketImplTest {
 
     @Test
     public void testClearingWithExactlyQuantity() throws Exception {
-        operator.addSupply(new PositiveSupply(10, 2500, listener));
-        operator.addSupply(new PositiveSupply(20, 2500, listener));
-        operator.addSupply(new PositiveSupply(30, 2500, listener));
-        operator.addSupply(new PositiveSupply(40, 2500, listener));
+        operator.addPositiveSupply(new PositiveSupply(10, 2500, listener));
+        operator.addPositiveSupply(new PositiveSupply(20, 2500, listener));
+        operator.addPositiveSupply(new PositiveSupply(30, 2500, listener));
+        operator.addPositiveSupply(new PositiveSupply(40, 2500, listener));
 
         operator.clearMarket();
 
@@ -78,10 +78,10 @@ public class RegelEnergieMarketImplTest {
 
     @Test
     public void testClearingWithRatedQuantity() throws Exception {
-        operator.addSupply(new PositiveSupply(10, 2500, listener));
-        operator.addSupply(new PositiveSupply(20, 2500, listener));
-        operator.addSupply(new PositiveSupply(30, 2500, listener));
-        operator.addSupply(new PositiveSupply(40, 5000, listener));
+        operator.addPositiveSupply(new PositiveSupply(10, 2500, listener));
+        operator.addPositiveSupply(new PositiveSupply(20, 2500, listener));
+        operator.addPositiveSupply(new PositiveSupply(30, 2500, listener));
+        operator.addPositiveSupply(new PositiveSupply(40, 5000, listener));
 
         operator.clearMarket();
 
@@ -96,14 +96,14 @@ public class RegelEnergieMarketImplTest {
 
     @Test
     public void testClearingWithManyMoreSupplies() throws Exception {
-        operator.addSupply(new PositiveSupply(10, 2500, listener));
-        operator.addSupply(new PositiveSupply(20, 2500, listener));
-        operator.addSupply(new PositiveSupply(30, 2500, listener));
-        operator.addSupply(new PositiveSupply(40, 5000, listener));
-        operator.addSupply(new PositiveSupply(50, 5000, listener));
-        operator.addSupply(new PositiveSupply(50, 5000, listener));
-        operator.addSupply(new PositiveSupply(50, 5000, listener));
-        operator.addSupply(new PositiveSupply(50, 5000, listener));
+        operator.addPositiveSupply(new PositiveSupply(10, 2500, listener));
+        operator.addPositiveSupply(new PositiveSupply(20, 2500, listener));
+        operator.addPositiveSupply(new PositiveSupply(30, 2500, listener));
+        operator.addPositiveSupply(new PositiveSupply(40, 5000, listener));
+        operator.addPositiveSupply(new PositiveSupply(50, 5000, listener));
+        operator.addPositiveSupply(new PositiveSupply(50, 5000, listener));
+        operator.addPositiveSupply(new PositiveSupply(50, 5000, listener));
+        operator.addPositiveSupply(new PositiveSupply(50, 5000, listener));
 
         operator.clearMarket();
 

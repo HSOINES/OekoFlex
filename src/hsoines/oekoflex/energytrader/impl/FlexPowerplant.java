@@ -52,7 +52,7 @@ public final class FlexPowerplant implements EOMTrader, RegelenergieMarketTrader
     public void makeBidRegelenergie() {
         Date currentDate = TimeUtil.getCurrentDate();
         int supplyCapacity = getSupplyCapacity(currentDate, Market.REGELENERGIE_MARKET);
-        regelenergieMarketOperator.addSupply(new PositiveSupply(costs * 1.5f, supplyCapacity, this));
+        regelenergieMarketOperator.addPositiveSupply(new PositiveSupply(costs * 1.5f, supplyCapacity, this));
     }
 
     int getSupplyCapacity(final Date currentDate, final Market market) {     //test implementierung

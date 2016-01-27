@@ -48,7 +48,7 @@ public class CombinedEnergyProducer implements RegelenergieMarketTrader, EOMTrad
     public void makeBidRegelenergie() {
         Date date = TimeUtil.getCurrentDate();
         int offerCapacity = (int) (energyTradeRegistry.getRemainingCapacity(date, Market.REGELENERGIE_MARKET) * quantityPercentageOnRegelMarkt);
-        regelenergieMarketOperator.addSupply(new PositiveSupply(regelMarktPriceStrategy.getPrice(date), offerCapacity, this));
+        regelenergieMarketOperator.addPositiveSupply(new PositiveSupply(regelMarktPriceStrategy.getPrice(date), offerCapacity, this));
     }
 
     @Override

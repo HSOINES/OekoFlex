@@ -1,6 +1,8 @@
 package hsoines.oekoflex.marketoperator.impl;
 
+import hsoines.oekoflex.bid.NegativeSupply;
 import hsoines.oekoflex.bid.PositiveSupply;
+import hsoines.oekoflex.bid.Supply;
 import hsoines.oekoflex.energytrader.MarketOperatorListener;
 import hsoines.oekoflex.marketoperator.RegelEnergieMarketOperator;
 import hsoines.oekoflex.summary.LoggerFile;
@@ -18,30 +20,36 @@ import java.util.List;
 
 /**
  * User: jh
- * Date: 07/01/16
- * Time: 10:55
+ * Date: 27/01/16
+ * Time: 20:45
  */
-public final class RegelEnergieMarketOperatorImpl implements RegelEnergieMarketOperator<PositiveSupply> {
+public final class RegelEnergieMarketOperatorImpl implements RegelEnergieMarketOperator {
     private static final Log log = LogFactory.getLog(RegelEnergieMarketOperatorImpl.class);
 
     private final String name;
-    private final int quantity;
-    private final List<PositiveSupply> supplies = new ArrayList<PositiveSupply>();
-    private long totalClearedQuantity;
-    private float lastClearedMaxPrice;
-    private float lastAssignmentRate;
+    private final int positiveQuantity;
+    private final int negativeQuantity;
+    private final List<PositiveSupply> positiveSupplies = new ArrayList<>();
+    private final List<NegativeSupply> negativeSupplies = new ArrayList<>();
+    private long totalClearedPositiveQuantity;
+    private long totalClearedNegativeQuantity;
+    private float lastClearedPositiveMaxPrice;
+    private float lastPositiveAssignmentRate;
+    private float lastNegativeAssignmentRate;
     private LoggerFile logger;
 
     public RegelEnergieMarketOperatorImpl(String name, String logDirName) throws IOException {
         this.name = name;
         Parameters p = RunEnvironment.getInstance().getParameters();
-        this.quantity = (int) p.getValue("rigidDemandEnergyOnlyMarket");
+        this.positiveQuantity = (int) p.getValue("rigidDemandEnergyOnlyMarket"); //todo
+        this.negativeQuantity = (int) p.getValue("rigidDemandEnergyOnlyMarket"); //todo
         init(logDirName);
     }
 
-    public RegelEnergieMarketOperatorImpl(final String name, String logDirName, int quantity) throws IOException {
-        this.quantity = quantity;
+    public RegelEnergieMarketOperatorImpl(final String name, String logDirName, int positiveQuantity, int negativeQuantity) throws IOException {
+        this.positiveQuantity = positiveQuantity;
         this.name = name;
+        this.negativeQuantity = negativeQuantity;
         init(logDirName);
     }
 
@@ -51,16 +59,30 @@ public final class RegelEnergieMarketOperatorImpl implements RegelEnergieMarketO
     }
 
     @Override
-    public void addSupply(final PositiveSupply supply) {
-        supplies.add(supply);
+    public void addPositiveSupply(final PositiveSupply supply) {
+        positiveSupplies.add(supply);
+    }
+
+    @Override
+    public void addNegativeSupply(final NegativeSupply supply) {
+        negativeSupplies.add(supply);
     }
 
     @Override
     public void clearMarket() {
+        AssignmentRateAndClearedQuantity positiveAssignmentRateAndClearedQuantity = doClearMarketFor(positiveSupplies, positiveQuantity);
+        totalClearedPositiveQuantity = positiveAssignmentRateAndClearedQuantity.getClearedQuantity();
+        lastPositiveAssignmentRate = positiveAssignmentRateAndClearedQuantity.getAssignmentRate();
+        AssignmentRateAndClearedQuantity negativeAssignmentRateAndClearedQuantity = doClearMarketFor(positiveSupplies, negativeQuantity);
+        totalClearedNegativeQuantity = negativeAssignmentRateAndClearedQuantity.getClearedQuantity();
+        lastNegativeAssignmentRate = negativeAssignmentRateAndClearedQuantity.getAssignmentRate();
+    }
+
+    AssignmentRateAndClearedQuantity doClearMarketFor(final List<PositiveSupply> supplies, int quantity) {
         supplies.sort((o1, o2) -> Float.compare(o1.getPrice(), o2.getPrice()));
-        totalClearedQuantity = 0;
-        lastAssignmentRate = 0;
-        for (PositiveSupply supply : supplies) {
+        int totalClearedQuantity = 0;
+        float lastAssignmentRate = 0;
+        for (Supply supply : this.positiveSupplies) {
             MarketOperatorListener marketOperatorListener = supply.getMarketOperatorListener();
             if (totalClearedQuantity + supply.getQuantity() < quantity) {
                 totalClearedQuantity += supply.getQuantity();
@@ -76,23 +98,42 @@ public final class RegelEnergieMarketOperatorImpl implements RegelEnergieMarketO
         }
         log.info("Clearing done.");
         supplies.clear();
+        final int finalTotalClearedQuantity = totalClearedQuantity;
+        final float finalLastAssignmentRate = lastAssignmentRate;
+        return new AssignmentRateAndClearedQuantity() {
+            @Override
+            public int getClearedQuantity() {
+                return finalTotalClearedQuantity;
+            }
+
+            @Override
+            public float getAssignmentRate() {
+                return finalLastAssignmentRate;
+            }
+        };
     }
 
     @Override
-    public long getTotalClearedQuantity() {
-        log.info("Cleared Quantity:" + totalClearedQuantity);
-        return totalClearedQuantity;
+    public long getTotalClearedPositiveQuantity() {
+        log.info("Cleared Quantity:" + totalClearedPositiveQuantity);
+        return totalClearedPositiveQuantity;
     }
 
     @Override
-    public float getLastAssignmentRate() {
-        return lastAssignmentRate;
+    public long getTotalClearedNegativeQuantity() {
+        log.info("Cleared Quantity:" + totalClearedNegativeQuantity);
+        return totalClearedNegativeQuantity;
     }
 
-    void doNotify(final PositiveSupply supply, final MarketOperatorListener marketOperatorListener, float assignRate) {
+    @Override
+    public float getLastPositiveAssignmentRate() {
+        return lastPositiveAssignmentRate;
+    }
+
+    void doNotify(final Supply supply, final MarketOperatorListener marketOperatorListener, float assignRate) {
         long tick = TimeUtil.getCurrentTick();
         marketOperatorListener.notifyClearingDone(TimeUtil.getDate(tick), Market.REGELENERGIE_MARKET, supply, supply.getPrice(), assignRate);
-        lastClearedMaxPrice = supply.getPrice();
+        lastClearedPositiveMaxPrice = supply.getPrice();
 
         logger.log(String.valueOf(tick) + ";"
                 + supply.getMarketOperatorListener().getClass().getSimpleName() + ";"
@@ -107,7 +148,13 @@ public final class RegelEnergieMarketOperatorImpl implements RegelEnergieMarketO
         return name;
     }
 
-    public float getLastClearedMaxPrice() {
-        return lastClearedMaxPrice;
+    public float getLastClearedPositiveMaxPrice() {
+        return lastClearedPositiveMaxPrice;
+    }
+
+    private interface AssignmentRateAndClearedQuantity {
+        int getClearedQuantity();
+
+        float getAssignmentRate();
     }
 }

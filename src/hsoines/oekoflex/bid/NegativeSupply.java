@@ -8,15 +8,15 @@ import hsoines.oekoflex.energytrader.MarketOperatorListener;
  * Date: 03/12/15
  * Time: 08:27
  */
-public final class PositiveSupply extends Supply {
+public final class NegativeSupply extends Supply {
 
-    public PositiveSupply(float price, int quantity, MarketOperatorListener marketOperatorListener) {
+    public NegativeSupply(float price, int quantity, MarketOperatorListener marketOperatorListener) {
         super(price, quantity, marketOperatorListener);
     }
 
     @Override
     public BidType getBidType() {
-        return BidType.POSITIVE_SUPPLY;
+        return BidType.NEGATIVE_SUPPLY;
     }
 
 }

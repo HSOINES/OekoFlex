@@ -29,7 +29,7 @@
             <repast.simphony.data2.engine.MethodDataSourceDefinition>
                 <id>TotalClearedQuantity</id>
                 <className>hsoines.oekoflex.marketoperator.RegelEnergieMarketOperator</className>
-                <methodName>getTotalClearedQuantity</methodName>
+                <methodName>getTotalClearedPositiveQuantity</methodName>
             </repast.simphony.data2.engine.MethodDataSourceDefinition>
         </entry>
         <entry>
