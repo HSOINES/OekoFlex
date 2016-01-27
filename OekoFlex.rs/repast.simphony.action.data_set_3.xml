@@ -24,30 +24,6 @@
         <methodName>getName</methodName>
       </repast.simphony.data2.engine.MethodDataSourceDefinition>
     </entry>
-    <!-- <entry>
-       <string>LastBidPrice</string>
-       <repast.simphony.data2.engine.MethodDataSourceDefinition>
-         <id>LastBidPrice</id>
-         <className>hsoines.oekoflex.energytrader.RegelenergieMarketTrader</className>
-         <methodName>getLastBidPrice</methodName>
-       </repast.simphony.data2.engine.MethodDataSourceDefinition>
-     </entry>
-    <entry>
-      <string>LastClearedPrice</string>
-      <repast.simphony.data2.engine.MethodDataSourceDefinition>
-        <id>LastClearedPrice</id>
-        <className>hsoines.oekoflex.energytrader.RegelenergieMarketTrader</className>
-        <methodName>getLastClearedPrice</methodName>
-      </repast.simphony.data2.engine.MethodDataSourceDefinition>
-    </entry>
-    <entry>
-      <string>LastAssignmentRate</string>
-      <repast.simphony.data2.engine.MethodDataSourceDefinition>
-        <id>LastAssignmentRate</id>
-        <className>hsoines.oekoflex.energytrader.RegelenergieMarketTrader</className>
-        <methodName>getLastAssignmentRate</methodName>
-      </repast.simphony.data2.engine.MethodDataSourceDefinition>
-    </entry>-->
   </methodDataSources>
   <countSources class="linked-hash-map"/>
   <customNADataSources class="linked-hash-map"/>

@@ -1,47 +1,63 @@
 <repast.simphony.data2.engine.DataSetDescriptor>
-    <name>RegelEnergieMarktOperatorDataSet</name>
-    <type>NON_AGGREGATE</type>
-    <sourceType>hsoines.oekoflex.marketoperator.RegelEnergieMarketOperator</sourceType>
-    <inclTick>true</inclTick>
-    <inclBatchRun>false</inclBatchRun>
-    <inclRandomSeed>false</inclRandomSeed>
-    <scheduleParams>
-        <start>0.0</start>
-        <interval>1.0</interval>
-        <priority>-Infinity</priority>
-        <pType>LAST</pType>
-        <duration>-1.0</duration>
-        <frequency>REPEAT</frequency>
-        <hashCode>236151325</hashCode>
-    </scheduleParams>
-    <atEnd>false</atEnd>
-    <methodDataSources class="linked-hash-map">
-        <entry>
-            <string>Name</string>
-            <repast.simphony.data2.engine.MethodDataSourceDefinition>
-                <id>Name</id>
-                <className>hsoines.oekoflex.marketoperator.RegelEnergieMarketOperator</className>
-                <methodName>getName</methodName>
-            </repast.simphony.data2.engine.MethodDataSourceDefinition>
-        </entry>
-        <entry>
-            <string>TotalClearedQuantity</string>
-            <repast.simphony.data2.engine.MethodDataSourceDefinition>
-                <id>TotalClearedQuantity</id>
-                <className>hsoines.oekoflex.marketoperator.RegelEnergieMarketOperator</className>
-                <methodName>getTotalClearedPositiveQuantity</methodName>
-            </repast.simphony.data2.engine.MethodDataSourceDefinition>
-        </entry>
-        <entry>
-            <string>LastAssignmentRate</string>
-            <repast.simphony.data2.engine.MethodDataSourceDefinition>
-                <id>LastAssignmentRate</id>
-                <className>hsoines.oekoflex.marketoperator.RegelEnergieMarketOperator</className>
-                <methodName>getLastAssignmentRate</methodName>
-            </repast.simphony.data2.engine.MethodDataSourceDefinition>
-        </entry>
-    </methodDataSources>
-    <countSources class="linked-hash-map"/>
-    <customNADataSources class="linked-hash-map"/>
-    <customAggDataSources class="linked-hash-map"/>
+  <name>RegelEnergieMarktOperatorDataSet</name>
+  <type>NON_AGGREGATE</type>
+  <sourceType>hsoines.oekoflex.marketoperator.RegelEnergieMarketOperator</sourceType>
+  <inclTick>true</inclTick>
+  <inclBatchRun>false</inclBatchRun>
+  <inclRandomSeed>false</inclRandomSeed>
+  <scheduleParams>
+    <start>0.0</start>
+    <interval>1.0</interval>
+    <priority>-Infinity</priority>
+    <pType>LAST</pType>
+    <duration>-1.0</duration>
+    <frequency>REPEAT</frequency>
+    <hashCode>236151325</hashCode>
+  </scheduleParams>
+  <atEnd>false</atEnd>
+  <methodDataSources class="linked-hash-map">
+    <entry>
+      <string>Name</string>
+      <repast.simphony.data2.engine.MethodDataSourceDefinition>
+        <id>Name</id>
+        <className>hsoines.oekoflex.marketoperator.RegelEnergieMarketOperator</className>
+        <methodName>getName</methodName>
+      </repast.simphony.data2.engine.MethodDataSourceDefinition>
+    </entry>
+    <entry>
+      <string>TotalClearedPositiveQuantity</string>
+      <repast.simphony.data2.engine.MethodDataSourceDefinition>
+        <id>TotalClearedPositiveQuantity</id>
+        <className>hsoines.oekoflex.marketoperator.RegelEnergieMarketOperator</className>
+        <methodName>getTotalClearedPositiveQuantity</methodName>
+      </repast.simphony.data2.engine.MethodDataSourceDefinition>
+    </entry>
+    <entry>
+      <string>LastClearedPositiveMaxPrice</string>
+      <repast.simphony.data2.engine.MethodDataSourceDefinition>
+        <id>LastClearedPositiveMaxPrice</id>
+        <className>hsoines.oekoflex.marketoperator.RegelEnergieMarketOperator</className>
+        <methodName>getLastClearedPositiveMaxPrice</methodName>
+      </repast.simphony.data2.engine.MethodDataSourceDefinition>
+    </entry>
+    <entry>
+      <string>TotalClearedNegativeQuantity</string>
+      <repast.simphony.data2.engine.MethodDataSourceDefinition>
+        <id>TotalClearedNegativeQuantity</id>
+        <className>hsoines.oekoflex.marketoperator.RegelEnergieMarketOperator</className>
+        <methodName>getTotalClearedNegativeQuantity</methodName>
+      </repast.simphony.data2.engine.MethodDataSourceDefinition>
+    </entry>
+    <entry>
+      <string>LastClearedNegativeMaxPrice</string>
+      <repast.simphony.data2.engine.MethodDataSourceDefinition>
+        <id>LastClearedNegativeMaxPrice</id>
+        <className>hsoines.oekoflex.marketoperator.RegelEnergieMarketOperator</className>
+        <methodName>getLastClearedNegativeMaxPrice</methodName>
+      </repast.simphony.data2.engine.MethodDataSourceDefinition>
+    </entry>
+  </methodDataSources>
+  <countSources class="linked-hash-map"/>
+  <customNADataSources class="linked-hash-map"/>
+  <customAggDataSources class="linked-hash-map"/>
 </repast.simphony.data2.engine.DataSetDescriptor>

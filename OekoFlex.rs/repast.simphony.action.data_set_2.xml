@@ -24,14 +24,6 @@
         <methodName>getLastAssignmentRate</methodName>
       </repast.simphony.data2.engine.MethodDataSourceDefinition>
     </entry>
-    <!--  <entry>
-        <string>LastBidPrice</string>
-        <repast.simphony.data2.engine.MethodDataSourceDefinition>
-          <id>LastBidPrice</id>
-          <className>hsoines.oekoflex.energytrader.EOMTrader</className>
-          <methodName>getLastBidPrice</methodName>
-        </repast.simphony.data2.engine.MethodDataSourceDefinition>
-      </entry>       -->
     <entry>
       <string>LastClearedPrice</string>
       <repast.simphony.data2.engine.MethodDataSourceDefinition>

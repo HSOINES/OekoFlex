@@ -48,7 +48,7 @@ public final class FlexPowerplant implements EOMTrader, RegelenergieMarketTrader
         this.costs = costs;
         this.supplyDelay = supplyDelay;
         positiveEnergyTradeRegistry = new EnergyTradeRegistryImpl(EnergyTradeRegistry.Type.PRODUCE, capacity);
-        negativeEnergyTradeRegistry = new EnergyTradeRegistryImpl(EnergyTradeRegistry.Type.PRODUCE, capacity);
+        negativeEnergyTradeRegistry = new EnergyTradeRegistryImpl(EnergyTradeRegistry.Type.PRODUCE, 0);
     }
 
     private void readFile(final File profileFile) throws IOException {
@@ -78,9 +78,8 @@ public final class FlexPowerplant implements EOMTrader, RegelenergieMarketTrader
     @Override
     public void makeBidRegelenergie() {
         Date currentDate = TimeUtil.getCurrentDate();
-        int supplyCapacity = getSupplyCapacity(currentDate, Market.REGELENERGIE_MARKET);
-        regelenergieMarketOperator.addPositiveSupply(new PositiveSupply(costs * 1.5f, supplyCapacity, this));
-        regelenergieMarketOperator.addNegativeSupply(new NegativeSupply(costs * .5f, (int) (0.1 * supplyCapacity), this));
+        regelenergieMarketOperator.addPositiveSupply(new PositiveSupply(costs * 1.5f, positiveEnergyTradeRegistry.getRemainingCapacity(currentDate, Market.REGELENERGIE_MARKET), this));
+        regelenergieMarketOperator.addNegativeSupply(new NegativeSupply(costs * .5f, negativeEnergyTradeRegistry.getRemainingCapacity(currentDate, Market.REGELENERGIE_MARKET), this));
     }
 
     @Override

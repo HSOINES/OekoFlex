@@ -33,7 +33,7 @@ public final class FlexPowerplantProducerFactory {
         for (CSVRecord parameters : format) {
             try {
                 String name = parameters.get("name");
-                int capacity = Integer.parseInt(parameters.get("capacity"));
+                int capacity = Integer.parseInt(parameters.get("positiveCapacity"));
                 float costs = Float.parseFloat(parameters.get("costs"));
                 float quantityDelay = Float.parseFloat(parameters.get("quantityDelay"));
                 String profileFileString = parameters.get("profileFile");
