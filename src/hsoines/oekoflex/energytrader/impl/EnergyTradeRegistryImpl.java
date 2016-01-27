@@ -29,7 +29,7 @@ public final class EnergyTradeRegistryImpl implements EnergyTradeRegistry {
         this.type = type;
         this.initialcapacity = initialcapacity;
         tradeElements = new ArrayList<>();
-        capacities = new HashMap<Long, Integer>();
+        capacities = new HashMap<>();
     }
 
     @Override

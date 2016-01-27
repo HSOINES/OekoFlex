@@ -1,5 +1,6 @@
 package hsoines.oekoflex.builder;
 
+import hsoines.oekoflex.builder.traderfactories.DaytimeEnergyConsumerFactory;
 import org.junit.Test;
 import repast.simphony.context.DefaultContext;
 

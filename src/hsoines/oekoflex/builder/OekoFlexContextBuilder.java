@@ -1,6 +1,7 @@
 package hsoines.oekoflex.builder;
 
 import hsoines.oekoflex.OekoflexAgent;
+import hsoines.oekoflex.builder.traderfactories.*;
 import hsoines.oekoflex.marketoperator.RegelEnergieMarketOperator;
 import hsoines.oekoflex.marketoperator.impl.EOMOperatorImpl;
 import hsoines.oekoflex.marketoperator.impl.RegelEnergieMarketOperatorImpl;

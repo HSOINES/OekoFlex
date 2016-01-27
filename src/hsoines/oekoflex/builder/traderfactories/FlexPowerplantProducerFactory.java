@@ -1,6 +1,7 @@
-package hsoines.oekoflex.builder;
+package hsoines.oekoflex.builder.traderfactories;
 
 import hsoines.oekoflex.OekoflexAgent;
+import hsoines.oekoflex.builder.CSVParameter;
 import hsoines.oekoflex.energytrader.impl.FlexPowerplant;
 import hsoines.oekoflex.marketoperator.RegelEnergieMarketOperator;
 import hsoines.oekoflex.marketoperator.impl.EOMOperatorImpl;
@@ -35,8 +36,10 @@ public final class FlexPowerplantProducerFactory {
                 int capacity = Integer.parseInt(parameters.get("capacity"));
                 float costs = Float.parseFloat(parameters.get("costs"));
                 float quantityDelay = Float.parseFloat(parameters.get("quantityDelay"));
+                String profileFileString = parameters.get("profileFile");
+                File profileFile = new File(configDir, profileFileString);
 
-                FlexPowerplant flexPowerplantProducer = new FlexPowerplant(name, capacity, costs, quantityDelay);
+                FlexPowerplant flexPowerplantProducer = new FlexPowerplant(name, capacity, costs, quantityDelay, profileFile);
                 flexPowerplantProducer.setEOMOperator(energyOnlyMarketOperator);
                 flexPowerplantProducer.setRegelenergieMarketOperator(regelEnergieMarketOperator);
                 context.add(flexPowerplantProducer);
