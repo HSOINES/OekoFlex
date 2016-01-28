@@ -42,6 +42,6 @@ public class FlexPowerplantTest {
         assertEquals(15f, currentAssignments.get(0).getAssignedPrice(), 0.00001f);
         assertEquals(5f, currentAssignments.get(1).getAssignedPrice(), 0.00001f);
         assertEquals(5000, currentAssignments.get(0).getOfferedQuantity());
-        assertEquals(500, currentAssignments.get(1).getOfferedQuantity());
+        assertEquals(0, currentAssignments.get(1).getOfferedQuantity());
     }
 }
