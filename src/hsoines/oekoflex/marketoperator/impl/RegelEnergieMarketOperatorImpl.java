@@ -60,7 +60,7 @@ public final class RegelEnergieMarketOperatorImpl implements RegelEnergieMarketO
 
     private void init(final String logDirName) throws IOException {
         logger = new LoggerFile(this.getClass().getSimpleName(), logDirName);
-        logger.log("tick;traderType;traderName;offeredPrice;offeredQuantity;assignedQuantity");
+        logger.log("tick;traderType;traderName;bidType;offeredPrice;offeredQuantity;assignedQuantity");
     }
 
     @Override
@@ -163,6 +163,7 @@ public final class RegelEnergieMarketOperatorImpl implements RegelEnergieMarketO
         logger.log(String.valueOf(tick) + ";"
                 + supply.getMarketOperatorListener().getClass().getSimpleName() + ";"
                 + supply.getMarketOperatorListener().getName() + ";"
+                + supply.getBidType() + ";"
                 + NumberFormatUtil.format(supply.getPrice()) + ";"
                 + supply.getQuantity() + ";"
                 + (int) (supply.getQuantity() * assignRate) + ";");
