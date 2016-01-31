@@ -31,11 +31,16 @@ public final class StorageFactory {
         for (CSVRecord parameters : format) {
             try {
                 String name = parameters.get("name");
-                int capacity = Integer.parseInt(parameters.get("capacity"));
-                float costs = Float.parseFloat(parameters.get("costs"));
-                float spread = Float.parseFloat(parameters.get("spread"));
+                int powerMax = Integer.parseInt(parameters.get("powerMax"));
+                int powerMin = Integer.parseInt(parameters.get("powerMin"));
+                int rampUp = Integer.parseInt(parameters.get("rampUp"));
+                int rampDown = Integer.parseInt(parameters.get("rampDown"));
+                float marginalCosts = Float.parseFloat(parameters.get("marginalCosts"));
+                float shutdownCosts = Float.parseFloat(parameters.get("shutdownCosts"));
 
-                Storage storage = new Storage(name, capacity, costs, spread);
+                int capacity = Integer.parseInt(parameters.get("capacity"));
+
+                Storage storage = new Storage(name, powerMax, powerMin, rampUp, rampDown, marginalCosts, shutdownCosts, capacity);
                 storage.setEOMOperator(eomOperator);
                 context.add(storage);
 

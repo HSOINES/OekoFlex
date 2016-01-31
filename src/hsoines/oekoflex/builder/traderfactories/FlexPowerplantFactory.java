@@ -20,31 +20,33 @@ import java.io.IOException;
  * Date: 07/01/16
  * Time: 21:32
  */
-public final class FlexPowerplantProducerFactory {
-    private static final Log log = LogFactory.getLog(FlexPowerplantProducerFactory.class);
+public final class FlexPowerplantFactory {
+    private static final Log log = LogFactory.getLog(FlexPowerplantFactory.class);
 
     public static void build(final File configDir,
                              final Context<OekoflexAgent> context,
                              final EOMOperatorImpl energyOnlyMarketOperator,
                              final RegelEnergieMarketOperator regelEnergieMarketOperator) throws IOException {
-        File configFile = new File(configDir + "/" + "FlexPowerplantProducer.cfg.csv");
+        File configFile = new File(configDir + "/" + "FlexPowerplant.cfg.csv");
         FileReader reader = new FileReader(configFile);
         CSVParser format = CSVParameter.getCSVFormat().parse(reader);
         for (CSVRecord parameters : format) {
             try {
                 String name = parameters.get("name");
-                int capacity = Integer.parseInt(parameters.get("positiveCapacity"));
-                float costs = Float.parseFloat(parameters.get("costs"));
-                float quantityDelay = Float.parseFloat(parameters.get("quantityDelay"));
-                String profileFileString = parameters.get("profileFile");
-                File profileFile = new File(configDir, profileFileString);
+                int powerMax = Integer.parseInt(parameters.get("powerMax"));
+                int powerMin = Integer.parseInt(parameters.get("powerMin"));
+                int rampUp = Integer.parseInt(parameters.get("rampUp"));
+                int rampDown = Integer.parseInt(parameters.get("rampDown"));
+                float marginalCosts = Float.parseFloat(parameters.get("marginalCosts"));
+                float shutdownCosts = Float.parseFloat(parameters.get("shutdownCosts"));
 
-                FlexPowerplant flexPowerplantProducer = new FlexPowerplant(name, capacity, costs, quantityDelay, profileFile);
+
+                FlexPowerplant flexPowerplantProducer = new FlexPowerplant(name, powerMax, powerMin, rampUp, rampDown, marginalCosts, shutdownCosts);
                 flexPowerplantProducer.setEOMOperator(energyOnlyMarketOperator);
                 flexPowerplantProducer.setRegelenergieMarketOperator(regelEnergieMarketOperator);
                 context.add(flexPowerplantProducer);
 
-                log.info("FlexPowerplantProducer Build done: " + name);
+                log.info("FlexPowerplant Build done for <" + name + ">.");
             } catch (NumberFormatException e) {
                 log.error(e.getMessage(), e);
             }

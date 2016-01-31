@@ -1,3 +1,0 @@
-name;positiveCapacity;costs;quantityDelay;profileFile
-flexPowerplant1;1600;1000;10;FlexPowerPlantProfile.cfg.csv
-flexPowerplant2;1600;1000;10;FlexPowerPlantProfile.cfg.csv

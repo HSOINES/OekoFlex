@@ -51,8 +51,8 @@ public class OekoFlexContextBuilder implements ContextBuilder<OekoflexAgent> {
 
             CombinedEnergyProducerFactory.build(configDir, context, eomOperator, regelenergieMarketOperator);
             DaytimeEnergyConsumerFactory.build(configDir, context, eomOperator);
-            FixedDemandConsumerFactory.build(configDir, context, eomOperator);
-            FlexPowerplantProducerFactory.build(configDir, context, eomOperator, regelenergieMarketOperator);
+            FlexibleDemandFactory.build(configDir, context, eomOperator);
+            FlexPowerplantFactory.build(configDir, context, eomOperator, regelenergieMarketOperator);
             StorageFactory.build(configDir, context, eomOperator);
 //            for (int i = 0; i < 3; i++) {
 //                ParametrizableEnergyProducer producer = new ParametrizableEnergyProducer("ParametrizableEnergyProducer_" + i);

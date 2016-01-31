@@ -24,8 +24,8 @@ import java.util.List;
  * Date: 17/01/16
  * Time: 23:03
  */
-public final class FixedDemand implements EOMTrader {
-    private static final Log log = LogFactory.getLog(FixedDemand.class);
+public final class FlexibleDemand implements EOMTrader {
+    private static final Log log = LogFactory.getLog(FlexibleDemand.class);
     public static final float FIXED_PRICE = 3000f;
     private final EnergyTradeRegistryImpl energyTradeRegistry;
     private final String name;
@@ -34,7 +34,7 @@ public final class FixedDemand implements EOMTrader {
     private float lastClearedPrice;
     private float lastAssignmentRate;
 
-    public FixedDemand(final String name, final File csvFile) throws IOException {
+    public FlexibleDemand(final String name, final File csvFile) throws IOException {
         this.name = name;
         energyTradeRegistry = new EnergyTradeRegistryImpl(EnergyTradeRegistry.Type.CONSUM, 0);
         FileReader reader = new FileReader(csvFile);

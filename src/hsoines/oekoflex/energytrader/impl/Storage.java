@@ -24,22 +24,31 @@ public final class Storage implements EOMTrader, MarketOperatorListener {
     private static final Log log = LogFactory.getLog(Storage.class);
 
     private final String name;
-    private final int batteryCapacity;
+    private final int powerMax;
+    private final int powerMin;
+    private final int rampUp;
+    private final int rampDown;
     private final float costs;
-    private final float spread;
-    private int batteryLevel;
+    private final float shutdownCosts;
+    private final int capacity;
+    private int soc;
     private EOMOperator eomMarketOperator;
     private final EnergyTradeRegistry batteryEnergyTradeRegistry;
     private float lastAssignmentRate;
     private float lastClearedPrice;
 
-    public Storage(String name, int batteryCapacity, final float costs, float spread) {
+
+    public Storage(final String name, final int powerMax, final int powerMin, final int rampUp, final int rampDown, final float marginalCosts, final float shutdownCosts, final int capacity) {
         this.name = name;
-        this.batteryCapacity = batteryCapacity;
-        this.costs = costs;
-        this.spread = spread;
-        batteryEnergyTradeRegistry = new EnergyTradeRegistryImpl(EnergyTradeRegistry.Type.PRODUCE, batteryCapacity);
-        batteryLevel = 0;
+        this.powerMax = powerMax;
+        this.powerMin = powerMin;
+        this.rampUp = rampUp;
+        this.rampDown = rampDown;
+        costs = marginalCosts;
+        this.shutdownCosts = shutdownCosts;
+        this.capacity = capacity;
+        batteryEnergyTradeRegistry = new EnergyTradeRegistryImpl(EnergyTradeRegistry.Type.PRODUCE, capacity);
+        soc = 0;
     }
 
     @Override
@@ -51,8 +60,8 @@ public final class Storage implements EOMTrader, MarketOperatorListener {
     public void makeBidEOM() {
         Date currentDate = TimeUtil.getCurrentDate();
         int capacity = batteryEnergyTradeRegistry.getCapacity(currentDate);
-        eomMarketOperator.addSupply(new PositiveSupply(costs * (1 + spread), batteryLevel, this));
-        eomMarketOperator.addDemand(new Demand(costs * (1 - spread), capacity - batteryLevel, this));
+        eomMarketOperator.addSupply(new PositiveSupply(costs * 1.1f, soc, this));
+        eomMarketOperator.addDemand(new Demand(costs * 0.9f, capacity - soc, this));
     }
 
     @Override
@@ -60,16 +69,16 @@ public final class Storage implements EOMTrader, MarketOperatorListener {
         batteryEnergyTradeRegistry.addAssignedQuantity(currentDate, market, bid.getPrice(), clearedPrice, bid.getQuantity(), rate, bid.getBidType());
         int assignedQuantity = (int) (bid.getQuantity() * rate);
         if (bid instanceof Demand) {
-            batteryLevel += assignedQuantity;
+            soc += assignedQuantity;
         } else if (bid instanceof PositiveSupply) {
-            batteryLevel -= assignedQuantity;
+            soc -= assignedQuantity;
         } else {
             log.error("not impemented.");
         }
         lastClearedPrice = clearedPrice;
         lastAssignmentRate = rate;
-        if (batteryLevel < 0 || batteryLevel > batteryCapacity) {
-            throw new IllegalStateException("batterylevel exceeds capacity: " + batteryLevel + ", MaxLevel: " + batteryCapacity);
+        if (soc < 0 || soc > capacity) {
+            throw new IllegalStateException("batterylevel exceeds capacity: " + soc + ", MaxLevel: " + capacity);
         }
     }
 
@@ -93,8 +102,8 @@ public final class Storage implements EOMTrader, MarketOperatorListener {
         return name;
     }
 
-    public int getBatteryLevel() {
+    public int getSoc() {
 
-        return batteryLevel;
+        return soc;
     }
 }
