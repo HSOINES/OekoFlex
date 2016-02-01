@@ -114,7 +114,7 @@ public final class EnergyTradeRegistryImpl implements EnergyTradeRegistry {
         int remainingCapacity = getRemainingCapacity(tick);
         float assignedQuantity = (float) Math.floor(offeredQuantity * rate);
         if (remainingCapacity < assignedQuantity) {
-            throw new IllegalStateException("Assigned quantity should not exceed the maximum quantity.");
+            // todo: connection positive/negative energy. throw new IllegalStateException("Assigned quantity should not exceed the maximum quantity.");
         } else {
             Integer capacity = capacities.get(tick);
             if (capacity == null) {

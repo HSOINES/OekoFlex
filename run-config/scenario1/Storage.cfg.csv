@@ -1,2 +1,2 @@
-name;powerMax;powerMin;rampUp;rampDown;marginalCosts;shutdownCosts;capacity
-storage1;200;0;100;100;12;1300;1000
+name;powerMax;powerMin;rampUp;rampDown;marginalCosts;shutdownCosts;capacity;socMax;socMin;chargePower;dischargePower
+storage1;200;0;100;100;12;1300;1000;0.8;0.2;200;250

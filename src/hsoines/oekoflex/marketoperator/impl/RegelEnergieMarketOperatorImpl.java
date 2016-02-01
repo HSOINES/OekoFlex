@@ -43,18 +43,11 @@ public final class RegelEnergieMarketOperatorImpl implements RegelEnergieMarketO
 
     private LoggerFile logger;
 
-    public RegelEnergieMarketOperatorImpl(String name, String logDirName) throws IOException {
+    public RegelEnergieMarketOperatorImpl(String name, String logDirName, final int positiveDemandREM, final int negativeDemandREM) throws IOException {
         this.name = name;
         Parameters p = RunEnvironment.getInstance().getParameters();
-        this.positiveQuantity = (int) p.getValue("rigidDemandEnergyOnlyMarket"); //todo
-        this.negativeQuantity = (int) p.getValue("rigidDemandEnergyOnlyMarket"); //todo
-        init(logDirName);
-    }
-
-    public RegelEnergieMarketOperatorImpl(final String name, String logDirName, int positiveQuantity, int negativeQuantity) throws IOException {
-        this.positiveQuantity = positiveQuantity;
-        this.name = name;
-        this.negativeQuantity = negativeQuantity;
+        this.positiveQuantity = positiveDemandREM;
+        this.negativeQuantity = negativeDemandREM;
         init(logDirName);
     }
 
@@ -75,10 +68,12 @@ public final class RegelEnergieMarketOperatorImpl implements RegelEnergieMarketO
 
     @Override
     public void clearMarket() {
+        log.info("positive clearing.");
         ClearingData positiveClearingData = doClearMarketFor(positiveSupplies, positiveQuantity);
         totalClearedPositiveQuantity = positiveClearingData.getClearedQuantity();
         lastPositiveAssignmentRate = positiveClearingData.getAssignmentRate();
         lastClearedPositiveMaxPrice = positiveClearingData.getLastClearedMaxPrice();
+        log.info("negative clearing.");
         ClearingData negativeClearingData = doClearMarketFor(negativeSupplies, negativeQuantity);
         totalClearedNegativeQuantity = negativeClearingData.getClearedQuantity();
         lastNegativeAssignmentRate = negativeClearingData.getAssignmentRate();
@@ -111,6 +106,7 @@ public final class RegelEnergieMarketOperatorImpl implements RegelEnergieMarketO
         final int finalTotalClearedQuantity = totalClearedQuantity;
         final float finalLastAssignmentRate = lastAssignmentRate;
         final float finalLastClearedPrice = lastClearedPrice;
+        log.info("total cleared quantity: " + finalTotalClearedQuantity + ", lasst assignment rate: " + lastAssignmentRate + ", last cleared price: " + lastClearedPrice);
         return new ClearingData() {
             @Override
             public int getClearedQuantity() {

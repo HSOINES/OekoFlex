@@ -58,12 +58,15 @@ public final class FlexPowerplant implements EOMTrader, RegelenergieMarketTrader
         Date precedingDate = TimeUtil.precedingDate(currentDate);
         int pCommitedNegativ = negativeEnergyTradeRegistry.getQuantityUsed(currentDate);
         int pPreceding = positiveEnergyTradeRegistry.getQuantityUsed(precedingDate) - negativeEnergyTradeRegistry.getQuantityUsed(precedingDate);  //todo: preceding power calculated by positive and negative energy traded???
-        int mustRun = 0;
-        if (pPreceding > rampUp) {
-            mustRun = Math.min(powerMin + pCommitedNegativ, pPreceding - rampDown);
+        int pMustRun = 0;
+        if (pPreceding > rampDown) {
+            pMustRun = Math.min(powerMin + pCommitedNegativ, pPreceding - rampDown);
         }
-        eomMarketOperator.addSupply(new PositiveSupply(marginalCosts, mustRun, this));
-//        eomMarketOperator.addSupply(new PositiveSupply(marginalCosts * 1.5f, powerMax - mustRun - pCommitedNegativ, this));    //???
+        eomMarketOperator.addSupply(new PositiveSupply(marginalCosts, pMustRun, this));
+
+        int pCommitedPositiv = positiveEnergyTradeRegistry.getQuantityUsed(currentDate);
+        int pFlex = Math.min(powerMax - pCommitedPositiv - pMustRun - pPreceding, rampUp);
+        eomMarketOperator.addSupply(new PositiveSupply(marginalCosts * 1.5f, pFlex, this));    //???
     }
 
     @Override
