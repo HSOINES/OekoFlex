@@ -31,14 +31,15 @@ public final class RepastTestSample {
     }
 
     @Test
-    @Ignore("execute() startet die simulation nicht.")
+    @Ignore("execute() doesn't schedule. ")
     public void testUninfectedToInfected() {
         ISchedule schedule = RunEnvironment.getInstance().getCurrentSchedule();
         CombinedEnergyProducer combinedTest = new CombinedEnergyProducer("combinedTest");
-        assertEquals(0, RunEnvironment.getInstance().getCurrentSchedule().getTickCount(), 0.001);
+        assertEquals(-1, RunEnvironment.getInstance().getCurrentSchedule().getTickCount(), 0.001);
         for (int i = 0; i < 5; ++i) {
-            schedule.execute();    // geht nicht.
+            schedule.schedule(combinedTest);
+            schedule.execute();
         }
-        assertEquals(4, RunEnvironment.getInstance().getCurrentSchedule().getTickCount(), 0.001);
+        assertEquals(4, schedule.getTickCount(), 0.001);
     }
 }

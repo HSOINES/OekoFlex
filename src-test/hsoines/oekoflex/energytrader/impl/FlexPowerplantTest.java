@@ -24,7 +24,7 @@ public class FlexPowerplantTest {
     public void setUp() throws Exception {
         RepastTestInitializer.init();
         regelEnergieMarketOperator = new RegelEnergieMarketOperatorImpl("test", ".", 10000, 100000);
-        flexpowerplant = new FlexPowerplant("flexpowerplant", 5000, 10f, 100);
+        flexpowerplant = new FlexPowerplant("flexpowerplant", 5000, 2000, 100, 100, 10f, 100f);
         flexpowerplant.setRegelenergieMarketOperator(regelEnergieMarketOperator);
 
     }
@@ -39,9 +39,9 @@ public class FlexPowerplantTest {
         assertEquals(2, currentAssignments.size());
         assertEquals(BidType.POSITIVE_SUPPLY, currentAssignments.get(0).getBidType());
         assertEquals(BidType.NEGATIVE_SUPPLY, currentAssignments.get(1).getBidType());
-        assertEquals(15f, currentAssignments.get(0).getAssignedPrice(), 0.00001f);
-        assertEquals(5f, currentAssignments.get(1).getAssignedPrice(), 0.00001f);
-        assertEquals(5000, currentAssignments.get(0).getOfferedQuantity());
-        assertEquals(0, currentAssignments.get(1).getOfferedQuantity());
+        assertEquals(10f, currentAssignments.get(0).getAssignedPrice(), 0.00001f);   // test impl
+        assertEquals(10f, currentAssignments.get(1).getAssignedPrice(), 0.00001f);   // test impl
+        assertEquals(100, currentAssignments.get(0).getOfferedQuantity());   // test impl
+        assertEquals(2000, currentAssignments.get(1).getOfferedQuantity());   //test impl
     }
 }

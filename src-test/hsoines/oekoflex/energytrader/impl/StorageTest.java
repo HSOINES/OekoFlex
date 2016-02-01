@@ -23,7 +23,7 @@ public class StorageTest {
     @Before
     public void setUp() throws Exception {
         RepastTestInitializer.init();
-        storage = new Storage("test", 1000, 1f, 0.1f);
+        storage = new Storage("test", 500, 10, 100, 100, 1f, 0.1f, 1000, 1, 0, 100, 100);
         operator = new EOMOperatorImpl("test_operator", "run/summary-logs/test");
         storage.setEOMOperator(operator);
     }
@@ -36,7 +36,7 @@ public class StorageTest {
         operator.addSupply(new PositiveSupply(0.8f, 500, null));
         operator.clearMarket();
 
-        int load = storage.getBatteryLevel();
+        int load = storage.getSoc();
         assertEquals(1000, load);
     }
 
@@ -47,7 +47,7 @@ public class StorageTest {
         operator.addSupply(new PositiveSupply(1f, 300, null));
 
         operator.clearMarket();
-        int load = storage.getBatteryLevel();
+        int load = storage.getSoc();
         assertEquals(500, load);
     }
 
@@ -56,12 +56,12 @@ public class StorageTest {
         storage.makeBidEOM();
         operator.addSupply(new PositiveSupply(0.8f, 400, null));
         operator.clearMarket();
-        assertEquals(400, storage.getBatteryLevel());
+        assertEquals(400, storage.getSoc());
         TimeUtil.nextTick();
         storage.makeBidEOM();
         operator.addDemand(new Demand(1.2f, 150, null));
         operator.clearMarket();
 
-        assertEquals(250, storage.getBatteryLevel());
+        assertEquals(250, storage.getSoc());
     }
 }

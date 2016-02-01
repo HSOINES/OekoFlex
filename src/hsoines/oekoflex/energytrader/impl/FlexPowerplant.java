@@ -3,7 +3,6 @@ package hsoines.oekoflex.energytrader.impl;
 import hsoines.oekoflex.bid.Bid;
 import hsoines.oekoflex.bid.NegativeSupply;
 import hsoines.oekoflex.bid.PositiveSupply;
-import hsoines.oekoflex.builder.CSVParameter;
 import hsoines.oekoflex.energytrader.EOMTrader;
 import hsoines.oekoflex.energytrader.EnergyTradeRegistry;
 import hsoines.oekoflex.energytrader.MarketOperatorListener;
@@ -12,13 +11,7 @@ import hsoines.oekoflex.marketoperator.EOMOperator;
 import hsoines.oekoflex.marketoperator.RegelEnergieMarketOperator;
 import hsoines.oekoflex.util.Market;
 import hsoines.oekoflex.util.TimeUtil;
-import org.apache.commons.csv.CSVParser;
-import org.apache.commons.csv.CSVRecord;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.Reader;
 import java.util.Date;
 import java.util.List;
 
@@ -27,10 +20,14 @@ import java.util.List;
  * Date: 18/01/16
  * Time: 16:14
  */
-public final class  FlexPowerplant implements EOMTrader, RegelenergieMarketTrader, MarketOperatorListener {
+public final class FlexPowerplant implements EOMTrader, RegelenergieMarketTrader, MarketOperatorListener {
     private final String name;
-    private final float costs;
-    private final float supplyDelay;
+    private final int powerMax;
+    private final int powerMin;
+    private final float shutdownCosts;
+    private final int rampUp;
+    private final int rampDown;
+    private final float marginalCosts;
     private EOMOperator eomMarketOperator;
     private final EnergyTradeRegistry positiveEnergyTradeRegistry;
     private final EnergyTradeRegistry negativeEnergyTradeRegistry;
@@ -38,29 +35,16 @@ public final class  FlexPowerplant implements EOMTrader, RegelenergieMarketTrade
     private float lastAssignmentRate;
     private float lastClearedPrice;
 
-    public FlexPowerplant(String name, int capacity, float costs, float supplyDelay, final File profileFile) throws IOException {
-        this(name, capacity, costs, supplyDelay);
-        readFile(profileFile);
-    }
-
-    public FlexPowerplant(String name, int capacity, float costs, float supplyDelay) throws IOException {
+    public FlexPowerplant(final String name, final int powerMax, final int powerMin, final int rampUp, final int rampDown, final float marginalCosts, final float shutdownCosts) {
         this.name = name;
-        this.costs = costs;
-        this.supplyDelay = supplyDelay;
-        positiveEnergyTradeRegistry = new EnergyTradeRegistryImpl(EnergyTradeRegistry.Type.PRODUCE, capacity);
-        negativeEnergyTradeRegistry = new EnergyTradeRegistryImpl(EnergyTradeRegistry.Type.PRODUCE, 0);
-    }
-
-    private void readFile(final File profileFile) throws IOException {
-        Reader reader = new FileReader(profileFile);
-        CSVParser format = CSVParameter.getCSVFormat().parse(reader);
-        for (CSVRecord parameters : format) {
-            int tick = Integer.parseInt(parameters.get("tick"));
-            int positiveQuantity = Integer.parseInt(parameters.get("positiveQuantity"));
-            int negativeQuantity = Integer.parseInt(parameters.get("negativeQuantity"));
-            positiveEnergyTradeRegistry.setCapacity(tick, positiveQuantity);
-            negativeEnergyTradeRegistry.setCapacity(tick, negativeQuantity);
-        }
+        this.powerMax = powerMax;
+        this.powerMin = powerMin;
+        this.rampUp = rampUp;
+        this.rampDown = rampDown;
+        this.marginalCosts = marginalCosts;
+        this.shutdownCosts = shutdownCosts;
+        positiveEnergyTradeRegistry = new EnergyTradeRegistryImpl(EnergyTradeRegistry.Type.PRODUCE, powerMax);
+        negativeEnergyTradeRegistry = new EnergyTradeRegistryImpl(EnergyTradeRegistry.Type.PRODUCE, powerMax);
     }
 
     @Override
@@ -71,15 +55,33 @@ public final class  FlexPowerplant implements EOMTrader, RegelenergieMarketTrade
     @Override
     public void makeBidEOM() {
         Date currentDate = TimeUtil.getCurrentDate();
-        int supplyCapacity = getSupplyCapacity(currentDate, Market.EOM_MARKET);
-        eomMarketOperator.addSupply(new PositiveSupply(costs * 1f, supplyCapacity, this));
+        Date precedingDate = TimeUtil.precedingDate(currentDate);
+        int pCommitedNegativ = negativeEnergyTradeRegistry.getQuantityUsed(currentDate);
+        int pPreceding = positiveEnergyTradeRegistry.getQuantityUsed(precedingDate) - negativeEnergyTradeRegistry.getQuantityUsed(precedingDate);  //todo: preceding power calculated by positive and negative energy traded???
+        int pMustRun = 0;
+        if (pPreceding > rampDown) {
+            pMustRun = Math.min(powerMin + pCommitedNegativ, pPreceding - rampDown);
+        }
+        eomMarketOperator.addSupply(new PositiveSupply(marginalCosts, pMustRun, this));
+
+        int pCommitedPositiv = positiveEnergyTradeRegistry.getQuantityUsed(currentDate);
+        int pFlex = Math.min(powerMax - pCommitedPositiv - pMustRun - pPreceding, rampUp);
+        eomMarketOperator.addSupply(new PositiveSupply(marginalCosts * 1.5f, pFlex, this));    //???
     }
 
     @Override
     public void makeBidRegelenergie() {
         Date currentDate = TimeUtil.getCurrentDate();
-        regelenergieMarketOperator.addPositiveSupply(new PositiveSupply(costs * 1.5f, positiveEnergyTradeRegistry.getRemainingCapacity(currentDate, Market.REGELENERGIE_MARKET), this));
-        regelenergieMarketOperator.addNegativeSupply(new NegativeSupply(costs * .5f, negativeEnergyTradeRegistry.getRemainingCapacity(currentDate, Market.REGELENERGIE_MARKET), this));
+        Date precedingDate = TimeUtil.precedingDate(currentDate);
+
+        int pPreceding = positiveEnergyTradeRegistry.getQuantityUsed(precedingDate) - negativeEnergyTradeRegistry.getQuantityUsed(precedingDate);  //todo: preceding power calculated by positive and negative energy traded???
+
+        //test impl
+        int pNeg = Math.abs(Math.min(pPreceding - powerMin, rampDown));
+        regelenergieMarketOperator.addNegativeSupply(new NegativeSupply(marginalCosts, pNeg, this));
+
+        int pPos = Math.abs(Math.min(powerMax - pPreceding, rampUp));
+        regelenergieMarketOperator.addPositiveSupply(new PositiveSupply(marginalCosts, pPos, this));
     }
 
     @Override
@@ -126,9 +128,4 @@ public final class  FlexPowerplant implements EOMTrader, RegelenergieMarketTrade
         return name;
     }
 
-    int getSupplyCapacity(final Date currentDate, final Market market) {     //test implementierung
-        int lastProducedCapacity = Math.max(positiveEnergyTradeRegistry.getQuantityUsed(TimeUtil.precedingDate(currentDate)), 200);
-        int remainingCapacity = positiveEnergyTradeRegistry.getRemainingCapacity(currentDate, market);
-        return (int) Math.min(lastProducedCapacity * supplyDelay, remainingCapacity);
-    }
 }

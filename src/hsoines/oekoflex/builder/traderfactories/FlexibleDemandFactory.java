@@ -2,7 +2,7 @@ package hsoines.oekoflex.builder.traderfactories;
 
 import hsoines.oekoflex.OekoflexAgent;
 import hsoines.oekoflex.builder.CSVParameter;
-import hsoines.oekoflex.energytrader.impl.FixedDemand;
+import hsoines.oekoflex.energytrader.impl.FlexibleDemand;
 import hsoines.oekoflex.marketoperator.impl.EOMOperatorImpl;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
@@ -19,11 +19,11 @@ import java.io.IOException;
  * Date: 07/01/16
  * Time: 21:32
  */
-public final class FixedDemandConsumerFactory {
-    private static final Log log = LogFactory.getLog(FixedDemandConsumerFactory.class);
+public final class FlexibleDemandFactory {
+    private static final Log log = LogFactory.getLog(FlexibleDemandFactory.class);
 
     public static void build(final File configDir, final Context<OekoflexAgent> context, final EOMOperatorImpl energyOnlyMarketOperator) throws IOException {
-        File configFile = new File(configDir + "/" + "FixedDemandConsumer.cfg.csv");
+        File configFile = new File(configDir + "/" + "FlexibleDemand.cfg.csv");
         FileReader reader = new FileReader(configFile);
         CSVParser format = CSVParameter.getCSVFormat().parse(reader);
         for (CSVRecord parameters : format) {
@@ -32,11 +32,11 @@ public final class FixedDemandConsumerFactory {
                 String demandFileName = parameters.get("demandFile");
                 File demandFile = new File(configDir, demandFileName);
 
-                FixedDemand fixedDemand = new FixedDemand(name, demandFile);
-                fixedDemand.setEOMOperator(energyOnlyMarketOperator);
-                context.add(fixedDemand);
+                FlexibleDemand flexibleDemand = new FlexibleDemand(name, demandFile);
+                flexibleDemand.setEOMOperator(energyOnlyMarketOperator);
+                context.add(flexibleDemand);
 
-                log.info("FixedDemandConsumer Build done: " + name);
+                log.info("FlexibleDemand Build done: " + name);
             } catch (NumberFormatException e) {
                 log.error(e.getMessage(), e);
             }

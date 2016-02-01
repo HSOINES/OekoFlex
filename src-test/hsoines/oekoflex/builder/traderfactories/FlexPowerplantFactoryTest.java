@@ -10,9 +10,9 @@ import java.io.File;
  * Date: 27/01/16
  * Time: 22:45
  */
-public class FlexPowerplantProducerFactoryTest {
+public class FlexPowerplantFactoryTest {
     @Test
     public void testIt() throws Exception {
-        FlexPowerplantProducerFactory.build(new File("run-config/scenario1"), new DefaultContext<>(), null, null);
+        FlexPowerplantFactory.build(new File("run-config/scenario1"), new DefaultContext<>(), null, null);
     }
 }

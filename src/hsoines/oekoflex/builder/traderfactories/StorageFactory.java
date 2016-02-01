@@ -4,6 +4,7 @@ import hsoines.oekoflex.OekoflexAgent;
 import hsoines.oekoflex.builder.CSVParameter;
 import hsoines.oekoflex.energytrader.impl.Storage;
 import hsoines.oekoflex.marketoperator.EOMOperator;
+import hsoines.oekoflex.marketoperator.RegelEnergieMarketOperator;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.logging.Log;
@@ -24,19 +25,28 @@ public final class StorageFactory {
 
     public static void build(final File configDir,
                              final Context<OekoflexAgent> context,
-                             final EOMOperator eomOperator) throws IOException {
+                             final EOMOperator eomOperator, final RegelEnergieMarketOperator regelenergieMarketOperator) throws IOException {
         File configFile = new File(configDir + "/" + "Storage.cfg.csv");
         FileReader reader = new FileReader(configFile);
         CSVParser format = CSVParameter.getCSVFormat().parse(reader);
         for (CSVRecord parameters : format) {
             try {
                 String name = parameters.get("name");
+                int powerMax = Integer.parseInt(parameters.get("powerMax"));
+                int powerMin = Integer.parseInt(parameters.get("powerMin"));
+                int rampUp = Integer.parseInt(parameters.get("rampUp"));
+                int rampDown = Integer.parseInt(parameters.get("rampDown"));
+                float marginalCosts = Float.parseFloat(parameters.get("marginalCosts"));
+                float shutdownCosts = Float.parseFloat(parameters.get("shutdownCosts"));
+                float socMax = Float.parseFloat(parameters.get("socMax"));
+                float socMin = Float.parseFloat(parameters.get("socMin"));
                 int capacity = Integer.parseInt(parameters.get("capacity"));
-                float costs = Float.parseFloat(parameters.get("costs"));
-                float spread = Float.parseFloat(parameters.get("spread"));
+                int chargePower = Integer.parseInt(parameters.get("chargePower"));
+                int dischargePower = Integer.parseInt(parameters.get("dischargePower"));
 
-                Storage storage = new Storage(name, capacity, costs, spread);
+                Storage storage = new Storage(name, powerMax, powerMin, rampUp, rampDown, marginalCosts, shutdownCosts, capacity, socMax, socMin, chargePower, dischargePower);
                 storage.setEOMOperator(eomOperator);
+                storage.setRegelenergieMarketOperator(regelenergieMarketOperator);
                 context.add(storage);
 
                 log.info("Storage Build done: " + name);
