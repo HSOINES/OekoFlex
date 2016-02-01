@@ -27,7 +27,7 @@ import java.util.List;
  * Date: 18/01/16
  * Time: 16:14
  */
-public final class FlexPowerplant implements EOMTrader, RegelenergieMarketTrader, MarketOperatorListener {
+public final class  FlexPowerplant implements EOMTrader, RegelenergieMarketTrader, MarketOperatorListener {
     private final String name;
     private final float costs;
     private final float supplyDelay;
