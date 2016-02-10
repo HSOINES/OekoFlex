@@ -1,7 +1,7 @@
 package hsoines.oekoflex.energytrader.impl;
 
 import hsoines.oekoflex.bid.BidType;
-import hsoines.oekoflex.energytrader.EnergyTradeRegistry;
+import hsoines.oekoflex.energytrader.TradeRegistry;
 import hsoines.oekoflex.util.Market;
 import hsoines.oekoflex.util.TimeUtil;
 import org.apache.commons.logging.Log;
@@ -17,15 +17,15 @@ import java.util.List;
  * Date: 17/12/15
  * Time: 08:08
  */
-public final class EnergyTradeRegistryImpl implements EnergyTradeRegistry {
-    private static final Log log = LogFactory.getLog(EnergyTradeRegistryImpl.class);
+public final class TradeRegistryImpl implements TradeRegistry {
+    private static final Log log = LogFactory.getLog(TradeRegistryImpl.class);
 
     private final List<EnergyTradeElement> tradeElements;
     private final Type type;
     private final int initialcapacity;
     private final HashMap<Long, Integer> capacities;
 
-    public EnergyTradeRegistryImpl(Type type, int initialcapacity) {
+    public TradeRegistryImpl(Type type, int initialcapacity) {
         this.type = type;
         this.initialcapacity = initialcapacity;
         tradeElements = new ArrayList<>();
@@ -38,7 +38,7 @@ public final class EnergyTradeRegistryImpl implements EnergyTradeRegistry {
     }
 
     @Override
-    public void addAssignedQuantity(final Date date, final Market market, final float offeredPrice, final float assignedPrice, final int offeredQuantity, float assignedRate, final BidType bidType) {
+    public void addAssignedQuantity(final Date date, final Market market, final float offeredPrice, final float assignedPrice, final float offeredQuantity, float assignedRate, final BidType bidType) {
         Long slotIndex = TimeUtil.getTick(date);
         for (int i = 0; i < market.getTicks(); i++) {
             addQuantity(slotIndex + i, market, offeredPrice, assignedPrice, offeredQuantity, assignedRate, bidType);
@@ -110,11 +110,11 @@ public final class EnergyTradeRegistryImpl implements EnergyTradeRegistry {
         return capacity - assigned;
     }
 
-    private void addQuantity(final long tick, final Market market, float offeredPrice, final float clearedprice, int offeredQuantity, final float rate, final BidType bidType) {
+    private void addQuantity(final long tick, final Market market, float offeredPrice, final float clearedprice, float offeredQuantity, final float rate, final BidType bidType) {
         int remainingCapacity = getRemainingCapacity(tick);
         float assignedQuantity = (float) Math.floor(offeredQuantity * rate);
         if (remainingCapacity < assignedQuantity) {
-            // todo: connection positive/negative energy. throw new IllegalStateException("Assigned quantity should not exceed the maximum quantity.");
+            throw new IllegalStateException("Assigned quantity should not exceed the maximum quantity.");
         } else {
             Integer capacity = capacities.get(tick);
             if (capacity == null) {
@@ -129,13 +129,13 @@ public final class EnergyTradeRegistryImpl implements EnergyTradeRegistry {
         private final long tick;
         private final float offeredPrice;
         private final float assignedPrice;
-        private final int offeredQuantity;
+        private final float offeredQuantity;
         private final float rate;
         private final Integer capacity;
         private Market market;
         private BidType bidType;
 
-        public EnergyTradeElement(final long tick, final Market market, final float offeredPrice, final float assignedPrice, final int offeredQuantity, final float rate, final int capacity, final BidType bidType) {
+        public EnergyTradeElement(final long tick, final Market market, final float offeredPrice, final float assignedPrice, final float offeredQuantity, final float rate, final int capacity, final BidType bidType) {
             this.tick = tick;
             this.market = market;
             this.offeredPrice = offeredPrice;
@@ -158,7 +158,7 @@ public final class EnergyTradeRegistryImpl implements EnergyTradeRegistry {
             return assignedPrice;
         }
 
-        public int getOfferedQuantity() {
+        public float getOfferedQuantity() {
             return offeredQuantity;
         }
 

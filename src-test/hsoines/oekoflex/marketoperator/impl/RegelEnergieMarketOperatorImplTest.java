@@ -1,7 +1,7 @@
 package hsoines.oekoflex.marketoperator.impl;
 
 import hsoines.oekoflex.bid.Bid;
-import hsoines.oekoflex.bid.NegativeSupply;
+import hsoines.oekoflex.bid.PowerNegative;
 import hsoines.oekoflex.energytrader.MarketOperatorListener;
 import hsoines.oekoflex.tools.RepastTestInitializer;
 import hsoines.oekoflex.util.Market;
@@ -32,10 +32,10 @@ public class RegelEnergieMarketOperatorImplTest {
 
     @Test
     public void testClearingWithTooLittleSupplies() throws Exception {
-        operator.addNegativeSupply(new NegativeSupply(10, 1000, listener));
-        operator.addNegativeSupply(new NegativeSupply(20, 1000, listener));
-        operator.addNegativeSupply(new NegativeSupply(30, 1000, listener));
-        operator.addNegativeSupply(new NegativeSupply(40, 1000, listener));
+        operator.addNegativeSupply(new PowerNegative(10, 1000, listener));
+        operator.addNegativeSupply(new PowerNegative(20, 1000, listener));
+        operator.addNegativeSupply(new PowerNegative(30, 1000, listener));
+        operator.addNegativeSupply(new PowerNegative(40, 1000, listener));
 
         operator.clearMarket();
 
@@ -52,10 +52,10 @@ public class RegelEnergieMarketOperatorImplTest {
 
     @Test
     public void testMoreNegativeSupplies() throws Exception {
-        operator.addNegativeSupply(new NegativeSupply(10, 2000, listener));
-        operator.addNegativeSupply(new NegativeSupply(20, 2000, listener));
-        operator.addNegativeSupply(new NegativeSupply(30, 5000, listener));
-        operator.addNegativeSupply(new NegativeSupply(50, 1500, listener));
+        operator.addNegativeSupply(new PowerNegative(10, 2000, listener));
+        operator.addNegativeSupply(new PowerNegative(20, 2000, listener));
+        operator.addNegativeSupply(new PowerNegative(30, 5000, listener));
+        operator.addNegativeSupply(new PowerNegative(50, 1500, listener));
 
         operator.clearMarket();
 
@@ -66,11 +66,11 @@ public class RegelEnergieMarketOperatorImplTest {
 
     @Test
     public void testLastAssignmentZero() throws Exception {
-        operator.addNegativeSupply(new NegativeSupply(10, 2000, listener));
-        operator.addNegativeSupply(new NegativeSupply(20, 2000, listener));
-        operator.addNegativeSupply(new NegativeSupply(30, 5000, listener));
-        operator.addNegativeSupply(new NegativeSupply(55, 1000, listener));
-        operator.addNegativeSupply(new NegativeSupply(60, 1000, listener));
+        operator.addNegativeSupply(new PowerNegative(10, 2000, listener));
+        operator.addNegativeSupply(new PowerNegative(20, 2000, listener));
+        operator.addNegativeSupply(new PowerNegative(30, 5000, listener));
+        operator.addNegativeSupply(new PowerNegative(55, 1000, listener));
+        operator.addNegativeSupply(new PowerNegative(60, 1000, listener));
 
         operator.clearMarket();
 

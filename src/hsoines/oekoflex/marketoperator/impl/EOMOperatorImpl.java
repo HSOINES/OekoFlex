@@ -1,8 +1,9 @@
 package hsoines.oekoflex.marketoperator.impl;
 
 import hsoines.oekoflex.bid.Bid;
-import hsoines.oekoflex.bid.Demand;
-import hsoines.oekoflex.bid.PositiveSupply;
+import hsoines.oekoflex.bid.EnergyDemand;
+import hsoines.oekoflex.bid.EnergySupply;
+import hsoines.oekoflex.bid.PowerPositive;
 import hsoines.oekoflex.energytrader.MarketOperatorListener;
 import hsoines.oekoflex.marketoperator.EOMOperator;
 import hsoines.oekoflex.summary.LoggerFile;
@@ -21,11 +22,11 @@ import java.util.List;
 public class EOMOperatorImpl implements EOMOperator {
     private static final Log log = LogFactory.getLog(EOMOperatorImpl.class);
 
-    private final List<Demand> demands;
-    private final List<PositiveSupply> supplies;
+    private final List<EnergyDemand> energyDemands;
+    private final List<EnergySupply> supplies;
     private final LoggerFile logger;
-    private List<Demand> lastDemands;
-    private List<PositiveSupply> lastSupplies;
+    private List<EnergyDemand> lastEnergyDemands;
+    private List<EnergySupply> lastSupplies;
     private final String name;
     private int clearedQuantity;
     private float clearedPrice;
@@ -35,7 +36,7 @@ public class EOMOperatorImpl implements EOMOperator {
     public EOMOperatorImpl(String name, final String logDirName) throws IOException {
         this.name = name;
 
-        demands = new ArrayList<>();
+        energyDemands = new ArrayList<>();
         supplies = new ArrayList<>();
 
         logger = new LoggerFile(this.getClass().getSimpleName(), logDirName);
@@ -43,47 +44,47 @@ public class EOMOperatorImpl implements EOMOperator {
     }
 
     @Override
-    public void addDemand(Demand demand) {
-        demands.add(demand);
+    public void addDemand(EnergyDemand energyDemand) {
+        energyDemands.add(energyDemand);
     }
 
     @Override
-    public void addSupply(PositiveSupply supply) {
+    public void addSupply(EnergySupply supply) {
         this.supplies.add(supply);
     }
 
     @Override
     public void clearMarket() {
-        demands.sort(new Demand.DescendingComparator());
-        this.supplies.sort(new PositiveSupply.AscendingComparator());
+        energyDemands.sort(new EnergyDemand.DescendingComparator());
+        this.supplies.sort(new PowerPositive.AscendingComparator());
 
-        if (demands.size() < 1 || this.supplies.size() < 1) {
+        if (energyDemands.size() < 1 || this.supplies.size() < 1) {
             throw new IllegalStateException("Sizes unsufficient! SupportSize: "
-                    + this.supplies.size() + ", DemandSize: " + demands.size());
+                    + this.supplies.size() + ", DemandSize: " + energyDemands.size());
         }
-        Iterator<Demand> demandIterator = demands.iterator();
-        Iterator<PositiveSupply> supplyIterator = this.supplies.iterator();
+        Iterator<EnergyDemand> demandIterator = energyDemands.iterator();
+        Iterator<EnergySupply> supplyIterator = this.supplies.iterator();
         int totalSupplyQuantity = 0;
         int totalDemandQuantity = 0;
         clearedQuantity = 0;
         int balance = 0;
         boolean moreSupplies = true;
         boolean moreDemands = true;
-        Demand demand = null;
-        PositiveSupply supply = null;
+        EnergyDemand energyDemand = null;
+        EnergySupply supply = null;
         do {
             String logString = "";
             if (balance > 0) {
                 if (supplyIterator.hasNext()) {
                     supply = supplyIterator.next();
-                    if (demand.getPrice() <= supply.getPrice()) {
+                    if (energyDemand.getPrice() <= supply.getPrice()) {
                         break;
                     }
                     balance -= supply.getQuantity();
                     if (balance < 0) {
                         clearedPrice = supply.getPrice();
                     } else {
-                        clearedPrice = demand.getPrice();
+                        clearedPrice = energyDemand.getPrice();
                     }
                     totalSupplyQuantity += supply.getQuantity();
                     logString = "Supply assigned. Price: " + supply.getPrice() + ", Quantity: " + supply.getQuantity();
@@ -92,21 +93,21 @@ public class EOMOperatorImpl implements EOMOperator {
                 }
             } else if (balance < 0) {
                 if (demandIterator.hasNext()) {
-                    demand = demandIterator.next();
-                    if (demand.getQuantity() < 0) {
+                    energyDemand = demandIterator.next();
+                    if (energyDemand.getQuantity() < 0) {
                         break;
                     }
-                    if (demand.getPrice() <= supply.getPrice()) {
+                    if (energyDemand.getPrice() <= supply.getPrice()) {
                         break;
                     }
-                    balance += demand.getQuantity();
+                    balance += energyDemand.getQuantity();
                     if (balance > 0) {
-                        clearedPrice = demand.getPrice();
+                        clearedPrice = energyDemand.getPrice();
                     } else {
                         clearedPrice = supply.getPrice();
                     }
-                    totalDemandQuantity += demand.getQuantity();
-                    logString = "Demand assigned. Price: " + demand.getPrice() + ", Quantity: " + demand.getQuantity();
+                    totalDemandQuantity += energyDemand.getQuantity();
+                    logString = "Demand assigned. Price: " + energyDemand.getPrice() + ", Quantity: " + energyDemand.getQuantity();
                 } else {
                     moreDemands = false;
                 }
@@ -115,14 +116,14 @@ public class EOMOperatorImpl implements EOMOperator {
                     throw new IllegalStateException("mustn't differ");
                 }
                 if (demandIterator.hasNext()) {
-                    demand = demandIterator.next();
-                    if (!(supply == null) && demand.getPrice() <= supply.getPrice()) {
+                    energyDemand = demandIterator.next();
+                    if (!(supply == null) && energyDemand.getPrice() <= supply.getPrice()) {
                         break;
                     }
-                    clearedPrice = (supply != null) ? (demand.getPrice() + supply.getPrice()) / 2 : demand.getPrice();
-                    balance += demand.getQuantity();
-                    totalDemandQuantity += demand.getQuantity();
-                    logString = "Demand assigned. Price: " + demand.getPrice() + ", Quantity: " + demand.getQuantity();
+                    clearedPrice = (supply != null) ? (energyDemand.getPrice() + supply.getPrice()) / 2 : energyDemand.getPrice();
+                    balance += energyDemand.getQuantity();
+                    totalDemandQuantity += energyDemand.getQuantity();
+                    logString = "Demand assigned. Price: " + energyDemand.getPrice() + ", Quantity: " + energyDemand.getQuantity();
                 } else {
                     moreDemands = false;
                     if (balance == 0) {
@@ -140,7 +141,7 @@ public class EOMOperatorImpl implements EOMOperator {
             lastAssignmentRate = ((float) supply.getQuantity() + balance) / supply.getQuantity();
             lastAssignmentType = AssignmentType.PartialSupply;
         } else if (balance > 0) {
-            lastAssignmentRate = ((float) demand.getQuantity() - balance) / demand.getQuantity();
+            lastAssignmentRate = ((float) energyDemand.getQuantity() - balance) / energyDemand.getQuantity();
             lastAssignmentType = AssignmentType.PartialDemand;
         } else {
             lastAssignmentRate = 1;
@@ -152,10 +153,10 @@ public class EOMOperatorImpl implements EOMOperator {
 
         notifyAssignmentRate();
 
-        lastDemands = new ArrayList<>(demands);
+        lastEnergyDemands = new ArrayList<>(energyDemands);
         lastSupplies = new ArrayList<>(supplies);
         supplies.clear();
-        demands.clear();
+        energyDemands.clear();
     }
 
     private void notifyAssignmentRate() {
@@ -165,25 +166,25 @@ public class EOMOperatorImpl implements EOMOperator {
                 .append(getLastAssignmentRate()).append(",")
                 .append(getTotalClearedQuantity()).append(",");
         Date date = TimeUtil.getCurrentDate();
-        for (Demand demand : demands) {
-            MarketOperatorListener marketOperatorListener = demand.getMarketOperatorListener();
+        for (EnergyDemand energyDemand : energyDemands) {
+            MarketOperatorListener marketOperatorListener = energyDemand.getMarketOperatorListener();
             if (marketOperatorListener != null) {
                 float assignmentRate;
-                if (demand.getPrice() > clearedPrice) {
+                if (energyDemand.getPrice() > clearedPrice) {
                     assignmentRate = 1f;
-                } else if (demand.getPrice() == clearedPrice) {
+                } else if (energyDemand.getPrice() == clearedPrice) {
                     assignmentRate = lastAssignmentRate;
                 } else {
                     assignmentRate = 0;
                 }
-                marketOperatorListener.notifyClearingDone(date, Market.EOM_MARKET, demand, clearedPrice, assignmentRate);
-                logSummary(demand, assignmentRate);
+                marketOperatorListener.notifyClearingDone(date, Market.EOM_MARKET, energyDemand, clearedPrice, assignmentRate);
+                logSummary(energyDemand, assignmentRate);
                 logString.append(assignmentRate).append(",")
-                        .append(demand.getPrice()).append(",")
-                        .append(demand.getQuantity()).append(",");
+                        .append(energyDemand.getPrice()).append(",")
+                        .append(energyDemand.getQuantity()).append(",");
             }
         }
-        for (PositiveSupply supply : this.supplies) {
+        for (EnergySupply supply : this.supplies) {
             MarketOperatorListener marketOperatorListener = supply.getMarketOperatorListener();
             if (marketOperatorListener != null) {
                 float assignmentRate = 0;
@@ -242,12 +243,12 @@ public class EOMOperatorImpl implements EOMOperator {
         return name;
     }
 
-    public List<PositiveSupply> getLastSupplies() {
+    public List<EnergySupply> getLastSupplies() {
         return lastSupplies;
     }
 
-    public List<Demand> getLastDemands() {
-        return lastDemands;
+    public List<EnergyDemand> getLastEnergyDemands() {
+        return lastEnergyDemands;
     }
 
     public AssignmentType getLastAssignmentType() {

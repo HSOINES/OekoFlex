@@ -9,12 +9,12 @@ import java.util.Comparator;
  * Date: 22/01/16
  * Time: 22:27
  */
-public abstract class Supply implements Bid {
+public abstract class BidSupport implements Bid {
     protected final float price;
-    private final int quantity;
+    private final float quantity;
     private final MarketOperatorListener marketOperatorListener;
 
-    public Supply(final float price, final int quantity, final MarketOperatorListener marketOperatorListener) {
+    public BidSupport(final float price, final float quantity, final MarketOperatorListener marketOperatorListener) {
         this.price = price;
         this.quantity = quantity;
         this.marketOperatorListener = marketOperatorListener;
@@ -31,16 +31,23 @@ public abstract class Supply implements Bid {
      }
 
      @Override
-     public int getQuantity() {
+     public float getQuantity() {
          return quantity;
      }
 
 
-    public static class AscendingComparator implements Comparator<PositiveSupply> {
+    public static class AscendingComparator implements Comparator<Bid> {
 
         @Override
-        public int compare(PositiveSupply o1, PositiveSupply o2) {
+        public int compare(Bid o1, Bid o2) {
             return Float.compare(o1.getPrice(), o2.getPrice());
+        }
+    }
+
+    public static class DescendingComparator implements Comparator<Bid> {
+        @Override
+        public int compare(Bid o1, Bid o2) {
+            return Float.compare(o2.getPrice(), o1.getPrice());
         }
     }
 }

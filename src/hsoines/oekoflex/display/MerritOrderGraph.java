@@ -1,8 +1,8 @@
 package hsoines.oekoflex.display;
 
 import hsoines.oekoflex.OekoflexAgent;
-import hsoines.oekoflex.bid.Demand;
-import hsoines.oekoflex.bid.PositiveSupply;
+import hsoines.oekoflex.bid.EnergyDemand;
+import hsoines.oekoflex.bid.EnergySupply;
 import hsoines.oekoflex.marketoperator.impl.EOMOperatorImpl;
 import hsoines.oekoflex.util.TimeUtil;
 import org.knowm.xchart.Chart;
@@ -46,11 +46,11 @@ public class MerritOrderGraph implements IDisplay {
                 .width(800).height(600).title(getClass()
                         .getSimpleName()).xAxisTitle("Quantity").yAxisTitle("Bid").build();
         panel.add(new XChartPanel(chart), BorderLayout.CENTER);
-        List<PositiveSupply> lastSupplies = eomOperator.getLastSupplies();
+        List<EnergySupply> lastSupplies = eomOperator.getLastSupplies();
         List<Float> quantityValues = new ArrayList<>();
         List<Float> priceValues = new ArrayList<>();
         float lastQuantity = 0;
-        for (PositiveSupply lastSupply : lastSupplies) {
+        for (EnergySupply lastSupply : lastSupplies) {
             quantityValues.add(lastQuantity);
             quantityValues.add(lastQuantity + lastSupply.getQuantity());
             lastQuantity += lastSupply.getQuantity();
@@ -59,16 +59,16 @@ public class MerritOrderGraph implements IDisplay {
         }
         chart.addSeries("Supplies", quantityValues, priceValues);
 
-        List<Demand> lastDemands = eomOperator.getLastDemands();
+        List<EnergyDemand> lastEnergyDemands = eomOperator.getLastEnergyDemands();
         quantityValues = new ArrayList<>();
         priceValues = new ArrayList<>();
         lastQuantity = 0;
-        for (Demand lastDemand : lastDemands) {
+        for (EnergyDemand lastEnergyDemand : lastEnergyDemands) {
             quantityValues.add(lastQuantity);
-            quantityValues.add(lastQuantity + lastDemand.getQuantity());
-            lastQuantity += lastDemand.getQuantity();
-            priceValues.add(lastDemand.getPrice());
-            priceValues.add(lastDemand.getPrice());
+            quantityValues.add(lastQuantity + lastEnergyDemand.getQuantity());
+            lastQuantity += lastEnergyDemand.getQuantity();
+            priceValues.add(lastEnergyDemand.getPrice());
+            priceValues.add(lastEnergyDemand.getPrice());
         }
         chart.addSeries("Demands", quantityValues, priceValues);
 

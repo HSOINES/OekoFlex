@@ -1,7 +1,7 @@
 package hsoines.oekoflex.energytrader.impl;
 
 import hsoines.oekoflex.bid.Bid;
-import hsoines.oekoflex.bid.PositiveSupply;
+import hsoines.oekoflex.bid.PowerPositive;
 import hsoines.oekoflex.energytrader.RegelenergieMarketTrader;
 import hsoines.oekoflex.marketoperator.RegelEnergieMarketOperator;
 import hsoines.oekoflex.marketoperator.impl.RegelEnergieMarketOperatorImpl;
@@ -34,7 +34,7 @@ public final class PositiveNegativeEnergyTraderTest {
 
         @Override
         public void makeBidRegelenergie() {
-            regelenergieMarketOperator.addPositiveSupply(new PositiveSupply(10.0f, 100, this));
+            regelenergieMarketOperator.addPositiveSupply(new PowerPositive(10.0f, 100, this));
         }
 
         @Override
@@ -53,7 +53,7 @@ public final class PositiveNegativeEnergyTraderTest {
         }
 
         @Override
-        public List<EnergyTradeRegistryImpl.EnergyTradeElement> getCurrentAssignments() {
+        public List<TradeRegistryImpl.EnergyTradeElement> getCurrentAssignments() {
             return null;
         }
 

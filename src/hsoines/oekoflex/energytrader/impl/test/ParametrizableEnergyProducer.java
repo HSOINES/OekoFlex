@@ -1,10 +1,10 @@
 package hsoines.oekoflex.energytrader.impl.test;
 
 import hsoines.oekoflex.bid.Bid;
-import hsoines.oekoflex.bid.PositiveSupply;
+import hsoines.oekoflex.bid.EnergySupply;
 import hsoines.oekoflex.energytrader.EOMTrader;
-import hsoines.oekoflex.energytrader.EnergyTradeRegistry;
-import hsoines.oekoflex.energytrader.impl.EnergyTradeRegistryImpl;
+import hsoines.oekoflex.energytrader.TradeRegistry;
+import hsoines.oekoflex.energytrader.impl.TradeRegistryImpl;
 import hsoines.oekoflex.marketoperator.EOMOperator;
 import hsoines.oekoflex.util.Market;
 import hsoines.oekoflex.util.TimeUtil;
@@ -26,7 +26,7 @@ public class ParametrizableEnergyProducer implements EOMTrader {
     private final int supplyCapacity;
     private final int supplyDelay;
     private int bidQuantity;
-    private EnergyTradeRegistry energyTradeRegistry = new EnergyTradeRegistryImpl(EnergyTradeRegistry.Type.PRODUCE, INITIALCAPACITY);
+    private TradeRegistry tradeRegistry = new TradeRegistryImpl(TradeRegistry.Type.PRODUCE, INITIALCAPACITY);
 
     public ParametrizableEnergyProducer(String name) {
         this.name = name;
@@ -53,7 +53,7 @@ public class ParametrizableEnergyProducer implements EOMTrader {
             	bidQuantity = 20;
             }
         }
-        marketOperator.addSupply(new PositiveSupply(bidPrice, Math.max(bidQuantity, INITIALCAPACITY), this));
+        marketOperator.addSupply(new EnergySupply(bidPrice, Math.max(bidQuantity, INITIALCAPACITY), this));
     }
 
     @Override
@@ -73,8 +73,8 @@ public class ParametrizableEnergyProducer implements EOMTrader {
     }
 
     @Override
-    public List<EnergyTradeRegistryImpl.EnergyTradeElement> getCurrentAssignments() {
-        return energyTradeRegistry.getEnergyTradeElements(TimeUtil.getCurrentDate());
+    public List<TradeRegistryImpl.EnergyTradeElement> getCurrentAssignments() {
+        return tradeRegistry.getEnergyTradeElements(TimeUtil.getCurrentDate());
     }
 
     @Override

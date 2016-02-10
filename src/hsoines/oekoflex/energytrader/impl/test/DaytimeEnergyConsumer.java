@@ -1,10 +1,10 @@
 package hsoines.oekoflex.energytrader.impl.test;
 
 import hsoines.oekoflex.bid.Bid;
-import hsoines.oekoflex.bid.Demand;
+import hsoines.oekoflex.bid.EnergyDemand;
 import hsoines.oekoflex.energytrader.EOMTrader;
-import hsoines.oekoflex.energytrader.EnergyTradeRegistry;
-import hsoines.oekoflex.energytrader.impl.EnergyTradeRegistryImpl;
+import hsoines.oekoflex.energytrader.TradeRegistry;
+import hsoines.oekoflex.energytrader.impl.TradeRegistryImpl;
 import hsoines.oekoflex.marketoperator.EOMOperator;
 import hsoines.oekoflex.strategies.DaytimePriceStrategy;
 import hsoines.oekoflex.strategies.PriceStrategy;
@@ -28,15 +28,15 @@ public final class DaytimeEnergyConsumer implements EOMTrader {
     private float lastAssignmentRate;
 
     private float lastBidPrice;
-    private EnergyTradeRegistry energyTradeRegistry;
+    private TradeRegistry tradeRegistry;
     private final PriceStrategy priceStrategy;
-    private int lastQuantity;
+    private float lastQuantity;
 
     public DaytimeEnergyConsumer(String name, int quantity, float priceAtDay, float decreaseAtNight) {
         this.name = name;
         this.quantity = quantity;
         priceStrategy = new DaytimePriceStrategy(priceAtDay, decreaseAtNight);
-        energyTradeRegistry = new EnergyTradeRegistryImpl(EnergyTradeRegistry.Type.CONSUM, quantity);
+        tradeRegistry = new TradeRegistryImpl(TradeRegistry.Type.CONSUM, quantity);
     }
 
     @Override
@@ -49,8 +49,8 @@ public final class DaytimeEnergyConsumer implements EOMTrader {
         Date date = TimeUtil.getCurrentDate();
         if (marketOperator != null) {
             lastBidPrice = priceStrategy.getPrice(date);
-            int offeredQuantity = energyTradeRegistry.getRemainingCapacity(date, Market.EOM_MARKET);
-            marketOperator.addDemand(new Demand(lastBidPrice, offeredQuantity, this));
+            int offeredQuantity = tradeRegistry.getRemainingCapacity(date, Market.EOM_MARKET);
+            marketOperator.addDemand(new EnergyDemand(lastBidPrice, offeredQuantity, this));
         }
     }
 
@@ -61,7 +61,7 @@ public final class DaytimeEnergyConsumer implements EOMTrader {
         this.clearedPrice = clearedPrice;
         lastAssignmentRate = rate;
         this.lastQuantity = bid.getQuantity();
-        energyTradeRegistry.addAssignedQuantity(date, market, bid.getPrice(), clearedPrice, bid.getQuantity(), rate, bid.getBidType());
+        tradeRegistry.addAssignedQuantity(date, market, bid.getPrice(), clearedPrice, bid.getQuantity(), rate, bid.getBidType());
     }
 
     public float getLastAssignmentRate() {
@@ -69,8 +69,8 @@ public final class DaytimeEnergyConsumer implements EOMTrader {
     }
 
     @Override
-    public List<EnergyTradeRegistryImpl.EnergyTradeElement> getCurrentAssignments() {
-        return energyTradeRegistry.getEnergyTradeElements(TimeUtil.getCurrentDate());
+    public List<TradeRegistryImpl.EnergyTradeElement> getCurrentAssignments() {
+        return tradeRegistry.getEnergyTradeElements(TimeUtil.getCurrentDate());
     }
 
     public float getLastClearedPrice() {

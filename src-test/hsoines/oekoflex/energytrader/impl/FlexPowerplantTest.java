@@ -34,11 +34,11 @@ public class FlexPowerplantTest {
         flexpowerplant.makeBidRegelenergie();
         regelEnergieMarketOperator.clearMarket();
 
-        List<EnergyTradeRegistryImpl.EnergyTradeElement> currentAssignments = flexpowerplant.getCurrentAssignments();
+        List<TradeRegistryImpl.EnergyTradeElement> currentAssignments = flexpowerplant.getCurrentAssignments();
 
         assertEquals(2, currentAssignments.size());
-        assertEquals(BidType.POSITIVE_SUPPLY, currentAssignments.get(0).getBidType());
-        assertEquals(BidType.NEGATIVE_SUPPLY, currentAssignments.get(1).getBidType());
+        assertEquals(BidType.POWER_POSITIVE, currentAssignments.get(0).getBidType());
+        assertEquals(BidType.POWER_NEGATIVE, currentAssignments.get(1).getBidType());
         assertEquals(10f, currentAssignments.get(0).getAssignedPrice(), 0.00001f);   // test impl
         assertEquals(10f, currentAssignments.get(1).getAssignedPrice(), 0.00001f);   // test impl
         assertEquals(100, currentAssignments.get(0).getOfferedQuantity());   // test impl
