@@ -8,7 +8,7 @@ import hsoines.oekoflex.energytrader.MarketOperatorListener;
  * Time: 21:33
  */
 public abstract class EnergyBid extends BidSupport {
-    public EnergyBid(final float price, final int quantity, final MarketOperatorListener marketOperatorListener) {
+    public EnergyBid(final float price, final float quantity, final MarketOperatorListener marketOperatorListener) {
         super(price, quantity, marketOperatorListener);
     }
 }

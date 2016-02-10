@@ -41,7 +41,7 @@ public class FlexPowerplantTest {
         assertEquals(BidType.POWER_NEGATIVE, currentAssignments.get(1).getBidType());
         assertEquals(10f, currentAssignments.get(0).getAssignedPrice(), 0.00001f);   // test impl
         assertEquals(10f, currentAssignments.get(1).getAssignedPrice(), 0.00001f);   // test impl
-        assertEquals(100, currentAssignments.get(0).getOfferedQuantity());   // test impl
-        assertEquals(2000, currentAssignments.get(1).getOfferedQuantity());   //test impl
+        assertEquals(100, currentAssignments.get(0).getOfferedQuantity(), 0.00001f);   // test impl
+        assertEquals(2000, currentAssignments.get(1).getOfferedQuantity(), 0.00001f);   //test impl
     }
 }

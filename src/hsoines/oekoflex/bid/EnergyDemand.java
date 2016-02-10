@@ -4,7 +4,7 @@ import hsoines.oekoflex.energytrader.MarketOperatorListener;
 
 public class EnergyDemand extends EnergyBid {
 
-    public EnergyDemand(float price, int quantity, MarketOperatorListener marketOperatorListener) {
+    public EnergyDemand(float price, float quantity, MarketOperatorListener marketOperatorListener) {
         super(price, quantity, marketOperatorListener);
     }
 

@@ -59,11 +59,11 @@ public final class FlexPowerplant implements EOMTrader, RegelenergieMarketTrader
         Date precedingDate = TimeUtil.precedingDate(currentDate);
         int pCommited = powerTradeRegistry.getQuantityUsed(currentDate);
         int ePreceding = energyTradeRegistry.getQuantityUsed(precedingDate);
-        int pMustRun = 0;
+        float pMustRun = 0;
         if (ePreceding > powerRampDown * TimeUtil.HOUR_PER_TICK) {
-            pMustRun = Math.min(powerMin + pCommited < 0 ? -pCommited : 0, ePreceding - powerRampDown);
+            pMustRun = Math.min(powerMin + pCommited < 0 ? -pCommited : 0, ePreceding / TimeUtil.HOUR_PER_TICK - powerRampDown);
         }
-        eomMarketOperator.addSupply(new EnergySupply(marginalCosts * .5f, (int) (pMustRun * TimeUtil.HOUR_PER_TICK), this)); // price???
+        eomMarketOperator.addSupply(new EnergySupply(marginalCosts * .5f, pMustRun * TimeUtil.HOUR_PER_TICK, this)); // price???
 
         int pFlex = (int) Math.min(powerMax - pCommited > 0 ? pCommited : 0 - pMustRun, ePreceding * TimeUtil.HOUR_PER_TICK + powerRampUp);
         eomMarketOperator.addSupply(new EnergySupply(marginalCosts, (int) (pFlex * TimeUtil.HOUR_PER_TICK), this));
@@ -77,10 +77,10 @@ public final class FlexPowerplant implements EOMTrader, RegelenergieMarketTrader
         int pPreceding = (int) (energyTradeRegistry.getQuantityUsed(precedingDate) / TimeUtil.HOUR_PER_TICK);
 
         int pNeg = Math.abs(Math.min(pPreceding - powerMin, powerRampDown));
-        regelenergieMarketOperator.addNegativeSupply(new PowerNegative(marginalCosts, pNeg, this));
+        regelenergieMarketOperator.addNegativeSupply(new PowerNegative(marginalCosts, pNeg, this));   //price???
 
         int pPos = Math.abs(Math.min(powerMax - pPreceding, powerRampUp));
-        regelenergieMarketOperator.addPositiveSupply(new PowerPositive(marginalCosts, pPos, this));
+        regelenergieMarketOperator.addPositiveSupply(new PowerPositive(marginalCosts, pPos, this));   //price???
     }
 
     @Override

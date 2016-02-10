@@ -10,7 +10,7 @@ import hsoines.oekoflex.energytrader.MarketOperatorListener;
  */
 public final class PowerNegative extends PowerBid {
 
-    public PowerNegative(float price, int quantity, MarketOperatorListener marketOperatorListener) {
+    public PowerNegative(float price, float quantity, MarketOperatorListener marketOperatorListener) {
         super(price, quantity, marketOperatorListener);
     }
 
