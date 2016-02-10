@@ -1,7 +1,10 @@
 package hsoines.oekoflex.builder;
 
 import hsoines.oekoflex.OekoflexAgent;
-import hsoines.oekoflex.builder.traderfactories.*;
+import hsoines.oekoflex.builder.traderfactories.DaytimeEnergyConsumerFactory;
+import hsoines.oekoflex.builder.traderfactories.FlexPowerplantFactory;
+import hsoines.oekoflex.builder.traderfactories.FlexibleDemandFactory;
+import hsoines.oekoflex.builder.traderfactories.StorageFactory;
 import hsoines.oekoflex.marketoperator.RegelEnergieMarketOperator;
 import hsoines.oekoflex.marketoperator.impl.EOMOperatorImpl;
 import hsoines.oekoflex.marketoperator.impl.RegelEnergieMarketOperatorImpl;
@@ -53,9 +56,11 @@ public class OekoFlexContextBuilder implements ContextBuilder<OekoflexAgent> {
             context.add(eomOperator);
             context.add(regelenergieMarketOperator);
 
-            CombinedEnergyProducerFactory.build(configDir, context, eomOperator, regelenergieMarketOperator);
+            //Consumer
             DaytimeEnergyConsumerFactory.build(configDir, context, eomOperator);
             FlexibleDemandFactory.build(configDir, context, eomOperator);
+
+            //Producer
             FlexPowerplantFactory.build(configDir, context, eomOperator, regelenergieMarketOperator);
             StorageFactory.build(configDir, context, eomOperator, regelenergieMarketOperator);
 

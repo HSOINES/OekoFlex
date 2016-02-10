@@ -23,7 +23,7 @@ public class StorageTest {
     @Before
     public void setUp() throws Exception {
         RepastTestInitializer.init();
-        storage = new Storage("test", 500, 10, 100, 100, 1f, 0.1f, 1000, 1, 0, 100, 100);
+        storage = new Storage("test", 500, 10, 1f, 0.1f, 1000, 1, 0, 100, 100);
         operator = new EOMOperatorImpl("test_operator", "run/summary-logs/test");
         storage.setEOMOperator(operator);
     }

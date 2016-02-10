@@ -28,8 +28,6 @@ public final class Storage implements EOMTrader, RegelenergieMarketTrader {
     private final String name;
     private final int powerMax;
     private final int powerMin;
-    private final int rampUp;
-    private final int rampDown;
     private final float costs;
     private final float shutdownCosts;
     private final int capacity;
@@ -46,15 +44,12 @@ public final class Storage implements EOMTrader, RegelenergieMarketTrader {
 
 
     public Storage(final String name, final int powerMax, final int powerMin,
-                   final int rampUp, final int rampDown,
                    final float marginalCosts, final float shutdownCosts,
                    final int capacity, final float socMax, final float socMin,
                    final int chargePower, final int dischargePower) {
         this.name = name;
         this.powerMax = powerMax;
         this.powerMin = powerMin;
-        this.rampUp = rampUp;
-        this.rampDown = rampDown;
         costs = marginalCosts;
         this.shutdownCosts = shutdownCosts;
         this.capacity = capacity;
