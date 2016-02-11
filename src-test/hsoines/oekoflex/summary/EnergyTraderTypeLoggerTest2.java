@@ -1,8 +1,8 @@
 package hsoines.oekoflex.summary;
 
 import hsoines.oekoflex.OekoflexAgent;
-import hsoines.oekoflex.bid.Demand;
-import hsoines.oekoflex.bid.PositiveSupply;
+import hsoines.oekoflex.bid.EnergyDemand;
+import hsoines.oekoflex.bid.PowerPositive;
 import hsoines.oekoflex.energytrader.impl.test.CombinedEnergyProducer;
 import hsoines.oekoflex.energytrader.impl.test.DaytimeEnergyConsumer;
 import hsoines.oekoflex.tools.RepastTestInitializer;
@@ -31,8 +31,8 @@ public class EnergyTraderTypeLoggerTest2 {
         context.add(combinedTest);
         energyTraderTypeLogger = new EnergyTraderTypeLogger(context, "run/summary-logs/test");
 
-        test.notifyClearingDone(new Date(), Market.EOM_MARKET, new Demand(10f, 1000, null), 10.0f, 1f);
-        combinedTest.notifyClearingDone(new Date(), Market.EOM_MARKET, new PositiveSupply(12f, 200, null), 1f, .4f);
+        test.notifyClearingDone(new Date(), Market.EOM_MARKET, new EnergyDemand(10f, 1000, null), 10.0f, 1f);
+        combinedTest.notifyClearingDone(new Date(), Market.EOM_MARKET, new PowerPositive(12f, 200, null), 1f, .4f);
 
     }
 

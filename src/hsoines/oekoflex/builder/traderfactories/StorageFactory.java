@@ -34,8 +34,6 @@ public final class StorageFactory {
                 String name = parameters.get("name");
                 int powerMax = Integer.parseInt(parameters.get("powerMax"));
                 int powerMin = Integer.parseInt(parameters.get("powerMin"));
-                int rampUp = Integer.parseInt(parameters.get("rampUp"));
-                int rampDown = Integer.parseInt(parameters.get("rampDown"));
                 float marginalCosts = Float.parseFloat(parameters.get("marginalCosts"));
                 float shutdownCosts = Float.parseFloat(parameters.get("shutdownCosts"));
                 float socMax = Float.parseFloat(parameters.get("socMax"));
@@ -44,7 +42,7 @@ public final class StorageFactory {
                 int chargePower = Integer.parseInt(parameters.get("chargePower"));
                 int dischargePower = Integer.parseInt(parameters.get("dischargePower"));
 
-                Storage storage = new Storage(name, powerMax, powerMin, rampUp, rampDown, marginalCosts, shutdownCosts, capacity, socMax, socMin, chargePower, dischargePower);
+                Storage storage = new Storage(name, powerMax, powerMin, marginalCosts, shutdownCosts, capacity, socMax, socMin, chargePower, dischargePower);
                 storage.setEOMOperator(eomOperator);
                 storage.setRegelenergieMarketOperator(regelenergieMarketOperator);
                 context.add(storage);

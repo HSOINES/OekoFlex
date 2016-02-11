@@ -3,7 +3,7 @@ package hsoines.oekoflex.summary;
 import hsoines.oekoflex.bid.Bid;
 import hsoines.oekoflex.energytrader.EOMTrader;
 import hsoines.oekoflex.energytrader.RegelenergieMarketTrader;
-import hsoines.oekoflex.energytrader.impl.EnergyTradeRegistryImpl;
+import hsoines.oekoflex.energytrader.impl.TradeRegistryImpl;
 import hsoines.oekoflex.marketoperator.EOMOperator;
 import hsoines.oekoflex.marketoperator.RegelEnergieMarketOperator;
 import hsoines.oekoflex.util.Market;
@@ -71,7 +71,7 @@ public class EnergyTraderTypeLoggerTest {
         }
 
         @Override
-        public List<EnergyTradeRegistryImpl.EnergyTradeElement> getCurrentAssignments() {
+        public List<TradeRegistryImpl.EnergyTradeElement> getCurrentAssignments() {
             countDownLatch.countDown();
             return null;
         }
@@ -113,7 +113,7 @@ public class EnergyTraderTypeLoggerTest {
         }
 
         @Override
-        public List<EnergyTradeRegistryImpl.EnergyTradeElement> getCurrentAssignments() {
+        public List<TradeRegistryImpl.EnergyTradeElement> getCurrentAssignments() {
             countDownLatch.countDown();
             return null;
         }

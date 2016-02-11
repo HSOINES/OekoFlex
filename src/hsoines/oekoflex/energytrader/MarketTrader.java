@@ -1,7 +1,7 @@
 package hsoines.oekoflex.energytrader;
 
 import hsoines.oekoflex.OekoflexAgent;
-import hsoines.oekoflex.energytrader.impl.EnergyTradeRegistryImpl;
+import hsoines.oekoflex.energytrader.impl.TradeRegistryImpl;
 
 import java.util.List;
 
@@ -14,5 +14,5 @@ public interface MarketTrader extends OekoflexAgent {
 
     float getLastAssignmentRate();
 
-    List<EnergyTradeRegistryImpl.EnergyTradeElement> getCurrentAssignments();
+    List<TradeRegistryImpl.EnergyTradeElement> getCurrentAssignments();
 }

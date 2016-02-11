@@ -13,7 +13,7 @@ public interface Bid {
 
     float getPrice();
 
-    int getQuantity();
+    float getQuantity();
 
     BidType getBidType();
 

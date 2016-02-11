@@ -3,7 +3,7 @@ package hsoines.oekoflex.summary;
 import hsoines.oekoflex.OekoflexAgent;
 import hsoines.oekoflex.domain.SequenceDefinition;
 import hsoines.oekoflex.energytrader.MarketTrader;
-import hsoines.oekoflex.energytrader.impl.EnergyTradeRegistryImpl;
+import hsoines.oekoflex.energytrader.impl.TradeRegistryImpl;
 import hsoines.oekoflex.util.NumberFormatUtil;
 import hsoines.oekoflex.util.TimeUtil;
 import org.apache.commons.io.FileUtils;
@@ -76,11 +76,11 @@ public final class EnergyTraderTypeLogger implements OekoflexAgent {
     }
 
     void logCommonData(final MarketTrader marketTrader, final LoggerFile loggerFile) {
-        List<EnergyTradeRegistryImpl.EnergyTradeElement> currentAssignments = marketTrader.getCurrentAssignments();
+        List<TradeRegistryImpl.EnergyTradeElement> currentAssignments = marketTrader.getCurrentAssignments();
         if (currentAssignments == null) {
             return;
         }
-        for (EnergyTradeRegistryImpl.EnergyTradeElement currentAssignment : currentAssignments) {
+        for (TradeRegistryImpl.EnergyTradeElement currentAssignment : currentAssignments) {
             int capacity = currentAssignment.getCapacity();
             int assignedQuantity = (int) (currentAssignment.getRate() * currentAssignment.getOfferedQuantity());
             loggerFile.log(TimeUtil.getTick(TimeUtil.getCurrentDate()) + ";"

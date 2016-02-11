@@ -1,10 +1,10 @@
 package hsoines.oekoflex.energytrader.impl;
 
 import hsoines.oekoflex.bid.Bid;
-import hsoines.oekoflex.bid.Demand;
+import hsoines.oekoflex.bid.EnergyDemand;
 import hsoines.oekoflex.builder.CSVParameter;
 import hsoines.oekoflex.energytrader.EOMTrader;
-import hsoines.oekoflex.energytrader.EnergyTradeRegistry;
+import hsoines.oekoflex.energytrader.TradeRegistry;
 import hsoines.oekoflex.marketoperator.EOMOperator;
 import hsoines.oekoflex.util.Market;
 import hsoines.oekoflex.util.TimeUtil;
@@ -27,7 +27,7 @@ import java.util.List;
 public final class FlexibleDemand implements EOMTrader {
     private static final Log log = LogFactory.getLog(FlexibleDemand.class);
     public static final float FIXED_PRICE = 3000f;
-    private final EnergyTradeRegistryImpl energyTradeRegistry;
+    private final TradeRegistryImpl energyTradeRegistry;
     private final String name;
 
     private EOMOperator marketOperator;
@@ -36,7 +36,7 @@ public final class FlexibleDemand implements EOMTrader {
 
     public FlexibleDemand(final String name, final File csvFile) throws IOException {
         this.name = name;
-        energyTradeRegistry = new EnergyTradeRegistryImpl(EnergyTradeRegistry.Type.CONSUM, 0);
+        energyTradeRegistry = new TradeRegistryImpl(TradeRegistry.Type.CONSUM, 0);
         FileReader reader = new FileReader(csvFile);
         CSVParser parser = CSVParameter.getCSVFormat().parse(reader);
         for (CSVRecord parameters : parser) {
@@ -58,7 +58,7 @@ public final class FlexibleDemand implements EOMTrader {
     @Override
     public void makeBidEOM() {
         int remainingCapacity = energyTradeRegistry.getRemainingCapacity(TimeUtil.getCurrentDate(), Market.EOM_MARKET);
-        marketOperator.addDemand(new Demand(FIXED_PRICE, remainingCapacity, this));
+        marketOperator.addDemand(new EnergyDemand(FIXED_PRICE, remainingCapacity, this));
     }
 
     @Override
@@ -79,7 +79,7 @@ public final class FlexibleDemand implements EOMTrader {
     }
 
     @Override
-    public List<EnergyTradeRegistryImpl.EnergyTradeElement> getCurrentAssignments() {
+    public List<TradeRegistryImpl.EnergyTradeElement> getCurrentAssignments() {
         return energyTradeRegistry.getEnergyTradeElements(TimeUtil.getCurrentDate());
     }
 

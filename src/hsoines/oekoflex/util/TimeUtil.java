@@ -16,6 +16,7 @@ import java.util.TimeZone;
  */
 public final class TimeUtil {
     private static final Log log = LogFactory.getLog(TimeUtil.class);
+    public static final float HOUR_PER_TICK = .25f;
 
     private static long quarterHoursUntilSimulationStart;
     public static final int QUARTER_HOUR_IN_MILLIS = 15 * 60 * 1000;

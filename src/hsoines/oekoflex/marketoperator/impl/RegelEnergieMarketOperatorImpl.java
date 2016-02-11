@@ -1,8 +1,8 @@
 package hsoines.oekoflex.marketoperator.impl;
 
-import hsoines.oekoflex.bid.NegativeSupply;
-import hsoines.oekoflex.bid.PositiveSupply;
-import hsoines.oekoflex.bid.Supply;
+import hsoines.oekoflex.bid.BidSupport;
+import hsoines.oekoflex.bid.PowerNegative;
+import hsoines.oekoflex.bid.PowerPositive;
 import hsoines.oekoflex.energytrader.MarketOperatorListener;
 import hsoines.oekoflex.marketoperator.RegelEnergieMarketOperator;
 import hsoines.oekoflex.summary.LoggerFile;
@@ -29,8 +29,8 @@ public final class RegelEnergieMarketOperatorImpl implements RegelEnergieMarketO
     private final String name;
     private final int positiveQuantity;
     private final int negativeQuantity;
-    private final List<Supply> positiveSupplies = new ArrayList<>();
-    private final List<Supply> negativeSupplies = new ArrayList<>();
+    private final List<BidSupport> positiveSupplies = new ArrayList<>();
+    private final List<BidSupport> negativeSupplies = new ArrayList<>();
 
     private long totalClearedPositiveQuantity;
     private long totalClearedNegativeQuantity;
@@ -57,12 +57,12 @@ public final class RegelEnergieMarketOperatorImpl implements RegelEnergieMarketO
     }
 
     @Override
-    public void addPositiveSupply(final PositiveSupply supply) {
+    public void addPositiveSupply(final PowerPositive supply) {
         positiveSupplies.add(supply);
     }
 
     @Override
-    public void addNegativeSupply(final NegativeSupply supply) {
+    public void addNegativeSupply(final PowerNegative supply) {
         negativeSupplies.add(supply);
     }
 
@@ -80,25 +80,25 @@ public final class RegelEnergieMarketOperatorImpl implements RegelEnergieMarketO
         lastClearedNegativeMaxPrice = negativeClearingData.getLastClearedMaxPrice();
     }
 
-    ClearingData doClearMarketFor(final List<Supply> supplies, int quantity) {
+    ClearingData doClearMarketFor(final List<BidSupport> supplies, int quantity) {
         supplies.sort((o1, o2) -> Float.compare(o1.getPrice(), o2.getPrice()));
         int totalClearedQuantity = 0;
         float lastAssignmentRate = 0;
         float lastClearedPrice = 0;
-        for (Supply supply : supplies) {
-            MarketOperatorListener marketOperatorListener = supply.getMarketOperatorListener();
-            if (totalClearedQuantity + supply.getQuantity() < quantity) {
-                totalClearedQuantity += supply.getQuantity();
+        for (BidSupport bidSupport : supplies) {
+            MarketOperatorListener marketOperatorListener = bidSupport.getMarketOperatorListener();
+            if (totalClearedQuantity + bidSupport.getQuantity() < quantity) {
+                totalClearedQuantity += bidSupport.getQuantity();
                 lastAssignmentRate = 1;
-                doNotify(supply, marketOperatorListener, 1);
-                lastClearedPrice = supply.getPrice();
+                doNotify(bidSupport, marketOperatorListener, 1);
+                lastClearedPrice = bidSupport.getPrice();
             } else if (totalClearedQuantity >= quantity) {
-                doNotify(supply, marketOperatorListener, 0);
+                doNotify(bidSupport, marketOperatorListener, 0);
             } else {
-                lastAssignmentRate = (quantity - totalClearedQuantity) / (float) supply.getQuantity();
-                doNotify(supply, marketOperatorListener, lastAssignmentRate);
-                totalClearedQuantity += supply.getQuantity() * lastAssignmentRate;
-                lastClearedPrice = supply.getPrice();
+                lastAssignmentRate = (quantity - totalClearedQuantity) / (float) bidSupport.getQuantity();
+                doNotify(bidSupport, marketOperatorListener, lastAssignmentRate);
+                totalClearedQuantity += bidSupport.getQuantity() * lastAssignmentRate;
+                lastClearedPrice = bidSupport.getPrice();
             }
         }
         log.info("Clearing done.");
@@ -152,17 +152,17 @@ public final class RegelEnergieMarketOperatorImpl implements RegelEnergieMarketO
         return lastNegativeAssignmentRate;
     }
 
-    void doNotify(final Supply supply, final MarketOperatorListener marketOperatorListener, float assignRate) {
+    void doNotify(final BidSupport bidSupport, final MarketOperatorListener marketOperatorListener, float assignRate) {
         long tick = TimeUtil.getCurrentTick();
-        marketOperatorListener.notifyClearingDone(TimeUtil.getDate(tick), Market.REGELENERGIE_MARKET, supply, supply.getPrice(), assignRate);
+        marketOperatorListener.notifyClearingDone(TimeUtil.getDate(tick), Market.REGELENERGIE_MARKET, bidSupport, bidSupport.getPrice(), assignRate);
 
         logger.log(String.valueOf(tick) + ";"
-                + supply.getMarketOperatorListener().getClass().getSimpleName() + ";"
-                + supply.getMarketOperatorListener().getName() + ";"
-                + supply.getBidType() + ";"
-                + NumberFormatUtil.format(supply.getPrice()) + ";"
-                + supply.getQuantity() + ";"
-                + (int) (supply.getQuantity() * assignRate) + ";");
+                + bidSupport.getMarketOperatorListener().getClass().getSimpleName() + ";"
+                + bidSupport.getMarketOperatorListener().getName() + ";"
+                + bidSupport.getBidType() + ";"
+                + NumberFormatUtil.format(bidSupport.getPrice()) + ";"
+                + bidSupport.getQuantity() + ";"
+                + (int) (bidSupport.getQuantity() * assignRate) + ";");
     }
 
     @Override
