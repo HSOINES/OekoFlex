@@ -4,6 +4,7 @@ import hsoines.oekoflex.bid.BidType;
 import hsoines.oekoflex.energytrader.TradeRegistry;
 import hsoines.oekoflex.util.Market;
 import hsoines.oekoflex.util.TimeUtil;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -11,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * User: jh
@@ -22,12 +24,12 @@ public final class TradeRegistryImpl implements TradeRegistry {
 
     private final List<EnergyTradeElement> tradeElements;
     private final Type type;
-    private final int initialcapacity;
-    private final HashMap<Long, Integer> capacities;
+    private final float initialcapacity;
+    private final Map<Long, Float> capacities;
 
-    public TradeRegistryImpl(Type type, int initialcapacity) {
+    public TradeRegistryImpl(Type type, float quantity2) {
         this.type = type;
-        this.initialcapacity = initialcapacity;
+        this.initialcapacity = quantity2;
         tradeElements = new ArrayList<>();
         capacities = new HashMap<>();
     }
@@ -59,9 +61,9 @@ public final class TradeRegistryImpl implements TradeRegistry {
     }
 
     @Override
-    public int getQuantityUsed(final Date date) {
+    public float getQuantityUsed(final Date date) {
         long tick = TimeUtil.getTick(date);
-        Integer capacity = getSafeAndSetInitialCapacity(tick);
+        Float capacity = getSafeAndSetInitialCapacity(tick);
         return capacity - getRemainingCapacity(date, Market.EOM_MARKET);
     }
 
@@ -77,7 +79,7 @@ public final class TradeRegistryImpl implements TradeRegistry {
     }
 
     @Override
-    public void setCapacity(final long tick, final int demand) {
+    public void setCapacity(final long tick, final float demand) {
         if (capacities.get(tick) != null) {
             log.warn("tick <" + tick + "> already assigned. Will be overriden.");
         }
@@ -87,12 +89,12 @@ public final class TradeRegistryImpl implements TradeRegistry {
     @Override
     public int getCapacity(final Date date) {
         long tick = TimeUtil.getTick(date);
-        Integer capacity = getSafeAndSetInitialCapacity(tick);
+        Float capacity = getSafeAndSetInitialCapacity(tick);
         return capacity;
     }
 
-    Integer getSafeAndSetInitialCapacity(final long tick) {
-        Integer capacity = capacities.get(tick);
+    Float getSafeAndSetInitialCapacity(final long tick) {
+        Float capacity = capacities.get(tick);
         if (capacity == null) {
             capacity = initialcapacity;
         }
@@ -106,7 +108,7 @@ public final class TradeRegistryImpl implements TradeRegistry {
                 assigned += energyTradeElement.getOfferedQuantity() * energyTradeElement.getRate();
             }
         }
-        Integer capacity = getSafeAndSetInitialCapacity(tick);
+        Float capacity = getSafeAndSetInitialCapacity(tick);
         return capacity - assigned;
     }
 
@@ -116,7 +118,7 @@ public final class TradeRegistryImpl implements TradeRegistry {
         if (remainingCapacity < assignedQuantity) {
             throw new IllegalStateException("Assigned quantity should not exceed the maximum quantity.");
         } else {
-            Integer capacity = capacities.get(tick);
+            Float capacity = capacities.get(tick);
             if (capacity == null) {
                 capacity = initialcapacity;
             }
@@ -131,7 +133,7 @@ public final class TradeRegistryImpl implements TradeRegistry {
         private final float assignedPrice;
         private final float offeredQuantity;
         private final float rate;
-        private final Integer capacity;
+        private final Float capacity;
         private Market market;
         private BidType bidType;
 

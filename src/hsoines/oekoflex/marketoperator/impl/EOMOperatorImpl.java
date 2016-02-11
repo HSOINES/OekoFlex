@@ -64,30 +64,39 @@ public class EOMOperatorImpl implements EOMOperator {
         }
         Iterator<EnergyDemand> demandIterator = energyDemands.iterator();
         Iterator<EnergySupply> supplyIterator = this.supplies.iterator();
+        
+        //increments until prices match
         int totalSupplyQuantity = 0;
         int totalDemandQuantity = 0;
+        
         clearedQuantity = 0;
+        //Indicates next element:
+        // balance < 0 -> demands are fetched
+        // balance > 0 -> supplies are fetched
         int balance = 0;
+        //Stops clearing if false
         boolean moreSupplies = true;
         boolean moreDemands = true;
+
+        //current bids to clear
         EnergyDemand energyDemand = null;
-        EnergySupply supply = null;
+        EnergySupply energySupply = null;
         do {
             String logString = "";
             if (balance > 0) {
                 if (supplyIterator.hasNext()) {
-                    supply = supplyIterator.next();
-                    if (energyDemand.getPrice() <= supply.getPrice()) {
+                    energySupply = supplyIterator.next();
+                    if (energyDemand.getPrice() <= energySupply.getPrice()) {
                         break;
                     }
-                    balance -= supply.getQuantity();
+                    balance -= energySupply.getQuantity();
                     if (balance < 0) {
-                        clearedPrice = supply.getPrice();
+                        clearedPrice = energySupply.getPrice();
                     } else {
                         clearedPrice = energyDemand.getPrice();
                     }
-                    totalSupplyQuantity += supply.getQuantity();
-                    logString = "Supply assigned. Price: " + supply.getPrice() + ", Quantity: " + supply.getQuantity();
+                    totalSupplyQuantity += energySupply.getQuantity();
+                    logString = "Supply assigned. Price: " + energySupply.getPrice() + ", Quantity: " + energySupply.getQuantity();
                 } else {
                     moreSupplies = false;
                 }
@@ -97,14 +106,14 @@ public class EOMOperatorImpl implements EOMOperator {
                     if (energyDemand.getQuantity() < 0) {
                         break;
                     }
-                    if (energyDemand.getPrice() <= supply.getPrice()) {
+                    if (energyDemand.getPrice() <= energySupply.getPrice()) {
                         break;
                     }
                     balance += energyDemand.getQuantity();
                     if (balance > 0) {
                         clearedPrice = energyDemand.getPrice();
                     } else {
-                        clearedPrice = supply.getPrice();
+                        clearedPrice = energySupply.getPrice();
                     }
                     totalDemandQuantity += energyDemand.getQuantity();
                     logString = "Demand assigned. Price: " + energyDemand.getPrice() + ", Quantity: " + energyDemand.getQuantity();
@@ -117,10 +126,10 @@ public class EOMOperatorImpl implements EOMOperator {
                 }
                 if (demandIterator.hasNext()) {
                     energyDemand = demandIterator.next();
-                    if (!(supply == null) && energyDemand.getPrice() <= supply.getPrice()) {
+                    if (!(energySupply == null) && energyDemand.getPrice() <= energySupply.getPrice()) {
                         break;
                     }
-                    clearedPrice = (supply != null) ? (energyDemand.getPrice() + supply.getPrice()) / 2 : energyDemand.getPrice();
+                    clearedPrice = (energySupply != null) ? (energyDemand.getPrice() + energySupply.getPrice()) / 2 : energyDemand.getPrice();
                     balance += energyDemand.getQuantity();
                     totalDemandQuantity += energyDemand.getQuantity();
                     logString = "Demand assigned. Price: " + energyDemand.getPrice() + ", Quantity: " + energyDemand.getQuantity();
@@ -134,11 +143,11 @@ public class EOMOperatorImpl implements EOMOperator {
             }
             log.debug("                                                      " + logString + ", " + "Balance: " + balance);
         }
-        while (supply == null || (moreDemands && balance <= 0) || (moreSupplies && balance > 0)); //Demand + Supply immer quantity > 0!!!
+        while (energySupply == null || (moreDemands && balance <= 0) || (moreSupplies && balance > 0)); //Demand + Supply immer quantity > 0!!!
 
         clearedQuantity = Math.min(totalDemandQuantity, totalSupplyQuantity);
         if (balance < 0) {
-            lastAssignmentRate = ((float) supply.getQuantity() + balance) / supply.getQuantity();
+            lastAssignmentRate = ((float) energySupply.getQuantity() + balance) / energySupply.getQuantity();
             lastAssignmentType = AssignmentType.PartialSupply;
         } else if (balance > 0) {
             lastAssignmentRate = ((float) energyDemand.getQuantity() - balance) / energyDemand.getQuantity();

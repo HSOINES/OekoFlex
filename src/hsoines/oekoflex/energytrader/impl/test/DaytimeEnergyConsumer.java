@@ -22,7 +22,7 @@ import java.util.List;
  */
 public final class DaytimeEnergyConsumer implements EOMTrader {
     private final String name;
-    private final int quantity;
+    private final float quantity;
     private EOMOperator marketOperator;
     private float clearedPrice;
     private float lastAssignmentRate;
@@ -32,11 +32,11 @@ public final class DaytimeEnergyConsumer implements EOMTrader {
     private final PriceStrategy priceStrategy;
     private float lastQuantity;
 
-    public DaytimeEnergyConsumer(String name, int quantity, float priceAtDay, float decreaseAtNight) {
+    public DaytimeEnergyConsumer(String name, float quantity2, float priceAtDay, float decreaseAtNight) {
         this.name = name;
-        this.quantity = quantity;
+        this.quantity = quantity2;
         priceStrategy = new DaytimePriceStrategy(priceAtDay, decreaseAtNight);
-        tradeRegistry = new TradeRegistryImpl(TradeRegistry.Type.CONSUM, quantity);
+        tradeRegistry = new TradeRegistryImpl(TradeRegistry.Type.CONSUM, quantity2);
     }
 
     @Override
