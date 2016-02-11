@@ -31,9 +31,10 @@ public class StorageTest {
     @Test
     public void testBatteryEmpty() throws Exception {
         storage.makeBidEOM();
+        operator.addSupply(new EnergySupply(0.7f, 500, null));
         operator.addSupply(new EnergySupply(0.8f, 500, null));
         operator.addSupply(new EnergySupply(0.8f, 500, null));
-        operator.addSupply(new EnergySupply(0.8f, 500, null));
+        operator.addDemand(new EnergyDemand(0.8f, 1000, null));
         operator.clearMarket();
 
         int load = storage.getSoc();

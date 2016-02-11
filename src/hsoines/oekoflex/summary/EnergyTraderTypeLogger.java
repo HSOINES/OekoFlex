@@ -1,6 +1,7 @@
 package hsoines.oekoflex.summary;
 
 import hsoines.oekoflex.OekoflexAgent;
+import hsoines.oekoflex.bid.BidType;
 import hsoines.oekoflex.domain.SequenceDefinition;
 import hsoines.oekoflex.energytrader.MarketTrader;
 import hsoines.oekoflex.energytrader.impl.TradeRegistryImpl;
@@ -70,7 +71,7 @@ public final class EnergyTraderTypeLogger implements OekoflexAgent {
 
     String buildHeaderString(final MarketTrader marketTrader) {
         final StringBuilder header = new StringBuilder();
-        header.append("tick;ClassName;InstanceName;Market;BidType;PriceOffered;PriceCleared;QuantityOffered;QuantityAssigned;Capacity");
+        header.append("tick;ClassName;InstanceName;Market;BidType;PriceOffered;PriceCleared;QuantityOffered;QuantityAssigned;Capacity;MustRunViolation");
 
         return header.toString();
     }
@@ -83,6 +84,7 @@ public final class EnergyTraderTypeLogger implements OekoflexAgent {
         for (TradeRegistryImpl.EnergyTradeElement currentAssignment : currentAssignments) {
             float capacity = currentAssignment.getCapacity();
             int assignedQuantity = (int) (currentAssignment.getRate() * currentAssignment.getOfferedQuantity());
+            boolean mustRunViolation = (currentAssignment.getBidType().equals(BidType.ENERGY_SUPPLY_MUSTRUN) && currentAssignment.getRate() - 1 > .01);
             loggerFile.log(TimeUtil.getTick(TimeUtil.getCurrentDate()) + ";"
                     + marketTrader.getClass().getSimpleName() + ";"
                     + marketTrader.getName() + ";"
@@ -92,7 +94,9 @@ public final class EnergyTraderTypeLogger implements OekoflexAgent {
                     + NumberFormatUtil.format(currentAssignment.getAssignedPrice()) + ";"
                     + NumberFormatUtil.format(currentAssignment.getOfferedQuantity()) + ";"
                     + NumberFormatUtil.format(assignedQuantity) + ";"
-                    + NumberFormatUtil.format(capacity) + ";");
+                    + NumberFormatUtil.format(capacity) + ";"
+                    + (mustRunViolation ? "X" : ""))
+            ;
         }
     }
 

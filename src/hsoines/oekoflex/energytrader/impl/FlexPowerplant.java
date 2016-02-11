@@ -1,9 +1,6 @@
 package hsoines.oekoflex.energytrader.impl;
 
-import hsoines.oekoflex.bid.Bid;
-import hsoines.oekoflex.bid.EnergySupply;
-import hsoines.oekoflex.bid.PowerNegative;
-import hsoines.oekoflex.bid.PowerPositive;
+import hsoines.oekoflex.bid.*;
 import hsoines.oekoflex.energytrader.EOMTrader;
 import hsoines.oekoflex.energytrader.MarketOperatorListener;
 import hsoines.oekoflex.energytrader.RegelenergieMarketTrader;
@@ -65,7 +62,7 @@ public final class FlexPowerplant implements EOMTrader, RegelenergieMarketTrader
             pMustRun = Math.min(powerMin + pCommited < 0 ? -pCommited : 0, ePreceding / TimeUtil.HOUR_PER_TICK - powerRampDown);
         }
         float eMustRun = pMustRun * TimeUtil.HOUR_PER_TICK;
-        eomMarketOperator.addSupply(new EnergySupply(shutdownCosts / eMustRun, eMustRun, this)); 
+        eomMarketOperator.addSupply(new EnergySupplyMustRun(-shutdownCosts / eMustRun, eMustRun, this));
 
         //einzeln positiv und negativ betrachten
         float pFlex = Math.min(powerMax - pCommited > 0 ? pCommited : 0 - pMustRun, ePreceding * TimeUtil.HOUR_PER_TICK + powerRampUp);

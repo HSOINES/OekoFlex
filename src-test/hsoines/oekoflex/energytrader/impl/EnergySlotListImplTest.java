@@ -36,15 +36,15 @@ public class EnergySlotListImplTest {
     @Test
     public void testSlotAssignCapacity() throws Exception {
         Date date = new Date(0);
-        assertEquals(1000, energySlotList.getRemainingCapacity(date, Market.EOM_MARKET));
+        assertEquals(1000, energySlotList.getRemainingCapacity(date, Market.EOM_MARKET), 0.00001f);
         energySlotList.addAssignedQuantity(date, Market.EOM_MARKET, 10f, 12.3f, 100, 1, BidType.ENERGY_DEMAND);
-        assertEquals(900, energySlotList.getRemainingCapacity(date, Market.EOM_MARKET));
+        assertEquals(900, energySlotList.getRemainingCapacity(date, Market.EOM_MARKET), 0.00001f);
     }
 
     @Test
     public void testSlotAssigning() throws Exception {
         energySlotList.addAssignedQuantity(date0, Market.EOM_MARKET, 10f, 12f, 100, 1, BidType.ENERGY_DEMAND);
-        assertEquals(900, energySlotList.getRemainingCapacity(date0, Market.EOM_MARKET));
+        assertEquals(900, energySlotList.getRemainingCapacity(date0, Market.EOM_MARKET), 0.00001f);
     }
 
     @Test(expected = IllegalStateException.class)
@@ -57,8 +57,8 @@ public class EnergySlotListImplTest {
     @Test
     public void testSlotAssigning2() throws Exception {
         energySlotList.addAssignedQuantity(date0, Market.EOM_MARKET, 10f, 10f, 300, 1f, BidType.ENERGY_DEMAND);
-        assertEquals(700, energySlotList.getRemainingCapacity(date0, Market.EOM_MARKET));
+        assertEquals(700, energySlotList.getRemainingCapacity(date0, Market.EOM_MARKET), 0.00001f);
         energySlotList.addAssignedQuantity(date0, Market.EOM_MARKET, 10f, 10f, 700, 1f, BidType.ENERGY_DEMAND);
-        assertEquals(0, energySlotList.getRemainingCapacity(date0, Market.EOM_MARKET));
+        assertEquals(0, energySlotList.getRemainingCapacity(date0, Market.EOM_MARKET), 0.00001f);
     }
 }
