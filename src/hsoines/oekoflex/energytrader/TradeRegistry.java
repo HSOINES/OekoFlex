@@ -32,13 +32,13 @@ public interface TradeRegistry {
     int getRemainingCapacity(Date date, final Market market);
 
     /* Energie, die zum entsprechenden Zeitpunkt abgerufen/geliefert wurde */
-    int getQuantityUsed(Date date);
+    float getQuantityUsed(Date date);
 
     /* Preis zu dem die Energie zugewiesen wurde, falls mehrere Zuweisungen  */
     List<TradeRegistryImpl.EnergyTradeElement> getEnergyTradeElements(Date date);
 
     /* Setzen der Kapazität */
-    void setCapacity(long tick, int demand);
+    void setCapacity(long tick, float demand);
 
     /* Kapazität zum Zeitpunkt date */
     int getCapacity(Date date);

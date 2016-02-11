@@ -29,7 +29,7 @@ public final class DaytimeEnergyConsumerFactory {
         for (CSVRecord parameters : format) {
             try {
                 String name = parameters.get("name");// + "_" + Long.toHexString(System.currentTimeMillis());
-                int quantity = Integer.parseInt(parameters.get("quantity"));
+                float quantity = Float.parseFloat(parameters.get("quantity"));
                 float priceAtDay = Float.parseFloat(parameters.get("priceAtDay"));
                 float decreaseAtNightInPercent = Float.parseFloat(parameters.get("decreaseAtNightInPercent"));
 
