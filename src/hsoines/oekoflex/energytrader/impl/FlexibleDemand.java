@@ -57,7 +57,7 @@ public final class FlexibleDemand implements EOMTrader {
 
     @Override
     public void makeBidEOM() {
-        int remainingCapacity = energyTradeRegistry.getRemainingCapacity(TimeUtil.getCurrentDate(), Market.EOM_MARKET);
+        float remainingCapacity = energyTradeRegistry.getRemainingCapacity(TimeUtil.getCurrentDate(), Market.EOM_MARKET);
         marketOperator.addDemand(new EnergyDemand(FIXED_PRICE, remainingCapacity, this));
     }
 

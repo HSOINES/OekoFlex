@@ -49,7 +49,7 @@ public final class DaytimeEnergyConsumer implements EOMTrader {
         Date date = TimeUtil.getCurrentDate();
         if (marketOperator != null) {
             lastBidPrice = priceStrategy.getPrice(date);
-            int offeredQuantity = tradeRegistry.getRemainingCapacity(date, Market.EOM_MARKET);
+            float offeredQuantity = tradeRegistry.getRemainingCapacity(date, Market.EOM_MARKET);
             marketOperator.addDemand(new EnergyDemand(lastBidPrice, offeredQuantity, this));
         }
     }

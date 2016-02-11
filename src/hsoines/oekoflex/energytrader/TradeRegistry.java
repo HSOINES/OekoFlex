@@ -29,7 +29,7 @@ public interface TradeRegistry {
     void addAssignedQuantity(final Date date, final Market market, final float offeredPrice, final float assignedPrice, final float offeredQuantity, float assignedRate, final BidType bidType);
 
     /* Energie, die zum entsprechenden Zeitpunkt vorhanden war */
-    int getRemainingCapacity(Date date, final Market market);
+    float getRemainingCapacity(Date date, final Market market);
 
     /* Energie, die zum entsprechenden Zeitpunkt abgerufen/geliefert wurde */
     float getQuantityUsed(Date date);
@@ -41,6 +41,6 @@ public interface TradeRegistry {
     void setCapacity(long tick, float demand);
 
     /* Kapazität zum Zeitpunkt date */
-    int getCapacity(Date date);
+    float getCapacity(Date date);
 
 }

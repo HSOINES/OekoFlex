@@ -81,7 +81,7 @@ public final class EnergyTraderTypeLogger implements OekoflexAgent {
             return;
         }
         for (TradeRegistryImpl.EnergyTradeElement currentAssignment : currentAssignments) {
-            int capacity = currentAssignment.getCapacity();
+            float capacity = currentAssignment.getCapacity();
             int assignedQuantity = (int) (currentAssignment.getRate() * currentAssignment.getOfferedQuantity());
             loggerFile.log(TimeUtil.getTick(TimeUtil.getCurrentDate()) + ";"
                     + marketTrader.getClass().getSimpleName() + ";"
@@ -90,9 +90,9 @@ public final class EnergyTraderTypeLogger implements OekoflexAgent {
                     + currentAssignment.getBidType() + ";"
                     + NumberFormatUtil.format(currentAssignment.getOfferedPrice()) + ";"
                     + NumberFormatUtil.format(currentAssignment.getAssignedPrice()) + ";"
-                    + currentAssignment.getOfferedQuantity() + ";"
-                    + assignedQuantity + ";"
-                    + capacity + ";");
+                    + NumberFormatUtil.format(currentAssignment.getOfferedQuantity()) + ";"
+                    + NumberFormatUtil.format(assignedQuantity) + ";"
+                    + NumberFormatUtil.format(capacity) + ";");
         }
     }
 

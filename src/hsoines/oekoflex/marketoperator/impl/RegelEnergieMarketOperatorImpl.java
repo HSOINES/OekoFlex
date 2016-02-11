@@ -161,8 +161,8 @@ public final class RegelEnergieMarketOperatorImpl implements RegelEnergieMarketO
                 + bidSupport.getMarketOperatorListener().getName() + ";"
                 + bidSupport.getBidType() + ";"
                 + NumberFormatUtil.format(bidSupport.getPrice()) + ";"
-                + bidSupport.getQuantity() + ";"
-                + (int) (bidSupport.getQuantity() * assignRate) + ";");
+                + NumberFormatUtil.format(bidSupport.getQuantity()) + ";"
+                + NumberFormatUtil.format(bidSupport.getQuantity() * assignRate) + ";");
     }
 
     @Override

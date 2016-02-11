@@ -58,7 +58,7 @@ public final class FlexPowerplant implements EOMTrader, RegelenergieMarketTrader
         Date currentDate = TimeUtil.getCurrentDate();
         Date precedingDate = TimeUtil.precedingDate(currentDate);
         //todo: einzeln positiv und negativ betrachten
-        int pCommited = powerTradeRegistry.getQuantityUsed(currentDate);
+        float pCommited = powerTradeRegistry.getQuantityUsed(currentDate);
         float ePreceding = energyTradeRegistry.getQuantityUsed(precedingDate);
         float pMustRun = 0;
         if (ePreceding > powerRampDown * TimeUtil.HOUR_PER_TICK) {

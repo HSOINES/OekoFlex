@@ -69,7 +69,7 @@ public final class Storage implements EOMTrader, RegelenergieMarketTrader {
     @Override
     public void makeBidEOM() {
         Date currentDate = TimeUtil.getCurrentDate();
-        int capacity = batteryTradeRegistry.getCapacity(currentDate);
+        float capacity = batteryTradeRegistry.getCapacity(currentDate);
         //eomMarketOperator.addSupply(new EnergySupply(costs * 1.1f, soc, this));
         //eomMarketOperator.addDemand(new EnergyDemand(costs * 0.9f, capacity - soc, this));
 
@@ -83,12 +83,12 @@ public final class Storage implements EOMTrader, RegelenergieMarketTrader {
         float bidNegative = 100f;
         float bidPositive = 300f;
 
-        int pPreceding = batteryTradeRegistry.getQuantityUsed(precedingDate);
+        float pPreceding = batteryTradeRegistry.getQuantityUsed(precedingDate);
 
-        int pNegative = Math.min(pPreceding - powerMin, dischargePower);
+        float pNegative = Math.min(pPreceding - powerMin, dischargePower);
         //regelenergieMarketOperator.addNegativeSupply(new PowerNegative(bidNegative, pNegative, this));
 
-        int pPositive = Math.min(powerMax - pPreceding, chargePower);
+        float pPositive = Math.min(powerMax - pPreceding, chargePower);
         //regelenergieMarketOperator.addPositiveSupply(new PowerPositive(bidPositive, pPositive, this));
 
     }

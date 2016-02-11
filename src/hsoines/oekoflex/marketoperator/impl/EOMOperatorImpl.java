@@ -222,7 +222,7 @@ public class EOMOperatorImpl implements EOMOperator {
                         + bid.getClass().getSimpleName() + ";"
                         + NumberFormatUtil.format(bid.getPrice()) + ";"
                         + NumberFormatUtil.format(clearedPrice) + ";"
-                        + bid.getQuantity() + ";"
+                        + NumberFormatUtil.format(bid.getQuantity()) + ";"
                         + NumberFormatUtil.format(assignmentRate * bid.getQuantity()) + ";"
         );
     }

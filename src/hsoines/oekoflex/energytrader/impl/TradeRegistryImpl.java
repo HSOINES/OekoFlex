@@ -4,15 +4,10 @@ import hsoines.oekoflex.bid.BidType;
 import hsoines.oekoflex.energytrader.TradeRegistry;
 import hsoines.oekoflex.util.Market;
 import hsoines.oekoflex.util.TimeUtil;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * User: jh
@@ -48,11 +43,11 @@ public final class TradeRegistryImpl implements TradeRegistry {
     }
 
     @Override
-    public int getRemainingCapacity(final Date date, final Market market) {
+    public float getRemainingCapacity(final Date date, final Market market) {
         long slotIndex = TimeUtil.getTick(date);
-        int minCapacity = Integer.MAX_VALUE;
+        float minCapacity = Integer.MAX_VALUE;
         for (int i = 0; i < market.getTicks(); i++) {
-            int capacity = getRemainingCapacity(slotIndex + i);
+            float capacity = getRemainingCapacity(slotIndex + i);
             if (capacity < minCapacity) {
                 minCapacity = capacity;
             }
@@ -87,7 +82,7 @@ public final class TradeRegistryImpl implements TradeRegistry {
     }
 
     @Override
-    public int getCapacity(final Date date) {
+    public float getCapacity(final Date date) {
         long tick = TimeUtil.getTick(date);
         Float capacity = getSafeAndSetInitialCapacity(tick);
         return capacity;
@@ -101,7 +96,7 @@ public final class TradeRegistryImpl implements TradeRegistry {
         return capacity;
     }
 
-    private int getRemainingCapacity(final long tick) {
+    private float getRemainingCapacity(final long tick) {
         int assigned = 0;
         for (EnergyTradeElement energyTradeElement : tradeElements) {
             if (energyTradeElement.getTick() == tick) {
@@ -113,7 +108,7 @@ public final class TradeRegistryImpl implements TradeRegistry {
     }
 
     private void addQuantity(final long tick, final Market market, float offeredPrice, final float clearedprice, float offeredQuantity, final float rate, final BidType bidType) {
-        int remainingCapacity = getRemainingCapacity(tick);
+        float remainingCapacity = getRemainingCapacity(tick);
         float assignedQuantity = (float) Math.floor(offeredQuantity * rate);
         if (remainingCapacity < assignedQuantity) {
             throw new IllegalStateException("Assigned quantity should not exceed the maximum quantity.");
@@ -133,11 +128,11 @@ public final class TradeRegistryImpl implements TradeRegistry {
         private final float assignedPrice;
         private final float offeredQuantity;
         private final float rate;
-        private final Float capacity;
+        private final float capacity;
         private Market market;
         private BidType bidType;
 
-        public EnergyTradeElement(final long tick, final Market market, final float offeredPrice, final float assignedPrice, final float offeredQuantity, final float rate, final int capacity, final BidType bidType) {
+        public EnergyTradeElement(final long tick, final Market market, final float offeredPrice, final float assignedPrice, final float offeredQuantity, final float rate, final float capacity, final BidType bidType) {
             this.tick = tick;
             this.market = market;
             this.offeredPrice = offeredPrice;
@@ -168,7 +163,7 @@ public final class TradeRegistryImpl implements TradeRegistry {
             return rate;
         }
 
-        public int getCapacity() {
+        public float getCapacity() {
             return capacity;
         }
 
