@@ -1,6 +1,5 @@
-package hsoines.oekoflex.builder;
+package hsoines.oekoflex.builder.traderfactories;
 
-import hsoines.oekoflex.builder.traderfactories.DaytimeEnergyConsumerFactory;
 import org.apache.log4j.BasicConfigurator;
 import org.junit.Test;
 import repast.simphony.context.DefaultContext;
@@ -9,16 +8,15 @@ import java.io.File;
 
 /**
  * User: jh
- * Date: 07/01/16
- * Time: 22:26
+ * Date: 19/02/16
+ * Time: 08:39
  */
-public class DaytimeEnergyConsumerFactoryTest {
+public class FlexibleDemandFactoryTest {
     @Test
     public void testLoadSample() throws Exception {
         BasicConfigurator.configure();
         File configDir = new File("run-config/scenario1");
-        DaytimeEnergyConsumerFactory.build(configDir, new DefaultContext<>(), null);
+        FlexibleDemandFactory.build(configDir, new DefaultContext<>(), null);
 
     }
-
 }
