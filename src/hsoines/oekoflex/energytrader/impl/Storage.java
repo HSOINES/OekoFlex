@@ -83,7 +83,7 @@ public final class Storage implements EOMTrader, RegelenergieMarketTrader {
         float bidNegative = 100f;
         float bidPositive = 300f;
 
-        float pPreceding = batteryTradeRegistry.getQuantityUsed(precedingDate);
+        float pPreceding = batteryTradeRegistry.getPositiveQuantityUsed(precedingDate);
 
         float pNegative = Math.min(pPreceding - powerMin, dischargePower);
         //regelenergieMarketOperator.addNegativeSupply(new PowerNegative(bidNegative, pNegative, this));

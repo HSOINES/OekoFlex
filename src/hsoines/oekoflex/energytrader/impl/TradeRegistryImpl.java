@@ -56,10 +56,31 @@ public final class TradeRegistryImpl implements TradeRegistry {
     }
 
     @Override
+    public float getPositiveQuantityUsed(final Date date) {
+        return getQuantityUsed(date, true);
+    }
+
+    @Override
+    public float getNegativeQuantityUsed(final Date date) {
+        return getQuantityUsed(date, false);
+    }
+
+    @Override
     public float getQuantityUsed(final Date date) {
-        long tick = TimeUtil.getTick(date);
-        Float capacity = getSafeAndSetInitialCapacity(tick);
-        return capacity - getRemainingCapacity(date, Market.EOM_MARKET);
+        return getQuantityUsed(date, true) + getQuantityUsed(date, false);
+    }
+
+    public float getQuantityUsed(final Date date, boolean positive) {
+        float quantityUsed = 0f;
+        List<EnergyTradeElement> energyTradeElements = getEnergyTradeElements(date);
+        for (EnergyTradeElement energyTradeElement : energyTradeElements) {
+            if (positive && energyTradeElement.bidType.isPositive()) {
+                quantityUsed += energyTradeElement.getOfferedQuantity() * energyTradeElement.getRate();
+            } else if (!positive && !energyTradeElement.bidType.isPositive()) {
+                quantityUsed += energyTradeElement.getOfferedQuantity() * energyTradeElement.getRate();
+            }
+        }
+        return quantityUsed;
     }
 
     @Override

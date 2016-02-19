@@ -55,8 +55,8 @@ public final class FlexPowerplant implements EOMTrader, RegelenergieMarketTrader
         Date currentDate = TimeUtil.getCurrentDate();
         Date precedingDate = TimeUtil.precedingDate(currentDate);
         //todo: einzeln positiv und negativ betrachten
-        float pCommited = powerTradeRegistry.getQuantityUsed(currentDate);
-        float ePreceding = energyTradeRegistry.getQuantityUsed(precedingDate);
+        float pCommited = powerTradeRegistry.getPositiveQuantityUsed(currentDate);
+        float ePreceding = energyTradeRegistry.getPositiveQuantityUsed(precedingDate);
         float pMustRun = 0;
         if (ePreceding > powerRampDown * TimeUtil.HOUR_PER_TICK) {
             pMustRun = Math.min(powerMin + pCommited < 0 ? -pCommited : 0, ePreceding / TimeUtil.HOUR_PER_TICK - powerRampDown);
@@ -74,7 +74,7 @@ public final class FlexPowerplant implements EOMTrader, RegelenergieMarketTrader
         Date currentDate = TimeUtil.getCurrentDate();
         Date precedingDate = TimeUtil.precedingDate(currentDate);
 
-        int pPreceding = (int) (energyTradeRegistry.getQuantityUsed(precedingDate) / TimeUtil.HOUR_PER_TICK);
+        int pPreceding = (int) (energyTradeRegistry.getPositiveQuantityUsed(precedingDate) / TimeUtil.HOUR_PER_TICK);
 
         int pNeg = Math.abs(Math.min(pPreceding - powerMin, powerRampDown));
         regelenergieMarketOperator.addNegativeSupply(new PowerNegative(marginalCosts, pNeg, this));   //price???
