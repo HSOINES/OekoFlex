@@ -52,21 +52,23 @@ public final class FlexPowerplant implements EOMTrader, RegelenergieMarketTrader
 
     @Override
     public void makeBidEOM() {
+        float t = TimeUtil.HOUR_PER_TICK;
+
         Date currentDate = TimeUtil.getCurrentDate();
         Date precedingDate = TimeUtil.precedingDate(currentDate);
-        //todo: einzeln positiv und negativ betrachten
-        float pCommited = powerTradeRegistry.getPositiveQuantityUsed(currentDate);
+
+        float pPositiveCommited = powerTradeRegistry.getPositiveQuantityUsed(currentDate);
+        float pNegativeCommited = powerTradeRegistry.getNegativeQuantityUsed(currentDate);
         float ePreceding = energyTradeRegistry.getPositiveQuantityUsed(precedingDate);
-        float pMustRun = 0;
-        if (ePreceding > powerRampDown * TimeUtil.HOUR_PER_TICK) {
-            pMustRun = Math.min(powerMin + pCommited < 0 ? -pCommited : 0, ePreceding / TimeUtil.HOUR_PER_TICK - powerRampDown);
+        if (ePreceding == 0) {
+            ePreceding = powerMin * t;
         }
-        float eMustRun = pMustRun * TimeUtil.HOUR_PER_TICK;
+
+        float eMustRun = Math.min((powerMin + pNegativeCommited) * t, ePreceding - powerRampDown * t); //todo: error in formula?
         eomMarketOperator.addSupply(new EnergySupplyMustRun(-shutdownCosts / eMustRun, eMustRun, this));
 
-        //einzeln positiv und negativ betrachten
-        float pFlex = Math.min(powerMax - pCommited > 0 ? pCommited : 0 - pMustRun, ePreceding * TimeUtil.HOUR_PER_TICK + powerRampUp);
-        eomMarketOperator.addSupply(new EnergySupply(marginalCosts, pFlex * TimeUtil.HOUR_PER_TICK, this));
+        float eFlex = Math.min((powerMax - pPositiveCommited) * t, ePreceding + powerRampUp * t);
+        eomMarketOperator.addSupply(new EnergySupply(marginalCosts, eFlex, this));
     }
 
     @Override
@@ -74,12 +76,15 @@ public final class FlexPowerplant implements EOMTrader, RegelenergieMarketTrader
         Date currentDate = TimeUtil.getCurrentDate();
         Date precedingDate = TimeUtil.precedingDate(currentDate);
 
-        int pPreceding = (int) (energyTradeRegistry.getPositiveQuantityUsed(precedingDate) / TimeUtil.HOUR_PER_TICK);
+        int pPreceding = (int) (energyTradeRegistry.getQuantityUsed(precedingDate) / TimeUtil.HOUR_PER_TICK);
+        if (pPreceding == 0) {
+            pPreceding = powerMin;
+        }
 
-        int pNeg = Math.abs(Math.min(pPreceding - powerMin, powerRampDown));
+        int pNeg = Math.min(pPreceding - powerMin, powerRampDown);
         regelenergieMarketOperator.addNegativeSupply(new PowerNegative(marginalCosts, pNeg, this));   //price???
 
-        int pPos = Math.abs(Math.min(powerMax - pPreceding, powerRampUp));
+        int pPos = Math.min(powerMax - pPreceding, powerRampUp);
         regelenergieMarketOperator.addPositiveSupply(new PowerPositive(marginalCosts, pPos, this));   //price???
     }
 
@@ -91,6 +96,7 @@ public final class FlexPowerplant implements EOMTrader, RegelenergieMarketTrader
     @Override
     public void notifyClearingDone(final Date currentDate, final Market market, final Bid bid, final float clearedPrice, final float rate) {
         switch (bid.getBidType()) {
+            case ENERGY_SUPPLY_MUSTRUN:
             case ENERGY_SUPPLY:
                 energyTradeRegistry.addAssignedQuantity(currentDate, market, bid.getPrice(), clearedPrice, bid.getQuantity(), rate, bid.getBidType());
                 break;
@@ -117,10 +123,10 @@ public final class FlexPowerplant implements EOMTrader, RegelenergieMarketTrader
 
     @Override
     public List<TradeRegistryImpl.EnergyTradeElement> getCurrentAssignments() {
-        List<TradeRegistryImpl.EnergyTradeElement> positiveEnergyTradeElements = energyTradeRegistry.getEnergyTradeElements(TimeUtil.getCurrentDate());
-        List<TradeRegistryImpl.EnergyTradeElement> negativeEnergyTradeElements = powerTradeRegistry.getEnergyTradeElements(TimeUtil.getCurrentDate());
-        positiveEnergyTradeElements.addAll(negativeEnergyTradeElements);
-        return positiveEnergyTradeElements;
+        List<TradeRegistryImpl.EnergyTradeElement> powerTradeElements = powerTradeRegistry.getEnergyTradeElements(TimeUtil.getCurrentDate());
+        List<TradeRegistryImpl.EnergyTradeElement> energyTradeElements = energyTradeRegistry.getEnergyTradeElements(TimeUtil.getCurrentDate());
+        powerTradeElements.addAll(energyTradeElements);
+        return powerTradeElements;
     }
 
     @Override
