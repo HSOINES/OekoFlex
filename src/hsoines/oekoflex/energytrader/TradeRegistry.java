@@ -16,6 +16,8 @@ import java.util.List;
  *
  * offered quantities: quantities are offered to a marketoperator
  * assigned quantities: quantities are assigned by a marketoperator
+ *
+ * Quantities may be energy or power or another product, depending on the purpose.
  */
 public interface TradeRegistry {
 
@@ -28,19 +30,23 @@ public interface TradeRegistry {
      */
     void addAssignedQuantity(final Date date, final Market market, final float offeredPrice, final float assignedPrice, final float offeredQuantity, float assignedRate, final BidType bidType);
 
-    /* Energie, die zum entsprechenden Zeitpunkt vorhanden war */
+    /* Energy/Power available at a certain point of time */
     float getRemainingCapacity(Date date, final Market market);
 
-    /* Energie, die zum entsprechenden Zeitpunkt abgerufen/geliefert wurde */
+    /* All Energy/Power assigned at a certain point of time */
     float getQuantityUsed(Date date);
 
-    /* Preis zu dem die Energie zugewiesen wurde, falls mehrere Zuweisungen  */
+    /* Positive Energy/Power assigned at a certain point of time */
+    float getPositiveQuantityUsed(Date date);
+
+    /* Negative Energy/Power assigned at a certain point of time */
+    float getNegativeQuantityUsed(Date date);
+
+    /* List of assigned energy/power elements*/
     List<TradeRegistryImpl.EnergyTradeElement> getEnergyTradeElements(Date date);
 
-    /* Setzen der Kapazität */
     void setCapacity(long tick, float demand);
 
-    /* Kapazität zum Zeitpunkt date */
     float getCapacity(Date date);
 
 }

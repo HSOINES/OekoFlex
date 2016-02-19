@@ -1,6 +1,8 @@
 package hsoines.oekoflex.energytrader.impl;
 
 import hsoines.oekoflex.bid.BidType;
+import hsoines.oekoflex.bid.EnergyDemand;
+import hsoines.oekoflex.marketoperator.impl.EOMOperatorImpl;
 import hsoines.oekoflex.marketoperator.impl.RegelEnergieMarketOperatorImpl;
 import hsoines.oekoflex.tools.RepastTestInitializer;
 import org.junit.Before;
@@ -17,31 +19,68 @@ import static org.junit.Assert.assertEquals;
  */
 public class FlexPowerplantTest {
 
+    public static final float SHUTDOWN_COSTS = 100f;
+    public static final float MARGINAL_COSTS = 50f;
+    public static final int POWER_RAMP_DOWN = 200;
+    public static final int POWER_RAMP_UP = 100;
+    public static final int POWER_MIN = 2000;
+    public static final int POWER_MAX = 5000;
+    public static final int POSITIVE_DEMAND_REM = 100;
+    public static final int NEGATIVE_DEMAND_REM = 100;
     private RegelEnergieMarketOperatorImpl regelEnergieMarketOperator;
     private FlexPowerplant flexpowerplant;
+    private EOMOperatorImpl eomOperator;
 
     @Before
     public void setUp() throws Exception {
         RepastTestInitializer.init();
-        regelEnergieMarketOperator = new RegelEnergieMarketOperatorImpl("test", ".", 10000, 100000);
-        flexpowerplant = new FlexPowerplant("flexpowerplant", 5000, 2000, 100, 100, 10f, 100f);
-        flexpowerplant.setRegelenergieMarketOperator(regelEnergieMarketOperator);
+        regelEnergieMarketOperator = new RegelEnergieMarketOperatorImpl("test", ".", POSITIVE_DEMAND_REM, NEGATIVE_DEMAND_REM);
+        eomOperator = new EOMOperatorImpl("test_eom_operator", ".");
+        eomOperator.addDemand(new EnergyDemand(3000, 500, null));
 
+        flexpowerplant = new FlexPowerplant("flexpowerplant", POWER_MAX, POWER_MIN, POWER_RAMP_UP, POWER_RAMP_DOWN, MARGINAL_COSTS, SHUTDOWN_COSTS);
+        flexpowerplant.setRegelenergieMarketOperator(regelEnergieMarketOperator);
+        flexpowerplant.setEOMOperator(eomOperator);
     }
 
     @Test
     public void testFlexPowerplant() throws Exception {
         flexpowerplant.makeBidRegelenergie();
+        flexpowerplant.makeBidEOM();
+
         regelEnergieMarketOperator.clearMarket();
+        eomOperator.clearMarket();
 
         List<TradeRegistryImpl.EnergyTradeElement> currentAssignments = flexpowerplant.getCurrentAssignments();
 
-        assertEquals(2, currentAssignments.size());
-        assertEquals(BidType.POWER_POSITIVE, currentAssignments.get(0).getBidType());
-        assertEquals(BidType.POWER_NEGATIVE, currentAssignments.get(1).getBidType());
-        assertEquals(10f, currentAssignments.get(0).getAssignedPrice(), 0.00001f);   // test impl
-        assertEquals(10f, currentAssignments.get(1).getAssignedPrice(), 0.00001f);   // test impl
-        assertEquals(100, currentAssignments.get(0).getOfferedQuantity(), 0.00001f);   // test impl
-        assertEquals(2000, currentAssignments.get(1).getOfferedQuantity(), 0.00001f);   //test impl
+        assertEquals(4, currentAssignments.size());
+
+        TradeRegistryImpl.EnergyTradeElement powerPositive = currentAssignments.get(0);
+        assertEquals(BidType.POWER_POSITIVE, powerPositive.getBidType());
+        assertEquals(50f, powerPositive.getAssignedPrice(), 0.00001f);   //price???
+        assertEquals(100, powerPositive.getOfferedQuantity(), 0.00001f);
+        assertEquals(1, powerPositive.getRate(), 0.00001f);
+
+        TradeRegistryImpl.EnergyTradeElement powerNegative = currentAssignments.get(1);
+        assertEquals(BidType.POWER_NEGATIVE, powerNegative.getBidType());
+        assertEquals(50f, powerNegative.getAssignedPrice(), 0.00001f);  //price???
+        assertEquals(0, powerNegative.getOfferedQuantity(), 0.00001f);
+        assertEquals(1, powerNegative.getRate(), 0.00001f);
+
+        TradeRegistryImpl.EnergyTradeElement energyMustRun = currentAssignments.get(2);
+        assertEquals(BidType.ENERGY_SUPPLY_MUSTRUN, energyMustRun.getBidType());
+        assertEquals(50f, energyMustRun.getAssignedPrice(), 0.00001f); //own marginal costs is merrit order result
+        //assertEquals(2100, energyMustRun.getOfferedQuantity(), 0.00001f);
+        assertEquals(1f, energyMustRun.getRate(), 0.00001f);
+
+        TradeRegistryImpl.EnergyTradeElement energy = currentAssignments.get(3);
+        assertEquals(BidType.ENERGY_SUPPLY, energy.getBidType());
+        assertEquals(50f, energy.getAssignedPrice(), 0.00001f);
+        //assertEquals(111, energy.getOfferedQuantity(), 0.00001f);
+        assertEquals(1f, energy.getRate(), 0.00001f);
+
     }
+
+    //todo: must_run_cut
+
 }
