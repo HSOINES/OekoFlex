@@ -36,7 +36,7 @@ public class FlexPowerplantTest {
         RepastTestInitializer.init();
         regelEnergieMarketOperator = new RegelEnergieMarketOperatorImpl("test", ".", POSITIVE_DEMAND_REM, NEGATIVE_DEMAND_REM);
         eomOperator = new EOMOperatorImpl("test_eom_operator", ".");
-        eomOperator.addDemand(new EnergyDemand(3000, 500, null));
+        eomOperator.addDemand(new EnergyDemand(3000, 200, null));
 
         flexpowerplant = new FlexPowerplant("flexpowerplant", POWER_MAX, POWER_MIN, POWER_RAMP_UP, POWER_RAMP_DOWN, MARGINAL_COSTS, SHUTDOWN_COSTS);
         flexpowerplant.setRegelenergieMarketOperator(regelEnergieMarketOperator);
@@ -69,15 +69,15 @@ public class FlexPowerplantTest {
 
         TradeRegistryImpl.EnergyTradeElement energyMustRun = currentAssignments.get(2);
         assertEquals(BidType.ENERGY_SUPPLY_MUSTRUN, energyMustRun.getBidType());
-        assertEquals(50f, energyMustRun.getAssignedPrice(), 0.00001f); //own marginal costs is merrit order result
-        //assertEquals(2100, energyMustRun.getOfferedQuantity(), 0.00001f);
-        assertEquals(1f, energyMustRun.getRate(), 0.00001f);
+        assertEquals(-.2f, energyMustRun.getAssignedPrice(), 0.00001f); // shutdown costs / must-run-quantity
+        assertEquals(500f, energyMustRun.getOfferedQuantity(), 0.00001f);
+        assertEquals(.4f, energyMustRun.getRate(), 0.00001f);
 
         TradeRegistryImpl.EnergyTradeElement energy = currentAssignments.get(3);
         assertEquals(BidType.ENERGY_SUPPLY, energy.getBidType());
-        assertEquals(50f, energy.getAssignedPrice(), 0.00001f);
-        //assertEquals(111, energy.getOfferedQuantity(), 0.00001f);
-        assertEquals(1f, energy.getRate(), 0.00001f);
+        assertEquals(-.2f, energy.getAssignedPrice(), 0.00001f);
+        assertEquals(25, energy.getOfferedQuantity(), 0.00001f);
+        assertEquals(0f, energy.getRate(), 0.00001f);
 
     }
 
