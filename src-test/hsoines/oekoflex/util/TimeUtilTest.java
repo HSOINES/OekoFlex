@@ -28,11 +28,11 @@ public class TimeUtilTest {
 
     @Test
     public void testTimeZone() throws Exception {
-        assertEquals(true, TimeUtil.isEnergyTimeZone(Market.EOM_MARKET, 0l));
-        assertEquals(true, TimeUtil.isEnergyTimeZone(Market.EOM_MARKET, 1l));
-        assertEquals(true, TimeUtil.isEnergyTimeZone(Market.REGELENERGIE_MARKET, 0l));
-        assertEquals(true, TimeUtil.isEnergyTimeZone(Market.REGELENERGIE_MARKET, SequenceDefinition.RegelenergieMarketInterval));
-        assertEquals(false, TimeUtil.isEnergyTimeZone(Market.REGELENERGIE_MARKET, 1l));
+        assertEquals(true, TimeUtil.isEnergyTimeZone(Market.SPOT_MARKET, 0l));
+        assertEquals(true, TimeUtil.isEnergyTimeZone(Market.SPOT_MARKET, 1l));
+        assertEquals(true, TimeUtil.isEnergyTimeZone(Market.BALANCING_MARKET, 0l));
+        assertEquals(true, TimeUtil.isEnergyTimeZone(Market.BALANCING_MARKET, SequenceDefinition.BalancingMarketInterval));
+        assertEquals(false, TimeUtil.isEnergyTimeZone(Market.BALANCING_MARKET, 1l));
     }
 
     @Test

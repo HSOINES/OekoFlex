@@ -1,7 +1,7 @@
 <repast.simphony.data2.engine.DataSetDescriptor>
-  <name>RegelEnergieMarktOperatorDataSet</name>
+  <name>BalancingMarketOperatorDataSet</name>
   <type>NON_AGGREGATE</type>
-  <sourceType>hsoines.oekoflex.marketoperator.RegelEnergieMarketOperator</sourceType>
+  <sourceType>hsoines.oekoflex.marketoperator.BalancingMarketOperator</sourceType>
   <inclTick>true</inclTick>
   <inclBatchRun>false</inclBatchRun>
   <inclRandomSeed>false</inclRandomSeed>
@@ -20,7 +20,7 @@
       <string>Name</string>
       <repast.simphony.data2.engine.MethodDataSourceDefinition>
         <id>Name</id>
-        <className>hsoines.oekoflex.marketoperator.RegelEnergieMarketOperator</className>
+        <className>hsoines.oekoflex.marketoperator.BalancingMarketOperator</className>
         <methodName>getName</methodName>
       </repast.simphony.data2.engine.MethodDataSourceDefinition>
     </entry>
@@ -28,7 +28,7 @@
       <string>TotalClearedPositiveQuantity</string>
       <repast.simphony.data2.engine.MethodDataSourceDefinition>
         <id>TotalClearedPositiveQuantity</id>
-        <className>hsoines.oekoflex.marketoperator.RegelEnergieMarketOperator</className>
+        <className>hsoines.oekoflex.marketoperator.BalancingMarketOperator</className>
         <methodName>getTotalClearedPositiveQuantity</methodName>
       </repast.simphony.data2.engine.MethodDataSourceDefinition>
     </entry>
@@ -36,7 +36,7 @@
       <string>LastClearedPositiveMaxPrice</string>
       <repast.simphony.data2.engine.MethodDataSourceDefinition>
         <id>LastClearedPositiveMaxPrice</id>
-        <className>hsoines.oekoflex.marketoperator.RegelEnergieMarketOperator</className>
+        <className>hsoines.oekoflex.marketoperator.BalancingMarketOperator</className>
         <methodName>getLastClearedPositiveMaxPrice</methodName>
       </repast.simphony.data2.engine.MethodDataSourceDefinition>
     </entry>
@@ -44,7 +44,7 @@
       <string>TotalClearedNegativeQuantity</string>
       <repast.simphony.data2.engine.MethodDataSourceDefinition>
         <id>TotalClearedNegativeQuantity</id>
-        <className>hsoines.oekoflex.marketoperator.RegelEnergieMarketOperator</className>
+        <className>hsoines.oekoflex.marketoperator.BalancingMarketOperator</className>
         <methodName>getTotalClearedNegativeQuantity</methodName>
       </repast.simphony.data2.engine.MethodDataSourceDefinition>
     </entry>
@@ -52,7 +52,7 @@
       <string>LastClearedNegativeMaxPrice</string>
       <repast.simphony.data2.engine.MethodDataSourceDefinition>
         <id>LastClearedNegativeMaxPrice</id>
-        <className>hsoines.oekoflex.marketoperator.RegelEnergieMarketOperator</className>
+        <className>hsoines.oekoflex.marketoperator.BalancingMarketOperator</className>
         <methodName>getLastClearedNegativeMaxPrice</methodName>
       </repast.simphony.data2.engine.MethodDataSourceDefinition>
     </entry>

@@ -1,12 +1,12 @@
 package hsoines.oekoflex.energytrader.impl;
 
 import hsoines.oekoflex.bid.*;
+import hsoines.oekoflex.energytrader.BalancingMarketTrader;
 import hsoines.oekoflex.energytrader.EOMTrader;
 import hsoines.oekoflex.energytrader.MarketOperatorListener;
-import hsoines.oekoflex.energytrader.RegelenergieMarketTrader;
 import hsoines.oekoflex.energytrader.TradeRegistry;
-import hsoines.oekoflex.marketoperator.EOMOperator;
-import hsoines.oekoflex.marketoperator.RegelEnergieMarketOperator;
+import hsoines.oekoflex.marketoperator.BalancingMarketOperator;
+import hsoines.oekoflex.marketoperator.SpotMarketOperator;
 import hsoines.oekoflex.util.Market;
 import hsoines.oekoflex.util.TimeUtil;
 
@@ -18,7 +18,7 @@ import java.util.List;
  * Date: 18/01/16
  * Time: 16:14
  */
-public final class FlexPowerplant implements EOMTrader, RegelenergieMarketTrader, MarketOperatorListener {
+public final class FlexPowerplant implements EOMTrader, BalancingMarketTrader, MarketOperatorListener {
     private final String name;
     private final String description;
     private final int powerMax;
@@ -27,10 +27,10 @@ public final class FlexPowerplant implements EOMTrader, RegelenergieMarketTrader
     private final int powerRampUp;
     private final int powerRampDown;
     private final float marginalCosts;
-    private EOMOperator eomMarketOperator;
+    private SpotMarketOperator eomMarketOperator;
     private final TradeRegistry energyTradeRegistry;
     private final TradeRegistry powerTradeRegistry;
-    private RegelEnergieMarketOperator regelenergieMarketOperator;
+    private BalancingMarketOperator balancingMarketOperator;
     private float lastAssignmentRate;
     private float lastClearedPrice;
 
@@ -48,8 +48,8 @@ public final class FlexPowerplant implements EOMTrader, RegelenergieMarketTrader
     }
 
     @Override
-    public void setEOMOperator(final EOMOperator eomOperator) {
-        this.eomMarketOperator = eomOperator;
+    public void setSpotMarketOperator(final SpotMarketOperator spotMarketOperator) {
+        this.eomMarketOperator = spotMarketOperator;
     }
 
     @Override
@@ -74,7 +74,7 @@ public final class FlexPowerplant implements EOMTrader, RegelenergieMarketTrader
     }
 
     @Override
-    public void makeBidRegelenergie() {
+    public void makeBidBalancingMarket() {
         Date currentDate = TimeUtil.getCurrentDate();
         Date precedingDate = TimeUtil.precedingDate(currentDate);
 
@@ -84,15 +84,15 @@ public final class FlexPowerplant implements EOMTrader, RegelenergieMarketTrader
         }
 
         int pNeg = Math.min(pPreceding - powerMin, powerRampDown);
-        regelenergieMarketOperator.addNegativeSupply(new PowerNegative(marginalCosts, pNeg, this));   //price???
+        balancingMarketOperator.addNegativeSupply(new PowerNegative(marginalCosts, pNeg, this));   //price???
 
         int pPos = Math.min(powerMax - pPreceding, powerRampUp);
-        regelenergieMarketOperator.addPositiveSupply(new PowerPositive(marginalCosts, pPos, this));   //price???
+        balancingMarketOperator.addPositiveSupply(new PowerPositive(marginalCosts, pPos, this));   //price???
     }
 
     @Override
-    public void setRegelenergieMarketOperator(final RegelEnergieMarketOperator regelenergieMarketOperator) {
-        this.regelenergieMarketOperator = regelenergieMarketOperator;
+    public void setBalancingMarketOperator(final BalancingMarketOperator balancingMarketOperator) {
+        this.balancingMarketOperator = balancingMarketOperator;
     }
 
     @Override
@@ -107,7 +107,7 @@ public final class FlexPowerplant implements EOMTrader, RegelenergieMarketTrader
                 powerTradeRegistry.addAssignedQuantity(currentDate, market, bid.getPrice(), clearedPrice, bid.getQuantity(), rate, bid.getBidType());
                 break;
         }
-        if (market.equals(Market.EOM_MARKET)) {
+        if (market.equals(Market.SPOT_MARKET)) {
             this.lastClearedPrice = clearedPrice;
             this.lastAssignmentRate = rate;
         }

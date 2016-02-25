@@ -1,2 +1,2 @@
-name;demandFile
-flexibleDemand1;FlexibleDemandProfile1.cfg.csv
+name;description;demandFile
+flexibleDemand1;test;FlexibleDemandProfile1.cfg.csv

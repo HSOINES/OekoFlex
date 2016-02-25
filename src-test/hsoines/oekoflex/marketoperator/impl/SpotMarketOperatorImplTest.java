@@ -16,14 +16,14 @@ import java.util.Date;
  * Date: 18/01/16
  * Time: 13:38
  */
-public class EOMOperatorImplTest {
+public class SpotMarketOperatorImplTest {
 
-    private EOMOperatorImpl operator;
+    private SpotMarketOperatorImpl operator;
 
     @Before
     public void setUp() throws Exception {
         RepastTestInitializer.init();
-        operator = new EOMOperatorImpl("test", "run/summary-logs/test");
+        operator = new SpotMarketOperatorImpl("test", "run/summary-logs/test");
     }
 
     @Test

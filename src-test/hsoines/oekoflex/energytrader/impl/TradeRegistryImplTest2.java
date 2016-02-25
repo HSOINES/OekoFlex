@@ -33,13 +33,13 @@ public class TradeRegistryImplTest2 {
         date2 = TimeUtil.getDate(2);
         date3 = TimeUtil.getDate(3);
         energyTradeRegistry = new TradeRegistryImpl(TradeRegistry.Type.CONSUM, INITIALCAPACITY);
-        energyTradeRegistry.addAssignedQuantity(date0, Market.REGELENERGIE_MARKET, 10f, 9f, 100, 0.5f, BidType.POWER_POSITIVE);
-        energyTradeRegistry.addAssignedQuantity(date0, Market.REGELENERGIE_MARKET, 10f, 9f, 100, 0.8f, BidType.POWER_POSITIVE);
-        energyTradeRegistry.addAssignedQuantity(date0, Market.REGELENERGIE_MARKET, 10f, 9f, 100, 1f, BidType.POWER_NEGATIVE);
-        energyTradeRegistry.addAssignedQuantity(date0, Market.REGELENERGIE_MARKET, 10f, 11f, 100, 0.5f, BidType.POWER_NEGATIVE);
-        energyTradeRegistry.addAssignedQuantity(date1, Market.REGELENERGIE_MARKET, 10f, 9f, 100, 0.5f, BidType.POWER_POSITIVE);
-        energyTradeRegistry.addAssignedQuantity(date1, Market.REGELENERGIE_MARKET, 10f, 9f, 100, 0.8f, BidType.POWER_POSITIVE);
-        energyTradeRegistry.addAssignedQuantity(date1, Market.REGELENERGIE_MARKET, 10f, 9f, 100, 1f, BidType.POWER_NEGATIVE);
+        energyTradeRegistry.addAssignedQuantity(date0, Market.BALANCING_MARKET, 10f, 9f, 100, 0.5f, BidType.POWER_POSITIVE);
+        energyTradeRegistry.addAssignedQuantity(date0, Market.BALANCING_MARKET, 10f, 9f, 100, 0.8f, BidType.POWER_POSITIVE);
+        energyTradeRegistry.addAssignedQuantity(date0, Market.BALANCING_MARKET, 10f, 9f, 100, 1f, BidType.POWER_NEGATIVE);
+        energyTradeRegistry.addAssignedQuantity(date0, Market.BALANCING_MARKET, 10f, 11f, 100, 0.5f, BidType.POWER_NEGATIVE);
+        energyTradeRegistry.addAssignedQuantity(date1, Market.BALANCING_MARKET, 10f, 9f, 100, 0.5f, BidType.POWER_POSITIVE);
+        energyTradeRegistry.addAssignedQuantity(date1, Market.BALANCING_MARKET, 10f, 9f, 100, 0.8f, BidType.POWER_POSITIVE);
+        energyTradeRegistry.addAssignedQuantity(date1, Market.BALANCING_MARKET, 10f, 9f, 100, 1f, BidType.POWER_NEGATIVE);
     }
 
 

@@ -6,7 +6,8 @@ package hsoines.oekoflex.util;
  * Time: 13:52
  */
 public enum Market {
-    EOM_MARKET(1), REGELENERGIE_MARKET(16);
+    SPOT_MARKET(1),       //EOM
+    BALANCING_MARKET(16); //Regelenergie
 
     private final int ticks;
 

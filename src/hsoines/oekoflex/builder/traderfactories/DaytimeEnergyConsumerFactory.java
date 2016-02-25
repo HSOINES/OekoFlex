@@ -3,7 +3,7 @@ package hsoines.oekoflex.builder.traderfactories;
 import hsoines.oekoflex.OekoflexAgent;
 import hsoines.oekoflex.builder.CSVParameter;
 import hsoines.oekoflex.energytrader.impl.test.DaytimeEnergyConsumer;
-import hsoines.oekoflex.marketoperator.impl.EOMOperatorImpl;
+import hsoines.oekoflex.marketoperator.impl.SpotMarketOperatorImpl;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.logging.Log;
@@ -22,7 +22,7 @@ import java.io.IOException;
 public final class DaytimeEnergyConsumerFactory {
     private static final Log log = LogFactory.getLog(DaytimeEnergyConsumerFactory.class);
 
-    public static void build(final File configDir, final Context<OekoflexAgent> context, final EOMOperatorImpl energyOnlyMarketOperator) throws IOException {
+    public static void build(final File configDir, final Context<OekoflexAgent> context, final SpotMarketOperatorImpl energyOnlyMarketOperator) throws IOException {
         File configFile = new File(configDir + "/" + "DaytimeEnergyConsumer.cfg.csv");
         FileReader reader = new FileReader(configFile);
         CSVParser format = CSVParameter.getCSVFormat().parse(reader);
@@ -34,7 +34,7 @@ public final class DaytimeEnergyConsumerFactory {
                 float decreaseAtNightInPercent = Float.parseFloat(parameters.get("decreaseAtNightInPercent"));
 
                 DaytimeEnergyConsumer daytimeEnergyConsumer = new DaytimeEnergyConsumer(name, quantity, priceAtDay, decreaseAtNightInPercent);
-                daytimeEnergyConsumer.setEOMOperator(energyOnlyMarketOperator);
+                daytimeEnergyConsumer.setSpotMarketOperator(energyOnlyMarketOperator);
                 context.add(daytimeEnergyConsumer);
 
                 log.info("DaytimeEnergyConsumer Build done: " + name);

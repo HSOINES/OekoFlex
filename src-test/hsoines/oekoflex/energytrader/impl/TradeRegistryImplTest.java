@@ -37,17 +37,17 @@ public class TradeRegistryImplTest {
 
     @Test
     public void testAssignmentQuarterHour() throws Exception {
-        energyTradeRegistry.addAssignedQuantity(date0, Market.EOM_MARKET, 1f, 1f, 100, 1f, BidType.ENERGY_DEMAND);
-        energyTradeRegistry.addAssignedQuantity(date1, Market.EOM_MARKET, 1f, 1f, 100, 1f, BidType.ENERGY_DEMAND);
-        energyTradeRegistry.addAssignedQuantity(date1, Market.EOM_MARKET, 1f, 1f, 100, 1f, BidType.ENERGY_DEMAND);
+        energyTradeRegistry.addAssignedQuantity(date0, Market.SPOT_MARKET, 1f, 1f, 100, 1f, BidType.ENERGY_DEMAND);
+        energyTradeRegistry.addAssignedQuantity(date1, Market.SPOT_MARKET, 1f, 1f, 100, 1f, BidType.ENERGY_DEMAND);
+        energyTradeRegistry.addAssignedQuantity(date1, Market.SPOT_MARKET, 1f, 1f, 100, 1f, BidType.ENERGY_DEMAND);
         assertEquals(100, energyTradeRegistry.getPositiveQuantityUsed(date0), 0.00001f);
         assertEquals(200, energyTradeRegistry.getPositiveQuantityUsed(date1), 0.00001f);
     }
 
     @Test
     public void testAssignmentFourHours() throws Exception {
-        energyTradeRegistry.addAssignedQuantity(date0, Market.REGELENERGIE_MARKET, 10f, 10f, 100, 1f, BidType.ENERGY_DEMAND);
-        energyTradeRegistry.addAssignedQuantity(date1, Market.EOM_MARKET, 10f, 10f, 100, 1f, BidType.ENERGY_DEMAND);
+        energyTradeRegistry.addAssignedQuantity(date0, Market.BALANCING_MARKET, 10f, 10f, 100, 1f, BidType.ENERGY_DEMAND);
+        energyTradeRegistry.addAssignedQuantity(date1, Market.SPOT_MARKET, 10f, 10f, 100, 1f, BidType.ENERGY_DEMAND);
         assertEquals(100, energyTradeRegistry.getPositiveQuantityUsed(date0), 0.00001f);
         assertEquals(200, energyTradeRegistry.getPositiveQuantityUsed(date1), 0.00001f);
         assertEquals(100, energyTradeRegistry.getPositiveQuantityUsed(date2), 0.00001f);
@@ -57,12 +57,12 @@ public class TradeRegistryImplTest {
         assertEquals(10f, energyTradeRegistry.getEnergyTradeElements(date1).get(0).getAssignedPrice(), 0.00001);
         assertEquals(10f, energyTradeRegistry.getEnergyTradeElements(date1).get(1).getAssignedPrice(), 0.00001);
 
-        assertEquals(900, energyTradeRegistry.getRemainingCapacity(date0, Market.EOM_MARKET), 0.00001f);
-        assertEquals(800, energyTradeRegistry.getRemainingCapacity(date1, Market.EOM_MARKET), 0.00001f);
-        assertEquals(900, energyTradeRegistry.getRemainingCapacity(date2, Market.EOM_MARKET), 0.00001f);
-        assertEquals(900, energyTradeRegistry.getRemainingCapacity(date3, Market.EOM_MARKET), 0.00001f);
+        assertEquals(900, energyTradeRegistry.getRemainingCapacity(date0, Market.SPOT_MARKET), 0.00001f);
+        assertEquals(800, energyTradeRegistry.getRemainingCapacity(date1, Market.SPOT_MARKET), 0.00001f);
+        assertEquals(900, energyTradeRegistry.getRemainingCapacity(date2, Market.SPOT_MARKET), 0.00001f);
+        assertEquals(900, energyTradeRegistry.getRemainingCapacity(date3, Market.SPOT_MARKET), 0.00001f);
 
-        assertEquals(800, energyTradeRegistry.getRemainingCapacity(date0, Market.REGELENERGIE_MARKET), 0.00001f);
+        assertEquals(800, energyTradeRegistry.getRemainingCapacity(date0, Market.BALANCING_MARKET), 0.00001f);
     }
 
 }

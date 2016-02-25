@@ -17,14 +17,14 @@ import static org.mockito.Mockito.*;
  * Date: 27/01/16
  * Time: 21:23
  */
-public class RegelEnergieMarketOperatorImplTest {
+public class BalancingMarketOperatorImplTest {
 
-    private RegelEnergieMarketOperatorImpl operator;
+    private BalancingMarketOperatorImpl operator;
     private MarketOperatorListener listener;
 
     @Before
     public void setUp() throws Exception {
-        operator = new RegelEnergieMarketOperatorImpl("test", "run/summary-logs/test", 0, 10000);
+        operator = new BalancingMarketOperatorImpl("test", "run/summary-logs/test", 0, 10000);
         listener = mock(MarketOperatorListener.class);
 
         RepastTestInitializer.init();
@@ -39,11 +39,11 @@ public class RegelEnergieMarketOperatorImplTest {
 
         operator.clearMarket();
 
-        verify(listener, times(1)).notifyClearingDone(Matchers.any(), Matchers.eq(Market.REGELENERGIE_MARKET), Matchers.<Bid>any(), Matchers.eq(10f), Matchers.eq(1f));
-        verify(listener, times(1)).notifyClearingDone(Matchers.any(), Matchers.eq(Market.REGELENERGIE_MARKET), Matchers.<Bid>any(), Matchers.eq(20f), Matchers.eq(1f));
-        verify(listener, times(1)).notifyClearingDone(Matchers.any(), Matchers.eq(Market.REGELENERGIE_MARKET), Matchers.<Bid>any(), Matchers.eq(30f), Matchers.eq(1f));
-        verify(listener, times(1)).notifyClearingDone(Matchers.any(), Matchers.eq(Market.REGELENERGIE_MARKET), Matchers.<Bid>any(), Matchers.eq(40f), Matchers.eq(1f));
-        verify(listener, times(4)).notifyClearingDone(Matchers.any(), Matchers.eq(Market.REGELENERGIE_MARKET), Matchers.<Bid>any(), Matchers.anyFloat(), Matchers.anyFloat());
+        verify(listener, times(1)).notifyClearingDone(Matchers.any(), Matchers.eq(Market.BALANCING_MARKET), Matchers.<Bid>any(), Matchers.eq(10f), Matchers.eq(1f));
+        verify(listener, times(1)).notifyClearingDone(Matchers.any(), Matchers.eq(Market.BALANCING_MARKET), Matchers.<Bid>any(), Matchers.eq(20f), Matchers.eq(1f));
+        verify(listener, times(1)).notifyClearingDone(Matchers.any(), Matchers.eq(Market.BALANCING_MARKET), Matchers.<Bid>any(), Matchers.eq(30f), Matchers.eq(1f));
+        verify(listener, times(1)).notifyClearingDone(Matchers.any(), Matchers.eq(Market.BALANCING_MARKET), Matchers.<Bid>any(), Matchers.eq(40f), Matchers.eq(1f));
+        verify(listener, times(4)).notifyClearingDone(Matchers.any(), Matchers.eq(Market.BALANCING_MARKET), Matchers.<Bid>any(), Matchers.anyFloat(), Matchers.anyFloat());
 
         assertEquals(40f, operator.getLastClearedNegativeMaxPrice(), 0.0001f);
         assertEquals(4000, operator.getTotalClearedNegativeQuantity());

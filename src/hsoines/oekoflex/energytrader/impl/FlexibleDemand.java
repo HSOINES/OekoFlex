@@ -5,7 +5,7 @@ import hsoines.oekoflex.bid.EnergyDemand;
 import hsoines.oekoflex.builder.CSVParameter;
 import hsoines.oekoflex.energytrader.EOMTrader;
 import hsoines.oekoflex.energytrader.TradeRegistry;
-import hsoines.oekoflex.marketoperator.EOMOperator;
+import hsoines.oekoflex.marketoperator.SpotMarketOperator;
 import hsoines.oekoflex.util.Market;
 import hsoines.oekoflex.util.TimeUtil;
 import org.apache.commons.csv.CSVParser;
@@ -31,7 +31,7 @@ public final class FlexibleDemand implements EOMTrader {
     private final String name;
     private final String description;
 
-    private EOMOperator marketOperator;
+    private SpotMarketOperator marketOperator;
     private float lastClearedPrice;
     private float lastAssignmentRate;
 
@@ -53,13 +53,13 @@ public final class FlexibleDemand implements EOMTrader {
     }
 
     @Override
-    public void setEOMOperator(final EOMOperator eomOperator) {
-        this.marketOperator = eomOperator;
+    public void setSpotMarketOperator(final SpotMarketOperator spotMarketOperator) {
+        this.marketOperator = spotMarketOperator;
     }
 
     @Override
     public void makeBidEOM() {
-        float remainingCapacity = energyTradeRegistry.getRemainingCapacity(TimeUtil.getCurrentDate(), Market.EOM_MARKET);
+        float remainingCapacity = energyTradeRegistry.getRemainingCapacity(TimeUtil.getCurrentDate(), Market.SPOT_MARKET);
         marketOperator.addDemand(new EnergyDemand(FIXED_PRICE, remainingCapacity, this));
     }
 

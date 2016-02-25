@@ -9,7 +9,7 @@ import repast.simphony.engine.schedule.ScheduledMethod;
 import static hsoines.oekoflex.domain.SequenceDefinition.EOMClearingPriority;
 import static hsoines.oekoflex.domain.SequenceDefinition.EOMInterval;
 
-public interface EOMOperator extends OekoflexAgent {
+public interface SpotMarketOperator extends OekoflexAgent {
 	public void addDemand(EnergyDemand energyDemand);
 
 	public void addSupply(EnergySupply supply);

@@ -2,8 +2,8 @@ package hsoines.oekoflex.energytrader.impl;
 
 import hsoines.oekoflex.bid.BidType;
 import hsoines.oekoflex.bid.EnergyDemand;
-import hsoines.oekoflex.marketoperator.impl.EOMOperatorImpl;
-import hsoines.oekoflex.marketoperator.impl.RegelEnergieMarketOperatorImpl;
+import hsoines.oekoflex.marketoperator.impl.BalancingMarketOperatorImpl;
+import hsoines.oekoflex.marketoperator.impl.SpotMarketOperatorImpl;
 import hsoines.oekoflex.tools.RepastTestInitializer;
 import org.junit.Before;
 import org.junit.Test;
@@ -27,25 +27,25 @@ public class FlexPowerplantTest {
     public static final int POWER_MAX = 5000;
     public static final int POSITIVE_DEMAND_REM = 100;
     public static final int NEGATIVE_DEMAND_REM = 100;
-    private RegelEnergieMarketOperatorImpl regelEnergieMarketOperator;
+    private BalancingMarketOperatorImpl regelEnergieMarketOperator;
     private FlexPowerplant flexpowerplant;
-    private EOMOperatorImpl eomOperator;
+    private SpotMarketOperatorImpl eomOperator;
 
     @Before
     public void setUp() throws Exception {
         RepastTestInitializer.init();
-        regelEnergieMarketOperator = new RegelEnergieMarketOperatorImpl("test", ".", POSITIVE_DEMAND_REM, NEGATIVE_DEMAND_REM);
-        eomOperator = new EOMOperatorImpl("test_eom_operator", ".");
+        regelEnergieMarketOperator = new BalancingMarketOperatorImpl("test", ".", POSITIVE_DEMAND_REM, NEGATIVE_DEMAND_REM);
+        eomOperator = new SpotMarketOperatorImpl("test_eom_operator", ".");
         eomOperator.addDemand(new EnergyDemand(3000, 200, null));
 
         flexpowerplant = new FlexPowerplant("flexpowerplant", "description", POWER_MAX, POWER_MIN, POWER_RAMP_UP, POWER_RAMP_DOWN, MARGINAL_COSTS, SHUTDOWN_COSTS);
-        flexpowerplant.setRegelenergieMarketOperator(regelEnergieMarketOperator);
-        flexpowerplant.setEOMOperator(eomOperator);
+        flexpowerplant.setBalancingMarketOperator(regelEnergieMarketOperator);
+        flexpowerplant.setSpotMarketOperator(eomOperator);
     }
 
     @Test
     public void testFlexPowerplant() throws Exception {
-        flexpowerplant.makeBidRegelenergie();
+        flexpowerplant.makeBidBalancingMarket();
         flexpowerplant.makeBidEOM();
 
         regelEnergieMarketOperator.clearMarket();

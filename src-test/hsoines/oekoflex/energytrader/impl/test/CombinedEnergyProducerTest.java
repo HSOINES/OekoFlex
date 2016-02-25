@@ -1,8 +1,8 @@
 package hsoines.oekoflex.energytrader.impl.test;
 
-import hsoines.oekoflex.marketoperator.EOMOperator;
-import hsoines.oekoflex.marketoperator.RegelEnergieMarketOperator;
-import hsoines.oekoflex.marketoperator.impl.RegelEnergieMarketOperatorImpl;
+import hsoines.oekoflex.marketoperator.BalancingMarketOperator;
+import hsoines.oekoflex.marketoperator.SpotMarketOperator;
+import hsoines.oekoflex.marketoperator.impl.BalancingMarketOperatorImpl;
 import hsoines.oekoflex.tools.RepastTestInitializer;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,28 +17,28 @@ import repast.simphony.context.Context;
 public class CombinedEnergyProducerTest {
 
     private CombinedEnergyProducer energyProducer;
-    private EOMOperator EOMOperator;
-    private RegelEnergieMarketOperator regelenergieMarketOperator;
+    private SpotMarketOperator SpotMarketOperator;
+    private BalancingMarketOperator regelenergieMarketOperator;
 
     @Before
     public void setUp() throws Exception {
         Context context = RepastTestInitializer.init();
         energyProducer = new CombinedEnergyProducer("energyProducer");
-        EOMOperator = Mockito.mock(EOMOperator.class);
-        energyProducer.setEOMOperator(EOMOperator);
-        regelenergieMarketOperator = Mockito.mock(RegelEnergieMarketOperator.class);
-        energyProducer.setRegelenergieMarketOperator(regelenergieMarketOperator);
+        SpotMarketOperator = Mockito.mock(SpotMarketOperator.class);
+        energyProducer.setSpotMarketOperator(SpotMarketOperator);
+        regelenergieMarketOperator = Mockito.mock(BalancingMarketOperator.class);
+        energyProducer.setBalancingMarketOperator(regelenergieMarketOperator);
     }
 
     @Test
     public void testAssignEnergy() throws Exception {
-        RegelEnergieMarketOperator testOperator = new RegelEnergieMarketOperatorImpl("test", "run/summary-logs/test", 1000, 0);
+        BalancingMarketOperator testOperator = new BalancingMarketOperatorImpl("test", "run/summary-logs/test", 1000, 0);
         CombinedEnergyProducer testProducer = new CombinedEnergyProducer("test_producer");
         testProducer.setQuantityPercentageOnRegelMarkt(0.6f);
         testProducer.setPriceRegelMarkt(1f);
-        testProducer.setRegelenergieMarketOperator(testOperator);
+        testProducer.setBalancingMarketOperator(testOperator);
 
-        testProducer.makeBidRegelenergie();
+        testProducer.makeBidBalancingMarket();
         testOperator.clearMarket();
 
 

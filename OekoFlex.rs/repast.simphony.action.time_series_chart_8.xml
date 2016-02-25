@@ -1,6 +1,6 @@
 <repast.simphony.chart2.engine.TimeSeriesChartDescriptor>
-  <name>REMPositive</name>
-  <dataSet>RegelEnergieMarktOperatorDataSet</dataSet>
+  <name>BalancingMarketPositive</name>
+  <dataSet>BalancingMarketOperatorDataSet</dataSet>
   <xAxisLabel>Tick Count</xAxisLabel>
   <yAxisLabel></yAxisLabel>
   <chartTitle>REM Positive Quantity</chartTitle>

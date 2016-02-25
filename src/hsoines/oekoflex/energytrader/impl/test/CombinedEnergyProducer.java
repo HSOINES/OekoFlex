@@ -3,12 +3,12 @@ package hsoines.oekoflex.energytrader.impl.test;
 import hsoines.oekoflex.bid.Bid;
 import hsoines.oekoflex.bid.EnergySupply;
 import hsoines.oekoflex.bid.PowerPositive;
+import hsoines.oekoflex.energytrader.BalancingMarketTrader;
 import hsoines.oekoflex.energytrader.EOMTrader;
-import hsoines.oekoflex.energytrader.RegelenergieMarketTrader;
 import hsoines.oekoflex.energytrader.TradeRegistry;
 import hsoines.oekoflex.energytrader.impl.TradeRegistryImpl;
-import hsoines.oekoflex.marketoperator.EOMOperator;
-import hsoines.oekoflex.marketoperator.RegelEnergieMarketOperator;
+import hsoines.oekoflex.marketoperator.BalancingMarketOperator;
+import hsoines.oekoflex.marketoperator.SpotMarketOperator;
 import hsoines.oekoflex.strategies.ConstantPriceStrategy;
 import hsoines.oekoflex.strategies.PriceStrategy;
 import hsoines.oekoflex.util.Market;
@@ -17,18 +17,18 @@ import hsoines.oekoflex.util.TimeUtil;
 import java.util.Date;
 import java.util.List;
 
-public class CombinedEnergyProducer implements RegelenergieMarketTrader, EOMTrader {
+public class CombinedEnergyProducer implements BalancingMarketTrader, EOMTrader {
 
     private final String name;
     private TradeRegistry tradeRegistry;
     private PriceStrategy regelMarktPriceStrategy;
     private ConstantPriceStrategy energyOnlyPriceStrategy;
-    private EOMOperator EOMOperator;
+    private SpotMarketOperator SpotMarketOperator;
     private float lastClearedPrice;
     private float lastAssignmentRate;
 
     private float lastBidPrice;
-    private RegelEnergieMarketOperator regelenergieMarketOperator;
+    private BalancingMarketOperator balancingMarketOperator;
     private int capacity;
     private float quantityPercentageOnRegelMarkt;
 
@@ -41,20 +41,20 @@ public class CombinedEnergyProducer implements RegelenergieMarketTrader, EOMTrad
     public void makeBidEOM() {
         Date date = TimeUtil.getCurrentDate();
         lastBidPrice = energyOnlyPriceStrategy.getPrice(date);
-        float offerCapacity = tradeRegistry.getRemainingCapacity(date, Market.REGELENERGIE_MARKET);
-        EOMOperator.addSupply(new EnergySupply(lastBidPrice, offerCapacity, this));
+        float offerCapacity = tradeRegistry.getRemainingCapacity(date, Market.BALANCING_MARKET);
+        SpotMarketOperator.addSupply(new EnergySupply(lastBidPrice, offerCapacity, this));
     }
 
     @Override
-    public void makeBidRegelenergie() {
+    public void makeBidBalancingMarket() {
         Date date = TimeUtil.getCurrentDate();
-        int offerCapacity = (int) (tradeRegistry.getRemainingCapacity(date, Market.REGELENERGIE_MARKET) * quantityPercentageOnRegelMarkt);
-        regelenergieMarketOperator.addPositiveSupply(new PowerPositive(regelMarktPriceStrategy.getPrice(date), offerCapacity, this));
+        int offerCapacity = (int) (tradeRegistry.getRemainingCapacity(date, Market.BALANCING_MARKET) * quantityPercentageOnRegelMarkt);
+        balancingMarketOperator.addPositiveSupply(new PowerPositive(regelMarktPriceStrategy.getPrice(date), offerCapacity, this));
     }
 
     @Override
-    public void setEOMOperator(final EOMOperator eomOperator) {
-        this.EOMOperator = eomOperator;
+    public void setSpotMarketOperator(final SpotMarketOperator spotMarketOperator) {
+        this.SpotMarketOperator = spotMarketOperator;
     }
 
     @Override
@@ -75,8 +75,8 @@ public class CombinedEnergyProducer implements RegelenergieMarketTrader, EOMTrad
     }
 
     @Override
-    public void setRegelenergieMarketOperator(RegelEnergieMarketOperator regelenergieMarketOperator) {
-        this.regelenergieMarketOperator = regelenergieMarketOperator;
+    public void setBalancingMarketOperator(BalancingMarketOperator balancingMarketOperator) {
+        this.balancingMarketOperator = balancingMarketOperator;
     }
 
     @Override
