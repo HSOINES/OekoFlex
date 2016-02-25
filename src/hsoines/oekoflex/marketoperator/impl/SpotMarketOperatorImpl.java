@@ -122,7 +122,7 @@ public class SpotMarketOperatorImpl implements SpotMarketOperator {
                 }
             } else {
                 if (totalDemandQuantity != totalSupplyQuantity) {
-                    throw new IllegalStateException("mustn't differ");
+                    //todo: right?!    throw new IllegalStateException("mustn't differ");
                 }
                 if (demandIterator.hasNext()) {
                     energyDemand = demandIterator.next();

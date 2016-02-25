@@ -66,10 +66,10 @@ public final class FlexPowerplant implements EOMTrader, BalancingMarketTrader, M
             ePreceding = powerMin * t;
         }
 
-        float eMustRun = Math.max((powerMin + pNegativeCommited) * t, ePreceding - powerRampDown * t); //todo: error in formula?
+        float eMustRun = Math.max((powerMin + pNegativeCommited) * t, ePreceding - powerRampDown * t);
         eomMarketOperator.addSupply(new EnergySupplyMustRun(-shutdownCosts / eMustRun, eMustRun, this));
 
-        float eFlex = Math.min((powerMax - pPositiveCommited) * t - eMustRun, (ePreceding + powerRampUp * t) - eMustRun);
+        float eFlex = Math.min((powerMax - pPositiveCommited) * t - eMustRun, ePreceding + powerRampUp * t - eMustRun);
         eomMarketOperator.addSupply(new EnergySupply(marginalCosts, eFlex, this));
     }
 
