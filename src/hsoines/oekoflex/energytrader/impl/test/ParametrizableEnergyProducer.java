@@ -78,6 +78,11 @@ public class ParametrizableEnergyProducer implements EOMTrader {
     }
 
     @Override
+    public String getDescription() {
+        return "";
+    }
+
+    @Override
     public float getLastClearedPrice() {
         return lastClearedPrice;
     }

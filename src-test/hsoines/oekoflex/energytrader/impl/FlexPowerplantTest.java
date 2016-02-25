@@ -38,7 +38,7 @@ public class FlexPowerplantTest {
         eomOperator = new EOMOperatorImpl("test_eom_operator", ".");
         eomOperator.addDemand(new EnergyDemand(3000, 200, null));
 
-        flexpowerplant = new FlexPowerplant("flexpowerplant", POWER_MAX, POWER_MIN, POWER_RAMP_UP, POWER_RAMP_DOWN, MARGINAL_COSTS, SHUTDOWN_COSTS);
+        flexpowerplant = new FlexPowerplant("flexpowerplant", "description", POWER_MAX, POWER_MIN, POWER_RAMP_UP, POWER_RAMP_DOWN, MARGINAL_COSTS, SHUTDOWN_COSTS);
         flexpowerplant.setRegelenergieMarketOperator(regelEnergieMarketOperator);
         flexpowerplant.setEOMOperator(eomOperator);
     }

@@ -61,5 +61,10 @@ public final class PositiveNegativeEnergyTraderTest {
         public String getName() {
             return null;
         }
+
+        @Override
+        public String getDescription() {
+            return "";
+        }
     }
 }

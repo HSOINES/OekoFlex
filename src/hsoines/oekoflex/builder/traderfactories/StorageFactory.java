@@ -32,6 +32,7 @@ public final class StorageFactory {
         for (CSVRecord parameters : format) {
             try {
                 String name = parameters.get("name");
+                String description = parameters.get("description");
                 int powerMax = Integer.parseInt(parameters.get("powerMax"));
                 int powerMin = Integer.parseInt(parameters.get("powerMin"));
                 float marginalCosts = Float.parseFloat(parameters.get("marginalCosts"));
@@ -42,7 +43,7 @@ public final class StorageFactory {
                 int chargePower = Integer.parseInt(parameters.get("chargePower"));
                 int dischargePower = Integer.parseInt(parameters.get("dischargePower"));
 
-                Storage storage = new Storage(name, powerMax, powerMin, marginalCosts, shutdownCosts, capacity, socMax, socMin, chargePower, dischargePower);
+                Storage storage = new Storage(name, description, powerMax, powerMin, marginalCosts, shutdownCosts, capacity, socMax, socMin, chargePower, dischargePower);
                 storage.setEOMOperator(eomOperator);
                 storage.setRegelenergieMarketOperator(regelenergieMarketOperator);
                 context.add(storage);

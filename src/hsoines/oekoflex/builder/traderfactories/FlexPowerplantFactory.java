@@ -33,6 +33,7 @@ public final class FlexPowerplantFactory {
         for (CSVRecord parameters : format) {
             try {
                 String name = parameters.get("name");
+                String description = parameters.get("description");
                 int powerMax = Integer.parseInt(parameters.get("powerMax"));
                 int powerMin = Integer.parseInt(parameters.get("powerMin"));
                 int rampUp = Integer.parseInt(parameters.get("rampUp"));
@@ -41,7 +42,7 @@ public final class FlexPowerplantFactory {
                 float shutdownCosts = Float.parseFloat(parameters.get("shutdownCosts"));
 
 
-                FlexPowerplant flexPowerplantProducer = new FlexPowerplant(name, powerMax, powerMin, rampUp, rampDown, marginalCosts, shutdownCosts);
+                FlexPowerplant flexPowerplantProducer = new FlexPowerplant(name, description, powerMax, powerMin, rampUp, rampDown, marginalCosts, shutdownCosts);
                 flexPowerplantProducer.setEOMOperator(energyOnlyMarketOperator);
                 flexPowerplantProducer.setRegelenergieMarketOperator(regelEnergieMarketOperator);
                 context.add(flexPowerplantProducer);

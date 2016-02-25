@@ -87,4 +87,10 @@ public final class DaytimeEnergyConsumer implements EOMTrader {
         return name;
     }
 
+
+    @Override
+    public String getDescription() {
+        return "";
+    }
+
 }

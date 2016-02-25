@@ -76,6 +76,11 @@ public class EnergyTraderTypeLoggerTest {
             return null;
         }
 
+        @Override
+        public String getDescription() {
+            return "";
+        }
+
 
         @Override
         public void notifyClearingDone(final Date currentDate, final Market market, final Bid bid, final float clearedPrice, final float rate) {
@@ -105,6 +110,11 @@ public class EnergyTraderTypeLoggerTest {
         @Override
         public String getName() {
             return null;
+        }
+
+        @Override
+        public String getDescription() {
+            return "";
         }
 
         @Override

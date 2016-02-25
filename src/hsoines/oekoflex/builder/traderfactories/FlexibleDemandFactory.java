@@ -29,10 +29,11 @@ public final class FlexibleDemandFactory {
         for (CSVRecord parameters : format) {
             try {
                 String name = parameters.get("name");
+                String description = parameters.get("description");
                 String demandFileName = parameters.get("demandFile");
                 File demandFile = new File(configDir, demandFileName);
 
-                FlexibleDemand flexibleDemand = new FlexibleDemand(name, demandFile);
+                FlexibleDemand flexibleDemand = new FlexibleDemand(name, description, demandFile);
                 flexibleDemand.setEOMOperator(energyOnlyMarketOperator);
                 context.add(flexibleDemand);
 

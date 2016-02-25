@@ -20,6 +20,7 @@ import java.util.List;
  */
 public final class FlexPowerplant implements EOMTrader, RegelenergieMarketTrader, MarketOperatorListener {
     private final String name;
+    private final String description;
     private final int powerMax;
     private final int powerMin;
     private final float shutdownCosts;
@@ -33,8 +34,9 @@ public final class FlexPowerplant implements EOMTrader, RegelenergieMarketTrader
     private float lastAssignmentRate;
     private float lastClearedPrice;
 
-    public FlexPowerplant(final String name, final int powerMax, final int powerMin, final int powerRampUp, final int powerRampDown, final float marginalCosts, final float shutdownCosts) {
+    public FlexPowerplant(final String name, final String description, final int powerMax, final int powerMin, final int powerRampUp, final int powerRampDown, final float marginalCosts, final float shutdownCosts) {
         this.name = name;
+        this.description = description;
         this.powerMax = powerMax;
         this.powerMin = powerMin;
         this.powerRampUp = powerRampUp;
@@ -134,4 +136,8 @@ public final class FlexPowerplant implements EOMTrader, RegelenergieMarketTrader
         return name;
     }
 
+    @Override
+    public String getDescription() {
+        return description;
+    }
 }

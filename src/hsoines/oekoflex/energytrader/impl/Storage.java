@@ -26,6 +26,7 @@ public final class Storage implements EOMTrader, RegelenergieMarketTrader {
     private static final Log log = LogFactory.getLog(Storage.class);
 
     private final String name;
+    private final String description;
     private final int powerMax;
     private final int powerMin;
     private final float costs;
@@ -43,11 +44,12 @@ public final class Storage implements EOMTrader, RegelenergieMarketTrader {
     private RegelEnergieMarketOperator regelenergieMarketOperator;
 
 
-    public Storage(final String name, final int powerMax, final int powerMin,
+    public Storage(final String name, final String description, final int powerMax, final int powerMin,
                    final float marginalCosts, final float shutdownCosts,
                    final int capacity, final float socMax, final float socMin,
                    final int chargePower, final int dischargePower) {
         this.name = name;
+        this.description = description;
         this.powerMax = powerMax;
         this.powerMin = powerMin;
         costs = marginalCosts;
@@ -139,5 +141,10 @@ public final class Storage implements EOMTrader, RegelenergieMarketTrader {
     @Override
     public void setRegelenergieMarketOperator(final RegelEnergieMarketOperator regelenergieMarketOperator) {
         this.regelenergieMarketOperator = regelenergieMarketOperator;
+    }
+
+    @Override
+    public String getDescription() {
+        return description;
     }
 }

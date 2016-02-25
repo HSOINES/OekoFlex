@@ -29,13 +29,15 @@ public final class FlexibleDemand implements EOMTrader {
     public static final float FIXED_PRICE = 3000f;
     private final TradeRegistryImpl energyTradeRegistry;
     private final String name;
+    private final String description;
 
     private EOMOperator marketOperator;
     private float lastClearedPrice;
     private float lastAssignmentRate;
 
-    public FlexibleDemand(final String name, final File csvFile) throws IOException {
+    public FlexibleDemand(final String name, final String description, final File csvFile) throws IOException {
         this.name = name;
+        this.description = description;
         energyTradeRegistry = new TradeRegistryImpl(TradeRegistry.Type.CONSUM, 0);
         FileReader reader = new FileReader(csvFile);
         CSVParser parser = CSVParameter.getCSVFormat().parse(reader);
@@ -86,5 +88,10 @@ public final class FlexibleDemand implements EOMTrader {
     @Override
     public String getName() {
         return name;
+    }
+
+    @Override
+    public String getDescription() {
+        return description;
     }
 }

@@ -107,4 +107,9 @@ public class CombinedEnergyProducer implements RegelenergieMarketTrader, EOMTrad
         this.quantityPercentageOnRegelMarkt = quantityPercentageOnRegelMarkt;
     }
 
+
+    @Override
+    public String getDescription() {
+        return "";
+    }
 }
