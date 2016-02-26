@@ -58,11 +58,17 @@ public final class BalancingMarketOperatorImpl implements BalancingMarketOperato
 
     @Override
     public void addPositiveSupply(final PowerPositive supply) {
+        if (supply.getQuantity() < 0.001) {
+            return;
+        }
         positiveSupplies.add(supply);
     }
 
     @Override
     public void addNegativeSupply(final PowerNegative supply) {
+        if (supply.getQuantity() < 0.001) {
+            return;
+        }
         negativeSupplies.add(supply);
     }
 

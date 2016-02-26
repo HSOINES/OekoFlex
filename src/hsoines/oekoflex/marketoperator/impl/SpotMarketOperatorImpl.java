@@ -44,12 +44,18 @@ public class SpotMarketOperatorImpl implements SpotMarketOperator {
     }
 
     @Override
-    public void addDemand(EnergyDemand energyDemand) {
-        energyDemands.add(energyDemand);
+    public void addDemand(EnergyDemand supply) {
+        if (supply.getQuantity() < 0.001) {
+            return;
+        }
+        energyDemands.add(supply);
     }
 
     @Override
     public void addSupply(EnergySupply supply) {
+        if (supply.getQuantity() < 0.001) {
+            return;
+        }
         this.supplies.add(supply);
     }
 
