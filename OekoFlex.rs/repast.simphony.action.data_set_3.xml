@@ -1,7 +1,7 @@
 <repast.simphony.data2.engine.DataSetDescriptor>
-  <name>RegelEnergieMarketTrader</name>
+  <name>BalancingMarketTrader</name>
   <type>NON_AGGREGATE</type>
-  <sourceType>hsoines.oekoflex.energytrader.RegelenergieMarketTrader</sourceType>
+  <sourceType>hsoines.oekoflex.energytrader.BalancingMarketTrader</sourceType>
   <inclTick>true</inclTick>
   <inclBatchRun>false</inclBatchRun>
   <inclRandomSeed>false</inclRandomSeed>
@@ -20,7 +20,7 @@
       <string>Name</string>
       <repast.simphony.data2.engine.MethodDataSourceDefinition>
         <id>Name</id>
-        <className>hsoines.oekoflex.energytrader.RegelenergieMarketTrader</className>
+        <className>hsoines.oekoflex.energytrader.BalancingMarketTrader</className>
         <methodName>getName</methodName>
       </repast.simphony.data2.engine.MethodDataSourceDefinition>
     </entry>

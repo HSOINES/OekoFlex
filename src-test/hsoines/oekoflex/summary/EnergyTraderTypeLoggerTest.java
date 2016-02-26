@@ -1,11 +1,11 @@
 package hsoines.oekoflex.summary;
 
 import hsoines.oekoflex.bid.Bid;
+import hsoines.oekoflex.energytrader.BalancingMarketTrader;
 import hsoines.oekoflex.energytrader.EOMTrader;
-import hsoines.oekoflex.energytrader.RegelenergieMarketTrader;
 import hsoines.oekoflex.energytrader.impl.TradeRegistryImpl;
-import hsoines.oekoflex.marketoperator.EOMOperator;
-import hsoines.oekoflex.marketoperator.RegelEnergieMarketOperator;
+import hsoines.oekoflex.marketoperator.BalancingMarketOperator;
+import hsoines.oekoflex.marketoperator.SpotMarketOperator;
 import hsoines.oekoflex.util.Market;
 import org.junit.Before;
 import org.junit.Test;
@@ -36,7 +36,7 @@ public class EnergyTraderTypeLoggerTest {
     public void testIt() {
         CountDownLatch countDownLatch = new CountDownLatch(2);
         MyEOMTrader myEOMTrader = new MyEOMTrader(countDownLatch);
-        MyRegelenergieMarketTrader myRegelenergieMarketTrader = new MyRegelenergieMarketTrader(countDownLatch);
+        MyBalancingMarketTrader myRegelenergieMarketTrader = new MyBalancingMarketTrader(countDownLatch);
         energyTraderTypeLogger.addIfNecessary(myEOMTrader);
         energyTraderTypeLogger.addIfNecessary(myRegelenergieMarketTrader);
 
@@ -76,6 +76,11 @@ public class EnergyTraderTypeLoggerTest {
             return null;
         }
 
+        @Override
+        public String getDescription() {
+            return "";
+        }
+
 
         @Override
         public void notifyClearingDone(final Date currentDate, final Market market, final Bid bid, final float clearedPrice, final float rate) {
@@ -83,7 +88,7 @@ public class EnergyTraderTypeLoggerTest {
         }
 
         @Override
-        public void setEOMOperator(final EOMOperator eomOperator) {
+        public void setSpotMarketOperator(final SpotMarketOperator spotMarketOperator) {
 
         }
 
@@ -94,10 +99,10 @@ public class EnergyTraderTypeLoggerTest {
 
     }
 
-    private static class MyRegelenergieMarketTrader implements RegelenergieMarketTrader {
+    private static class MyBalancingMarketTrader implements BalancingMarketTrader {
         private final CountDownLatch countDownLatch;
 
-        public MyRegelenergieMarketTrader(final CountDownLatch countDownLatch) {
+        public MyBalancingMarketTrader(final CountDownLatch countDownLatch) {
             this.countDownLatch = countDownLatch;
         }
 
@@ -105,6 +110,11 @@ public class EnergyTraderTypeLoggerTest {
         @Override
         public String getName() {
             return null;
+        }
+
+        @Override
+        public String getDescription() {
+            return "";
         }
 
         @Override
@@ -119,12 +129,12 @@ public class EnergyTraderTypeLoggerTest {
         }
 
         @Override
-        public void makeBidRegelenergie() {
+        public void makeBidBalancingMarket() {
 
         }
 
         @Override
-        public void setRegelenergieMarketOperator(final RegelEnergieMarketOperator regelenergieMarketOperator) {
+        public void setBalancingMarketOperator(final BalancingMarketOperator balancingMarketOperator) {
 
         }
 

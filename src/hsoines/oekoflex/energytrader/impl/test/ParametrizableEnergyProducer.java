@@ -5,7 +5,7 @@ import hsoines.oekoflex.bid.EnergySupply;
 import hsoines.oekoflex.energytrader.EOMTrader;
 import hsoines.oekoflex.energytrader.TradeRegistry;
 import hsoines.oekoflex.energytrader.impl.TradeRegistryImpl;
-import hsoines.oekoflex.marketoperator.EOMOperator;
+import hsoines.oekoflex.marketoperator.SpotMarketOperator;
 import hsoines.oekoflex.util.Market;
 import hsoines.oekoflex.util.TimeUtil;
 import repast.simphony.engine.environment.RunEnvironment;
@@ -18,7 +18,7 @@ public class ParametrizableEnergyProducer implements EOMTrader {
 
     public static final int INITIALCAPACITY = 200;
     private final String name;
-    private EOMOperator marketOperator;
+    private SpotMarketOperator marketOperator;
     private float lastClearedPrice;
     private float lastAssignmentRate;
 
@@ -57,8 +57,8 @@ public class ParametrizableEnergyProducer implements EOMTrader {
     }
 
     @Override
-    public void setEOMOperator(final EOMOperator eomOperator) {
-        this.marketOperator = eomOperator;
+    public void setSpotMarketOperator(final SpotMarketOperator spotMarketOperator) {
+        this.marketOperator = spotMarketOperator;
     }
 
     @Override
@@ -75,6 +75,11 @@ public class ParametrizableEnergyProducer implements EOMTrader {
     @Override
     public List<TradeRegistryImpl.EnergyTradeElement> getCurrentAssignments() {
         return tradeRegistry.getEnergyTradeElements(TimeUtil.getCurrentDate());
+    }
+
+    @Override
+    public String getDescription() {
+        return "";
     }
 
     @Override

@@ -15,4 +15,6 @@ public interface MarketTrader extends OekoflexAgent {
     float getLastAssignmentRate();
 
     List<TradeRegistryImpl.EnergyTradeElement> getCurrentAssignments();
+
+    String getDescription();
 }

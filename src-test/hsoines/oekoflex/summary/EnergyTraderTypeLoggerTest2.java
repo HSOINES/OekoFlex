@@ -31,8 +31,8 @@ public class EnergyTraderTypeLoggerTest2 {
         context.add(combinedTest);
         energyTraderTypeLogger = new EnergyTraderTypeLogger(context, "run/summary-logs/test");
 
-        test.notifyClearingDone(new Date(), Market.EOM_MARKET, new EnergyDemand(10f, 1000, null), 10.0f, 1f);
-        combinedTest.notifyClearingDone(new Date(), Market.EOM_MARKET, new PowerPositive(12f, 200, null), 1f, .4f);
+        test.notifyClearingDone(new Date(), Market.SPOT_MARKET, new EnergyDemand(10f, 1000, null), 10.0f, 1f);
+        combinedTest.notifyClearingDone(new Date(), Market.SPOT_MARKET, new PowerPositive(12f, 200, null), 1f, .4f);
 
     }
 

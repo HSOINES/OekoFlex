@@ -3,8 +3,8 @@ package hsoines.oekoflex.builder.traderfactories;
 import hsoines.oekoflex.OekoflexAgent;
 import hsoines.oekoflex.builder.CSVParameter;
 import hsoines.oekoflex.energytrader.impl.Storage;
-import hsoines.oekoflex.marketoperator.EOMOperator;
-import hsoines.oekoflex.marketoperator.RegelEnergieMarketOperator;
+import hsoines.oekoflex.marketoperator.BalancingMarketOperator;
+import hsoines.oekoflex.marketoperator.SpotMarketOperator;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.logging.Log;
@@ -25,13 +25,14 @@ public final class StorageFactory {
 
     public static void build(final File configDir,
                              final Context<OekoflexAgent> context,
-                             final EOMOperator eomOperator, final RegelEnergieMarketOperator regelenergieMarketOperator) throws IOException {
+                             final SpotMarketOperator spotMarketOperator, final BalancingMarketOperator balancingMarketOperator) throws IOException {
         File configFile = new File(configDir + "/" + "Storage.cfg.csv");
         FileReader reader = new FileReader(configFile);
         CSVParser format = CSVParameter.getCSVFormat().parse(reader);
         for (CSVRecord parameters : format) {
             try {
                 String name = parameters.get("name");
+                String description = parameters.get("description");
                 int powerMax = Integer.parseInt(parameters.get("powerMax"));
                 int powerMin = Integer.parseInt(parameters.get("powerMin"));
                 float marginalCosts = Float.parseFloat(parameters.get("marginalCosts"));
@@ -42,9 +43,9 @@ public final class StorageFactory {
                 int chargePower = Integer.parseInt(parameters.get("chargePower"));
                 int dischargePower = Integer.parseInt(parameters.get("dischargePower"));
 
-                Storage storage = new Storage(name, powerMax, powerMin, marginalCosts, shutdownCosts, capacity, socMax, socMin, chargePower, dischargePower);
-                storage.setEOMOperator(eomOperator);
-                storage.setRegelenergieMarketOperator(regelenergieMarketOperator);
+                Storage storage = new Storage(name, description, powerMax, powerMin, marginalCosts, shutdownCosts, capacity, socMax, socMin, chargePower, dischargePower);
+                storage.setSpotMarketOperator(spotMarketOperator);
+                storage.setBalancingMarketOperator(balancingMarketOperator);
                 context.add(storage);
 
                 log.info("Storage Build done: " + name);

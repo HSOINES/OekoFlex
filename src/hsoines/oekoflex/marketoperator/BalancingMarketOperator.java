@@ -6,12 +6,12 @@ import hsoines.oekoflex.bid.PowerPositive;
 import hsoines.oekoflex.domain.SequenceDefinition;
 import repast.simphony.engine.schedule.ScheduledMethod;
 
-public interface RegelEnergieMarketOperator extends OekoflexAgent {
+public interface BalancingMarketOperator extends OekoflexAgent {
 	void addPositiveSupply(PowerPositive supply);
 
 	void addNegativeSupply(PowerNegative supply);
 
-	@ScheduledMethod(start = SequenceDefinition.SimulationStart, interval = SequenceDefinition.RegelenergieMarketInterval, priority = SequenceDefinition.RegelenergieMarketClearingPriority)
+	@ScheduledMethod(start = SequenceDefinition.SimulationStart, interval = SequenceDefinition.BalancingMarketInterval, priority = SequenceDefinition.BalancingMarketClearingPriority)
 	void clearMarket();
 
 

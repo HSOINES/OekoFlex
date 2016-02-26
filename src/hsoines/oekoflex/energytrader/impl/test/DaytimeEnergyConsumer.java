@@ -5,7 +5,7 @@ import hsoines.oekoflex.bid.EnergyDemand;
 import hsoines.oekoflex.energytrader.EOMTrader;
 import hsoines.oekoflex.energytrader.TradeRegistry;
 import hsoines.oekoflex.energytrader.impl.TradeRegistryImpl;
-import hsoines.oekoflex.marketoperator.EOMOperator;
+import hsoines.oekoflex.marketoperator.SpotMarketOperator;
 import hsoines.oekoflex.strategies.DaytimePriceStrategy;
 import hsoines.oekoflex.strategies.PriceStrategy;
 import hsoines.oekoflex.util.Market;
@@ -23,7 +23,7 @@ import java.util.List;
 public final class DaytimeEnergyConsumer implements EOMTrader {
     private final String name;
     private final float quantity;
-    private EOMOperator marketOperator;
+    private SpotMarketOperator marketOperator;
     private float clearedPrice;
     private float lastAssignmentRate;
 
@@ -40,8 +40,8 @@ public final class DaytimeEnergyConsumer implements EOMTrader {
     }
 
     @Override
-    public void setEOMOperator(final EOMOperator eomOperator) {
-        this.marketOperator = eomOperator;
+    public void setSpotMarketOperator(final SpotMarketOperator spotMarketOperator) {
+        this.marketOperator = spotMarketOperator;
     }
 
     @Override
@@ -49,7 +49,7 @@ public final class DaytimeEnergyConsumer implements EOMTrader {
         Date date = TimeUtil.getCurrentDate();
         if (marketOperator != null) {
             lastBidPrice = priceStrategy.getPrice(date);
-            float offeredQuantity = tradeRegistry.getRemainingCapacity(date, Market.EOM_MARKET);
+            float offeredQuantity = tradeRegistry.getRemainingCapacity(date, Market.SPOT_MARKET);
             marketOperator.addDemand(new EnergyDemand(lastBidPrice, offeredQuantity, this));
         }
     }
@@ -85,6 +85,12 @@ public final class DaytimeEnergyConsumer implements EOMTrader {
     @Override
     public String getName() {
         return name;
+    }
+
+
+    @Override
+    public String getDescription() {
+        return "";
     }
 
 }

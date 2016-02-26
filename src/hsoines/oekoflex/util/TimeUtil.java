@@ -62,10 +62,10 @@ public final class TimeUtil {
 
     static boolean isEnergyTimeZone(final Market market, final long tick) {
         switch (market) {
-            case EOM_MARKET:
+            case SPOT_MARKET:
                 return true;
-            case REGELENERGIE_MARKET:
-                return tick % SequenceDefinition.RegelenergieMarketInterval == 0;
+            case BALANCING_MARKET:
+                return tick % SequenceDefinition.BalancingMarketInterval == 0;
             default:
                 log.error("unknown EnergyTimeZone: " + market);
                 return false;

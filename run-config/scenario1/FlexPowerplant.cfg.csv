@@ -1,5 +1,0 @@
-name;powerMax;powerMin;rampUp;rampDown;marginalCosts;shutdownCosts
-flexPowerplant1;800;100;100;200;30;40000
-flexPowerplant2;500;200;200;200;32;20000
-flexPowerplant3;200;50;50;200;40;10000
-flexPowerplant4;600;200;50;200;50;20000

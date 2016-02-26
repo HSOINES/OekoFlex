@@ -4,11 +4,11 @@ import hsoines.oekoflex.bid.Bid;
 import hsoines.oekoflex.bid.EnergyDemand;
 import hsoines.oekoflex.bid.PowerNegative;
 import hsoines.oekoflex.bid.PowerPositive;
+import hsoines.oekoflex.energytrader.BalancingMarketTrader;
 import hsoines.oekoflex.energytrader.EOMTrader;
-import hsoines.oekoflex.energytrader.RegelenergieMarketTrader;
 import hsoines.oekoflex.energytrader.TradeRegistry;
-import hsoines.oekoflex.marketoperator.EOMOperator;
-import hsoines.oekoflex.marketoperator.RegelEnergieMarketOperator;
+import hsoines.oekoflex.marketoperator.BalancingMarketOperator;
+import hsoines.oekoflex.marketoperator.SpotMarketOperator;
 import hsoines.oekoflex.util.Market;
 import hsoines.oekoflex.util.TimeUtil;
 import org.apache.commons.logging.Log;
@@ -22,10 +22,11 @@ import java.util.List;
  * Date: 18/01/16
  * Time: 16:14
  */
-public final class Storage implements EOMTrader, RegelenergieMarketTrader {
+public final class Storage implements EOMTrader, BalancingMarketTrader {
     private static final Log log = LogFactory.getLog(Storage.class);
 
     private final String name;
+    private final String description;
     private final int powerMax;
     private final int powerMin;
     private final float costs;
@@ -36,18 +37,19 @@ public final class Storage implements EOMTrader, RegelenergieMarketTrader {
     private final int chargePower;
     private final int dischargePower;
     private int soc;
-    private EOMOperator eomMarketOperator;
+    private SpotMarketOperator eomMarketOperator;
     private final TradeRegistry batteryTradeRegistry;
     private float lastAssignmentRate;
     private float lastClearedPrice;
-    private RegelEnergieMarketOperator regelenergieMarketOperator;
+    private BalancingMarketOperator balancingMarketOperator;
 
 
-    public Storage(final String name, final int powerMax, final int powerMin,
+    public Storage(final String name, final String description, final int powerMax, final int powerMin,
                    final float marginalCosts, final float shutdownCosts,
                    final int capacity, final float socMax, final float socMin,
                    final int chargePower, final int dischargePower) {
         this.name = name;
+        this.description = description;
         this.powerMax = powerMax;
         this.powerMin = powerMin;
         costs = marginalCosts;
@@ -62,8 +64,8 @@ public final class Storage implements EOMTrader, RegelenergieMarketTrader {
     }
 
     @Override
-    public void setEOMOperator(final EOMOperator eomOperator) {
-        this.eomMarketOperator = eomOperator;
+    public void setSpotMarketOperator(final SpotMarketOperator spotMarketOperator) {
+        this.eomMarketOperator = spotMarketOperator;
     }
 
     @Override
@@ -76,7 +78,7 @@ public final class Storage implements EOMTrader, RegelenergieMarketTrader {
     }
 
     @Override
-    public void makeBidRegelenergie() {
+    public void makeBidBalancingMarket() {
         Date currentDate = TimeUtil.getCurrentDate();
         Date precedingDate = TimeUtil.precedingDate(currentDate);
         float cOpp = 200f;
@@ -86,10 +88,10 @@ public final class Storage implements EOMTrader, RegelenergieMarketTrader {
         float pPreceding = batteryTradeRegistry.getPositiveQuantityUsed(precedingDate);
 
         float pNegative = Math.min(pPreceding - powerMin, dischargePower);
-        //regelenergieMarketOperator.addNegativeSupply(new PowerNegative(bidNegative, pNegative, this));
+        //balancingMarketOperator.addNegativeSupply(new PowerNegative(bidNegative, pNegative, this));
 
         float pPositive = Math.min(powerMax - pPreceding, chargePower);
-        //regelenergieMarketOperator.addPositiveSupply(new PowerPositive(bidPositive, pPositive, this));
+        //balancingMarketOperator.addPositiveSupply(new PowerPositive(bidPositive, pPositive, this));
 
     }
 
@@ -137,7 +139,12 @@ public final class Storage implements EOMTrader, RegelenergieMarketTrader {
     }
 
     @Override
-    public void setRegelenergieMarketOperator(final RegelEnergieMarketOperator regelenergieMarketOperator) {
-        this.regelenergieMarketOperator = regelenergieMarketOperator;
+    public void setBalancingMarketOperator(final BalancingMarketOperator balancingMarketOperator) {
+        this.balancingMarketOperator = balancingMarketOperator;
+    }
+
+    @Override
+    public String getDescription() {
+        return description;
     }
 }

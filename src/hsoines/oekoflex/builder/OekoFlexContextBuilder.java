@@ -5,9 +5,9 @@ import hsoines.oekoflex.builder.traderfactories.DaytimeEnergyConsumerFactory;
 import hsoines.oekoflex.builder.traderfactories.FlexPowerplantFactory;
 import hsoines.oekoflex.builder.traderfactories.FlexibleDemandFactory;
 import hsoines.oekoflex.builder.traderfactories.StorageFactory;
-import hsoines.oekoflex.marketoperator.RegelEnergieMarketOperator;
-import hsoines.oekoflex.marketoperator.impl.EOMOperatorImpl;
-import hsoines.oekoflex.marketoperator.impl.RegelEnergieMarketOperatorImpl;
+import hsoines.oekoflex.marketoperator.BalancingMarketOperator;
+import hsoines.oekoflex.marketoperator.impl.BalancingMarketOperatorImpl;
+import hsoines.oekoflex.marketoperator.impl.SpotMarketOperatorImpl;
 import hsoines.oekoflex.summary.EnergyTraderTypeLogger;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -51,18 +51,18 @@ public class OekoFlexContextBuilder implements ContextBuilder<OekoflexAgent> {
             Properties globalProperties = loadProperties(configDir);
             int positiveDemandREM = Integer.parseInt((String) globalProperties.get("positiveDemandREM"));
             int negativeDemandREM = Integer.parseInt((String) globalProperties.get("negativeDemandREM"));
-            EOMOperatorImpl eomOperator = new EOMOperatorImpl("EOM_Operator", logDirName);
-            RegelEnergieMarketOperator regelenergieMarketOperator = new RegelEnergieMarketOperatorImpl("RegelEnergieMarketOperator", logDirName, positiveDemandREM, negativeDemandREM);
+            SpotMarketOperatorImpl eomOperator = new SpotMarketOperatorImpl("EOM_Operator", logDirName);
+            BalancingMarketOperator balancingMarketOperator = new BalancingMarketOperatorImpl("BalancingMarketOperator", logDirName, positiveDemandREM, negativeDemandREM);
             context.add(eomOperator);
-            context.add(regelenergieMarketOperator);
+            context.add(balancingMarketOperator);
 
             //Consumer
             DaytimeEnergyConsumerFactory.build(configDir, context, eomOperator);
             FlexibleDemandFactory.build(configDir, context, eomOperator);
 
             //Producer
-            FlexPowerplantFactory.build(configDir, context, eomOperator, regelenergieMarketOperator);
-            StorageFactory.build(configDir, context, eomOperator, regelenergieMarketOperator);
+            FlexPowerplantFactory.build(configDir, context, eomOperator, balancingMarketOperator);
+            StorageFactory.build(configDir, context, eomOperator, balancingMarketOperator);
 
         } catch (IOException e) {
             log.error(e.toString(), e);

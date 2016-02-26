@@ -5,7 +5,7 @@ import hsoines.oekoflex.bid.EnergyDemand;
 import hsoines.oekoflex.bid.EnergySupply;
 import hsoines.oekoflex.bid.PowerPositive;
 import hsoines.oekoflex.energytrader.MarketOperatorListener;
-import hsoines.oekoflex.marketoperator.EOMOperator;
+import hsoines.oekoflex.marketoperator.SpotMarketOperator;
 import hsoines.oekoflex.summary.LoggerFile;
 import hsoines.oekoflex.util.Market;
 import hsoines.oekoflex.util.NumberFormatUtil;
@@ -19,8 +19,8 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
-public class EOMOperatorImpl implements EOMOperator {
-    private static final Log log = LogFactory.getLog(EOMOperatorImpl.class);
+public class SpotMarketOperatorImpl implements SpotMarketOperator {
+    private static final Log log = LogFactory.getLog(SpotMarketOperatorImpl.class);
 
     private final List<EnergyDemand> energyDemands;
     private final List<EnergySupply> supplies;
@@ -33,7 +33,7 @@ public class EOMOperatorImpl implements EOMOperator {
     private float lastAssignmentRate;
     private AssignmentType lastAssignmentType;
 
-    public EOMOperatorImpl(String name, final String logDirName) throws IOException {
+    public SpotMarketOperatorImpl(String name, final String logDirName) throws IOException {
         this.name = name;
 
         energyDemands = new ArrayList<>();
@@ -44,12 +44,18 @@ public class EOMOperatorImpl implements EOMOperator {
     }
 
     @Override
-    public void addDemand(EnergyDemand energyDemand) {
-        energyDemands.add(energyDemand);
+    public void addDemand(EnergyDemand supply) {
+        if (supply.getQuantity() < 0.001) {
+            return;
+        }
+        energyDemands.add(supply);
     }
 
     @Override
     public void addSupply(EnergySupply supply) {
+        if (supply.getQuantity() < 0.001) {
+            return;
+        }
         this.supplies.add(supply);
     }
 
@@ -122,7 +128,7 @@ public class EOMOperatorImpl implements EOMOperator {
                 }
             } else {
                 if (totalDemandQuantity != totalSupplyQuantity) {
-                    throw new IllegalStateException("mustn't differ");
+                    //todo: right?!    throw new IllegalStateException("mustn't differ");
                 }
                 if (demandIterator.hasNext()) {
                     energyDemand = demandIterator.next();
@@ -186,7 +192,7 @@ public class EOMOperatorImpl implements EOMOperator {
                 } else {
                     assignmentRate = 0;
                 }
-                marketOperatorListener.notifyClearingDone(date, Market.EOM_MARKET, energyDemand, clearedPrice, assignmentRate);
+                marketOperatorListener.notifyClearingDone(date, Market.SPOT_MARKET, energyDemand, clearedPrice, assignmentRate);
                 logSummary(energyDemand, assignmentRate);
                 logString.append(assignmentRate).append(",")
                         .append(energyDemand.getPrice()).append(",")
@@ -204,7 +210,7 @@ public class EOMOperatorImpl implements EOMOperator {
                 } else {
                     assignmentRate = 0;
                 }
-                marketOperatorListener.notifyClearingDone(date, Market.EOM_MARKET, supply, clearedPrice, assignmentRate);
+                marketOperatorListener.notifyClearingDone(date, Market.SPOT_MARKET, supply, clearedPrice, assignmentRate);
                 logSummary(supply, assignmentRate);
                 logString.append(assignmentRate).append(",")
                         .append(supply.getPrice()).append(",")

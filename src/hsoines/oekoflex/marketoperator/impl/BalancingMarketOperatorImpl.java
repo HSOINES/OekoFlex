@@ -4,7 +4,7 @@ import hsoines.oekoflex.bid.BidSupport;
 import hsoines.oekoflex.bid.PowerNegative;
 import hsoines.oekoflex.bid.PowerPositive;
 import hsoines.oekoflex.energytrader.MarketOperatorListener;
-import hsoines.oekoflex.marketoperator.RegelEnergieMarketOperator;
+import hsoines.oekoflex.marketoperator.BalancingMarketOperator;
 import hsoines.oekoflex.summary.LoggerFile;
 import hsoines.oekoflex.util.Market;
 import hsoines.oekoflex.util.NumberFormatUtil;
@@ -23,8 +23,8 @@ import java.util.List;
  * Date: 27/01/16
  * Time: 20:45
  */
-public final class RegelEnergieMarketOperatorImpl implements RegelEnergieMarketOperator {
-    private static final Log log = LogFactory.getLog(RegelEnergieMarketOperatorImpl.class);
+public final class BalancingMarketOperatorImpl implements BalancingMarketOperator {
+    private static final Log log = LogFactory.getLog(BalancingMarketOperatorImpl.class);
 
     private final String name;
     private final int positiveQuantity;
@@ -43,7 +43,7 @@ public final class RegelEnergieMarketOperatorImpl implements RegelEnergieMarketO
 
     private LoggerFile logger;
 
-    public RegelEnergieMarketOperatorImpl(String name, String logDirName, final int positiveDemandREM, final int negativeDemandREM) throws IOException {
+    public BalancingMarketOperatorImpl(String name, String logDirName, final int positiveDemandREM, final int negativeDemandREM) throws IOException {
         this.name = name;
         Parameters p = RunEnvironment.getInstance().getParameters();
         this.positiveQuantity = positiveDemandREM;
@@ -58,11 +58,17 @@ public final class RegelEnergieMarketOperatorImpl implements RegelEnergieMarketO
 
     @Override
     public void addPositiveSupply(final PowerPositive supply) {
+        if (supply.getQuantity() < 0.001) {
+            return;
+        }
         positiveSupplies.add(supply);
     }
 
     @Override
     public void addNegativeSupply(final PowerNegative supply) {
+        if (supply.getQuantity() < 0.001) {
+            return;
+        }
         negativeSupplies.add(supply);
     }
 
@@ -154,7 +160,7 @@ public final class RegelEnergieMarketOperatorImpl implements RegelEnergieMarketO
 
     void doNotify(final BidSupport bidSupport, final MarketOperatorListener marketOperatorListener, float assignRate) {
         long tick = TimeUtil.getCurrentTick();
-        marketOperatorListener.notifyClearingDone(TimeUtil.getDate(tick), Market.REGELENERGIE_MARKET, bidSupport, bidSupport.getPrice(), assignRate);
+        marketOperatorListener.notifyClearingDone(TimeUtil.getDate(tick), Market.BALANCING_MARKET, bidSupport, bidSupport.getPrice(), assignRate);
 
         logger.log(String.valueOf(tick) + ";"
                 + bidSupport.getMarketOperatorListener().getClass().getSimpleName() + ";"

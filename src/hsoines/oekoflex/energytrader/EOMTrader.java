@@ -1,7 +1,7 @@
 package hsoines.oekoflex.energytrader;
 
 import hsoines.oekoflex.domain.SequenceDefinition;
-import hsoines.oekoflex.marketoperator.EOMOperator;
+import hsoines.oekoflex.marketoperator.SpotMarketOperator;
 import repast.simphony.engine.schedule.ScheduledMethod;
 
 /**
@@ -10,7 +10,7 @@ import repast.simphony.engine.schedule.ScheduledMethod;
  * Time: 08:29
  */
 public interface EOMTrader extends MarketTrader, MarketOperatorListener {
-    void setEOMOperator(EOMOperator eomOperator);
+    void setSpotMarketOperator(SpotMarketOperator spotMarketOperator);
 
     float getLastClearedPrice();
 
