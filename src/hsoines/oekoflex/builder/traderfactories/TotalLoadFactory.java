@@ -2,7 +2,7 @@ package hsoines.oekoflex.builder.traderfactories;
 
 import hsoines.oekoflex.OekoflexAgent;
 import hsoines.oekoflex.builder.CSVParameter;
-import hsoines.oekoflex.energytrader.impl.FlexibleDemand;
+import hsoines.oekoflex.energytrader.impl.TotalLoad;
 import hsoines.oekoflex.marketoperator.impl.SpotMarketOperatorImpl;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
@@ -19,11 +19,11 @@ import java.io.IOException;
  * Date: 07/01/16
  * Time: 21:32
  */
-public final class FlexibleDemandFactory {
-    private static final Log log = LogFactory.getLog(FlexibleDemandFactory.class);
+public final class TotalLoadFactory {
+    private static final Log log = LogFactory.getLog(TotalLoadFactory.class);
 
     public static void build(final File configDir, final Context<OekoflexAgent> context, final SpotMarketOperatorImpl energyOnlyMarketOperator) throws IOException {
-        File configFile = new File(configDir + "/" + "FlexibleDemand.cfg.csv");
+        File configFile = new File(configDir + "/" + "TotalLoad.cfg.csv");
         FileReader reader = new FileReader(configFile);
         CSVParser format = CSVParameter.getCSVFormat().parse(reader);
         for (CSVRecord parameters : format) {
@@ -33,11 +33,11 @@ public final class FlexibleDemandFactory {
                 String demandFileName = parameters.get("demandFile");
                 File demandFile = new File(configDir, demandFileName);
 
-                FlexibleDemand flexibleDemand = new FlexibleDemand(name, description, demandFile);
-                flexibleDemand.setSpotMarketOperator(energyOnlyMarketOperator);
-                context.add(flexibleDemand);
+                TotalLoad totalLoad = new TotalLoad(name, description, demandFile);
+                totalLoad.setSpotMarketOperator(energyOnlyMarketOperator);
+                context.add(totalLoad);
 
-                log.info("FlexibleDemand Build done: " + name);
+                log.info("TotalLoad Build done: " + name);
             } catch (NumberFormatException e) {
                 log.error(e.getMessage(), e);
             }

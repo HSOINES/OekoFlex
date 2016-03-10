@@ -3,8 +3,8 @@ package hsoines.oekoflex.builder;
 import hsoines.oekoflex.OekoflexAgent;
 import hsoines.oekoflex.builder.traderfactories.DaytimeEnergyConsumerFactory;
 import hsoines.oekoflex.builder.traderfactories.FlexPowerplantFactory;
-import hsoines.oekoflex.builder.traderfactories.FlexibleDemandFactory;
 import hsoines.oekoflex.builder.traderfactories.StorageFactory;
+import hsoines.oekoflex.builder.traderfactories.TotalLoadFactory;
 import hsoines.oekoflex.energytrader.impl.test.ResidualSupplier;
 import hsoines.oekoflex.marketoperator.BalancingMarketOperator;
 import hsoines.oekoflex.marketoperator.impl.BalancingMarketOperatorImpl;
@@ -77,7 +77,7 @@ public class OekoFlexContextBuilder implements ContextBuilder<OekoflexAgent> {
 
             //Consumer
             DaytimeEnergyConsumerFactory.build(configDir, context, spotMarketOperator);
-            FlexibleDemandFactory.build(configDir, context, spotMarketOperator);
+            TotalLoadFactory.build(configDir, context, spotMarketOperator);
 
             //Producer
             FlexPowerplantFactory.build(configDir, context, spotMarketOperator, balancingMarketOperator);

@@ -11,12 +11,12 @@ import java.io.File;
  * Date: 19/02/16
  * Time: 08:39
  */
-public class FlexibleDemandFactoryTest {
+public class TotalLoadFactoryTest {
     @Test
     public void testLoadSample() throws Exception {
         BasicConfigurator.configure();
         File configDir = new File("run-config/scenario1");
-        FlexibleDemandFactory.build(configDir, new DefaultContext<>(), null);
+        TotalLoadFactory.build(configDir, new DefaultContext<>(), null);
 
     }
 }
