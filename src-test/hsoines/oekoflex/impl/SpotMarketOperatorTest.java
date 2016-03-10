@@ -19,7 +19,7 @@ public class SpotMarketOperatorTest {
     @Before
     public void setUp() throws Exception {
         RepastTestInitializer.init();
-        spotMarketOperator = new SpotMarketOperatorImpl("test", "run/summary-logs/test", true);
+        spotMarketOperator = new SpotMarketOperatorImpl("test", "run/summary-logs/test", true, null);
     }
 
     @org.junit.Test

@@ -9,7 +9,10 @@ import hsoines.oekoflex.util.Market;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.File;
 import java.util.Date;
+
+import static org.junit.Assert.assertTrue;
 
 /**
  * User: jh
@@ -19,11 +22,13 @@ import java.util.Date;
 public class SpotMarketOperatorImplTest {
 
     private SpotMarketOperatorImpl operator;
+    private File priceForwardOutDir;
 
     @Before
     public void setUp() throws Exception {
         RepastTestInitializer.init();
-        operator = new SpotMarketOperatorImpl("test", "run/summary-logs/test", true);
+        priceForwardOutDir = new File("run/price-forward/test");
+        operator = new SpotMarketOperatorImpl("test", "run/summary-logs/test", true, priceForwardOutDir);
     }
 
     @Test
@@ -32,7 +37,9 @@ public class SpotMarketOperatorImplTest {
         operator.addDemand(new EnergyDemand(10f, 100, listener));
         operator.addSupply(new EnergySupply(9f, 50, listener));
         operator.clearMarket();
+        operator.stop();
         //must write log in test
+        assertTrue(priceForwardOutDir.exists());
     }
 
     private static class MyMarketOperatorListener implements MarketOperatorListener {

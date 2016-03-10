@@ -9,6 +9,7 @@ import hsoines.oekoflex.marketoperator.BalancingMarketOperator;
 import hsoines.oekoflex.marketoperator.impl.BalancingMarketOperatorImpl;
 import hsoines.oekoflex.marketoperator.impl.SpotMarketOperatorImpl;
 import hsoines.oekoflex.summary.impl.EnergyTraderTypeLogger;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import repast.simphony.context.Context;
@@ -39,23 +40,35 @@ public class OekoFlexContextBuilder implements ContextBuilder<OekoflexAgent> {
         String scenario = (String) p.getValue("scenario");
         String logDirName = "run/summary-logs/" + scenario;
         String configDirName = "run-config/" + scenario;
+        String priceForwardOutDirName = "run/price-forward/" + scenario;
+
         File configDir = new File(configDirName);
         if (!configDir.exists()) {
             log.error("Configuration directory is not existing: " + scenario);
             re.endRun();
         }
 
-        //remove log-dirs
-        if (loggingActivated) {
-            EnergyTraderTypeLogger energyTraderTypeLogger = new EnergyTraderTypeLogger(context, logDirName);
-            context.add(energyTraderTypeLogger);
-        }
 
         try {
+            File priceForwardOutDir = new File(priceForwardOutDirName);
+            if (priceForwardOutDir.exists()) {
+                log.info("removing old price forward");
+                FileUtils.deleteDirectory(priceForwardOutDir);
+                priceForwardOutDir.mkdir();
+            }
+
+            if (loggingActivated) {
+                //remove log-dirs
+                File logDir = new File(logDirName);
+                FileUtils.deleteDirectory(logDir);
+                EnergyTraderTypeLogger energyTraderTypeLogger = new EnergyTraderTypeLogger(context, logDirName);
+                context.add(energyTraderTypeLogger);
+            }
+
             Properties globalProperties = loadProperties(configDir);
             int positiveDemandREM = Integer.parseInt((String) globalProperties.get("positiveDemandREM"));
             int negativeDemandREM = Integer.parseInt((String) globalProperties.get("negativeDemandREM"));
-            SpotMarketOperatorImpl eomOperator = new SpotMarketOperatorImpl("EOM_Operator", logDirName, loggingActivated);
+            SpotMarketOperatorImpl eomOperator = new SpotMarketOperatorImpl("EOM_Operator", logDirName, loggingActivated, priceForwardOutDir);
             BalancingMarketOperator balancingMarketOperator = new BalancingMarketOperatorImpl("BalancingMarketOperator", loggingActivated, logDirName, positiveDemandREM, negativeDemandREM);
             context.add(eomOperator);
             context.add(balancingMarketOperator);
@@ -72,7 +85,6 @@ public class OekoFlexContextBuilder implements ContextBuilder<OekoflexAgent> {
             log.error(e.toString(), e);
             re.endRun();
         }
-
 
         return context;
     }

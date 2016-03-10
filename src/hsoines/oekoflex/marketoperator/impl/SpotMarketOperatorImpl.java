@@ -4,6 +4,7 @@ import hsoines.oekoflex.bid.Bid;
 import hsoines.oekoflex.bid.BidSupport;
 import hsoines.oekoflex.bid.EnergyDemand;
 import hsoines.oekoflex.bid.EnergySupply;
+import hsoines.oekoflex.builder.CSVParameter;
 import hsoines.oekoflex.energytrader.MarketOperatorListener;
 import hsoines.oekoflex.marketoperator.SpotMarketOperator;
 import hsoines.oekoflex.summary.LoggerFile;
@@ -12,9 +13,12 @@ import hsoines.oekoflex.summary.impl.NullLoggerFile;
 import hsoines.oekoflex.util.Market;
 import hsoines.oekoflex.util.NumberFormatUtil;
 import hsoines.oekoflex.util.TimeUtil;
+import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
 
@@ -32,8 +36,9 @@ public class SpotMarketOperatorImpl implements SpotMarketOperator {
     private float lastAssignmentRate;
     private AssignmentType lastAssignmentType;
     private final Map<Class, String> simpleNamesOfClasses;
+    private final CSVPrinter csvPrinter;
 
-    public SpotMarketOperatorImpl(String name, final String logDirName, final boolean loggingActivated) throws IOException {
+    public SpotMarketOperatorImpl(String name, final String logDirName, final boolean loggingActivated, final File priceForwardOutDir) throws IOException {
         this.name = name;
 
         energyDemands = new ArrayList<>();
@@ -46,6 +51,19 @@ public class SpotMarketOperatorImpl implements SpotMarketOperator {
         }
         logger.log("tick;traderType;traderName;bidType;offeredPrice;clearedPrice;offeredQuantity;assignedQuantity");
         simpleNamesOfClasses = new HashMap<>();
+        if (priceForwardOutDir != null) {
+            if (!priceForwardOutDir.exists()) {
+                if (!priceForwardOutDir.mkdirs()) {
+                    throw new IllegalStateException("couldn't create directories.");
+                }
+            }
+            File priceForwardFile = new File(priceForwardOutDir, "price-forward.csv");
+            final Appendable out;
+            out = new FileWriter(priceForwardFile);
+            csvPrinter = CSVParameter.getCSVFormat().withHeader("tick", "price").print(out);
+        } else {
+            csvPrinter = null;
+        }
     }
 
     @Override
@@ -75,11 +93,11 @@ public class SpotMarketOperatorImpl implements SpotMarketOperator {
         }
         Iterator<EnergyDemand> demandIterator = energyDemands.iterator();
         Iterator<EnergySupply> supplyIterator = this.energySupplies.iterator();
-        
+
         //increments until prices match
         int totalSupplyQuantity = 0;
         int totalDemandQuantity = 0;
-        
+
         clearedQuantity = 0;
         //Indicates next element:
         // balance < 0 -> energyDemands are fetched
@@ -169,11 +187,25 @@ public class SpotMarketOperatorImpl implements SpotMarketOperator {
         }
 
         notifyAssignmentRate();
+        logPriceForward();
 
         lastEnergyDemands = new ArrayList<>(energyDemands);
         lastSupplies = new ArrayList<>(energySupplies);
         energySupplies.clear();
         energyDemands.clear();
+    }
+
+    private void logPriceForward() {
+        if (csvPrinter == null) {
+            return;
+        }
+
+        long tick = TimeUtil.getCurrentTick();
+        try {
+            csvPrinter.printRecord(tick, clearedPrice);
+        } catch (IOException e) {
+            log.error(e.toString(), e);
+        }
     }
 
     private void notifyAssignmentRate() {
@@ -254,6 +286,17 @@ public class SpotMarketOperatorImpl implements SpotMarketOperator {
     @Override
     public float getLastAssignmentRate() {
         return lastAssignmentRate;
+    }
+
+    @Override
+    public void stop() {
+        if (csvPrinter != null) {
+            try {
+                csvPrinter.close();
+            } catch (IOException e) {
+                log.error(e.toString(), e);
+            }
+        }
     }
 
     public float getPrice() {  //dummy, da chart nicht sauber laeuft

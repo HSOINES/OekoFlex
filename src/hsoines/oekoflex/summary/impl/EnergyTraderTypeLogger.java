@@ -8,14 +8,12 @@ import hsoines.oekoflex.energytrader.impl.TradeRegistryImpl;
 import hsoines.oekoflex.summary.LoggerFile;
 import hsoines.oekoflex.util.NumberFormatUtil;
 import hsoines.oekoflex.util.TimeUtil;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import repast.simphony.context.Context;
 import repast.simphony.engine.schedule.ScheduledMethod;
 import repast.simphony.util.collections.IndexedIterable;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -38,12 +36,6 @@ public final class EnergyTraderTypeLogger implements OekoflexAgent {
         this.context = context;
         this.scenarioLogDir = scenarioLogDir + "/Trader";
 
-        File logDir = new File(scenarioLogDir);
-        try {
-            FileUtils.deleteDirectory(logDir);
-        } catch (IOException e) {
-            log.error(e.toString(), e);
-        }
         simpleNames = new HashMap<>();
     }
 

@@ -23,6 +23,9 @@ public interface SpotMarketOperator extends OekoflexAgent {
 
 	float getLastAssignmentRate();
 
+	@ScheduledMethod(start = ScheduledMethod.END)
+	void stop();
+
 	enum AssignmentType{
 		PartialDemand, PartialSupply, Full
 	}
