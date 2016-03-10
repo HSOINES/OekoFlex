@@ -19,6 +19,6 @@
 	<classpathentry kind="lib" path="lib/log4j-api-2.4.1.jar"/>
 	<classpathentry kind="lib" path="lib/log4j-core-2.4.1.jar"/>
 	<classpathentry kind="lib" path="lib/saf.core.runtime.jar"/>
-	<classpathentry kind="lib" path="lib/xchart-2.6.1.jar"/>
+	<classpathentry kind="lib" path="lib/xchart-3.0.2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

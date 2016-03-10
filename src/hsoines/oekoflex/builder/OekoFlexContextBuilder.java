@@ -5,6 +5,7 @@ import hsoines.oekoflex.builder.traderfactories.DaytimeEnergyConsumerFactory;
 import hsoines.oekoflex.builder.traderfactories.FlexPowerplantFactory;
 import hsoines.oekoflex.builder.traderfactories.FlexibleDemandFactory;
 import hsoines.oekoflex.builder.traderfactories.StorageFactory;
+import hsoines.oekoflex.energytrader.impl.test.ResidualSupplier;
 import hsoines.oekoflex.marketoperator.BalancingMarketOperator;
 import hsoines.oekoflex.marketoperator.impl.BalancingMarketOperatorImpl;
 import hsoines.oekoflex.marketoperator.impl.SpotMarketOperatorImpl;
@@ -48,6 +49,7 @@ public class OekoFlexContextBuilder implements ContextBuilder<OekoflexAgent> {
             re.endRun();
         }
 
+        float residualEnergy = (float) p.getValue("residualEnergy");
 
         try {
             File priceForwardOutDir = new File(priceForwardOutDirName);
@@ -68,19 +70,23 @@ public class OekoFlexContextBuilder implements ContextBuilder<OekoflexAgent> {
             Properties globalProperties = loadProperties(configDir);
             int positiveDemandREM = Integer.parseInt((String) globalProperties.get("positiveDemandREM"));
             int negativeDemandREM = Integer.parseInt((String) globalProperties.get("negativeDemandREM"));
-            SpotMarketOperatorImpl eomOperator = new SpotMarketOperatorImpl("EOM_Operator", logDirName, loggingActivated, priceForwardOutDir);
+            SpotMarketOperatorImpl spotMarketOperator = new SpotMarketOperatorImpl("EOM_Operator", logDirName, loggingActivated, priceForwardOutDir);
             BalancingMarketOperator balancingMarketOperator = new BalancingMarketOperatorImpl("BalancingMarketOperator", loggingActivated, logDirName, positiveDemandREM, negativeDemandREM);
-            context.add(eomOperator);
+            context.add(spotMarketOperator);
             context.add(balancingMarketOperator);
 
             //Consumer
-            DaytimeEnergyConsumerFactory.build(configDir, context, eomOperator);
-            FlexibleDemandFactory.build(configDir, context, eomOperator);
+            DaytimeEnergyConsumerFactory.build(configDir, context, spotMarketOperator);
+            FlexibleDemandFactory.build(configDir, context, spotMarketOperator);
 
             //Producer
-            FlexPowerplantFactory.build(configDir, context, eomOperator, balancingMarketOperator);
-            StorageFactory.build(configDir, context, eomOperator, balancingMarketOperator);
+            FlexPowerplantFactory.build(configDir, context, spotMarketOperator, balancingMarketOperator);
+            StorageFactory.build(configDir, context, spotMarketOperator, balancingMarketOperator);
 
+            //experimental!
+            final ResidualSupplier residualSupplier = new ResidualSupplier(residualEnergy);
+            residualSupplier.setSpotMarketOperator(spotMarketOperator);
+            context.add(residualSupplier);
         } catch (IOException e) {
             log.error(e.toString(), e);
             re.endRun();

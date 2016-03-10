@@ -119,7 +119,7 @@ public class SpotMarketOperatorImpl implements SpotMarketOperator {
                         break;
                     }
                     balance -= energySupply.getQuantity();
-                    if (balance < 0) {
+                    if (balance <= 0) {//todo
                         clearedPrice = energySupply.getPrice();
                     } else {
                         clearedPrice = energyDemand.getPrice();
@@ -162,7 +162,7 @@ public class SpotMarketOperatorImpl implements SpotMarketOperator {
                 } else {
                     moreDemands = false;
                     if (balance == 0) {
-                        log.warn("market stops. balance is 0, no more demands.");
+                        log.trace("market stops. balance is 0, no more demands.");
                         break;
                     }
                 }

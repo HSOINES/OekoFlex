@@ -6,4 +6,5 @@
 			   defaultValue="scenario1"/>
 	<parameter name="daysToRun" displayName="Simulationstage" type="int" defaultValue="1"/>
 	<parameter name="loggingActivated" displayName="Logging aktiviert" type="boolean" defaultValue="true"/>
+	<parameter name="residualEnergy" displayName="Residual Energie" type="float" defaultValue="4000"/>
 </parameters>
