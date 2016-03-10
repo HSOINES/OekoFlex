@@ -1,10 +1,11 @@
-package hsoines.oekoflex.summary;
+package hsoines.oekoflex.summary.impl;
 
 import hsoines.oekoflex.OekoflexAgent;
 import hsoines.oekoflex.bid.BidType;
 import hsoines.oekoflex.domain.SequenceDefinition;
 import hsoines.oekoflex.energytrader.MarketTrader;
 import hsoines.oekoflex.energytrader.impl.TradeRegistryImpl;
+import hsoines.oekoflex.summary.LoggerFile;
 import hsoines.oekoflex.util.NumberFormatUtil;
 import hsoines.oekoflex.util.TimeUtil;
 import org.apache.commons.io.FileUtils;
@@ -62,7 +63,7 @@ public final class EnergyTraderTypeLogger implements OekoflexAgent {
             LoggerFile loggerFile = null;
             try {
                 String header = buildHeaderString(marketTrader);
-                loggerFile = new LoggerFile(marketTrader.getClass().getSimpleName() + "s", scenarioLogDir);
+                loggerFile = new LoggerFileImpl(marketTrader.getClass().getSimpleName() + "s", scenarioLogDir);
                 loggerFiles.put(marketTrader.getClass(), loggerFile);
                 loggerFile.log(header);
             } catch (IOException e) {

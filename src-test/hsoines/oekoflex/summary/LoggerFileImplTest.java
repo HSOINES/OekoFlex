@@ -1,5 +1,6 @@
 package hsoines.oekoflex.summary;
 
+import hsoines.oekoflex.summary.impl.LoggerFileImpl;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.BasicConfigurator;
@@ -11,15 +12,15 @@ import org.junit.Test;
  * Date: 10/03/16
  * Time: 14:27
  */
-public class LoggerFileTest {
-    private static final Log log = LogFactory.getLog(LoggerFileTest.class);
+public class LoggerFileImplTest {
+    private static final Log log = LogFactory.getLog(LoggerFileImplTest.class);
 
     private LoggerFile testLogger;
 
     @Before
     public void setUp() throws Exception {
         BasicConfigurator.configure();
-        testLogger = new LoggerFile("testlogger", "testscenario", 3);
+        testLogger = new LoggerFileImpl("testlogger", "testscenario", 3);
 
     }
 

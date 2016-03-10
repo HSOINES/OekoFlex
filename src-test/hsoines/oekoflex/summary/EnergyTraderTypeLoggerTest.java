@@ -6,6 +6,7 @@ import hsoines.oekoflex.energytrader.EOMTrader;
 import hsoines.oekoflex.energytrader.impl.TradeRegistryImpl;
 import hsoines.oekoflex.marketoperator.BalancingMarketOperator;
 import hsoines.oekoflex.marketoperator.SpotMarketOperator;
+import hsoines.oekoflex.summary.impl.EnergyTraderTypeLogger;
 import hsoines.oekoflex.util.Market;
 import org.junit.Before;
 import org.junit.Test;

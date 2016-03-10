@@ -8,7 +8,7 @@ import hsoines.oekoflex.builder.traderfactories.StorageFactory;
 import hsoines.oekoflex.marketoperator.BalancingMarketOperator;
 import hsoines.oekoflex.marketoperator.impl.BalancingMarketOperatorImpl;
 import hsoines.oekoflex.marketoperator.impl.SpotMarketOperatorImpl;
-import hsoines.oekoflex.summary.EnergyTraderTypeLogger;
+import hsoines.oekoflex.summary.impl.EnergyTraderTypeLogger;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import repast.simphony.context.Context;
@@ -34,6 +34,8 @@ public class OekoFlexContextBuilder implements ContextBuilder<OekoflexAgent> {
         int daysToRun = (int) p.getValue("daysToRun");
         re.endAt(daysToRun * 96);//todo
 
+        boolean loggingActivated = (boolean) p.getValue("loggingActivated");
+
         String scenario = (String) p.getValue("scenario");
         String logDirName = "run/summary-logs/" + scenario;
         String configDirName = "run-config/" + scenario;
@@ -44,15 +46,17 @@ public class OekoFlexContextBuilder implements ContextBuilder<OekoflexAgent> {
         }
 
         //remove log-dirs
-        EnergyTraderTypeLogger energyTraderTypeLogger = new EnergyTraderTypeLogger(context, logDirName);
-        context.add(energyTraderTypeLogger);
+        if (loggingActivated) {
+            EnergyTraderTypeLogger energyTraderTypeLogger = new EnergyTraderTypeLogger(context, logDirName);
+            context.add(energyTraderTypeLogger);
+        }
 
         try {
             Properties globalProperties = loadProperties(configDir);
             int positiveDemandREM = Integer.parseInt((String) globalProperties.get("positiveDemandREM"));
             int negativeDemandREM = Integer.parseInt((String) globalProperties.get("negativeDemandREM"));
-            SpotMarketOperatorImpl eomOperator = new SpotMarketOperatorImpl("EOM_Operator", logDirName);
-            BalancingMarketOperator balancingMarketOperator = new BalancingMarketOperatorImpl("BalancingMarketOperator", logDirName, positiveDemandREM, negativeDemandREM);
+            SpotMarketOperatorImpl eomOperator = new SpotMarketOperatorImpl("EOM_Operator", logDirName, loggingActivated);
+            BalancingMarketOperator balancingMarketOperator = new BalancingMarketOperatorImpl("BalancingMarketOperator", loggingActivated, logDirName, positiveDemandREM, negativeDemandREM);
             context.add(eomOperator);
             context.add(balancingMarketOperator);
 

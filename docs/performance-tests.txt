@@ -1,0 +1,5 @@
+
+Testumfeld: ca. 300 FlexPowerplants, 367 Tage
+ohne Graphik, mit Logging: 8 Minuten
+ohne Graphik, ohne Logging: 4.5 Minuten
+mit Graphik, mit Logging: 1 Stunde

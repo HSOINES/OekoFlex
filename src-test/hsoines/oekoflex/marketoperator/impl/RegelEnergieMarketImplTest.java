@@ -28,7 +28,7 @@ public class RegelEnergieMarketImplTest {
 
     @Before
     public void setUp() throws Exception {
-        operator = new BalancingMarketOperatorImpl("test", "run/summary-logs/test", 10000, 0);
+        operator = new BalancingMarketOperatorImpl("test", true, "run/summary-logs/test", 10000, 0);
         listener = mock(MarketOperatorListener.class);
 
         RepastTestInitializer.init();

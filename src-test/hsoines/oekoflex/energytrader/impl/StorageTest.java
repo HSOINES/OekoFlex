@@ -24,7 +24,7 @@ public class StorageTest {
     public void setUp() throws Exception {
         RepastTestInitializer.init();
         storage = new Storage("test", "description", 500, 10, 1f, 0.1f, 1000, 1, 0, 100, 100);
-        operator = new SpotMarketOperatorImpl("test_operator", "run/summary-logs/test");
+        operator = new SpotMarketOperatorImpl("test_operator", "run/summary-logs/test", true);
         storage.setSpotMarketOperator(operator);
     }
 

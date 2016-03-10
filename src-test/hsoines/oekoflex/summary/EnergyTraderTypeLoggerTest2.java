@@ -5,6 +5,7 @@ import hsoines.oekoflex.bid.EnergyDemand;
 import hsoines.oekoflex.bid.PowerPositive;
 import hsoines.oekoflex.energytrader.impl.test.CombinedEnergyProducer;
 import hsoines.oekoflex.energytrader.impl.test.DaytimeEnergyConsumer;
+import hsoines.oekoflex.summary.impl.EnergyTraderTypeLogger;
 import hsoines.oekoflex.tools.RepastTestInitializer;
 import hsoines.oekoflex.util.Market;
 import org.junit.Before;

@@ -7,6 +7,8 @@ import hsoines.oekoflex.bid.EnergySupply;
 import hsoines.oekoflex.energytrader.MarketOperatorListener;
 import hsoines.oekoflex.marketoperator.SpotMarketOperator;
 import hsoines.oekoflex.summary.LoggerFile;
+import hsoines.oekoflex.summary.impl.LoggerFileImpl;
+import hsoines.oekoflex.summary.impl.NullLoggerFile;
 import hsoines.oekoflex.util.Market;
 import hsoines.oekoflex.util.NumberFormatUtil;
 import hsoines.oekoflex.util.TimeUtil;
@@ -31,13 +33,17 @@ public class SpotMarketOperatorImpl implements SpotMarketOperator {
     private AssignmentType lastAssignmentType;
     private final Map<Class, String> simpleNamesOfClasses;
 
-    public SpotMarketOperatorImpl(String name, final String logDirName) throws IOException {
+    public SpotMarketOperatorImpl(String name, final String logDirName, final boolean loggingActivated) throws IOException {
         this.name = name;
 
         energyDemands = new ArrayList<>();
         energySupplies = new ArrayList<>();
 
-        logger = new LoggerFile(this.getClass().getSimpleName(), logDirName);
+        if (loggingActivated) {
+            logger = new LoggerFileImpl(this.getClass().getSimpleName(), logDirName);
+        } else {
+            logger = new NullLoggerFile();
+        }
         logger.log("tick;traderType;traderName;bidType;offeredPrice;clearedPrice;offeredQuantity;assignedQuantity");
         simpleNamesOfClasses = new HashMap<>();
     }

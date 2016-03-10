@@ -23,7 +23,7 @@ public class SpotMarketOperatorImplTest {
     @Before
     public void setUp() throws Exception {
         RepastTestInitializer.init();
-        operator = new SpotMarketOperatorImpl("test", "run/summary-logs/test");
+        operator = new SpotMarketOperatorImpl("test", "run/summary-logs/test", true);
     }
 
     @Test

@@ -6,6 +6,8 @@ import hsoines.oekoflex.bid.PowerPositive;
 import hsoines.oekoflex.energytrader.MarketOperatorListener;
 import hsoines.oekoflex.marketoperator.BalancingMarketOperator;
 import hsoines.oekoflex.summary.LoggerFile;
+import hsoines.oekoflex.summary.impl.LoggerFileImpl;
+import hsoines.oekoflex.summary.impl.NullLoggerFile;
 import hsoines.oekoflex.util.Market;
 import hsoines.oekoflex.util.NumberFormatUtil;
 import hsoines.oekoflex.util.TimeUtil;
@@ -41,15 +43,19 @@ public final class BalancingMarketOperatorImpl implements BalancingMarketOperato
 
     private LoggerFile logger;
 
-    public BalancingMarketOperatorImpl(String name, String logDirName, final int positiveDemandREM, final int negativeDemandREM) throws IOException {
+    public BalancingMarketOperatorImpl(String name, final boolean loggingActivated, String logDirName, final int positiveDemandREM, final int negativeDemandREM) throws IOException {
         this.name = name;
         this.positiveQuantity = positiveDemandREM;
         this.negativeQuantity = negativeDemandREM;
-        init(logDirName);
+        if (loggingActivated) {
+            initLogging(logDirName);
+        } else {
+            logger = new NullLoggerFile();
+        }
     }
 
-    private void init(final String logDirName) throws IOException {
-        logger = new LoggerFile(this.getClass().getSimpleName(), logDirName);
+    private void initLogging(final String logDirName) throws IOException {
+        logger = new LoggerFileImpl(this.getClass().getSimpleName(), logDirName);
         logger.log("tick;traderType;traderName;bidType;offeredPrice;offeredQuantity;assignedQuantity");
     }
 
@@ -71,12 +77,12 @@ public final class BalancingMarketOperatorImpl implements BalancingMarketOperato
 
     @Override
     public void clearMarket() {
-        log.info("positive clearing.");
+        log.trace("positive clearing.");
         ClearingData positiveClearingData = doClearMarketFor(positiveSupplies, positiveQuantity);
         totalClearedPositiveQuantity = positiveClearingData.getClearedQuantity();
         lastPositiveAssignmentRate = positiveClearingData.getAssignmentRate();
         lastClearedPositiveMaxPrice = positiveClearingData.getLastClearedMaxPrice();
-        log.info("negative clearing.");
+        log.trace("negative clearing.");
         ClearingData negativeClearingData = doClearMarketFor(negativeSupplies, negativeQuantity);
         totalClearedNegativeQuantity = negativeClearingData.getClearedQuantity();
         lastNegativeAssignmentRate = negativeClearingData.getAssignmentRate();
@@ -104,12 +110,12 @@ public final class BalancingMarketOperatorImpl implements BalancingMarketOperato
                 lastClearedPrice = bidSupport.getPrice();
             }
         }
-        log.info("Clearing done.");
+        log.trace("Clearing done.");
         supplies.clear();
         final int finalTotalClearedQuantity = totalClearedQuantity;
         final float finalLastAssignmentRate = lastAssignmentRate;
         final float finalLastClearedPrice = lastClearedPrice;
-        log.info("total cleared quantity: " + finalTotalClearedQuantity + ", lasst assignment rate: " + lastAssignmentRate + ", last cleared price: " + lastClearedPrice);
+        log.trace("total cleared quantity: " + finalTotalClearedQuantity + ", lasst assignment rate: " + lastAssignmentRate + ", last cleared price: " + lastClearedPrice);
         return new ClearingData() {
             @Override
             public int getClearedQuantity() {
@@ -130,13 +136,11 @@ public final class BalancingMarketOperatorImpl implements BalancingMarketOperato
 
     @Override
     public long getTotalClearedPositiveQuantity() {
-        log.info("Cleared Quantity:" + totalClearedPositiveQuantity);
         return totalClearedPositiveQuantity;
     }
 
     @Override
     public long getTotalClearedNegativeQuantity() {
-        log.info("Cleared Quantity:" + totalClearedNegativeQuantity);
         return totalClearedNegativeQuantity;
     }
 
@@ -184,4 +188,5 @@ public final class BalancingMarketOperatorImpl implements BalancingMarketOperato
         float getLastClearedMaxPrice();
         float getAssignmentRate();
     }
+
 }

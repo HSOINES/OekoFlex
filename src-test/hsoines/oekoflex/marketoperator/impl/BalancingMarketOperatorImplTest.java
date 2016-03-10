@@ -24,7 +24,7 @@ public class BalancingMarketOperatorImplTest {
 
     @Before
     public void setUp() throws Exception {
-        operator = new BalancingMarketOperatorImpl("test", "run/summary-logs/test", 0, 10000);
+        operator = new BalancingMarketOperatorImpl("test", true, "run/summary-logs/test", 0, 10000);
         listener = mock(MarketOperatorListener.class);
 
         RepastTestInitializer.init();
