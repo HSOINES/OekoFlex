@@ -1,9 +1,9 @@
 <repast.simphony.chart2.engine.TimeSeriesChartDescriptor>
-  <name>BalancingMarketPositive</name>
+  <name>BalancingMarketQuantity</name>
   <dataSet>BalancingMarketOperatorDataSet</dataSet>
   <xAxisLabel>Tick Count</xAxisLabel>
   <yAxisLabel></yAxisLabel>
-  <chartTitle>REM Positive Quantity</chartTitle>
+  <chartTitle>Balancing Market Positive And Negative Price</chartTitle>
   <type>TIME_SERIES</type>
   <background>
     <red>192</red>
@@ -28,8 +28,8 @@
     </entry>
   </seriesIds>
   <dataValueIds>
-    <string>TotalClearedPositiveQuantity</string>
     <string>LastClearedPositiveMaxPrice</string>
+    <string>LastClearedNegativeMaxPrice</string>
   </dataValueIds>
   <plotRangeLength>-1</plotRangeLength>
 </repast.simphony.chart2.engine.TimeSeriesChartDescriptor>

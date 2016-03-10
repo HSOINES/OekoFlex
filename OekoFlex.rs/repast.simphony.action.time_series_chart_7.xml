@@ -1,9 +1,9 @@
 <repast.simphony.chart2.engine.TimeSeriesChartDescriptor>
-    <name>LastClearedQuantity</name>
-    <dataSet>EnergieOnlyMarketOperator</dataSet>
+    <name>BalancingMarketMaxPrice</name>
+    <dataSet>BalancingMarketOperatorDataSet</dataSet>
     <xAxisLabel>Tick Count</xAxisLabel>
     <yAxisLabel></yAxisLabel>
-    <chartTitle>EOM Quantity</chartTitle>
+    <chartTitle>Balancing Market Positive and Negative Quantity</chartTitle>
     <type>TIME_SERIES</type>
     <background>
         <red>192</red>
@@ -21,14 +21,15 @@
     <showLegend>true</showLegend>
     <seriesIds>
         <entry>
-            <string>Price</string>
+            <string>Name</string>
             <SeriesData>
                 <label></label>
             </SeriesData>
         </entry>
     </seriesIds>
     <dataValueIds>
-        <string>TotalClearedQuantity</string>
+        <string>TotalClearedPositiveQuantity</string>
+        <string>TotalClearedNegativeQuantity</string>
     </dataValueIds>
     <plotRangeLength>-1</plotRangeLength>
 </repast.simphony.chart2.engine.TimeSeriesChartDescriptor>

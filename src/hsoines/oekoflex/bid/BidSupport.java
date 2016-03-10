@@ -36,18 +36,26 @@ public abstract class BidSupport implements Bid {
      }
 
 
-    public static class AscendingComparator implements Comparator<Bid> {
+    public static class SupplySorter implements Comparator<Bid> {
 
         @Override
         public int compare(Bid o1, Bid o2) {
-            return Float.compare(o1.getPrice(), o2.getPrice());
+            final int compare = Float.compare(o1.getPrice(), o2.getPrice());
+            if (compare == 0) {
+                return Float.compare(o2.getQuantity(), o1.getQuantity());
+            }
+            return compare;
         }
     }
 
-    public static class DescendingComparator implements Comparator<Bid> {
+    public static class DemandSorter implements Comparator<Bid> {
         @Override
         public int compare(Bid o1, Bid o2) {
-            return Float.compare(o2.getPrice(), o1.getPrice());
+            final int compare = Float.compare(o2.getPrice(), o1.getPrice());
+            if (compare == 0) {
+                return Float.compare(o2.getQuantity(), o1.getQuantity());
+            }
+            return compare;
         }
     }
 }

@@ -1,9 +1,9 @@
 package hsoines.oekoflex.marketoperator.impl;
 
 import hsoines.oekoflex.bid.Bid;
+import hsoines.oekoflex.bid.BidSupport;
 import hsoines.oekoflex.bid.EnergyDemand;
 import hsoines.oekoflex.bid.EnergySupply;
-import hsoines.oekoflex.bid.PowerPositive;
 import hsoines.oekoflex.energytrader.MarketOperatorListener;
 import hsoines.oekoflex.marketoperator.SpotMarketOperator;
 import hsoines.oekoflex.summary.LoggerFile;
@@ -14,16 +14,13 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 public class SpotMarketOperatorImpl implements SpotMarketOperator {
     private static final Log log = LogFactory.getLog(SpotMarketOperatorImpl.class);
 
     private final List<EnergyDemand> energyDemands;
-    private final List<EnergySupply> supplies;
+    private final List<EnergySupply> energySupplies;
     private final LoggerFile logger;
     private List<EnergyDemand> lastEnergyDemands;
     private List<EnergySupply> lastSupplies;
@@ -32,15 +29,17 @@ public class SpotMarketOperatorImpl implements SpotMarketOperator {
     private float clearedPrice;
     private float lastAssignmentRate;
     private AssignmentType lastAssignmentType;
+    private final Map<Class, String> simpleNamesOfClasses;
 
     public SpotMarketOperatorImpl(String name, final String logDirName) throws IOException {
         this.name = name;
 
         energyDemands = new ArrayList<>();
-        supplies = new ArrayList<>();
+        energySupplies = new ArrayList<>();
 
         logger = new LoggerFile(this.getClass().getSimpleName(), logDirName);
         logger.log("tick;traderType;traderName;bidType;offeredPrice;clearedPrice;offeredQuantity;assignedQuantity");
+        simpleNamesOfClasses = new HashMap<>();
     }
 
     @Override
@@ -56,20 +55,20 @@ public class SpotMarketOperatorImpl implements SpotMarketOperator {
         if (supply.getQuantity() < 0.001) {
             return;
         }
-        this.supplies.add(supply);
+        this.energySupplies.add(supply);
     }
 
     @Override
     public void clearMarket() {
-        energyDemands.sort(new EnergyDemand.DescendingComparator());
-        this.supplies.sort(new PowerPositive.AscendingComparator());
+        energyDemands.sort(new BidSupport.DemandSorter());
+        energySupplies.sort(new BidSupport.SupplySorter());
 
-        if (energyDemands.size() < 1 || this.supplies.size() < 1) {
+        if (energyDemands.size() < 1 || this.energySupplies.size() < 1) {
             throw new IllegalStateException("Sizes unsufficient! SupportSize: "
-                    + this.supplies.size() + ", DemandSize: " + energyDemands.size());
+                    + this.energySupplies.size() + ", DemandSize: " + energyDemands.size());
         }
         Iterator<EnergyDemand> demandIterator = energyDemands.iterator();
-        Iterator<EnergySupply> supplyIterator = this.supplies.iterator();
+        Iterator<EnergySupply> supplyIterator = this.energySupplies.iterator();
         
         //increments until prices match
         int totalSupplyQuantity = 0;
@@ -77,8 +76,8 @@ public class SpotMarketOperatorImpl implements SpotMarketOperator {
         
         clearedQuantity = 0;
         //Indicates next element:
-        // balance < 0 -> demands are fetched
-        // balance > 0 -> supplies are fetched
+        // balance < 0 -> energyDemands are fetched
+        // balance > 0 -> energySupplies are fetched
         int balance = 0;
         //Stops clearing if false
         boolean moreSupplies = true;
@@ -169,8 +168,8 @@ public class SpotMarketOperatorImpl implements SpotMarketOperator {
         notifyAssignmentRate();
 
         lastEnergyDemands = new ArrayList<>(energyDemands);
-        lastSupplies = new ArrayList<>(supplies);
-        supplies.clear();
+        lastSupplies = new ArrayList<>(energySupplies);
+        energySupplies.clear();
         energyDemands.clear();
     }
 
@@ -199,7 +198,7 @@ public class SpotMarketOperatorImpl implements SpotMarketOperator {
                         .append(energyDemand.getQuantity()).append(",");
             }
         }
-        for (EnergySupply supply : this.supplies) {
+        for (EnergySupply supply : this.energySupplies) {
             MarketOperatorListener marketOperatorListener = supply.getMarketOperatorListener();
             if (marketOperatorListener != null) {
                 float assignmentRate = 0;
@@ -222,8 +221,14 @@ public class SpotMarketOperatorImpl implements SpotMarketOperator {
     }
 
     private void logSummary(final Bid bid, final float assignmentRate) {
+        final Class<? extends MarketOperatorListener> aClass = bid.getMarketOperatorListener().getClass();
+        String simpleName = simpleNamesOfClasses.get(aClass);
+        if (simpleName == null) {
+            simpleName = aClass.getSimpleName();
+            simpleNamesOfClasses.put(aClass, simpleName);
+        }
         logger.log(TimeUtil.getCurrentTick() + ";"
-                        + bid.getMarketOperatorListener().getClass().getSimpleName() + ";"
+                        + simpleName + ";"
                         + bid.getMarketOperatorListener().getName() + ";"
                         + bid.getClass().getSimpleName() + ";"
                         + NumberFormatUtil.format(bid.getPrice()) + ";"

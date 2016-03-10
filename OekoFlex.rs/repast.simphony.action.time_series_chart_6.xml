@@ -1,9 +1,9 @@
 <repast.simphony.chart2.engine.TimeSeriesChartDescriptor>
-    <name>LastAssignmentRate</name>
+    <name>LastClearedQuantity</name>
     <dataSet>EnergieOnlyMarketOperator</dataSet>
     <xAxisLabel>Tick Count</xAxisLabel>
     <yAxisLabel></yAxisLabel>
-    <chartTitle>EOM LastAssignmentRate</chartTitle>
+    <chartTitle>EOM Quantity</chartTitle>
     <type>TIME_SERIES</type>
     <background>
         <red>192</red>
@@ -28,7 +28,7 @@
         </entry>
     </seriesIds>
     <dataValueIds>
-        <string>LastAssignmentRate</string>
+        <string>TotalClearedQuantity</string>
     </dataValueIds>
     <plotRangeLength>-1</plotRangeLength>
 </repast.simphony.chart2.engine.TimeSeriesChartDescriptor>
