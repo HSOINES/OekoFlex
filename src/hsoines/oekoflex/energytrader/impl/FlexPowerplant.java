@@ -34,6 +34,9 @@ public final class FlexPowerplant implements EOMTrader, BalancingMarketTrader, M
     private float lastAssignmentRate;
     private float lastClearedPrice;
 
+    /*
+        RampUp/Down: for 12 Hours.
+     */
     public FlexPowerplant(final String name, final String description, final int powerMax, final int powerMin, final int powerRampUp, final int powerRampDown, final float marginalCosts, final float shutdownCosts) {
         this.name = name;
         this.description = description;
@@ -83,10 +86,10 @@ public final class FlexPowerplant implements EOMTrader, BalancingMarketTrader, M
             pPreceding = powerMin;
         }
 
-        int pNeg = Math.min(pPreceding - powerMin, powerRampDown);
+        float pNeg = Math.min(pPreceding - powerMin, powerRampDown / 3f);
         balancingMarketOperator.addNegativeSupply(new PowerNegative(marginalCosts, pNeg, this));   //price???
 
-        int pPos = Math.min(powerMax - pPreceding, powerRampUp);
+        float pPos = Math.min(powerMax - pPreceding, powerRampUp / 3f);
         balancingMarketOperator.addPositiveSupply(new PowerPositive(marginalCosts, pPos, this));   //price???
     }
 

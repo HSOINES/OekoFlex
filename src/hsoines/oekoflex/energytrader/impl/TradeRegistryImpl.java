@@ -16,7 +16,7 @@ import java.util.*;
  */
 public final class TradeRegistryImpl implements TradeRegistry {
     private static final Log log = LogFactory.getLog(TradeRegistryImpl.class);
-    public static final int MAX_ELEMENTS_IN_LIST = 4 * 16; //we now only use the values from last round!
+    public static final int MAX_ELEMENTS_IN_LIST = 1000; //we now only use the values from last round!
 
     private final List<EnergyTradeElement> tradeElements;
     private final Type type;

@@ -58,7 +58,7 @@ public class FlexPowerplantTest {
         TradeRegistryImpl.EnergyTradeElement powerPositive = currentAssignments.get(0);
         assertEquals(BidType.POWER_POSITIVE, powerPositive.getBidType());
         assertEquals(50f, powerPositive.getAssignedPrice(), 0.00001f);   //price???
-        assertEquals(100, powerPositive.getOfferedQuantity(), 0.00001f);
+        assertEquals(100 / 3f, powerPositive.getOfferedQuantity(), 0.00001f);
         assertEquals(1, powerPositive.getRate(), 0.00001f);
 
         TradeRegistryImpl.EnergyTradeElement energyMustRun = currentAssignments.get(1);
