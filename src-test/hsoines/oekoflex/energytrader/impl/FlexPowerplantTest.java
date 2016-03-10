@@ -53,7 +53,7 @@ public class FlexPowerplantTest {
 
         List<TradeRegistryImpl.EnergyTradeElement> currentAssignments = flexpowerplant.getCurrentAssignments();
 
-        assertEquals(4, currentAssignments.size());
+        assertEquals(3, currentAssignments.size());
 
         TradeRegistryImpl.EnergyTradeElement powerPositive = currentAssignments.get(0);
         assertEquals(BidType.POWER_POSITIVE, powerPositive.getBidType());
@@ -61,19 +61,13 @@ public class FlexPowerplantTest {
         assertEquals(100, powerPositive.getOfferedQuantity(), 0.00001f);
         assertEquals(1, powerPositive.getRate(), 0.00001f);
 
-        TradeRegistryImpl.EnergyTradeElement powerNegative = currentAssignments.get(1);
-        assertEquals(BidType.POWER_NEGATIVE, powerNegative.getBidType());
-        assertEquals(50f, powerNegative.getAssignedPrice(), 0.00001f);  //price???
-        assertEquals(0, powerNegative.getOfferedQuantity(), 0.00001f);
-        assertEquals(1, powerNegative.getRate(), 0.00001f);
-
-        TradeRegistryImpl.EnergyTradeElement energyMustRun = currentAssignments.get(2);
+        TradeRegistryImpl.EnergyTradeElement energyMustRun = currentAssignments.get(1);
         assertEquals(BidType.ENERGY_SUPPLY_MUSTRUN, energyMustRun.getBidType());
         assertEquals(-.2f, energyMustRun.getAssignedPrice(), 0.00001f); // shutdown costs / must-run-quantity
         assertEquals(500f, energyMustRun.getOfferedQuantity(), 0.00001f);
         assertEquals(.4f, energyMustRun.getRate(), 0.00001f);
 
-        TradeRegistryImpl.EnergyTradeElement energy = currentAssignments.get(3);
+        TradeRegistryImpl.EnergyTradeElement energy = currentAssignments.get(2);
         assertEquals(BidType.ENERGY_SUPPLY, energy.getBidType());
         assertEquals(-.2f, energy.getAssignedPrice(), 0.00001f);
         assertEquals(25, energy.getOfferedQuantity(), 0.00001f);

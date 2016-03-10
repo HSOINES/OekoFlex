@@ -11,8 +11,6 @@ import hsoines.oekoflex.util.NumberFormatUtil;
 import hsoines.oekoflex.util.TimeUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import repast.simphony.engine.environment.RunEnvironment;
-import repast.simphony.parameter.Parameters;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -45,7 +43,6 @@ public final class BalancingMarketOperatorImpl implements BalancingMarketOperato
 
     public BalancingMarketOperatorImpl(String name, String logDirName, final int positiveDemandREM, final int negativeDemandREM) throws IOException {
         this.name = name;
-        Parameters p = RunEnvironment.getInstance().getParameters();
         this.positiveQuantity = positiveDemandREM;
         this.negativeQuantity = negativeDemandREM;
         init(logDirName);
@@ -58,7 +55,7 @@ public final class BalancingMarketOperatorImpl implements BalancingMarketOperato
 
     @Override
     public void addPositiveSupply(final PowerPositive supply) {
-        if (supply.getQuantity() < 0.001) {
+        if (supply.getQuantity() < 0.00001) {
             return;
         }
         positiveSupplies.add(supply);
@@ -66,7 +63,7 @@ public final class BalancingMarketOperatorImpl implements BalancingMarketOperato
 
     @Override
     public void addNegativeSupply(final PowerNegative supply) {
-        if (supply.getQuantity() < 0.001) {
+        if (supply.getQuantity() < 0.00001) {
             return;
         }
         negativeSupplies.add(supply);
@@ -87,7 +84,7 @@ public final class BalancingMarketOperatorImpl implements BalancingMarketOperato
     }
 
     ClearingData doClearMarketFor(final List<BidSupport> supplies, int quantity) {
-        supplies.sort((o1, o2) -> Float.compare(o1.getPrice(), o2.getPrice()));
+        supplies.sort(new BidSupport.SupplySorter());
         int totalClearedQuantity = 0;
         float lastAssignmentRate = 0;
         float lastClearedPrice = 0;
