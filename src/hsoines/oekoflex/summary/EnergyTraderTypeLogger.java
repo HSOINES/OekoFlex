@@ -31,6 +31,7 @@ public final class EnergyTraderTypeLogger implements OekoflexAgent {
     private final String scenarioLogDir;
 
     private final Map<Class, LoggerFile> loggerFiles = new HashMap<>();
+    private final Map<Class, String> simpleNames;
 
     public EnergyTraderTypeLogger(final Context<OekoflexAgent> context, String scenarioLogDir) {
         this.context = context;
@@ -42,6 +43,7 @@ public final class EnergyTraderTypeLogger implements OekoflexAgent {
         } catch (IOException e) {
             log.error(e.toString(), e);
         }
+        simpleNames = new HashMap<>();
     }
 
     @ScheduledMethod(start = SequenceDefinition.SimulationStart, interval = 1, priority = SequenceDefinition.ReportingPriority)
@@ -85,8 +87,14 @@ public final class EnergyTraderTypeLogger implements OekoflexAgent {
             float capacity = currentAssignment.getCapacity();
             int assignedQuantity = (int) (currentAssignment.getRate() * currentAssignment.getOfferedQuantity());
             boolean mustRunViolation = (currentAssignment.getBidType().equals(BidType.ENERGY_SUPPLY_MUSTRUN) && currentAssignment.getRate() - 1 > .01);
+            final Class<? extends MarketTrader> aClass = marketTrader.getClass();
+            String simpleName = simpleNames.get(aClass);
+            if (simpleName == null) {
+                simpleName = aClass.getSimpleName();
+                simpleNames.put(aClass, simpleName);
+            }
             loggerFile.log(TimeUtil.getTick(TimeUtil.getCurrentDate()) + ";"
-                    + marketTrader.getClass().getSimpleName() + ";"
+                    + simpleName + ";"
                     + marketTrader.getName() + ";"
                     + marketTrader.getDescription() + ";"
                     + currentAssignment.getMarket() + ";"

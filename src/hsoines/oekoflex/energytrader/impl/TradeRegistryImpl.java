@@ -16,6 +16,7 @@ import java.util.*;
  */
 public final class TradeRegistryImpl implements TradeRegistry {
     private static final Log log = LogFactory.getLog(TradeRegistryImpl.class);
+    public static final int MAX_ELEMENTS_IN_LIST = 3000;
 
     private final List<EnergyTradeElement> tradeElements;
     private final Type type;
@@ -139,6 +140,7 @@ public final class TradeRegistryImpl implements TradeRegistry {
                 capacity = initialcapacity;
             }
             tradeElements.add(new EnergyTradeElement(tick, market, offeredPrice, clearedprice, offeredQuantity, rate, capacity, bidType));
+            if (tradeElements.size() > MAX_ELEMENTS_IN_LIST) tradeElements.remove(0);
         }
     }
 

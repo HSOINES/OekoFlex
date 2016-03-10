@@ -126,9 +126,6 @@ public class SpotMarketOperatorImpl implements SpotMarketOperator {
                     moreDemands = false;
                 }
             } else {
-                if (totalDemandQuantity != totalSupplyQuantity) {
-                    //todo: right?!    throw new IllegalStateException("mustn't differ");
-                }
                 if (demandIterator.hasNext()) {
                     energyDemand = demandIterator.next();
                     if (!(energySupply == null) && energyDemand.getPrice() <= energySupply.getPrice()) {
@@ -146,7 +143,7 @@ public class SpotMarketOperatorImpl implements SpotMarketOperator {
                     }
                 }
             }
-            log.debug("                                                      " + logString + ", " + "Balance: " + balance);
+            log.trace("                                                      " + logString + ", " + "Balance: " + balance);
         }
         while (energySupply == null || (moreDemands && balance <= 0) || (moreSupplies && balance > 0)); //Demand + Supply immer quantity > 0!!!
 
@@ -215,8 +212,8 @@ public class SpotMarketOperatorImpl implements SpotMarketOperator {
                         .append(supply.getPrice()).append(",")
                         .append(supply.getQuantity()).append(",");
             }
-            Log allInOneLine = LogFactory.getLog("ALL_IN_ONE_LINE");
-            allInOneLine.info(logString.toString());
+//            Log allInOneLine = LogFactory.getLog("ALL_IN_ONE_LINE");
+//            allInOneLine.info(logString.toString());
         }
     }
 
