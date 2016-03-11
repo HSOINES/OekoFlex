@@ -16,6 +16,7 @@ import hsoines.oekoflex.util.TimeUtil;
 import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import repast.simphony.engine.schedule.ScheduledMethod;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -288,11 +289,11 @@ public class SpotMarketOperatorImpl implements SpotMarketOperator {
         return lastAssignmentRate;
     }
 
-    @Override
+    @ScheduledMethod(start = ScheduledMethod.END)
     public void stop() {
         if (csvPrinter != null) {
             try {
-            	csvPrinter.flush();
+                logger.close();
                 csvPrinter.close();
             } catch (IOException e) {
                 log.error(e.toString(), e);

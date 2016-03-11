@@ -50,6 +50,13 @@ public final class EnergyTraderTypeLogger implements OekoflexAgent {
         }
     }
 
+    @ScheduledMethod(start = ScheduledMethod.END)
+    public void close() {
+        for (LoggerFile loggerFile : loggerFiles.values()) {
+            loggerFile.close();
+        }
+    }
+
     public void addIfNecessary(final MarketTrader marketTrader) {
         if (!loggerFiles.keySet().contains(marketTrader.getClass())) {
             LoggerFile loggerFile = null;

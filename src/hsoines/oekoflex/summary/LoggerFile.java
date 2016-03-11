@@ -7,4 +7,6 @@ package hsoines.oekoflex.summary;
  */
 public interface LoggerFile {
     void log(String text);
+
+    void close();
 }

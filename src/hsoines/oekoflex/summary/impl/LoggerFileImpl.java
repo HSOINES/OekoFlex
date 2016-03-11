@@ -64,6 +64,11 @@ public final class LoggerFileImpl implements LoggerFile {
         }
     }
 
+    @Override
+    public void close() {
+        appender.close();
+    }
+
     LoggingEvent buildEvent(final String s) {
         return new LoggingEvent("", logger, Level.toLevel("INFO"), s + System.getProperty("line.separator"), null);
     }

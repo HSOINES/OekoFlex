@@ -13,6 +13,7 @@ import hsoines.oekoflex.util.NumberFormatUtil;
 import hsoines.oekoflex.util.TimeUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import repast.simphony.engine.schedule.ScheduledMethod;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -182,10 +183,18 @@ public final class BalancingMarketOperatorImpl implements BalancingMarketOperato
         return lastClearedPositiveMaxPrice;
     }
 
+
+    @ScheduledMethod(start = ScheduledMethod.END)
+    public void stop() {
+        logger.close();
+    }
+
+
     private interface ClearingData {
         int getClearedQuantity();
 
         float getLastClearedMaxPrice();
+
         float getAssignmentRate();
     }
 
