@@ -90,6 +90,7 @@ public class OekoFlexContextBuilder implements ContextBuilder<OekoflexAgent> {
         } catch (IOException e) {
             log.error(e.toString(), e);
             re.endRun();
+            System.exit(-1);
         }
 
         return context;

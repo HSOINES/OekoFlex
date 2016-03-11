@@ -292,6 +292,7 @@ public class SpotMarketOperatorImpl implements SpotMarketOperator {
     public void stop() {
         if (csvPrinter != null) {
             try {
+            	csvPrinter.flush();
                 csvPrinter.close();
             } catch (IOException e) {
                 log.error(e.toString(), e);
