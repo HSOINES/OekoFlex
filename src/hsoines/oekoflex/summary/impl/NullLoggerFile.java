@@ -12,4 +12,10 @@ public class NullLoggerFile implements LoggerFile {
     public void log(final String text) {
         //no action
     }
+
+    @Override
+    public void close() {
+        //no action
+
+    }
 }
