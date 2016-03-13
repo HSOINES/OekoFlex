@@ -54,8 +54,6 @@ public class OekoFlexContextBuilder implements ContextBuilder<OekoflexAgent> {
             re.endRun();
         }
 
-        float residualEnergy = (float) p.getValue("residualEnergy");
-
         try {
             File priceForwardOutDir = new File(priceForwardOutDirName);
             if (priceForwardOutDir.exists()) {
@@ -88,10 +86,6 @@ public class OekoFlexContextBuilder implements ContextBuilder<OekoflexAgent> {
             FlexPowerplantFactory.build(configDir, context, spotMarketOperator, balancingMarketOperator);
             StorageFactory.build(configDir, context, spotMarketOperator, balancingMarketOperator);
 
-            //experimental!
-            final ResidualSupplier residualSupplier = new ResidualSupplier(residualEnergy);
-            residualSupplier.setSpotMarketOperator(spotMarketOperator);
-            context.add(residualSupplier);
         } catch (IOException e) {
             log.error(e.toString(), e);
             re.endRun();

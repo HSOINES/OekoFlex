@@ -19,6 +19,16 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+/*
+todo
+Exception in thread "AWT-EventQueue-0" java.lang.NullPointerException
+	at org.knowm.xchart.Series_XY.getLegendRenderType(Series_XY.java:84)
+	at org.knowm.xchart.internal.chartpart.Legend_AxesChart.paint(Legend_AxesChart.java:86)
+	at org.knowm.xchart.Chart_XY.paint(Chart_XY.java:253)
+	at org.knowm.xchart.Chart_XY.paint(Chart_XY.java:224)
+	at org.knowm.xchart.XChartPanel.paintComponent(XChartPanel.java:95)
+	at javax.swing.JComponent.paint(Unknown Source)
+ */
 public class MerritOrderGraph implements IDisplay {
 
     public static final String SUPPLIES = "Supplies";

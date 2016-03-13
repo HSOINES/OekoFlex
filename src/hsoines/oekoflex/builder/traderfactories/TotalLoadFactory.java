@@ -22,7 +22,8 @@ import java.io.IOException;
 public final class TotalLoadFactory {
     private static final Log log = LogFactory.getLog(TotalLoadFactory.class);
 
-    public static void build(final File configDir, final Context<OekoflexAgent> context, final SpotMarketOperatorImpl energyOnlyMarketOperator) throws IOException {
+    public static void build(final File configDir, final Context<OekoflexAgent> context,
+                             final SpotMarketOperatorImpl energyOnlyMarketOperator) throws IOException {
         File configFile = new File(configDir + "/" + "TotalLoad.cfg.csv");
         FileReader reader = new FileReader(configFile);
         CSVParser format = CSVParameter.getCSVFormat().parse(reader);
@@ -30,10 +31,12 @@ public final class TotalLoadFactory {
             try {
                 String name = parameters.get("name");
                 String description = parameters.get("description");
-                String demandFileName = parameters.get("demandFile");
-                File demandFile = new File(configDir, demandFileName);
+                String typeString = parameters.get("type");
+                String dataFileName = parameters.get("dataFile");
+                File dataFile = new File(configDir, dataFileName);
 
-                TotalLoad totalLoad = new TotalLoad(name, description, demandFile);
+                TotalLoad.Type type = TotalLoad.Type.valueOf(typeString);
+                TotalLoad totalLoad = new TotalLoad(name, description, type, dataFile);
                 totalLoad.setSpotMarketOperator(energyOnlyMarketOperator);
                 context.add(totalLoad);
 

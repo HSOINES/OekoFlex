@@ -1,2 +1,3 @@
-name;description;demandFile
-totalLoad;real-data-based;TotalLoadProfile.cfg.csv
+name;description;type;dataFile
+totalLoad;real-data-based;DEMAND;TotalLoadProfile.cfg.csv
+renweables;real-data-based;SUPPLY;RenewablesProfile.cfg.csv
