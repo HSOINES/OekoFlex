@@ -68,15 +68,17 @@ public class PriceForwardCurveGenerator {
 
     public void generate() {
         for (int tick = 0; tick < ticksToRun; tick++) {
+            TimeUtil.nextTick();
             log.debug("Building pfc for tick: " + tick);
             for (FlexPowerplant flexPowerplant : flexPowerplants) {
                 flexPowerplant.makeBidEOM(tick);
             }
-            renewables.makeBidEOM();
-            totalload.makeBidEOM();
+            renewables.makeBidEOM(tick);
+            totalload.makeBidEOM(tick);
             spotMarketOperator.clearMarket();
             logPriceForward(tick, csvPrinter);
         }
+        TimeUtil.reset();
 
         try {
             csvPrinter.close();
