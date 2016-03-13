@@ -35,7 +35,7 @@ public class FlexPowerplantTest {
     public void setUp() throws Exception {
         RepastTestInitializer.init();
         regelEnergieMarketOperator = new BalancingMarketOperatorImpl("test", true, ".", POSITIVE_DEMAND_REM, NEGATIVE_DEMAND_REM);
-        eomOperator = new SpotMarketOperatorImpl("test_eom_operator", ".", true, null);
+        eomOperator = new SpotMarketOperatorImpl("test_eom_operator", ".", true);
         eomOperator.addDemand(new EnergyDemand(3000, 200, null));
 
         flexpowerplant = new FlexPowerplant("flexpowerplant", "description", POWER_MAX, POWER_MIN, POWER_RAMP_UP, POWER_RAMP_DOWN, MARGINAL_COSTS, SHUTDOWN_COSTS);

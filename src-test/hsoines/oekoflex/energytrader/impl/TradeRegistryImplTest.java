@@ -32,7 +32,7 @@ public class TradeRegistryImplTest {
         date1 = TimeUtil.getDate(1);
         date2 = TimeUtil.getDate(2);
         date3 = TimeUtil.getDate(3);
-        energyTradeRegistry = new TradeRegistryImpl(TradeRegistry.Type.CONSUM, INITIALCAPACITY);
+        energyTradeRegistry = new TradeRegistryImpl(TradeRegistry.Type.CONSUM, INITIALCAPACITY, 1000);
     }
 
     @Test

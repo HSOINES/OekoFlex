@@ -27,8 +27,7 @@ public class SpotMarketOperatorImplTest {
     @Before
     public void setUp() throws Exception {
         RepastTestInitializer.init();
-        priceForwardOutDir = new File("run/price-forward/test");
-        operator = new SpotMarketOperatorImpl("test", "run/summary-logs/test", true, priceForwardOutDir);
+        operator = new SpotMarketOperatorImpl("test", "run/summary-logs/test", true);
     }
 
     @Test
@@ -39,7 +38,6 @@ public class SpotMarketOperatorImplTest {
         operator.clearMarket();
         operator.stop();
         //must write log in test
-        assertTrue(priceForwardOutDir.exists());
     }
 
     private static class MyMarketOperatorListener implements MarketOperatorListener {

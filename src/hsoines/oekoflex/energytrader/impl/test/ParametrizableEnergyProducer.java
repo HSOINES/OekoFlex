@@ -26,7 +26,7 @@ public class ParametrizableEnergyProducer implements EOMTrader {
     private final int supplyCapacity;
     private final int supplyDelay;
     private int bidQuantity;
-    private TradeRegistry tradeRegistry = new TradeRegistryImpl(TradeRegistry.Type.PRODUCE, INITIALCAPACITY);
+    private TradeRegistry tradeRegistry = new TradeRegistryImpl(TradeRegistry.Type.PRODUCE, INITIALCAPACITY, 1000);
 
     public ParametrizableEnergyProducer(String name) {
         this.name = name;
@@ -54,6 +54,11 @@ public class ParametrizableEnergyProducer implements EOMTrader {
             }
         }
         marketOperator.addSupply(new EnergySupply(bidPrice, Math.max(bidQuantity, INITIALCAPACITY), this));
+    }
+
+    @Override
+    public void init() {
+
     }
 
     @Override

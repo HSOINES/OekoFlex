@@ -89,6 +89,11 @@ public class EnergyTraderTypeLoggerTest {
         }
 
         @Override
+        public void init() {
+
+        }
+
+        @Override
         public void setSpotMarketOperator(final SpotMarketOperator spotMarketOperator) {
 
         }

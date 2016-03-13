@@ -38,7 +38,7 @@ public final class Storage implements EOMTrader, BalancingMarketTrader {
     private final int dischargePower;
     private int soc;
     private SpotMarketOperator eomMarketOperator;
-    private final TradeRegistry batteryTradeRegistry;
+    private TradeRegistry batteryTradeRegistry;
     private float lastAssignmentRate;
     private float lastClearedPrice;
     private BalancingMarketOperator balancingMarketOperator;
@@ -59,7 +59,11 @@ public final class Storage implements EOMTrader, BalancingMarketTrader {
         this.socMin = socMin;
         this.chargePower = chargePower;
         this.dischargePower = dischargePower;
-        batteryTradeRegistry = new TradeRegistryImpl(TradeRegistry.Type.PRODUCE, capacity);
+        init();
+    }
+
+    public void init() {
+        batteryTradeRegistry = new TradeRegistryImpl(TradeRegistry.Type.PRODUCE, capacity, 1000);
         soc = 0;
     }
 

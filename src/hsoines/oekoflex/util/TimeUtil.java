@@ -23,7 +23,7 @@ public final class TimeUtil {
     public static Date startDate;
     public static OekoflexDateFormat dateFormat = new OekoflexDateFormat();
 
-    private static int testTick = -1;
+    private static int internalTick = -1;
 
     static {
         TimeZone.setDefault(TimeZone.getTimeZone("GMT"));
@@ -43,8 +43,8 @@ public final class TimeUtil {
 
     public static Date getCurrentDate(){
         double tickCount;
-        if (testTick >= 0) {
-            tickCount = testTick;
+        if (internalTick >= 0) {
+            tickCount = internalTick;
         } else {
             tickCount = RepastEssentials.GetTickCount();
         }
@@ -92,11 +92,12 @@ public final class TimeUtil {
 
     //only for test purposes!
     public static void nextTick() {
-        testTick++;
+        internalTick++;
     }
 
     public static void reset() {
-        testTick = -1;
+        internalTick = -1;
 
     }
+
 }

@@ -15,6 +15,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Date;
@@ -29,10 +30,11 @@ public final class TotalLoad implements EOMTrader {
     private static final Log log = LogFactory.getLog(TotalLoad.class);
     public static final float MAX_DEMAND_PRICE = 3000f;
     public static final float MIN_SUPPLY_PRICE = -3000f;
-    private final TradeRegistryImpl energyTradeRegistry;
+    private TradeRegistryImpl energyTradeRegistry;
     private final String name;
     private final String description;
     private final Type type;
+    private File csvFile;
 
     private SpotMarketOperator marketOperator;
     private float lastClearedPrice;
@@ -42,14 +44,21 @@ public final class TotalLoad implements EOMTrader {
         this.name = name;
         this.description = description;
         this.type = type;
-        energyTradeRegistry = new TradeRegistryImpl(TradeRegistry.Type.CONSUM, 0);
-        FileReader reader = new FileReader(csvFile);
+        this.csvFile = csvFile;
+        init();
+    }
+
+    @Override
+    public void init(){
+        energyTradeRegistry = new TradeRegistryImpl(TradeRegistry.Type.CONSUM, 0, 1000000);
+        FileReader reader = null;
+        try {
+            reader = new FileReader(csvFile);
         CSVParser parser = CSVParameter.getCSVFormat().parse(reader);
-        for (CSVRecord parameters : parser) {
-                float data = -1;
-            try {
+            float data = -1;
+            for (CSVRecord parameters : parser) {
                 long tick = Long.parseLong(parameters.get("tick"));
-                switch (type){
+                switch (type) {
                     case DEMAND:
                         data = Float.parseFloat(parameters.get("demand"));
                         break;
@@ -58,9 +67,11 @@ public final class TotalLoad implements EOMTrader {
                         break;
                 }
                 energyTradeRegistry.setCapacity(tick, data);
-            } catch (NumberFormatException e) {
-                log.error(e.getMessage(), e);
             }
+        } catch (IOException e) {
+            log.error(e.getMessage(), e);
+        } catch (NumberFormatException e) {
+            log.error(e.getMessage(), e);
         }
     }
 

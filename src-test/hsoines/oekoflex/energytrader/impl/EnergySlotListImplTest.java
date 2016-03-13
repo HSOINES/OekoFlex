@@ -26,7 +26,7 @@ public class EnergySlotListImplTest {
 
     @Before
     public void setUp() throws Exception {
-        energySlotList = new TradeRegistryImpl(TradeRegistry.Type.PRODUCE, 1000);
+        energySlotList = new TradeRegistryImpl(TradeRegistry.Type.PRODUCE, 1000, 1000);
         date0 = TimeUtil.getDate(0);
         date1 = TimeUtil.getDate(1);
         date2 = TimeUtil.getDate(2);

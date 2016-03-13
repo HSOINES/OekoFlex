@@ -25,6 +25,11 @@ public final class ResidualSupplier implements EOMTrader {
     }
 
     @Override
+    public void init() {
+
+    }
+
+    @Override
     public void setSpotMarketOperator(final SpotMarketOperator spotMarketOperator) {
         this.spotMarketOperator = spotMarketOperator;
     }

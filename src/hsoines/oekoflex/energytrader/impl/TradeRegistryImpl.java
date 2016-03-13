@@ -16,16 +16,17 @@ import java.util.*;
  */
 public final class TradeRegistryImpl implements TradeRegistry {
     private static final Log log = LogFactory.getLog(TradeRegistryImpl.class);
-    public static final int MAX_ELEMENTS_IN_LIST = 1000; //we now only use the values from last round!
 
     private final List<EnergyTradeElement> tradeElements;
     private final Type type;
     private final float initialcapacity;
+    private int maxElements;
     private final Map<Long, Float> capacities;
 
-    public TradeRegistryImpl(Type type, float quantity2) {
+    public TradeRegistryImpl(Type type, float quantity2, int maxElements) {
         this.type = type;
         this.initialcapacity = quantity2;
+        this.maxElements = maxElements;
         tradeElements = new ArrayList<>();
         capacities = new HashMap<>();
     }
@@ -140,7 +141,7 @@ public final class TradeRegistryImpl implements TradeRegistry {
                 capacity = initialcapacity;
             }
             tradeElements.add(new EnergyTradeElement(tick, market, offeredPrice, clearedprice, offeredQuantity, rate, capacity, bidType));
-            if (tradeElements.size() > MAX_ELEMENTS_IN_LIST) tradeElements.remove(0);
+            if (tradeElements.size() > maxElements) tradeElements.remove(0);
         }
     }
 

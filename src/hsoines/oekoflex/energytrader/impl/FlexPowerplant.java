@@ -28,8 +28,8 @@ public final class FlexPowerplant implements EOMTrader, BalancingMarketTrader, M
     private final int powerRampDown;
     private final float marginalCosts;
     private SpotMarketOperator eomMarketOperator;
-    private final TradeRegistry energyTradeRegistry;
-    private final TradeRegistry powerTradeRegistry;
+    private TradeRegistry energyTradeRegistry;
+    private TradeRegistry powerTradeRegistry;
     private BalancingMarketOperator balancingMarketOperator;
     private float lastAssignmentRate;
     private float lastClearedPrice;
@@ -46,8 +46,12 @@ public final class FlexPowerplant implements EOMTrader, BalancingMarketTrader, M
         this.powerRampDown = powerRampDown;
         this.marginalCosts = marginalCosts;
         this.shutdownCosts = shutdownCosts;
-        energyTradeRegistry = new TradeRegistryImpl(TradeRegistry.Type.PRODUCE, powerMax);
-        powerTradeRegistry = new TradeRegistryImpl(TradeRegistry.Type.PRODUCE, powerMax);
+        init();
+    }
+
+    public void init() {
+        energyTradeRegistry = new TradeRegistryImpl(TradeRegistry.Type.PRODUCE, powerMax, 1000);
+        powerTradeRegistry = new TradeRegistryImpl(TradeRegistry.Type.PRODUCE, powerMax, 1000);
     }
 
     @Override
@@ -142,5 +146,9 @@ public final class FlexPowerplant implements EOMTrader, BalancingMarketTrader, M
     @Override
     public String getDescription() {
         return description;
+    }
+
+    public void makeBidEOM(int tick) {
+
     }
 }
