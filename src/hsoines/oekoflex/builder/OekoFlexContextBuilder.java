@@ -21,14 +21,19 @@ import repast.simphony.parameter.Parameters;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Locale;
 import java.util.Properties;
 
 public class OekoFlexContextBuilder implements ContextBuilder<OekoflexAgent> {
     private static final Log log = LogFactory.getLog(OekoFlexContextBuilder.class);
 
+    static {
+        Locale.setDefault(Locale.GERMAN);
+    }
+
     @Override
     public Context build(Context<OekoflexAgent> context) {
-
+    	log.info("locale: " + Locale.getDefault().getDisplayName());
         context.setId("OekoFlex");
 
         Parameters p = RunEnvironment.getInstance().getParameters();
