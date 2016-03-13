@@ -61,9 +61,14 @@ public final class FlexPowerplant implements EOMTrader, BalancingMarketTrader, M
 
     @Override
     public void makeBidEOM() {
+        long currentTick = TimeUtil.getCurrentTick();
+        makeBidEOM(currentTick);
+    }
+
+    public void makeBidEOM(long currentTick) {
         float t = TimeUtil.HOUR_PER_TICK;
 
-        Date currentDate = TimeUtil.getCurrentDate();
+        Date currentDate = TimeUtil.getDate(currentTick);
         Date precedingDate = TimeUtil.precedingDate(currentDate);
 
         float pPositiveCommited = powerTradeRegistry.getPositiveQuantityUsed(currentDate);
@@ -146,9 +151,5 @@ public final class FlexPowerplant implements EOMTrader, BalancingMarketTrader, M
     @Override
     public String getDescription() {
         return description;
-    }
-
-    public void makeBidEOM(int tick) {
-
     }
 }

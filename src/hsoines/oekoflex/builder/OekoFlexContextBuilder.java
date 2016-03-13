@@ -5,7 +5,6 @@ import hsoines.oekoflex.builder.traderfactories.DaytimeEnergyConsumerFactory;
 import hsoines.oekoflex.builder.traderfactories.FlexPowerplantFactory;
 import hsoines.oekoflex.builder.traderfactories.StorageFactory;
 import hsoines.oekoflex.builder.traderfactories.TotalLoadFactory;
-import hsoines.oekoflex.energytrader.impl.test.ResidualSupplier;
 import hsoines.oekoflex.marketoperator.BalancingMarketOperator;
 import hsoines.oekoflex.marketoperator.impl.BalancingMarketOperatorImpl;
 import hsoines.oekoflex.marketoperator.impl.SpotMarketOperatorImpl;
@@ -89,7 +88,7 @@ public class OekoFlexContextBuilder implements ContextBuilder<OekoflexAgent> {
             StorageFactory.build(configDir, context, spotMarketOperator, balancingMarketOperator);
 
             //Price Forward Generator
-            PriceForwardCurveGenerator priceForwardCurveGenerator = new PriceForwardCurveGenerator(context, daysToRun * 96, priceForwardOutDir);
+            PriceForwardCurveGenerator priceForwardCurveGenerator = new PriceForwardCurveGenerator(configDir, daysToRun * 96, priceForwardOutDir);
             priceForwardCurveGenerator.generate();
         } catch (IOException e) {
             log.error(e.toString(), e);

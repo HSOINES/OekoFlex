@@ -88,7 +88,6 @@ public class EnergyTraderTypeLoggerTest {
 
         }
 
-        @Override
         public void init() {
 
         }

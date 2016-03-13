@@ -56,7 +56,6 @@ public class ParametrizableEnergyProducer implements EOMTrader {
         marketOperator.addSupply(new EnergySupply(bidPrice, Math.max(bidQuantity, INITIALCAPACITY), this));
     }
 
-    @Override
     public void init() {
 
     }

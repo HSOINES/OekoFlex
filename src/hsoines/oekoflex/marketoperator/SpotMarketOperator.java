@@ -18,8 +18,6 @@ public interface SpotMarketOperator extends OekoflexAgent {
 	@ScheduledMethod(start = SequenceDefinition.SimulationStart, interval = EOMInterval, priority = EOMClearingPriority)
 	void clearMarket();
 
-	void logPriceForward(int tick, CSVPrinter csvPrinter);
-
 	int getTotalClearedQuantity();
 
 	float getLastClearedPrice();

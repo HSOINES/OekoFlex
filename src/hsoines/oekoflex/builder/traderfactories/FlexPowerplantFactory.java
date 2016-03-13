@@ -4,6 +4,7 @@ import hsoines.oekoflex.OekoflexAgent;
 import hsoines.oekoflex.builder.CSVParameter;
 import hsoines.oekoflex.energytrader.impl.FlexPowerplant;
 import hsoines.oekoflex.marketoperator.BalancingMarketOperator;
+import hsoines.oekoflex.marketoperator.SpotMarketOperator;
 import hsoines.oekoflex.marketoperator.impl.SpotMarketOperatorImpl;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
@@ -14,6 +15,8 @@ import repast.simphony.context.Context;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * User: jh
@@ -27,9 +30,20 @@ public final class FlexPowerplantFactory {
                              final Context<OekoflexAgent> context,
                              final SpotMarketOperatorImpl energyOnlyMarketOperator,
                              final BalancingMarketOperator balancingMarketOperator) throws IOException {
+        Set<FlexPowerplant> flexPowerplants = build(configDir);
+        for (FlexPowerplant flexPowerplant : flexPowerplants) {
+            flexPowerplant.setBalancingMarketOperator(balancingMarketOperator);
+            flexPowerplant.setSpotMarketOperator(energyOnlyMarketOperator);
+            context.add(flexPowerplant);
+        }
+    }
+
+    public static Set<FlexPowerplant> build(File configDir) throws IOException {
         File configFile = new File(configDir + "/" + "FlexiblePowerplant.cfg.csv");
         FileReader reader = new FileReader(configFile);
         CSVParser format = CSVParameter.getCSVFormat().parse(reader);
+
+        Set<FlexPowerplant> flexPowerplants = new HashSet<>();
         for (CSVRecord parameters : format) {
             try {
                 String name = parameters.get("name");
@@ -42,15 +56,13 @@ public final class FlexPowerplantFactory {
                 float shutdownCosts = Float.parseFloat(parameters.get("shutdownCosts"));
 
 
-                FlexPowerplant flexPowerplantProducer = new FlexPowerplant(name, description, powerMax, powerMin, rampUp, rampDown, marginalCosts, shutdownCosts);
-                flexPowerplantProducer.setSpotMarketOperator(energyOnlyMarketOperator);
-                flexPowerplantProducer.setBalancingMarketOperator(balancingMarketOperator);
-                context.add(flexPowerplantProducer);
-
+                FlexPowerplant flexPowerplant = new FlexPowerplant(name, description, powerMax, powerMin, rampUp, rampDown, marginalCosts, shutdownCosts);
+                flexPowerplants.add(flexPowerplant);
                 log.info("FlexPowerplant Build done for <" + name + ">.");
             } catch (NumberFormatException e) {
                 log.error(e.getMessage(), e);
             }
         }
+        return flexPowerplants;
     }
 }

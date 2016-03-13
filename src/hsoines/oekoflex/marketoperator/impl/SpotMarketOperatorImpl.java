@@ -181,15 +181,6 @@ public class SpotMarketOperatorImpl implements SpotMarketOperator {
         energyDemands.clear();
     }
 
-    @Override
-    public void logPriceForward(int tick, CSVPrinter csvPrinter) {
-        try {
-            csvPrinter.printRecord(tick, getLastClearedPrice());
-        } catch (IOException e) {
-            log.error(e.toString(), e);
-        }
-    }
-
     private void notifyAssignmentRate() {
         StringBuilder logString = new StringBuilder();
         logString.append(getName()).append(",")

@@ -48,7 +48,6 @@ public final class TotalLoad implements EOMTrader {
         init();
     }
 
-    @Override
     public void init(){
         energyTradeRegistry = new TradeRegistryImpl(TradeRegistry.Type.CONSUM, 0, 1000000);
         FileReader reader = null;
@@ -82,7 +81,12 @@ public final class TotalLoad implements EOMTrader {
 
     @Override
     public void makeBidEOM() {
-        float remainingCapacity = energyTradeRegistry.getRemainingCapacity(TimeUtil.getCurrentDate(), Market.SPOT_MARKET);
+        long currentTick = TimeUtil.getCurrentTick();
+        makeBidEOM(currentTick);
+    }
+    public void makeBidEOM(long currentTick) {
+        Date currentDate = TimeUtil.getDate(currentTick);
+        float remainingCapacity = energyTradeRegistry.getRemainingCapacity(currentDate, Market.SPOT_MARKET);
         switch (type){
             case DEMAND:
         marketOperator.addDemand(new EnergyDemand(MAX_DEMAND_PRICE, remainingCapacity, this));
