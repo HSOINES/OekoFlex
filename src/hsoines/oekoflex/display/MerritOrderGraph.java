@@ -104,14 +104,10 @@ public class MerritOrderGraph implements IDisplay {
 
     @Override
     public void setPause(boolean pause) {
-        // TODO Auto-generated method stub
-
     }
 
     @Override
     public void update() {
-        // TODO Auto-generated method stub
-
     }
 
     @Override
@@ -120,20 +116,14 @@ public class MerritOrderGraph implements IDisplay {
 
     @Override
     public void setLayout(Layout<?, ?> layout) {
-        // TODO Auto-generated method stub
-
     }
 
     @Override
     public void addDisplayListener(DisplayListener listener) {
-        // TODO Auto-generated method stub
-
     }
 
     @Override
     public void setLayoutFrequency(LayoutFrequency frequency, int interval) {
-        // TODO Auto-generated method stub
-
     }
 
     @Override
@@ -143,56 +133,39 @@ public class MerritOrderGraph implements IDisplay {
 
     @Override
     public void registerToolBar(JToolBar bar) {
-        // TODO Auto-generated method stub
-
     }
 
     @Override
     public void destroy() {
-        // TODO Auto-generated method stub
-
     }
 
     @Override
     public void iconified() {
-        // TODO Auto-generated method stub
-
     }
 
     @Override
     public void deIconified() {
-        // TODO Auto-generated method stub
-
     }
 
     @Override
     public void closed() {
-        // TODO Auto-generated method stub
-
     }
 
     @Override
     public void addProbeListener(ProbeListener listener) {
-        // TODO Auto-generated method stub
-
     }
 
     @Override
     public Layout<?, ?> getLayout() {
-        // TODO Auto-generated method stub
         return null;
     }
 
     @Override
     public DisplayEditorLifecycle createEditor(JPanel panel) {
-        // TODO Auto-generated method stub
         return null;
     }
 
     @Override
     public void resetHomeView() {
-        // TODO Auto-generated method stub
-
     }
-
 }

@@ -75,6 +75,6 @@ public class FlexPowerplantTest {
 
     }
 
-    //todo: must_run_cut
+    //todo: must_run only partially assigned
 
 }
