@@ -22,6 +22,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class SpotMarketOperatorImpl implements SpotMarketOperator {
     private static final Log log = LogFactory.getLog(SpotMarketOperatorImpl.class);

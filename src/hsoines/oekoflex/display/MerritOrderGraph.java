@@ -16,19 +16,10 @@ import repast.simphony.visualization.*;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-/*
-todo
-Exception in thread "AWT-EventQueue-0" java.lang.NullPointerException
-	at org.knowm.xchart.Series_XY.getLegendRenderType(Series_XY.java:84)
-	at org.knowm.xchart.internal.chartpart.Legend_AxesChart.paint(Legend_AxesChart.java:86)
-	at org.knowm.xchart.Chart_XY.paint(Chart_XY.java:253)
-	at org.knowm.xchart.Chart_XY.paint(Chart_XY.java:224)
-	at org.knowm.xchart.XChartPanel.paintComponent(XChartPanel.java:95)
-	at javax.swing.JComponent.paint(Unknown Source)
- */
 public class MerritOrderGraph implements IDisplay {
 
     public static final String SUPPLIES = "Supplies";
@@ -69,8 +60,8 @@ public class MerritOrderGraph implements IDisplay {
         panel.add(new XChartPanel<>(chart), BorderLayout.CENTER);
 
         List<EnergySupply> lastSupplies = eomOperator.getLastSupplies();
-        List<Float> quantityValues = new ArrayList<>();
-        List<Float> priceValues = new ArrayList<>();
+        List<Float> quantityValues = Collections.synchronizedList(new ArrayList<Float>());
+        List<Float> priceValues = Collections.synchronizedList(new ArrayList<Float>());
         float lastQuantity = 0;
         quantityValues.add(lastQuantity);
         priceValues.add(0f);
@@ -114,10 +105,14 @@ public class MerritOrderGraph implements IDisplay {
 
     @Override
     public void setPause(boolean pause) {
+        // TODO Auto-generated method stub
+
     }
 
     @Override
     public void update() {
+        // TODO Auto-generated method stub
+
     }
 
     @Override
@@ -126,14 +121,20 @@ public class MerritOrderGraph implements IDisplay {
 
     @Override
     public void setLayout(Layout<?, ?> layout) {
+        // TODO Auto-generated method stub
+
     }
 
     @Override
     public void addDisplayListener(DisplayListener listener) {
+        // TODO Auto-generated method stub
+
     }
 
     @Override
     public void setLayoutFrequency(LayoutFrequency frequency, int interval) {
+        // TODO Auto-generated method stub
+
     }
 
     @Override
@@ -143,39 +144,56 @@ public class MerritOrderGraph implements IDisplay {
 
     @Override
     public void registerToolBar(JToolBar bar) {
+        // TODO Auto-generated method stub
+
     }
 
     @Override
     public void destroy() {
+        // TODO Auto-generated method stub
+
     }
 
     @Override
     public void iconified() {
+        // TODO Auto-generated method stub
+
     }
 
     @Override
     public void deIconified() {
+        // TODO Auto-generated method stub
+
     }
 
     @Override
     public void closed() {
+        // TODO Auto-generated method stub
+
     }
 
     @Override
     public void addProbeListener(ProbeListener listener) {
+        // TODO Auto-generated method stub
+
     }
 
     @Override
     public Layout<?, ?> getLayout() {
+        // TODO Auto-generated method stub
         return null;
     }
 
     @Override
     public DisplayEditorLifecycle createEditor(JPanel panel) {
+        // TODO Auto-generated method stub
         return null;
     }
 
     @Override
     public void resetHomeView() {
+        // TODO Auto-generated method stub
+
     }
+
 }
