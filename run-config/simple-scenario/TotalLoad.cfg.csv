@@ -1,0 +1,3 @@
+name;description;type;dataFile
+totalload;real-data-based;DEMAND;TotalLoadProfile.cfg.csv
+renewables;real-data-based;SUPPLY;RenewablesProfile.cfg.csv
