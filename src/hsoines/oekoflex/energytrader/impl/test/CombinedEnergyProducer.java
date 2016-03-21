@@ -34,7 +34,11 @@ public class CombinedEnergyProducer implements BalancingMarketTrader, EOMTrader 
 
     public CombinedEnergyProducer(String name) {
         this.name = name;
-        tradeRegistry = new TradeRegistryImpl(TradeRegistry.Type.PRODUCE, 5000);
+        init();
+    }
+
+    public void init() {
+        tradeRegistry = new TradeRegistryImpl(TradeRegistry.Type.PRODUCE, 5000, 1000);
     }
 
     @Override
@@ -91,7 +95,7 @@ public class CombinedEnergyProducer implements BalancingMarketTrader, EOMTrader 
 
     public void setCapacity(final int capacity) {
         this.capacity = capacity;
-        tradeRegistry = new TradeRegistryImpl(TradeRegistry.Type.PRODUCE, capacity);
+        tradeRegistry = new TradeRegistryImpl(TradeRegistry.Type.PRODUCE, capacity, 1000);
     }
 
     public void setPriceRegelMarkt(final float priceRegelMarkt) {

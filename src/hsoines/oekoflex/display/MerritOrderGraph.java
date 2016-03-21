@@ -16,11 +16,14 @@ import repast.simphony.visualization.*;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
 public class MerritOrderGraph implements IDisplay {
 
+    public static final String SUPPLIES = "Supplies";
+    public static final String DEMANDS = "Demands";
     private final Context<OekoflexAgent> context;
     private Chart_XY chart;
     private JPanel panel;
@@ -38,17 +41,27 @@ public class MerritOrderGraph implements IDisplay {
         }
         panel = new JPanel();
         panel.setLayout(new BorderLayout());
+
+        chart = new ChartBuilder_XY().width(800).height(600).title(getClass().getSimpleName()).xAxisTitle("Quantity").yAxisTitle("Bid").build();
+        // Customize Chart
+        chart.getStyler().setLegendPosition(Styler.LegendPosition.InsideNW);
+        chart.getStyler().setAxisTitlesVisible(false);
+        chart.getStyler().setDefaultSeriesRenderStyle(Series_XY.ChartXYSeriesRenderStyle.Line);
+
     }
 
     @Override
     public void render() {
         panel.removeAll();
 
-        chart = new ChartBuilder_XY().width(800).height(600).title(getClass().getSimpleName()).xAxisTitle("Quantity").yAxisTitle("Bid").build();
+        chart.removeSeries(SUPPLIES);
+        chart.removeSeries(DEMANDS);
+
         panel.add(new XChartPanel<>(chart), BorderLayout.CENTER);
+
         List<EnergySupply> lastSupplies = eomOperator.getLastSupplies();
-        List<Float> quantityValues = new ArrayList<>();
-        List<Float> priceValues = new ArrayList<>();
+        List<Float> quantityValues = Collections.synchronizedList(new ArrayList<Float>());
+        List<Float> priceValues = Collections.synchronizedList(new ArrayList<Float>());
         float lastQuantity = 0;
         quantityValues.add(lastQuantity);
         priceValues.add(0f);
@@ -61,7 +74,7 @@ public class MerritOrderGraph implements IDisplay {
         }
         quantityValues.add(lastQuantity);
         priceValues.add(0f);
-        chart.addSeries("Supplies", quantityValues, priceValues);
+        chart.addSeries(SUPPLIES, quantityValues, priceValues);
 
         List<EnergyDemand> lastEnergyDemands = eomOperator.getLastEnergyDemands();
         quantityValues = new ArrayList<>();
@@ -78,12 +91,8 @@ public class MerritOrderGraph implements IDisplay {
         }
         quantityValues.add(lastQuantity);
         priceValues.add(0f);
-        chart.addSeries("Demands", quantityValues, priceValues);
+        chart.addSeries(DEMANDS, quantityValues, priceValues);
 
-        // Customize Chart
-        chart.getStyler().setLegendPosition(Styler.LegendPosition.InsideNW);
-        chart.getStyler().setAxisTitlesVisible(false);
-        chart.getStyler().setDefaultSeriesRenderStyle(Series_XY.ChartXYSeriesRenderStyle.Line);
 
         Date date = TimeUtil.getCurrentDate();
         String info = "Date: " + TimeUtil.dateFormat.format(date) +

@@ -13,7 +13,7 @@ public class NumberFormatUtilTest {
     @Test
     public void testFormat() throws Exception {
         String s = NumberFormatUtil.format(0.12345678901234567890f);
-        assertEquals("0.12", s);
+        assertEquals("0,12", s);
     }
 
     @Test
@@ -25,6 +25,6 @@ public class NumberFormatUtilTest {
     @Test
     public void testNormal() throws Exception {
         String s = NumberFormatUtil.format(110.12345678901234567890f);
-        assertEquals("110.12", s);
+        assertEquals("110,12", s);
     }
 }

@@ -13,6 +13,8 @@ import repast.simphony.context.Context;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * User: jh
@@ -22,7 +24,17 @@ import java.io.IOException;
 public final class TotalLoadFactory {
     private static final Log log = LogFactory.getLog(TotalLoadFactory.class);
 
-    public static void build(final File configDir, final Context<OekoflexAgent> context, final SpotMarketOperatorImpl energyOnlyMarketOperator) throws IOException {
+    public static void build(final File configDir, final Context<OekoflexAgent> context,
+                             final SpotMarketOperatorImpl energyOnlyMarketOperator) throws IOException {
+        Set<TotalLoad> totalLoads = build(configDir);
+        for (TotalLoad totalLoad : totalLoads) {
+            totalLoad.setSpotMarketOperator(energyOnlyMarketOperator);
+            context.add(totalLoad);
+        }
+    }
+
+    public static Set<TotalLoad> build(File configDir) throws IOException {
+        Set<TotalLoad> totalLoads = new HashSet<>();
         File configFile = new File(configDir + "/" + "TotalLoad.cfg.csv");
         FileReader reader = new FileReader(configFile);
         CSVParser format = CSVParameter.getCSVFormat().parse(reader);
@@ -30,17 +42,19 @@ public final class TotalLoadFactory {
             try {
                 String name = parameters.get("name");
                 String description = parameters.get("description");
-                String demandFileName = parameters.get("demandFile");
-                File demandFile = new File(configDir, demandFileName);
+                String typeString = parameters.get("type");
+                String dataFileName = parameters.get("dataFile");
+                File dataFile = new File(configDir, dataFileName);
 
-                TotalLoad totalLoad = new TotalLoad(name, description, demandFile);
-                totalLoad.setSpotMarketOperator(energyOnlyMarketOperator);
-                context.add(totalLoad);
+                TotalLoad.Type type = TotalLoad.Type.valueOf(typeString);
+                TotalLoad totalLoad = new TotalLoad(name, description, type, dataFile);
+                totalLoads.add(totalLoad);
 
                 log.info("TotalLoad Build done: " + name);
             } catch (NumberFormatException e) {
                 log.error(e.getMessage(), e);
             }
         }
+        return totalLoads;
     }
 }

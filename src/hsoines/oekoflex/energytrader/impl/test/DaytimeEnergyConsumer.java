@@ -36,7 +36,11 @@ public final class DaytimeEnergyConsumer implements EOMTrader {
         this.name = name;
         this.quantity = quantity2;
         priceStrategy = new DaytimePriceStrategy(priceAtDay, decreaseAtNight);
-        tradeRegistry = new TradeRegistryImpl(TradeRegistry.Type.CONSUM, quantity2);
+        init();
+    }
+
+    public void init() {
+        tradeRegistry = new TradeRegistryImpl(TradeRegistry.Type.CONSUM, quantity, 1000);
     }
 
     @Override

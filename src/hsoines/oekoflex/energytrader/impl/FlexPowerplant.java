@@ -28,8 +28,8 @@ public final class FlexPowerplant implements EOMTrader, BalancingMarketTrader, M
     private final int powerRampDown;
     private final float marginalCosts;
     private SpotMarketOperator eomMarketOperator;
-    private final TradeRegistry energyTradeRegistry;
-    private final TradeRegistry powerTradeRegistry;
+    private TradeRegistry energyTradeRegistry;
+    private TradeRegistry powerTradeRegistry;
     private BalancingMarketOperator balancingMarketOperator;
     private float lastAssignmentRate;
     private float lastClearedPrice;
@@ -46,8 +46,12 @@ public final class FlexPowerplant implements EOMTrader, BalancingMarketTrader, M
         this.powerRampDown = powerRampDown;
         this.marginalCosts = marginalCosts;
         this.shutdownCosts = shutdownCosts;
-        energyTradeRegistry = new TradeRegistryImpl(TradeRegistry.Type.PRODUCE, powerMax);
-        powerTradeRegistry = new TradeRegistryImpl(TradeRegistry.Type.PRODUCE, powerMax);
+        init();
+    }
+
+    public void init() {
+        energyTradeRegistry = new TradeRegistryImpl(TradeRegistry.Type.PRODUCE, powerMax, 1000);
+        powerTradeRegistry = new TradeRegistryImpl(TradeRegistry.Type.PRODUCE, powerMax, 1000);
     }
 
     @Override
@@ -57,9 +61,14 @@ public final class FlexPowerplant implements EOMTrader, BalancingMarketTrader, M
 
     @Override
     public void makeBidEOM() {
+        long currentTick = TimeUtil.getCurrentTick();
+        makeBidEOM(currentTick);
+    }
+
+    public void makeBidEOM(long currentTick) {
         float t = TimeUtil.HOUR_PER_TICK;
 
-        Date currentDate = TimeUtil.getCurrentDate();
+        Date currentDate = TimeUtil.getDate(currentTick);
         Date precedingDate = TimeUtil.precedingDate(currentDate);
 
         float pPositiveCommited = powerTradeRegistry.getPositiveQuantityUsed(currentDate);

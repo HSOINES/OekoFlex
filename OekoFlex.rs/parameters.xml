@@ -1,10 +1,29 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <parameters>
+					<parameter name="randomSeed" displayName="Default Random Seed" type="int" 
+						defaultValue="__NULL__"
+						isReadOnly="false" 
+						converter="repast.simphony.parameter.StringConverterFactory$IntConverter"
+									
+		/>
+				<parameter name="scenario" displayName="Szenario" type="java.lang.String" 
+						defaultValue="scenario1" 
+						isReadOnly="false" 
+						converter="repast.simphony.parameter.StringConverterFactory$StringStringConverter"
+									
+		/>
+				<parameter name="daysToRun" displayName="Simulationstage" type="int" 
+						defaultValue="1" 
+						isReadOnly="false" 
+						converter="repast.simphony.parameter.StringConverterFactory$IntConverter"
+									
+		/>
+				<parameter name="loggingActivated" displayName="Logging aktiviert" type="boolean" 
+						defaultValue="true" 
+						isReadOnly="false" 
+						converter="repast.simphony.parameter.StringConverterFactory$BooleanConverter"
+									
+		/>
+		</parameters>
 
-	<parameter name="randomSeed" displayName="Default Random Seed" type="int" defaultValue="__NULL__" />
-	<parameter name="scenario" displayName="Szenario" type="String"
-			   defaultValue="scenario1"/>
-	<parameter name="daysToRun" displayName="Simulationstage" type="int" defaultValue="1"/>
-	<parameter name="loggingActivated" displayName="Logging aktiviert" type="boolean" defaultValue="true"/>
-	<parameter name="residualEnergy" displayName="Residual Energie" type="float" defaultValue="4000"/>
-</parameters>
+

@@ -2,6 +2,7 @@ package hsoines.oekoflex.energytrader.impl;
 
 import hsoines.oekoflex.bid.Bid;
 import hsoines.oekoflex.bid.EnergyDemand;
+import hsoines.oekoflex.bid.EnergySupply;
 import hsoines.oekoflex.builder.CSVParameter;
 import hsoines.oekoflex.energytrader.EOMTrader;
 import hsoines.oekoflex.energytrader.TradeRegistry;
@@ -14,6 +15,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Date;
@@ -26,29 +28,49 @@ import java.util.List;
  */
 public final class TotalLoad implements EOMTrader {
     private static final Log log = LogFactory.getLog(TotalLoad.class);
-    public static final float FIXED_PRICE = 3000f;
-    private final TradeRegistryImpl energyTradeRegistry;
+    public static final float MAX_DEMAND_PRICE = 3000f;
+    public static final float MIN_SUPPLY_PRICE = -3000f;
+    private TradeRegistryImpl energyTradeRegistry;
     private final String name;
     private final String description;
+    private final Type type;
+    private File csvFile;
 
     private SpotMarketOperator marketOperator;
     private float lastClearedPrice;
     private float lastAssignmentRate;
 
-    public TotalLoad(final String name, final String description, final File csvFile) throws IOException {
+    public TotalLoad(final String name, final String description, Type type, final File csvFile) throws IOException {
         this.name = name;
         this.description = description;
-        energyTradeRegistry = new TradeRegistryImpl(TradeRegistry.Type.CONSUM, 0);
-        FileReader reader = new FileReader(csvFile);
+        this.type = type;
+        this.csvFile = csvFile;
+        init();
+    }
+
+    public void init(){
+        energyTradeRegistry = new TradeRegistryImpl(TradeRegistry.Type.CONSUM, 0, 1000000);
+        FileReader reader = null;
+        try {
+            reader = new FileReader(csvFile);
         CSVParser parser = CSVParameter.getCSVFormat().parse(reader);
-        for (CSVRecord parameters : parser) {
-            try {
+            float data = -1;
+            for (CSVRecord parameters : parser) {
                 long tick = Long.parseLong(parameters.get("tick"));
-                int demand = Integer.parseInt(parameters.get("demand"));
-                energyTradeRegistry.setCapacity(tick, demand);
-            } catch (NumberFormatException e) {
-                log.error(e.getMessage(), e);
+                switch (type) {
+                    case DEMAND:
+                        data = Float.parseFloat(parameters.get("demand"));
+                        break;
+                    case SUPPLY:
+                        data = Float.parseFloat(parameters.get("supply"));
+                        break;
+                }
+                energyTradeRegistry.setCapacity(tick, data);
             }
+        } catch (IOException e) {
+            log.error(e.getMessage(), e);
+        } catch (NumberFormatException e) {
+            log.error(e.getMessage(), e);
         }
     }
 
@@ -59,8 +81,22 @@ public final class TotalLoad implements EOMTrader {
 
     @Override
     public void makeBidEOM() {
-        float remainingCapacity = energyTradeRegistry.getRemainingCapacity(TimeUtil.getCurrentDate(), Market.SPOT_MARKET);
-        marketOperator.addDemand(new EnergyDemand(FIXED_PRICE, remainingCapacity, this));
+        long currentTick = TimeUtil.getCurrentTick();
+        makeBidEOM(currentTick);
+    }
+    public void makeBidEOM(long currentTick) {
+        Date currentDate = TimeUtil.getDate(currentTick);
+        float remainingCapacity = energyTradeRegistry.getRemainingCapacity(currentDate, Market.SPOT_MARKET);
+        switch (type){
+            case DEMAND:
+        marketOperator.addDemand(new EnergyDemand(MAX_DEMAND_PRICE, remainingCapacity, this));
+                break;
+            case SUPPLY:
+        marketOperator.addSupply(new EnergySupply(MIN_SUPPLY_PRICE, remainingCapacity, this));
+                break;
+            default:
+                throw new IllegalStateException("type unknown:" + type);
+        }
     }
 
     @Override
@@ -94,4 +130,6 @@ public final class TotalLoad implements EOMTrader {
     public String getDescription() {
         return description;
     }
+
+    public enum Type{DEMAND,SUPPLY}
 }

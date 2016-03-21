@@ -10,10 +10,6 @@ import java.util.Locale;
  * Time: 23:07
  */
 public final class CSVParameter {
-    static {
-        Locale.setDefault(Locale.ENGLISH);
-    }
-
     public static CSVFormat getCSVFormat() {
         return CSVFormat.DEFAULT.withHeader().withDelimiter(';');
     }

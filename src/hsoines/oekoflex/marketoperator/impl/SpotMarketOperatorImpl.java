@@ -22,6 +22,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class SpotMarketOperatorImpl implements SpotMarketOperator {
     private static final Log log = LogFactory.getLog(SpotMarketOperatorImpl.class);
@@ -37,9 +39,8 @@ public class SpotMarketOperatorImpl implements SpotMarketOperator {
     private float lastAssignmentRate;
     private AssignmentType lastAssignmentType;
     private final Map<Class, String> simpleNamesOfClasses;
-    private final CSVPrinter csvPrinter;
 
-    public SpotMarketOperatorImpl(String name, final String logDirName, final boolean loggingActivated, final File priceForwardOutDir) throws IOException {
+    public SpotMarketOperatorImpl(String name, final String logDirName, final boolean loggingActivated) throws IOException {
         this.name = name;
 
         energyDemands = new ArrayList<>();
@@ -52,27 +53,14 @@ public class SpotMarketOperatorImpl implements SpotMarketOperator {
         }
         logger.log("tick;traderType;traderName;bidType;offeredPrice;clearedPrice;offeredQuantity;assignedQuantity");
         simpleNamesOfClasses = new HashMap<>();
-        if (priceForwardOutDir != null) {
-            if (!priceForwardOutDir.exists()) {
-                if (!priceForwardOutDir.mkdirs()) {
-                    throw new IllegalStateException("couldn't create directories.");
-                }
-            }
-            File priceForwardFile = new File(priceForwardOutDir, "price-forward.csv");
-            final Appendable out;
-            out = new FileWriter(priceForwardFile);
-            csvPrinter = CSVParameter.getCSVFormat().withHeader("tick", "price").print(out);
-        } else {
-            csvPrinter = null;
-        }
     }
 
     @Override
-    public void addDemand(EnergyDemand supply) {
-        if (supply.getQuantity() < 0.001) {
+    public void addDemand(EnergyDemand demand) {
+        if (demand.getQuantity() < 0.001) {
             return;
         }
-        energyDemands.add(supply);
+        energyDemands.add(demand);
     }
 
     @Override
@@ -120,7 +108,7 @@ public class SpotMarketOperatorImpl implements SpotMarketOperator {
                         break;
                     }
                     balance -= energySupply.getQuantity();
-                    if (balance <= 0) {//todo
+                    if (balance <= 0) {
                         clearedPrice = energySupply.getPrice();
                     } else {
                         clearedPrice = energyDemand.getPrice();
@@ -188,25 +176,11 @@ public class SpotMarketOperatorImpl implements SpotMarketOperator {
         }
 
         notifyAssignmentRate();
-        logPriceForward();
 
         lastEnergyDemands = new ArrayList<>(energyDemands);
         lastSupplies = new ArrayList<>(energySupplies);
         energySupplies.clear();
         energyDemands.clear();
-    }
-
-    private void logPriceForward() {
-        if (csvPrinter == null) {
-            return;
-        }
-
-        long tick = TimeUtil.getCurrentTick();
-        try {
-            csvPrinter.printRecord(tick, clearedPrice);
-        } catch (IOException e) {
-            log.error(e.toString(), e);
-        }
     }
 
     private void notifyAssignmentRate() {
@@ -291,14 +265,7 @@ public class SpotMarketOperatorImpl implements SpotMarketOperator {
 
     @ScheduledMethod(start = ScheduledMethod.END)
     public void stop() {
-        if (csvPrinter != null) {
-            try {
                 logger.close();
-                csvPrinter.close();
-            } catch (IOException e) {
-                log.error(e.toString(), e);
-            }
-        }
     }
 
     public float getPrice() {  //dummy, da chart nicht sauber laeuft

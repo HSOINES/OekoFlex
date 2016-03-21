@@ -10,6 +10,7 @@ import repast.simphony.engine.schedule.ScheduledMethod;
  * Time: 08:29
  */
 public interface EOMTrader extends MarketTrader, MarketOperatorListener {
+
     void setSpotMarketOperator(SpotMarketOperator spotMarketOperator);
 
     float getLastClearedPrice();

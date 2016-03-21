@@ -1,0 +1,3 @@
+name;description;powerMax;powerMin;rampUp;rampDown;marginalCosts;shutdownCosts
+NEURATH G;lignite;20000;6000;7000;7000;20.75;534240
+LICHTERFELDE 1;oil;300000;1500;1500;75;230.86;180000

@@ -1,14 +1,13 @@
 package hsoines.oekoflex.builder;
 
 import hsoines.oekoflex.OekoflexAgent;
-import hsoines.oekoflex.builder.traderfactories.DaytimeEnergyConsumerFactory;
 import hsoines.oekoflex.builder.traderfactories.FlexPowerplantFactory;
 import hsoines.oekoflex.builder.traderfactories.StorageFactory;
 import hsoines.oekoflex.builder.traderfactories.TotalLoadFactory;
-import hsoines.oekoflex.energytrader.impl.test.ResidualSupplier;
 import hsoines.oekoflex.marketoperator.BalancingMarketOperator;
 import hsoines.oekoflex.marketoperator.impl.BalancingMarketOperatorImpl;
 import hsoines.oekoflex.marketoperator.impl.SpotMarketOperatorImpl;
+import hsoines.oekoflex.priceforwardcurve.PriceForwardCurveGenerator;
 import hsoines.oekoflex.summary.impl.EnergyTraderTypeLogger;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
@@ -21,20 +20,26 @@ import repast.simphony.parameter.Parameters;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Locale;
 import java.util.Properties;
 
 public class OekoFlexContextBuilder implements ContextBuilder<OekoflexAgent> {
     private static final Log log = LogFactory.getLog(OekoFlexContextBuilder.class);
 
+    static {
+        Locale.setDefault(Locale.GERMAN);
+    }
+
     @Override
     public Context build(Context<OekoflexAgent> context) {
-
+    	log.info("locale: " + Locale.getDefault().getDisplayName());
         context.setId("OekoFlex");
 
         Parameters p = RunEnvironment.getInstance().getParameters();
         RunEnvironment re = RunEnvironment.getInstance();
         int daysToRun = (int) p.getValue("daysToRun");
-        re.endAt(daysToRun * 96);//todo
+
+        re.endAt(daysToRun * 96);
 
         boolean loggingActivated = (boolean) p.getValue("loggingActivated");
 
@@ -48,8 +53,6 @@ public class OekoFlexContextBuilder implements ContextBuilder<OekoflexAgent> {
             log.error("Configuration directory is not existing: " + scenario);
             re.endRun();
         }
-
-        float residualEnergy = (float) p.getValue("residualEnergy");
 
         try {
             File priceForwardOutDir = new File(priceForwardOutDirName);
@@ -70,23 +73,21 @@ public class OekoFlexContextBuilder implements ContextBuilder<OekoflexAgent> {
             Properties globalProperties = loadProperties(configDir);
             int positiveDemandREM = Integer.parseInt((String) globalProperties.get("positiveDemandREM"));
             int negativeDemandREM = Integer.parseInt((String) globalProperties.get("negativeDemandREM"));
-            SpotMarketOperatorImpl spotMarketOperator = new SpotMarketOperatorImpl("EOM_Operator", logDirName, loggingActivated, priceForwardOutDir);
+            SpotMarketOperatorImpl spotMarketOperator = new SpotMarketOperatorImpl("EOM_Operator", logDirName, loggingActivated);
             BalancingMarketOperator balancingMarketOperator = new BalancingMarketOperatorImpl("BalancingMarketOperator", loggingActivated, logDirName, positiveDemandREM, negativeDemandREM);
             context.add(spotMarketOperator);
             context.add(balancingMarketOperator);
 
             //Consumer
-            DaytimeEnergyConsumerFactory.build(configDir, context, spotMarketOperator);
             TotalLoadFactory.build(configDir, context, spotMarketOperator);
 
             //Producer
             FlexPowerplantFactory.build(configDir, context, spotMarketOperator, balancingMarketOperator);
             StorageFactory.build(configDir, context, spotMarketOperator, balancingMarketOperator);
 
-            //experimental!
-            final ResidualSupplier residualSupplier = new ResidualSupplier(residualEnergy);
-            residualSupplier.setSpotMarketOperator(spotMarketOperator);
-            context.add(residualSupplier);
+            //Price Forward Generator
+            PriceForwardCurveGenerator priceForwardCurveGenerator = new PriceForwardCurveGenerator(configDir, daysToRun * 96, priceForwardOutDir);
+            priceForwardCurveGenerator.generate();
         } catch (IOException e) {
             log.error(e.toString(), e);
             re.endRun();
