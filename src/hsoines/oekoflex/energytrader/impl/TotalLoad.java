@@ -15,7 +15,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Date;
@@ -25,6 +24,8 @@ import java.util.List;
  * User: jh
  * Date: 17/01/16
  * Time: 23:03
+ *
+ * Die csv-Datei beschreibt die Energie pro 15 Minuten.
  */
 public final class TotalLoad implements EOMTrader {
     private static final Log log = LogFactory.getLog(TotalLoad.class);
