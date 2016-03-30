@@ -7,7 +7,9 @@ import hsoines.oekoflex.builder.traderfactories.TotalLoadFactory;
 import hsoines.oekoflex.marketoperator.BalancingMarketOperator;
 import hsoines.oekoflex.marketoperator.impl.BalancingMarketOperatorImpl;
 import hsoines.oekoflex.marketoperator.impl.SpotMarketOperatorImpl;
-import hsoines.oekoflex.priceforwardcurve.PriceForwardCurveGenerator;
+import hsoines.oekoflex.priceforwardcurve.PriceForwardCurve;
+import hsoines.oekoflex.priceforwardcurve.impl.PriceForwardCurveGenerator;
+import hsoines.oekoflex.priceforwardcurve.impl.PriceForwardCurveImpl;
 import hsoines.oekoflex.summary.impl.EnergyTraderTypeLogger;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
@@ -52,7 +54,7 @@ public class OekoFlexContextBuilder implements ContextBuilder<OekoflexAgent> {
         String scenario = (String) p.getValue("scenario");
         String logDirName = "run/summary-logs/" + scenario;
         String configDirName = "run-config/" + scenario;
-        String priceForwardOutDirName = "run/price-forward/" + scenario;
+        String priceForwardOutDirName = configDirName + "/price-forward/";
 
         File configDir = new File(configDirName);
         if (!configDir.exists()) {
@@ -84,15 +86,18 @@ public class OekoFlexContextBuilder implements ContextBuilder<OekoflexAgent> {
             context.add(spotMarketOperator);
             context.add(balancingMarketOperator);
 
+            // PriceForwardCurve
+            File priceForwardFile = new File(priceForwardOutDir, "price-forward.csv");
+            PriceForwardCurveGenerator priceForwardCurveGenerator = new PriceForwardCurveGenerator(configDir, daysToRun * 96, priceForwardFile);
+            PriceForwardCurve priceForwardCurve = new PriceForwardCurveImpl(priceForwardFile);
+
             //Consumer
             TotalLoadFactory.build(configDir, context, spotMarketOperator);
 
             //Producer
-            FlexPowerplantFactory.build(configDir, context, spotMarketOperator, balancingMarketOperator);
+            FlexPowerplantFactory.build(configDir, context, spotMarketOperator, balancingMarketOperator, priceForwardCurve);
             StorageFactory.build(configDir, context, spotMarketOperator, balancingMarketOperator);
 
-            //Price Forward Generator
-            PriceForwardCurveGenerator priceForwardCurveGenerator = new PriceForwardCurveGenerator(configDir, daysToRun * 96, priceForwardOutDir);
             priceForwardCurveGenerator.generate();
         } catch (IOException e) {
             log.error(e.toString(), e);

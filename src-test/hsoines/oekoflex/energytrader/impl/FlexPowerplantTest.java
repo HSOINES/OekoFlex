@@ -4,10 +4,13 @@ import hsoines.oekoflex.bid.BidType;
 import hsoines.oekoflex.bid.EnergyDemand;
 import hsoines.oekoflex.marketoperator.impl.BalancingMarketOperatorImpl;
 import hsoines.oekoflex.marketoperator.impl.SpotMarketOperatorImpl;
+import hsoines.oekoflex.priceforwardcurve.PriceForwardCurve;
 import hsoines.oekoflex.tools.RepastTestInitializer;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.IOException;
+import java.text.ParseException;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -38,7 +41,13 @@ public class FlexPowerplantTest {
         eomOperator = new SpotMarketOperatorImpl("test_eom_operator", ".", true);
         eomOperator.addDemand(new EnergyDemand(3000, 200, null));
 
-        flexpowerplant = new FlexPowerplant("flexpowerplant", "description", POWER_MAX, POWER_MIN, POWER_RAMP_UP, POWER_RAMP_DOWN, MARGINAL_COSTS, SHUTDOWN_COSTS);
+        flexpowerplant = new FlexPowerplant("flexpowerplant", "description", POWER_MAX, POWER_MIN, POWER_RAMP_UP, POWER_RAMP_DOWN, MARGINAL_COSTS, SHUTDOWN_COSTS,
+                new PriceForwardCurve() {
+                    @Override
+                    public void readData() throws IOException, ParseException {
+
+                    }
+                });
         flexpowerplant.setBalancingMarketOperator(regelEnergieMarketOperator);
         flexpowerplant.setSpotMarketOperator(eomOperator);
     }

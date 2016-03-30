@@ -15,6 +15,6 @@ public class FlexPowerplantFactoryTest {
     @Test
     public void testIt() throws Exception {
         BasicConfigurator.configure();
-        FlexPowerplantFactory.build(new File("run-config/test"), new DefaultContext<>(), null, null);
+        FlexPowerplantFactory.build(new File("run-config/test"), new DefaultContext<>(), null, null, null);
     }
 }

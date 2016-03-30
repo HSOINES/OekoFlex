@@ -1,4 +1,4 @@
-package hsoines.oekoflex.priceforwardcurve;
+package hsoines.oekoflex.priceforwardcurve.impl;
 
 import hsoines.oekoflex.builder.CSVParameter;
 import hsoines.oekoflex.builder.OekoFlexContextBuilder;
@@ -31,7 +31,7 @@ public class PriceForwardCurveGenerator {
     private final SpotMarketOperator spotMarketOperator;
     private CSVPrinter csvPrinter;
 
-    public PriceForwardCurveGenerator(File configDir, int ticksToRun, final File priceForwardOutDir) throws IOException {
+    public PriceForwardCurveGenerator(File configDir, int ticksToRun, final File priceForwardFile) throws IOException {
         this.ticksToRun = ticksToRun;
 
         spotMarketOperator = new SpotMarketOperatorImpl("pfc-spotmarkeroperator", "", false);
@@ -50,12 +50,11 @@ public class PriceForwardCurveGenerator {
                 totalload = totalLoad;
             }
         }
-            if (!priceForwardOutDir.exists()) {
-                if (!priceForwardOutDir.mkdirs()) {
+        if (!priceForwardFile.getParentFile().exists()) {
+            if (!priceForwardFile.getParentFile().mkdirs()) {
                     throw new IllegalStateException("couldn't create directories.");
                 }
             }
-            File priceForwardFile = new File(priceForwardOutDir, "price-forward.csv");
             final Appendable out;
                 try {
                     out = new FileWriter(priceForwardFile);

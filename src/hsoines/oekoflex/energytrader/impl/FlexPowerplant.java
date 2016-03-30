@@ -7,6 +7,7 @@ import hsoines.oekoflex.energytrader.MarketOperatorListener;
 import hsoines.oekoflex.energytrader.TradeRegistry;
 import hsoines.oekoflex.marketoperator.BalancingMarketOperator;
 import hsoines.oekoflex.marketoperator.SpotMarketOperator;
+import hsoines.oekoflex.priceforwardcurve.PriceForwardCurve;
 import hsoines.oekoflex.util.Market;
 import hsoines.oekoflex.util.TimeUtil;
 
@@ -24,6 +25,7 @@ public final class FlexPowerplant implements EOMTrader, BalancingMarketTrader, M
     private final int powerMax;
     private final int powerMin;
     private final float shutdownCosts;
+    private final PriceForwardCurve priceForwardCurve;
     private final int powerRampUp;
     private final int powerRampDown;
     private final float marginalCosts;
@@ -37,7 +39,11 @@ public final class FlexPowerplant implements EOMTrader, BalancingMarketTrader, M
     /*
         RampUp/Down: for 12 Hours.
      */
-    public FlexPowerplant(final String name, final String description, final int powerMax, final int powerMin, final int powerRampUp, final int powerRampDown, final float marginalCosts, final float shutdownCosts) {
+    public FlexPowerplant(final String name, final String description,
+                          final int powerMax, final int powerMin,
+                          final int powerRampUp, final int powerRampDown,
+                          final float marginalCosts, final float shutdownCosts,
+                          final PriceForwardCurve priceForwardCurve) {
         this.name = name;
         this.description = description;
         this.powerMax = powerMax;
@@ -46,6 +52,7 @@ public final class FlexPowerplant implements EOMTrader, BalancingMarketTrader, M
         this.powerRampDown = powerRampDown;
         this.marginalCosts = marginalCosts;
         this.shutdownCosts = shutdownCosts;
+        this.priceForwardCurve = priceForwardCurve;
         init();
     }
 
@@ -63,6 +70,25 @@ public final class FlexPowerplant implements EOMTrader, BalancingMarketTrader, M
     public void makeBidEOM() {
         long currentTick = TimeUtil.getCurrentTick();
         makeBidEOM(currentTick);
+    }
+
+    @Override
+    public void makeBidBalancingMarket() {
+        Date currentDate = TimeUtil.getCurrentDate();
+        Date precedingDate = TimeUtil.precedingDate(currentDate);
+
+        int pPreceding = (int) (energyTradeRegistry.getQuantityUsed(precedingDate) / TimeUtil.HOUR_PER_TICK);
+        if (pPreceding == 0) {
+            pPreceding = powerMin;
+        }
+
+        float pNeg = Math.min(pPreceding - powerMin, powerRampDown / 3f);
+        final float priceNegative = -2000;
+        balancingMarketOperator.addNegativeSupply(new PowerNegative(priceNegative, pNeg, this));   //price???
+
+        float pPos = Math.min(powerMax - pPreceding, powerRampUp / 3f);
+        final float pricePositive = 2000;
+        balancingMarketOperator.addPositiveSupply(new PowerPositive(pricePositive, pPos, this));   //price???
     }
 
     public void makeBidEOM(long currentTick) {
@@ -83,23 +109,6 @@ public final class FlexPowerplant implements EOMTrader, BalancingMarketTrader, M
 
         float eFlex = Math.min((powerMax - pPositiveCommited) * t - eMustRun, ePreceding + powerRampUp * t - eMustRun);
         eomMarketOperator.addSupply(new EnergySupply(marginalCosts, eFlex, this));
-    }
-
-    @Override
-    public void makeBidBalancingMarket() {
-        Date currentDate = TimeUtil.getCurrentDate();
-        Date precedingDate = TimeUtil.precedingDate(currentDate);
-
-        int pPreceding = (int) (energyTradeRegistry.getQuantityUsed(precedingDate) / TimeUtil.HOUR_PER_TICK);
-        if (pPreceding == 0) {
-            pPreceding = powerMin;
-        }
-
-        float pNeg = Math.min(pPreceding - powerMin, powerRampDown / 3f);
-        balancingMarketOperator.addNegativeSupply(new PowerNegative(marginalCosts, pNeg, this));   //price???
-
-        float pPos = Math.min(powerMax - pPreceding, powerRampUp / 3f);
-        balancingMarketOperator.addPositiveSupply(new PowerPositive(marginalCosts, pPos, this));   //price???
     }
 
     @Override
