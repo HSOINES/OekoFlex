@@ -3,6 +3,7 @@ package hsoines.oekoflex.display;
 import hsoines.oekoflex.OekoflexAgent;
 import hsoines.oekoflex.bid.EnergyDemand;
 import hsoines.oekoflex.bid.EnergySupply;
+import hsoines.oekoflex.marketoperator.SpotMarketOperator;
 import hsoines.oekoflex.marketoperator.impl.SpotMarketOperatorImpl;
 import hsoines.oekoflex.util.TimeUtil;
 import org.knowm.xchart.ChartBuilder_XY;
@@ -24,14 +25,13 @@ public class MerritOrderGraph implements IDisplay {
 
     public static final String SUPPLIES = "Supplies";
     public static final String DEMANDS = "Demands";
-    private final Context<OekoflexAgent> context;
     private Chart_XY chart;
     private JPanel panel;
-    private SpotMarketOperatorImpl eomOperator;
+    private SpotMarketOperator eomOperator;
 
     public MerritOrderGraph(Context<OekoflexAgent> context) {
 
-        this.context = context;
+        final Context<OekoflexAgent> context1 = context;
 
         Iterable<OekoflexAgent> iter = context.getAgentLayer(OekoflexAgent.class);
         for (OekoflexAgent oekoflexAgent : iter) {
@@ -48,6 +48,10 @@ public class MerritOrderGraph implements IDisplay {
         chart.getStyler().setAxisTitlesVisible(false);
         chart.getStyler().setDefaultSeriesRenderStyle(Series_XY.ChartXYSeriesRenderStyle.Line);
 
+    }
+
+    public MerritOrderGraph(final SpotMarketOperator mySpotMarketOperator) {
+        eomOperator = mySpotMarketOperator;
     }
 
     @Override

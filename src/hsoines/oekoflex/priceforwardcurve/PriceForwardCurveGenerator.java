@@ -1,7 +1,7 @@
 package hsoines.oekoflex.priceforwardcurve;
 
-import hsoines.oekoflex.OekoflexAgent;
 import hsoines.oekoflex.builder.CSVParameter;
+import hsoines.oekoflex.builder.OekoFlexContextBuilder;
 import hsoines.oekoflex.builder.traderfactories.FlexPowerplantFactory;
 import hsoines.oekoflex.builder.traderfactories.TotalLoadFactory;
 import hsoines.oekoflex.energytrader.impl.FlexPowerplant;
@@ -12,7 +12,6 @@ import hsoines.oekoflex.util.TimeUtil;
 import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import repast.simphony.context.Context;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -89,7 +88,7 @@ public class PriceForwardCurveGenerator {
 
     public void logPriceForward(int tick, CSVPrinter csvPrinter) {
         try {
-            csvPrinter.printRecord(tick, spotMarketOperator.getLastClearedPrice());
+            csvPrinter.printRecord(tick, OekoFlexContextBuilder.defaultNumberFormat.format(spotMarketOperator.getLastClearedPrice()));
         } catch (IOException e) {
             log.error(e.toString(), e);
         }

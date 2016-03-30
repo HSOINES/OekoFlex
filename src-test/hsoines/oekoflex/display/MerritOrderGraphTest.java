@@ -7,13 +7,9 @@ import hsoines.oekoflex.util.TimeUtil;
 import org.junit.Test;
 
 import javax.swing.*;
-
 import java.awt.*;
-import java.util.*;
+import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
-
-import static org.junit.Assert.*;
 
 /**
  * Created by jhense on 15.03.2016.
@@ -25,7 +21,7 @@ public class MerritOrderGraphTest {
 
         JFrame jFrame = new JFrame();
         MySpotMarketOperator mySpotMarketOperator = new MySpotMarketOperator();
-        MerritOrderGraph merritOrderGraph = null;//new MerritOrderGraph(mySpotMarketOperator);
+        MerritOrderGraph merritOrderGraph = new MerritOrderGraph(mySpotMarketOperator);
         merritOrderGraph.init();
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
