@@ -47,7 +47,7 @@ public final class PriceForwardCurveImpl implements PriceForwardCurve {
     public float getPriceSummation(final long currentTick, final int ticks) {
         float sum = 0;
         for (long i = currentTick; i < currentTick + ticks; i++) {
-            sum += priceOnTick.get(i);
+            sum += getPriceOnTick(i);
         }
         return sum;
     }
@@ -60,22 +60,27 @@ public final class PriceForwardCurveImpl implements PriceForwardCurve {
     }
 
     @Override
+    public float getMaximum(final long currentTick, final int ticks) {
+        float max = -Float.MAX_VALUE;
+        for (long i = currentTick; i < currentTick + ticks; i++) {
+            float v = getPriceOnTick(i);
+            if (max < v) max = v;
+        }
+        return max;
+    }
+
+    @Override
     public float getMinimum(final long currentTick, final int ticks) {
         float min = Float.MAX_VALUE;
         for (long i = currentTick; i < currentTick + ticks; i++) {
-            float v = priceOnTick.get(i);
+            float v = getPriceOnTick(i);
             if (min > v) min = v;
         }
         return min;
     }
 
-    @Override
-    public float getMaximum(final long currentTick, final int ticks) {
-        float max = -Float.MAX_VALUE;
-        for (long i = currentTick; i < currentTick + ticks; i++) {
-            float v = priceOnTick.get(i);
-            if (max < v) max = v;
-        }
-        return max;
+    private float getPriceOnTick(final long tick) {
+        final Float price = priceOnTick.get(tick);
+        return price == null ? 0 : price;
     }
 }

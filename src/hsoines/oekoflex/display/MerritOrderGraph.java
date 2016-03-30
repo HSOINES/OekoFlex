@@ -6,11 +6,11 @@ import hsoines.oekoflex.bid.EnergySupply;
 import hsoines.oekoflex.marketoperator.SpotMarketOperator;
 import hsoines.oekoflex.marketoperator.impl.SpotMarketOperatorImpl;
 import hsoines.oekoflex.util.TimeUtil;
-import org.knowm.xchart.ChartBuilder_XY;
-import org.knowm.xchart.Chart_XY;
-import org.knowm.xchart.Series_XY;
 import org.knowm.xchart.XChartPanel;
-import org.knowm.xchart.internal.style.Styler;
+import org.knowm.xchart.XYChart;
+import org.knowm.xchart.XYChartBuilder;
+import org.knowm.xchart.XYSeries;
+import org.knowm.xchart.style.Styler;
 import repast.simphony.context.Context;
 import repast.simphony.visualization.*;
 
@@ -25,7 +25,7 @@ public class MerritOrderGraph implements IDisplay {
 
     public static final String SUPPLIES = "Supplies";
     public static final String DEMANDS = "Demands";
-    private Chart_XY chart;
+    private XYChart chart;
     private JPanel panel;
     private SpotMarketOperator eomOperator;
 
@@ -51,11 +51,11 @@ public class MerritOrderGraph implements IDisplay {
         panel = new JPanel();
         panel.setLayout(new BorderLayout());
 
-        chart = new ChartBuilder_XY().width(800).height(600).title(getClass().getSimpleName()).xAxisTitle("Quantity").yAxisTitle("Bid").build();
+        chart = new XYChartBuilder().width(800).height(600).title(getClass().getSimpleName()).xAxisTitle("Quantity").yAxisTitle("Bid").build();
         // Customize Chart
         chart.getStyler().setLegendPosition(Styler.LegendPosition.InsideNW);
         chart.getStyler().setAxisTitlesVisible(false);
-        chart.getStyler().setDefaultSeriesRenderStyle(Series_XY.ChartXYSeriesRenderStyle.Line);
+        chart.getStyler().setDefaultSeriesRenderStyle(XYSeries.XYSeriesRenderStyle.Line);
     }
 
 
