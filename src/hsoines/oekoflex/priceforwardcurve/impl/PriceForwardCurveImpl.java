@@ -40,6 +40,7 @@ public final class PriceForwardCurveImpl implements PriceForwardCurve {
             final float price = OekoFlexContextBuilder.defaultNumberFormat.parse(values.get("price")).floatValue();
             priceOnTick.put(tick, price);
         }
+        reader.close();
     }
 
     @Override
