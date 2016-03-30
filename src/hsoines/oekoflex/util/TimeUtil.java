@@ -90,7 +90,20 @@ public final class TimeUtil {
         return new Date(currentDate.getTime() + QUARTER_HOUR_IN_MILLIS);
     }
 
-    //only for test purposes!
+    /*
+    only for test purposes!
+    simulation can be controlled by this methods
+
+        usage:
+
+        nextTick();
+        dosomemarketclearing
+        nextTick();
+
+        in tearDown:
+        reset();
+     */
+
     public static void nextTick() {
         internalTick++;
     }

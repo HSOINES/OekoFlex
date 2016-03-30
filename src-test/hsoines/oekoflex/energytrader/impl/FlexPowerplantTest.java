@@ -5,12 +5,13 @@ import hsoines.oekoflex.bid.EnergyDemand;
 import hsoines.oekoflex.marketoperator.impl.BalancingMarketOperatorImpl;
 import hsoines.oekoflex.marketoperator.impl.SpotMarketOperatorImpl;
 import hsoines.oekoflex.priceforwardcurve.PriceForwardCurve;
+import hsoines.oekoflex.priceforwardcurve.impl.PriceForwardCurveImpl;
 import hsoines.oekoflex.tools.RepastTestInitializer;
+import hsoines.oekoflex.util.TimeUtil;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.IOException;
-import java.text.ParseException;
+import java.io.File;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -41,24 +42,18 @@ public class FlexPowerplantTest {
         eomOperator = new SpotMarketOperatorImpl("test_eom_operator", ".", true);
         eomOperator.addDemand(new EnergyDemand(3000, 200, null));
 
+        final File priceForwardOutFile = new File("run-config/test/price-forward/price-forward.csv");
+        final PriceForwardCurve priceForwardCurve = new PriceForwardCurveImpl(priceForwardOutFile);
+        priceForwardCurve.readData();
         flexpowerplant = new FlexPowerplant("flexpowerplant", "description", POWER_MAX, POWER_MIN, POWER_RAMP_UP, POWER_RAMP_DOWN, MARGINAL_COSTS, SHUTDOWN_COSTS,
-                new PriceForwardCurve() {
-                    @Override
-                    public void readData() throws IOException, ParseException {
-
-                    }
-
-                    @Override
-                    public float getPriceSummation(final long currentTick, final int ticks) {
-                        return 0;
-                    }
-                });
+                priceForwardCurve);
         flexpowerplant.setBalancingMarketOperator(regelEnergieMarketOperator);
         flexpowerplant.setSpotMarketOperator(eomOperator);
     }
 
     @Test
     public void testFlexPowerplant() throws Exception {
+        TimeUtil.nextTick();
         flexpowerplant.makeBidBalancingMarket();
         flexpowerplant.makeBidEOM();
 
@@ -71,7 +66,7 @@ public class FlexPowerplantTest {
 
         TradeRegistryImpl.EnergyTradeElement powerPositive = currentAssignments.get(0);
         assertEquals(BidType.POWER_POSITIVE, powerPositive.getBidType());
-        assertEquals(50f, powerPositive.getAssignedPrice(), 0.00001f);   //price???
+        assertEquals(16f, powerPositive.getAssignedPrice(), 0.00001f);   //price???
         assertEquals(100 / 3f, powerPositive.getOfferedQuantity(), 0.00001f);
         assertEquals(1, powerPositive.getRate(), 0.00001f);
 
@@ -86,7 +81,6 @@ public class FlexPowerplantTest {
         assertEquals(-.2f, energy.getAssignedPrice(), 0.00001f);
         assertEquals(25, energy.getOfferedQuantity(), 0.00001f);
         assertEquals(0f, energy.getRate(), 0.00001f);
-
     }
 
     //todo: must_run only partially assigned

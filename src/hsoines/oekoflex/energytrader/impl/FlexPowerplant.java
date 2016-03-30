@@ -83,12 +83,12 @@ public final class FlexPowerplant implements EOMTrader, BalancingMarketTrader, M
         }
 
         float pNeg = Math.min(pPreceding - powerMin, powerRampDown / 3f);
-        final float priceNegative = -2000;
+        final float priceNegative = marginalCosts;
         balancingMarketOperator.addNegativeSupply(new PowerNegative(priceNegative, pNeg, this));   //price???
 
         float pPos = Math.min(powerMax - pPreceding, powerRampUp / 3f);
         final float pricePositive = priceForwardCurve.getPriceSummation(TimeUtil.getCurrentTick(), Market.BALANCING_MARKET.getTicks());
-        balancingMarketOperator.addPositiveSupply(new PowerPositive(pricePositive, pPos, this));   //price???
+        balancingMarketOperator.addPositiveSupply(new PowerPositive(pricePositive, pPos, this));
     }
 
     public void makeBidEOM(long currentTick) {
