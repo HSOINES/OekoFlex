@@ -39,6 +39,15 @@ public class MerritOrderGraph implements IDisplay {
                 eomOperator = (SpotMarketOperatorImpl) oekoflexAgent;
             }
         }
+        panelInit();
+    }
+
+    public MerritOrderGraph(final SpotMarketOperator mySpotMarketOperator) {
+        eomOperator = mySpotMarketOperator;
+        panelInit();
+    }
+
+    void panelInit() {
         panel = new JPanel();
         panel.setLayout(new BorderLayout());
 
@@ -47,12 +56,8 @@ public class MerritOrderGraph implements IDisplay {
         chart.getStyler().setLegendPosition(Styler.LegendPosition.InsideNW);
         chart.getStyler().setAxisTitlesVisible(false);
         chart.getStyler().setDefaultSeriesRenderStyle(Series_XY.ChartXYSeriesRenderStyle.Line);
-
     }
 
-    public MerritOrderGraph(final SpotMarketOperator mySpotMarketOperator) {
-        eomOperator = mySpotMarketOperator;
-    }
 
     @Override
     public void render() {

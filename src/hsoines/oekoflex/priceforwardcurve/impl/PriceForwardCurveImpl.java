@@ -50,4 +50,31 @@ public final class PriceForwardCurveImpl implements PriceForwardCurve {
         }
         return sum;
     }
+
+    @Override
+    public float getSpread(final long currentTick, final int ticks) {
+        float min = getMinimum(currentTick, ticks);
+        float max = getMaximum(currentTick, ticks);
+        return max - min;
+    }
+
+    @Override
+    public float getMinimum(final long currentTick, final int ticks) {
+        float min = Float.MAX_VALUE;
+        for (long i = currentTick; i < currentTick + ticks; i++) {
+            float v = priceOnTick.get(i);
+            if (min > v) min = v;
+        }
+        return min;
+    }
+
+    @Override
+    public float getMaximum(final long currentTick, final int ticks) {
+        float max = -Float.MAX_VALUE;
+        for (long i = currentTick; i < currentTick + ticks; i++) {
+            float v = priceOnTick.get(i);
+            if (max < v) max = v;
+        }
+        return max;
+    }
 }

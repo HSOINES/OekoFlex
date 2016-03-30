@@ -19,6 +19,8 @@ public final class SequenceDefinition {
 
     public static final int EOMInterval = 1;
 
+    public static final int DayInterval = 96;
+
     //starts
     public static final int SimulationStart = 0;
 }

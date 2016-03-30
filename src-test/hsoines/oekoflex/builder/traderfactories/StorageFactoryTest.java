@@ -16,6 +16,6 @@ public class StorageFactoryTest {
     public void testLoadSample() throws Exception {
         BasicConfigurator.configure();
         File configDir = new File("run-config/scenario1");
-        StorageFactory.build(configDir, new DefaultContext<>(), null, null);
+        StorageFactory.build(configDir, new DefaultContext<>(), null, null, null);
     }
 }

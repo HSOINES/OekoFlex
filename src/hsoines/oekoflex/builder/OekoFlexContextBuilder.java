@@ -97,8 +97,9 @@ public class OekoFlexContextBuilder implements ContextBuilder<OekoflexAgent> {
 
             //Producer
             FlexPowerplantFactory.build(configDir, context, spotMarketOperator, balancingMarketOperator, priceForwardCurve);
-            StorageFactory.build(configDir, context, spotMarketOperator, balancingMarketOperator);
+            StorageFactory.build(configDir, context, spotMarketOperator, balancingMarketOperator, priceForwardCurve);
 
+            //build pfc
             priceForwardCurveGenerator.generate();
             priceForwardCurve.readData();
         } catch (IOException e) {

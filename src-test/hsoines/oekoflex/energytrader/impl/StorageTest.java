@@ -3,10 +3,14 @@ package hsoines.oekoflex.energytrader.impl;
 import hsoines.oekoflex.bid.EnergyDemand;
 import hsoines.oekoflex.bid.EnergySupply;
 import hsoines.oekoflex.marketoperator.impl.SpotMarketOperatorImpl;
+import hsoines.oekoflex.priceforwardcurve.PriceForwardCurve;
+import hsoines.oekoflex.priceforwardcurve.impl.PriceForwardCurveImpl;
 import hsoines.oekoflex.tools.RepastTestInitializer;
 import hsoines.oekoflex.util.TimeUtil;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.io.File;
 
 import static org.junit.Assert.assertEquals;
 
@@ -23,7 +27,10 @@ public class StorageTest {
     @Before
     public void setUp() throws Exception {
         RepastTestInitializer.init();
-        storage = new Storage("test", "description", 500, 10, 1f, 0.1f, 1000, 1, 0, 100, 100);
+        final File priceForwardOutFile = new File("run-config/test/price-forward/price-forward.csv");
+        final PriceForwardCurve priceForwardCurve = new PriceForwardCurveImpl(priceForwardOutFile);
+        priceForwardCurve.readData();
+        storage = new Storage("test", "description", 500, 10, 1f, 0.1f, 1000, 1, 0, 100, 100, priceForwardCurve);
         operator = new SpotMarketOperatorImpl("test_operator", "run/summary-logs/test", true);
         storage.setSpotMarketOperator(operator);
     }

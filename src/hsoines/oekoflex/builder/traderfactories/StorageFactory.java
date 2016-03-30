@@ -6,6 +6,7 @@ import hsoines.oekoflex.builder.OekoFlexContextBuilder;
 import hsoines.oekoflex.energytrader.impl.Storage;
 import hsoines.oekoflex.marketoperator.BalancingMarketOperator;
 import hsoines.oekoflex.marketoperator.SpotMarketOperator;
+import hsoines.oekoflex.priceforwardcurve.PriceForwardCurve;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.logging.Log;
@@ -24,10 +25,13 @@ import java.text.ParseException;
  */
 public final class StorageFactory {
     private static final Log log = LogFactory.getLog(StorageFactory.class);
+    private static PriceForwardCurve priceForwardCurve;
 
     public static void build(final File configDir,
                              final Context<OekoflexAgent> context,
-                             final SpotMarketOperator spotMarketOperator, final BalancingMarketOperator balancingMarketOperator) throws IOException {
+                             final SpotMarketOperator spotMarketOperator, final BalancingMarketOperator balancingMarketOperator,
+                             final PriceForwardCurve priceForwardCurve) throws IOException {
+        StorageFactory.priceForwardCurve = priceForwardCurve;
         File configFile = new File(configDir + "/" + "Storage.cfg.csv");
         FileReader reader = new FileReader(configFile);
         CSVParser format = CSVParameter.getCSVFormat().parse(reader);
@@ -45,7 +49,11 @@ public final class StorageFactory {
                 int chargePower = Integer.parseInt(parameters.get("chargePower"));
                 int dischargePower = Integer.parseInt(parameters.get("dischargePower"));
 
-                Storage storage = new Storage(name, description, powerMax, powerMin, marginalCosts, shutdownCosts, capacity, socMax, socMin, chargePower, dischargePower);
+                Storage storage = new Storage(name, description,
+                        powerMax, powerMin,
+                        marginalCosts, shutdownCosts, capacity,
+                        socMax, socMin, chargePower, dischargePower,
+                        priceForwardCurve);
                 storage.setSpotMarketOperator(spotMarketOperator);
                 storage.setBalancingMarketOperator(balancingMarketOperator);
                 context.add(storage);

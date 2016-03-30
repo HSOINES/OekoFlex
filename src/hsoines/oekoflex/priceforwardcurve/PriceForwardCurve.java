@@ -12,4 +12,10 @@ public interface PriceForwardCurve {
     void readData() throws IOException, ParseException;
 
     float getPriceSummation(long currentTick, int ticks);
+
+    float getSpread(long currentTick, int ticks);
+
+    float getMinimum(long currentTick, int ticks);
+
+    float getMaximum(long currentTick, int ticks);
 }

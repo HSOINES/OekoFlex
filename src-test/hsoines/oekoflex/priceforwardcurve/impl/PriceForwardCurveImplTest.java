@@ -32,4 +32,14 @@ public class PriceForwardCurveImplTest {
         priceSummation = priceForwardCurve.getPriceSummation(16, 16);
         assertEquals(32f, priceSummation, 0.0000f);
     }
+
+    @Test
+    public void testSpread() throws Exception {
+        float spread = priceForwardCurve.getSpread(0, 16);
+        assertEquals(0, spread, 0.00001f);
+        spread = priceForwardCurve.getSpread(8, 16);
+        assertEquals(1, spread, 0.00001f);
+        spread = priceForwardCurve.getSpread(0, 32);
+        assertEquals(1, spread, 0.00001f);
+    }
 }
