@@ -10,4 +10,6 @@ import java.text.ParseException;
  */
 public interface PriceForwardCurve {
     void readData() throws IOException, ParseException;
+
+    float getPriceSummation(long currentTick, int ticks);
 }

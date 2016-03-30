@@ -47,6 +47,11 @@ public class FlexPowerplantTest {
                     public void readData() throws IOException, ParseException {
 
                     }
+
+                    @Override
+                    public float getPriceSummation(final long currentTick, final int ticks) {
+                        return 0;
+                    }
                 });
         flexpowerplant.setBalancingMarketOperator(regelEnergieMarketOperator);
         flexpowerplant.setSpotMarketOperator(eomOperator);

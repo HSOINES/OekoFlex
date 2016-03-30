@@ -21,7 +21,7 @@ import java.util.Map;
  */
 public final class PriceForwardCurveImpl implements PriceForwardCurve {
 
-    private final Map<Integer, Float> priceOnTick;
+    private final Map<Long, Float> priceOnTick;
     private final File priceForwardOutFile;
 
     public PriceForwardCurveImpl(final File priceForwardOutFile) {
@@ -36,9 +36,18 @@ public final class PriceForwardCurveImpl implements PriceForwardCurve {
         final CSVFormat csvFormat = CSVParameter.getCSVFormat();
         final CSVParser csvParser = csvFormat.parse(reader);
         for (CSVRecord values : csvParser.getRecords()) {
-            final int tick = Integer.parseInt(values.get("tick"));
+            final long tick = Long.parseLong(values.get("tick"));
             final float price = OekoFlexContextBuilder.defaultNumberFormat.parse(values.get("price")).floatValue();
             priceOnTick.put(tick, price);
         }
+    }
+
+    @Override
+    public float getPriceSummation(final long currentTick, final int ticks) {
+        float sum = 0;
+        for (long i = currentTick; i < currentTick + ticks; i++) {
+            sum += priceOnTick.get(i);
+        }
+        return sum;
     }
 }

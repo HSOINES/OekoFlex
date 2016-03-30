@@ -24,6 +24,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.Locale;
 import java.util.Properties;
 
@@ -99,10 +100,13 @@ public class OekoFlexContextBuilder implements ContextBuilder<OekoflexAgent> {
             StorageFactory.build(configDir, context, spotMarketOperator, balancingMarketOperator);
 
             priceForwardCurveGenerator.generate();
+            priceForwardCurve.readData();
         } catch (IOException e) {
             log.error(e.toString(), e);
             re.endRun();
             System.exit(-1);
+        } catch (ParseException e) {
+            log.error(e.toString(), e);
         }
 
         return context;
