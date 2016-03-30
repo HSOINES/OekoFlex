@@ -2,8 +2,6 @@ package hsoines.oekoflex.builder;
 
 import org.apache.commons.csv.CSVFormat;
 
-import java.util.Locale;
-
 /**
  * User: jh
  * Date: 17/01/16

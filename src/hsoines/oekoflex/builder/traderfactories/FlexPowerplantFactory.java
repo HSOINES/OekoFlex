@@ -2,9 +2,9 @@ package hsoines.oekoflex.builder.traderfactories;
 
 import hsoines.oekoflex.OekoflexAgent;
 import hsoines.oekoflex.builder.CSVParameter;
+import hsoines.oekoflex.builder.OekoFlexContextBuilder;
 import hsoines.oekoflex.energytrader.impl.FlexPowerplant;
 import hsoines.oekoflex.marketoperator.BalancingMarketOperator;
-import hsoines.oekoflex.marketoperator.SpotMarketOperator;
 import hsoines.oekoflex.marketoperator.impl.SpotMarketOperatorImpl;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
@@ -15,6 +15,7 @@ import repast.simphony.context.Context;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -52,8 +53,8 @@ public final class FlexPowerplantFactory {
                 int powerMin = Integer.parseInt(parameters.get("powerMin"));
                 int rampUp = Integer.parseInt(parameters.get("rampUp"));
                 int rampDown = Integer.parseInt(parameters.get("rampDown"));
-                float marginalCosts = Float.parseFloat(parameters.get("marginalCosts"));
-                float shutdownCosts = Float.parseFloat(parameters.get("shutdownCosts"));
+                float marginalCosts = OekoFlexContextBuilder.defaultNumberFormat.parse(parameters.get("marginalCosts")).floatValue();
+                float shutdownCosts = OekoFlexContextBuilder.defaultNumberFormat.parse(parameters.get("shutdownCosts")).floatValue();
 
 
                 FlexPowerplant flexPowerplant = new FlexPowerplant(name, description, powerMax, powerMin, rampUp, rampDown, marginalCosts, shutdownCosts);
@@ -61,6 +62,8 @@ public final class FlexPowerplantFactory {
                 log.info("FlexPowerplant Build done for <" + name + ">.");
             } catch (NumberFormatException e) {
                 log.error(e.getMessage(), e);
+            } catch (ParseException e) {
+                log.error(e.toString(), e);
             }
         }
         return flexPowerplants;

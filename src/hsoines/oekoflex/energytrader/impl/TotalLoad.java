@@ -4,6 +4,7 @@ import hsoines.oekoflex.bid.Bid;
 import hsoines.oekoflex.bid.EnergyDemand;
 import hsoines.oekoflex.bid.EnergySupply;
 import hsoines.oekoflex.builder.CSVParameter;
+import hsoines.oekoflex.builder.OekoFlexContextBuilder;
 import hsoines.oekoflex.energytrader.EOMTrader;
 import hsoines.oekoflex.energytrader.TradeRegistry;
 import hsoines.oekoflex.marketoperator.SpotMarketOperator;
@@ -17,6 +18,7 @@ import org.apache.commons.logging.LogFactory;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 
@@ -60,18 +62,18 @@ public final class TotalLoad implements EOMTrader {
                 long tick = Long.parseLong(parameters.get("tick"));
                 switch (type) {
                     case DEMAND:
-                        data = Float.parseFloat(parameters.get("demand"));
+                        data = OekoFlexContextBuilder.defaultNumberFormat.parse(parameters.get("demand")).floatValue();
                         break;
                     case SUPPLY:
-                        data = Float.parseFloat(parameters.get("supply"));
+                        data = OekoFlexContextBuilder.defaultNumberFormat.parse(parameters.get("supply")).floatValue();
                         break;
                 }
                 energyTradeRegistry.setCapacity(tick, data);
             }
-        } catch (IOException e) {
+        } catch (IOException | NumberFormatException e) {
             log.error(e.getMessage(), e);
-        } catch (NumberFormatException e) {
-            log.error(e.getMessage(), e);
+        } catch (ParseException e) {
+            log.error(e.toString(), e);
         }
     }
 

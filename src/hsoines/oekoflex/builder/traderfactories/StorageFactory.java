@@ -2,6 +2,7 @@ package hsoines.oekoflex.builder.traderfactories;
 
 import hsoines.oekoflex.OekoflexAgent;
 import hsoines.oekoflex.builder.CSVParameter;
+import hsoines.oekoflex.builder.OekoFlexContextBuilder;
 import hsoines.oekoflex.energytrader.impl.Storage;
 import hsoines.oekoflex.marketoperator.BalancingMarketOperator;
 import hsoines.oekoflex.marketoperator.SpotMarketOperator;
@@ -14,6 +15,7 @@ import repast.simphony.context.Context;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.text.ParseException;
 
 /**
  * User: jh
@@ -35,10 +37,10 @@ public final class StorageFactory {
                 String description = parameters.get("description");
                 int powerMax = Integer.parseInt(parameters.get("powerMax"));
                 int powerMin = Integer.parseInt(parameters.get("powerMin"));
-                float marginalCosts = Float.parseFloat(parameters.get("marginalCosts"));
-                float shutdownCosts = Float.parseFloat(parameters.get("shutdownCosts"));
-                float socMax = Float.parseFloat(parameters.get("socMax"));
-                float socMin = Float.parseFloat(parameters.get("socMin"));
+                float marginalCosts = OekoFlexContextBuilder.defaultNumberFormat.parse(parameters.get("marginalCosts")).floatValue();
+                float shutdownCosts = OekoFlexContextBuilder.defaultNumberFormat.parse(parameters.get("shutdownCosts")).floatValue();
+                float socMax = OekoFlexContextBuilder.defaultNumberFormat.parse(parameters.get("socMax")).floatValue();
+                float socMin = OekoFlexContextBuilder.defaultNumberFormat.parse(parameters.get("socMin")).floatValue();
                 int capacity = Integer.parseInt(parameters.get("capacity"));
                 int chargePower = Integer.parseInt(parameters.get("chargePower"));
                 int dischargePower = Integer.parseInt(parameters.get("dischargePower"));
@@ -51,6 +53,8 @@ public final class StorageFactory {
                 log.info("Storage Build done: " + name);
             } catch (NumberFormatException e) {
                 log.error(e.getMessage(), e);
+            } catch (ParseException e) {
+                log.error(e.toString(), e);
             }
         }
     }

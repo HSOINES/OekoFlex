@@ -20,14 +20,20 @@ import repast.simphony.parameter.Parameters;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.Locale;
 import java.util.Properties;
 
 public class OekoFlexContextBuilder implements ContextBuilder<OekoflexAgent> {
     private static final Log log = LogFactory.getLog(OekoFlexContextBuilder.class);
 
+    static final Locale defaultlocale = Locale.GERMAN;
+    public static NumberFormat defaultNumberFormat;
+
     static {
-        Locale.setDefault(Locale.GERMAN);
+        Locale.setDefault(OekoFlexContextBuilder.defaultlocale);
+        OekoFlexContextBuilder.defaultNumberFormat = DecimalFormat.getNumberInstance();
     }
 
     @Override

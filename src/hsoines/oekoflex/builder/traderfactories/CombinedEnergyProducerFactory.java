@@ -2,6 +2,7 @@ package hsoines.oekoflex.builder.traderfactories;
 
 import hsoines.oekoflex.OekoflexAgent;
 import hsoines.oekoflex.builder.CSVParameter;
+import hsoines.oekoflex.builder.OekoFlexContextBuilder;
 import hsoines.oekoflex.energytrader.impl.test.CombinedEnergyProducer;
 import hsoines.oekoflex.marketoperator.BalancingMarketOperator;
 import hsoines.oekoflex.marketoperator.impl.SpotMarketOperatorImpl;
@@ -14,6 +15,7 @@ import repast.simphony.context.Context;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.text.ParseException;
 
 /**
  * User: jh
@@ -31,9 +33,9 @@ public final class CombinedEnergyProducerFactory {
             try {
                 String name = parameters.get("name");// + "_" + Long.toHexString(System.currentTimeMillis());
                 int capacity = Integer.parseInt(parameters.get("capacity"));
-                float priceRegelMarkt = Float.parseFloat(parameters.get("priceRegelMarkt"));
-                float priceEnergyOnlyMarkt = Float.parseFloat(parameters.get("priceEnergyOnlyMarkt"));
-                float quantityPercentageOnRegelMarkt = Float.parseFloat(parameters.get("quantityPercentageOnRegelMarkt"));
+                float priceRegelMarkt = OekoFlexContextBuilder.defaultNumberFormat.parse(parameters.get("priceRegelMarkt")).floatValue();
+                float priceEnergyOnlyMarkt = OekoFlexContextBuilder.defaultNumberFormat.parse(parameters.get("priceEnergyOnlyMarkt")).floatValue();
+                float quantityPercentageOnRegelMarkt = OekoFlexContextBuilder.defaultNumberFormat.parse(parameters.get("quantityPercentageOnRegelMarkt")).floatValue();
 
                 CombinedEnergyProducer combinedEnergyProducer = new CombinedEnergyProducer(name);
                 combinedEnergyProducer.setCapacity(capacity);
@@ -48,6 +50,8 @@ public final class CombinedEnergyProducerFactory {
                 CombinedEnergyProducerFactory.log.info("CombinedEnergyProducer Build done: " + name);
             } catch (NumberFormatException e) {
                 log.error(e.getMessage(), e);
+            } catch (ParseException e) {
+                log.error(e.toString(), e);
             }
         }
     }

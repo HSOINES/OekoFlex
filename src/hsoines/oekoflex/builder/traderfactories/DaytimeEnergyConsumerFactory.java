@@ -2,6 +2,7 @@ package hsoines.oekoflex.builder.traderfactories;
 
 import hsoines.oekoflex.OekoflexAgent;
 import hsoines.oekoflex.builder.CSVParameter;
+import hsoines.oekoflex.builder.OekoFlexContextBuilder;
 import hsoines.oekoflex.energytrader.impl.test.DaytimeEnergyConsumer;
 import hsoines.oekoflex.marketoperator.impl.SpotMarketOperatorImpl;
 import org.apache.commons.csv.CSVParser;
@@ -13,6 +14,7 @@ import repast.simphony.context.Context;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.text.ParseException;
 
 /**
  * User: jh
@@ -29,9 +31,9 @@ public final class DaytimeEnergyConsumerFactory {
         for (CSVRecord parameters : format) {
             try {
                 String name = parameters.get("name");// + "_" + Long.toHexString(System.currentTimeMillis());
-                float quantity = Float.parseFloat(parameters.get("quantity"));
-                float priceAtDay = Float.parseFloat(parameters.get("priceAtDay"));
-                float decreaseAtNightInPercent = Float.parseFloat(parameters.get("decreaseAtNightInPercent"));
+                float quantity = OekoFlexContextBuilder.defaultNumberFormat.parse(parameters.get("quantity")).floatValue();
+                float priceAtDay = OekoFlexContextBuilder.defaultNumberFormat.parse(parameters.get("priceAtDay")).floatValue();
+                float decreaseAtNightInPercent = OekoFlexContextBuilder.defaultNumberFormat.parse(parameters.get("decreaseAtNightInPercent")).floatValue();
 
                 DaytimeEnergyConsumer daytimeEnergyConsumer = new DaytimeEnergyConsumer(name, quantity, priceAtDay, decreaseAtNightInPercent);
                 daytimeEnergyConsumer.setSpotMarketOperator(energyOnlyMarketOperator);
@@ -40,6 +42,8 @@ public final class DaytimeEnergyConsumerFactory {
                 log.info("DaytimeEnergyConsumer Build done: " + name);
             } catch (NumberFormatException e) {
                 log.error(e.getMessage(), e);
+            } catch (ParseException e) {
+                log.error(e.toString(), e);
             }
         }
     }
