@@ -14,6 +14,9 @@ import hsoines.oekoflex.util.TimeUtil;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 /**
  * User: jh
  * Date: 18/01/16
@@ -25,7 +28,9 @@ import java.util.List;
  *
  */
 public final class FlexPowerplant implements EOMTrader, BalancingMarketTrader, MarketOperatorListener {
-    public static final float LATENCY = 3f;
+    private static final Log log = LogFactory.getLog(FlexPowerplant.class);
+
+   public static final float LATENCY = 3f;
     private final String name;
     private final String description;
     private final int powerMax;
@@ -103,7 +108,8 @@ public final class FlexPowerplant implements EOMTrader, BalancingMarketTrader, M
         float pNegativeCommited = powerTradeRegistry.getNegativeQuantityUsed(currentDate);
         float ePreceding = energyTradeRegistry.getQuantityUsed(precedingDate);
         if (ePreceding / TimeUtil.HOUR_PER_TICK < powerMin){
-            throw new IllegalStateException("min power not running!");
+            //throw new IllegalStateException("min power not running!");
+        	log.warn("ePreceding is below min_power");
         }
 
         float eMustRun = Math.max((powerMin + pNegativeCommited) * t, ePreceding - powerRampDown * t);

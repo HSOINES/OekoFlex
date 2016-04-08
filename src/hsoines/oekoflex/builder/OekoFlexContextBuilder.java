@@ -48,7 +48,7 @@ public class OekoFlexContextBuilder implements ContextBuilder<OekoflexAgent> {
         RunEnvironment re = RunEnvironment.getInstance();
         int daysToRun = (int) p.getValue("daysToRun");
 
-        re.endAt(daysToRun * 96);
+        re.endAt(daysToRun * 96 - 1);
 
         boolean loggingActivated = (boolean) p.getValue("loggingActivated");
 

@@ -104,7 +104,7 @@ public final class EnergyTraderTypeLogger implements OekoflexAgent {
                     + NumberFormatUtil.format(currentAssignment.getOfferedQuantity()) + ";"
                     + NumberFormatUtil.format(assignedQuantity) + ";"
                     + NumberFormatUtil.format(capacity) + ";"
-                    + (mustRunViolation ? "X" : ""))
+                    + (mustRunViolation ? "MustRunViolation=true" : ""))
             ;
         }
     }
