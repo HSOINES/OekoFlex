@@ -31,8 +31,6 @@ public final class Storage implements EOMTrader, BalancingMarketTrader {
 
     private final String name;
     private final String description;
-    private final int powerMax;
-    private final int powerMin;
     private final float marginalCosts;
     private final float shutdownCosts;
     private final int capacity;
@@ -49,15 +47,13 @@ public final class Storage implements EOMTrader, BalancingMarketTrader {
     private BalancingMarketOperator balancingMarketOperator;
 
 
-    public Storage(final String name, final String description, final int powerMax, final int powerMin,
+    public Storage(final String name, final String description,
                    final float marginalCosts, final float shutdownCosts,
                    final int capacity, final float socMax, final float socMin,
                    final int chargePower, final int dischargePower,
                    PriceForwardCurve priceForwardCurve) {
         this.name = name;
         this.description = description;
-        this.powerMax = powerMax;
-        this.powerMin = powerMin;
         this.marginalCosts = marginalCosts;
         this.shutdownCosts = shutdownCosts;
         this.capacity = capacity;

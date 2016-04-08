@@ -40,18 +40,18 @@ public class TradeRegistryImplTest {
         energyTradeRegistry.addAssignedQuantity(date0, Market.SPOT_MARKET, 1f, 1f, 100, 1f, BidType.ENERGY_DEMAND);
         energyTradeRegistry.addAssignedQuantity(date1, Market.SPOT_MARKET, 1f, 1f, 100, 1f, BidType.ENERGY_DEMAND);
         energyTradeRegistry.addAssignedQuantity(date1, Market.SPOT_MARKET, 1f, 1f, 100, 1f, BidType.ENERGY_DEMAND);
-        assertEquals(100, energyTradeRegistry.getPositiveQuantityUsed(date0), 0.00001f);
-        assertEquals(200, energyTradeRegistry.getPositiveQuantityUsed(date1), 0.00001f);
+        assertEquals(100, energyTradeRegistry.getNegativeQuantityUsed(date0), 0.00001f);
+        assertEquals(200, energyTradeRegistry.getNegativeQuantityUsed(date1), 0.00001f);
     }
 
     @Test
     public void testAssignmentFourHours() throws Exception {
         energyTradeRegistry.addAssignedQuantity(date0, Market.BALANCING_MARKET, 10f, 10f, 100, 1f, BidType.ENERGY_DEMAND);
         energyTradeRegistry.addAssignedQuantity(date1, Market.SPOT_MARKET, 10f, 10f, 100, 1f, BidType.ENERGY_DEMAND);
-        assertEquals(100, energyTradeRegistry.getPositiveQuantityUsed(date0), 0.00001f);
-        assertEquals(200, energyTradeRegistry.getPositiveQuantityUsed(date1), 0.00001f);
-        assertEquals(100, energyTradeRegistry.getPositiveQuantityUsed(date2), 0.00001f);
-        assertEquals(100, energyTradeRegistry.getPositiveQuantityUsed(date3), 0.00001f);
+        assertEquals(100, energyTradeRegistry.getNegativeQuantityUsed(date0), 0.00001f);
+        assertEquals(200, energyTradeRegistry.getNegativeQuantityUsed(date1), 0.00001f);
+        assertEquals(100, energyTradeRegistry.getNegativeQuantityUsed(date2), 0.00001f);
+        assertEquals(100, energyTradeRegistry.getNegativeQuantityUsed(date3), 0.00001f);
 
         assertEquals(10f, energyTradeRegistry.getEnergyTradeElements(date0).get(0).getAssignedPrice(), 0.00001);
         assertEquals(10f, energyTradeRegistry.getEnergyTradeElements(date1).get(0).getAssignedPrice(), 0.00001);

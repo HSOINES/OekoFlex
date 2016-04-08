@@ -31,6 +31,11 @@ public final class TradeRegistryImpl implements TradeRegistry {
         capacities = new HashMap<>();
     }
 
+    public TradeRegistryImpl(Type produce, int powerMax, int i, float startQuantity) {
+        this(produce, powerMax, i);
+        addQuantity(-1, Market.START_VALUE, 0, 0, startQuantity, 1, BidType.START_VALUE);
+    }
+
     @Override
     public Type getType() {
         return type;
@@ -76,10 +81,11 @@ public final class TradeRegistryImpl implements TradeRegistry {
         float quantityUsed = 0f;
         List<EnergyTradeElement> energyTradeElements = getEnergyTradeElements(date);
         for (EnergyTradeElement energyTradeElement : energyTradeElements) {
-            if (positive && energyTradeElement.bidType.isPositive()) {
-                quantityUsed += energyTradeElement.getOfferedQuantity() * energyTradeElement.getRate();
-            } else if (!positive && !energyTradeElement.bidType.isPositive()) {
-                quantityUsed += energyTradeElement.getOfferedQuantity() * energyTradeElement.getRate();
+            float offeredQuantity = energyTradeElement.getOfferedQuantity();
+            if (positive && energyTradeElement.bidType.isPositiveAmount()) {
+                quantityUsed += offeredQuantity * energyTradeElement.getRate();
+            } else if (!positive && !energyTradeElement.bidType.isPositiveAmount()) {
+                quantityUsed += offeredQuantity * energyTradeElement.getRate();
             }
         }
         return quantityUsed;

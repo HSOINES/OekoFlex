@@ -35,11 +35,18 @@ public class PriceForwardCurveImplTest {
 
     @Test
     public void testSpread() throws Exception {
-        float spread = priceForwardCurve.getSpread(0, 16);
+        float spread = priceForwardCurve.getSpread(0, 8);
         assertEquals(0, spread, 0.00001f);
+        spread = priceForwardCurve.getSpread(12, 16);
+        assertEquals(3, spread, 0.00001f);
+        spread = priceForwardCurve.getSpread(16, 16);
+        assertEquals(0, spread, 0.00001f);
+
+        spread = priceForwardCurve.getSpread(0, 16);
+        assertEquals(10, spread, 0.00001f);
         spread = priceForwardCurve.getSpread(8, 16);
-        assertEquals(1, spread, 0.00001f);
+        assertEquals(10, spread, 0.00001f);
         spread = priceForwardCurve.getSpread(0, 32);
-        assertEquals(1, spread, 0.00001f);
+        assertEquals(10, spread, 0.00001f);
     }
 }

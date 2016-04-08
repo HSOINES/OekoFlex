@@ -50,7 +50,6 @@ public final class StorageFactory {
                 int dischargePower = Integer.parseInt(parameters.get("dischargePower"));
 
                 Storage storage = new Storage(name, description,
-                        powerMax, powerMin,
                         marginalCosts, shutdownCosts, capacity,
                         socMax, socMin, chargePower, dischargePower,
                         priceForwardCurve);

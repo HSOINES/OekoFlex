@@ -6,15 +6,14 @@ package hsoines.oekoflex.bid;
  * Time: 22:35
  */
 public enum BidType {
-    ENERGY_DEMAND(true), ENERGY_SUPPLY(false), ENERGY_SUPPLY_MUSTRUN(false), POWER_POSITIVE(true), POWER_NEGATIVE(false);
+    ENERGY_DEMAND(false), ENERGY_SUPPLY(true), ENERGY_SUPPLY_MUSTRUN(true), POWER_POSITIVE(true), POWER_NEGATIVE(false), START_VALUE(true);
 
     private final boolean positive;
 
     BidType(final boolean positive) {
         this.positive = positive;
     }
-
-    public boolean isPositive() {
+    public boolean isPositiveAmount() {
         return positive;
     }
 }

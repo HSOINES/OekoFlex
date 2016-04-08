@@ -7,7 +7,8 @@ package hsoines.oekoflex.util;
  */
 public enum Market {
     SPOT_MARKET(1),       //EOM
-    BALANCING_MARKET(16); //Regelenergie
+    BALANCING_MARKET(16),  //Regelenergie
+    START_VALUE(0);
 
     private final int ticks;
 

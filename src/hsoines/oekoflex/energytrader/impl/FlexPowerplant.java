@@ -18,8 +18,14 @@ import java.util.List;
  * User: jh
  * Date: 18/01/16
  * Time: 16:14
+ *
+ * marginalCosts: Euro/MWh
+ * powerMin: Minimum Power of PowerPlant
+ * powerRampUp/Down: MWh/15min
+ *
  */
 public final class FlexPowerplant implements EOMTrader, BalancingMarketTrader, MarketOperatorListener {
+    public static final float LATENCY = 3f;
     private final String name;
     private final String description;
     private final int powerMax;
@@ -36,9 +42,6 @@ public final class FlexPowerplant implements EOMTrader, BalancingMarketTrader, M
     private float lastAssignmentRate;
     private float lastClearedPrice;
 
-    /*
-        RampUp/Down: for 12 Hours.
-     */
     public FlexPowerplant(final String name, final String description,
                           final int powerMax, final int powerMin,
                           final int powerRampUp, final int powerRampDown,
@@ -57,7 +60,7 @@ public final class FlexPowerplant implements EOMTrader, BalancingMarketTrader, M
     }
 
     public void init() {
-        energyTradeRegistry = new TradeRegistryImpl(TradeRegistry.Type.PRODUCE, powerMax, 1000);
+        energyTradeRegistry = new TradeRegistryImpl(TradeRegistry.Type.PRODUCE, powerMax, 1000, powerMin * TimeUtil.HOUR_PER_TICK);
         powerTradeRegistry = new TradeRegistryImpl(TradeRegistry.Type.PRODUCE, powerMax, 1000);
     }
 
@@ -78,15 +81,14 @@ public final class FlexPowerplant implements EOMTrader, BalancingMarketTrader, M
         Date precedingDate = TimeUtil.precedingDate(currentDate);
 
         int pPreceding = (int) (energyTradeRegistry.getQuantityUsed(precedingDate) / TimeUtil.HOUR_PER_TICK);
-        if (pPreceding == 0) {
-            pPreceding = powerMin;
-        }
 
-        float pNeg = Math.min(pPreceding - powerMin, powerRampDown / 3f);
-        final float priceNegative = marginalCosts;
+        float pNeg = Math.min(pPreceding - powerMin, powerRampDown / LATENCY);
+        float marginalCostsPerBidPeriod = marginalCosts * Market.BALANCING_MARKET.getTicks() * TimeUtil.HOUR_PER_TICK;
+        float negativeEOMPrices = priceForwardCurve.getNegativePriceSummation(TimeUtil.getCurrentTick(), Market.BALANCING_MARKET.getTicks());
+        final float priceNegative = marginalCostsPerBidPeriod + negativeEOMPrices;
         balancingMarketOperator.addNegativeSupply(new PowerNegative(priceNegative, pNeg, this));   //price???
 
-        float pPos = Math.min(powerMax - pPreceding, powerRampUp / 3f);
+        float pPos = Math.min(powerMax - pPreceding, powerRampUp / LATENCY);
         final float pricePositive = priceForwardCurve.getPriceSummation(TimeUtil.getCurrentTick(), Market.BALANCING_MARKET.getTicks());
         balancingMarketOperator.addPositiveSupply(new PowerPositive(pricePositive, pPos, this));
     }
@@ -99,9 +101,9 @@ public final class FlexPowerplant implements EOMTrader, BalancingMarketTrader, M
 
         float pPositiveCommited = powerTradeRegistry.getPositiveQuantityUsed(currentDate);
         float pNegativeCommited = powerTradeRegistry.getNegativeQuantityUsed(currentDate);
-        float ePreceding = energyTradeRegistry.getPositiveQuantityUsed(precedingDate);
-        if (ePreceding == 0) {
-            ePreceding = powerMin * t;
+        float ePreceding = energyTradeRegistry.getQuantityUsed(precedingDate);
+        if (ePreceding / TimeUtil.HOUR_PER_TICK < powerMin){
+            throw new IllegalStateException("min power not running!");
         }
 
         float eMustRun = Math.max((powerMin + pNegativeCommited) * t, ePreceding - powerRampDown * t);

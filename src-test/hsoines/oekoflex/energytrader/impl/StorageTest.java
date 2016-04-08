@@ -30,7 +30,7 @@ public class StorageTest {
         final File priceForwardOutFile = new File("run-config/test/price-forward/price-forward.csv");
         final PriceForwardCurve priceForwardCurve = new PriceForwardCurveImpl(priceForwardOutFile);
         priceForwardCurve.readData();
-        storage = new Storage("test", "description", 500, 10, 1f, 0.1f, 1000, 1, 0, 100, 100, priceForwardCurve);
+        storage = new Storage("test", "description", 1f, 0.1f, 1000, 1, 0, 100, 100, priceForwardCurve);
         operator = new SpotMarketOperatorImpl("test_operator", "run/summary-logs/test", true);
         storage.setSpotMarketOperator(operator);
     }

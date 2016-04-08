@@ -70,6 +70,18 @@ public final class PriceForwardCurveImpl implements PriceForwardCurve {
     }
 
     @Override
+    public float getNegativePriceSummation(long currentTick, int ticks) {
+        float sum = 0;
+        for (long i = currentTick; i < currentTick + ticks; i++) {
+            float priceOnTick = getPriceOnTick(i);
+            if (priceOnTick < 0) {
+                sum += -priceOnTick;
+            }
+        }
+        return sum;
+    }
+
+    @Override
     public float getMinimum(final long currentTick, final int ticks) {
         float min = Float.MAX_VALUE;
         for (long i = currentTick; i < currentTick + ticks; i++) {

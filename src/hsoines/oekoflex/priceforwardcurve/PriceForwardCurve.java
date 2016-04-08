@@ -18,4 +18,6 @@ public interface PriceForwardCurve {
     float getMinimum(long currentTick, int ticks);
 
     float getMaximum(long currentTick, int ticks);
+
+    float getNegativePriceSummation(long currentTick, int ticks);
 }
