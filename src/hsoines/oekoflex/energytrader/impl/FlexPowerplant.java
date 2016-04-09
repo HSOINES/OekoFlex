@@ -65,8 +65,7 @@ public final class FlexPowerplant implements EOMTrader, BalancingMarketTrader, M
     }
 
     public void init() {
-//        energyTradeRegistry = new TradeRegistryImpl(TradeRegistry.Type.PRODUCE, powerMax, 1000, powerMin * TimeUtil.HOUR_PER_TICK);
-        energyTradeRegistry = new TradeRegistryImpl(TradeRegistry.Type.PRODUCE, powerMax, 1000);
+        energyTradeRegistry = new TradeRegistryImpl(TradeRegistry.Type.PRODUCE, powerMax, 1000, powerMin * TimeUtil.HOUR_PER_TICK);
         powerTradeRegistry = new TradeRegistryImpl(TradeRegistry.Type.PRODUCE, powerMax, 1000);
     }
 
