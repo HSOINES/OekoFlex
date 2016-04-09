@@ -65,7 +65,8 @@ public final class FlexPowerplant implements EOMTrader, BalancingMarketTrader, M
     }
 
     public void init() {
-        energyTradeRegistry = new TradeRegistryImpl(TradeRegistry.Type.PRODUCE, powerMax, 1000, powerMin * TimeUtil.HOUR_PER_TICK);
+//        energyTradeRegistry = new TradeRegistryImpl(TradeRegistry.Type.PRODUCE, powerMax, 1000, powerMin * TimeUtil.HOUR_PER_TICK);
+        energyTradeRegistry = new TradeRegistryImpl(TradeRegistry.Type.PRODUCE, powerMax, 1000);
         powerTradeRegistry = new TradeRegistryImpl(TradeRegistry.Type.PRODUCE, powerMax, 1000);
     }
 
@@ -86,12 +87,20 @@ public final class FlexPowerplant implements EOMTrader, BalancingMarketTrader, M
         Date precedingDate = TimeUtil.precedingDate(currentDate);
 
         int pPreceding = (int) (energyTradeRegistry.getQuantityUsed(precedingDate) / TimeUtil.HOUR_PER_TICK);
+        if ( pPreceding - powerMin < -0.001f){
+            if (pPreceding == 0){
+                log.info("powerplant stopped.");
+                return;
+            } else {
+                throw new IllegalStateException("Power not in acceptable range: " + pPreceding);
+            }
+        }
 
         float pNeg = Math.min(pPreceding - powerMin, powerRampDown / LATENCY);
         float marginalCostsPerBidPeriod = marginalCosts * Market.BALANCING_MARKET.getTicks() * TimeUtil.HOUR_PER_TICK;
         float negativeEOMPrices = priceForwardCurve.getNegativePriceSummation(TimeUtil.getCurrentTick(), Market.BALANCING_MARKET.getTicks());
         final float priceNegative = marginalCostsPerBidPeriod + negativeEOMPrices;
-        balancingMarketOperator.addNegativeSupply(new PowerNegative(priceNegative, pNeg, this));   //price???
+        balancingMarketOperator.addNegativeSupply(new PowerNegative(priceNegative, pNeg, this));
 
         float pPos = Math.min(powerMax - pPreceding, powerRampUp / LATENCY);
         final float pricePositive = priceForwardCurve.getPriceSummation(TimeUtil.getCurrentTick(), Market.BALANCING_MARKET.getTicks());
@@ -107,9 +116,14 @@ public final class FlexPowerplant implements EOMTrader, BalancingMarketTrader, M
         float pPositiveCommited = powerTradeRegistry.getPositiveQuantityUsed(currentDate);
         float pNegativeCommited = powerTradeRegistry.getNegativeQuantityUsed(currentDate);
         float ePreceding = energyTradeRegistry.getQuantityUsed(precedingDate);
-        if (ePreceding / TimeUtil.HOUR_PER_TICK < powerMin){
-            //throw new IllegalStateException("min power not running!");
-        	log.warn("ePreceding is below min_power");
+        if (ePreceding / TimeUtil.HOUR_PER_TICK - powerMin < -0.001f){
+            if (ePreceding == 0){
+                ePreceding = (powerMin - powerRampUp) * TimeUtil.HOUR_PER_TICK;
+                log.info("PowerPlant was down... trying start.");
+            } else {
+                throw new IllegalStateException("Power not in acceptable range: " + ePreceding / TimeUtil.HOUR_PER_TICK +
+                        ". MinPower:  " + powerMin + ". Plant: " + getName());
+            }
         }
 
         float eMustRun = Math.max((powerMin + pNegativeCommited) * t, ePreceding - powerRampDown * t);
@@ -128,7 +142,14 @@ public final class FlexPowerplant implements EOMTrader, BalancingMarketTrader, M
     public void notifyClearingDone(final Date currentDate, final Market market, final Bid bid, final float clearedPrice, final float rate) {
         switch (bid.getBidType()) {
             case ENERGY_SUPPLY_MUSTRUN:
-            case ENERGY_SUPPLY:
+            	if (rate < 0.0001f){
+            		return;
+            	}
+            	if (1 - rate > 0.00001f){
+            		log.error("rate of MUSTRUN < 1: " + rate + ", Plant: " + getName() );
+                    energyTradeRegistry.addAssignedQuantity(currentDate, market, bid.getPrice(), 0, bid.getQuantity(), 1-rate, BidType.ENERGY_SUPPLY_MUSTRUN_COMPLEMENT);
+            	}         	
+           case ENERGY_SUPPLY:
                 energyTradeRegistry.addAssignedQuantity(currentDate, market, bid.getPrice(), clearedPrice, bid.getQuantity(), rate, bid.getBidType());
                 break;
             case POWER_NEGATIVE:
