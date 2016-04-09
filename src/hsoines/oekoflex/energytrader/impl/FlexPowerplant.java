@@ -85,13 +85,13 @@ public final class FlexPowerplant implements EOMTrader, BalancingMarketTrader, M
         Date currentDate = TimeUtil.getCurrentDate();
         Date precedingDate = TimeUtil.precedingDate(currentDate);
 
-        int pPreceding = (int) (energyTradeRegistry.getQuantityUsed(precedingDate) / TimeUtil.HOUR_PER_TICK);
+        float pPreceding = (energyTradeRegistry.getQuantityUsed(precedingDate) / TimeUtil.HOUR_PER_TICK);
         if ( pPreceding - powerMin < -0.001f){
             if (pPreceding == 0){
                 log.info("powerplant stopped.");
                 return;
             } else {
-                throw new IllegalStateException("Power not in acceptable range: " + pPreceding);
+                throw new IllegalStateException("Power not in acceptable range: " + pPreceding + ". PowerMin: " + powerMin);
             }
         }
 
