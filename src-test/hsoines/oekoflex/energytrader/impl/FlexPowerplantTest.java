@@ -58,6 +58,11 @@ public class FlexPowerplantTest {
         flexpowerplant.makeBidEOM();
         eomOperator.clearMarket();
 
+        TimeUtil.nextTick();
+        eomOperator.addDemand(new EnergyDemand(3000, 1000, null));
+        flexpowerplant.makeBidEOM();
+        eomOperator.clearMarket();
+
         List<TradeRegistryImpl.EnergyTradeElement> currentAssignments = flexpowerplant.getCurrentAssignments();
 
         assertEquals(2, currentAssignments.size());
@@ -88,8 +93,8 @@ public class FlexPowerplantTest {
 
         TradeRegistryImpl.EnergyTradeElement powerPositive = currentAssignments.get(0);
         assertEquals(BidType.POWER_POSITIVE, powerPositive.getBidType());
-        assertEquals(17f, powerPositive.getOfferedPrice(), 0.0001f); // Summe PFC [1,16]
-        assertEquals(17f, powerPositive.getAssignedPrice(), 0.0001f);
+        assertEquals(18f, powerPositive.getOfferedPrice(), 0.0001f); // Summe PFC [1,16]
+        assertEquals(18f, powerPositive.getAssignedPrice(), 0.0001f);
         assertEquals(33.333333f, powerPositive.getOfferedQuantity(), 0.0001f); // RampUp after 5 minutes
         assertEquals(1f, powerPositive.getRate(), 0.0001f);
 
@@ -136,28 +141,34 @@ public class FlexPowerplantTest {
         eomOperator.addDemand(new EnergyDemand(3000, 200, null));
         flexpowerplant.makeBidBalancingMarket();
         flexpowerplant.makeBidEOM();
+        balancingMarketOperator.clearMarket();
+        eomOperator.clearMarket();
 
+        TimeUtil.nextTick();
+        eomOperator.addDemand(new EnergyDemand(3000, 200, null));
+        flexpowerplant.makeBidBalancingMarket();
+        flexpowerplant.makeBidEOM();
         balancingMarketOperator.clearMarket();
         eomOperator.clearMarket();
 
         List<TradeRegistryImpl.EnergyTradeElement> currentAssignments = flexpowerplant.getCurrentAssignments();
 
-        assertEquals(3, currentAssignments.size());
+        assertEquals(4, currentAssignments.size());
 
         TradeRegistryImpl.EnergyTradeElement powerPositive = currentAssignments.get(0);
         assertEquals(BidType.POWER_POSITIVE, powerPositive.getBidType());
-        assertEquals(16f, powerPositive.getAssignedPrice(), 0.0001f);
+        assertEquals(17f, powerPositive.getAssignedPrice(), 0.0001f);
         assertEquals(100 / 3f, powerPositive.getOfferedQuantity(), 0.0001f);
         assertEquals(1, powerPositive.getRate(), 0.0001f);
 
-        TradeRegistryImpl.EnergyTradeElement energyMustRun = currentAssignments.get(1);
+        TradeRegistryImpl.EnergyTradeElement energyMustRun = currentAssignments.get(2);
         assertEquals(BidType.ENERGY_SUPPLY_MUSTRUN, energyMustRun.getBidType());
         assertEquals(-.2f, energyMustRun.getOfferedPrice(), 0.0001f); // shutdown costs / must-run-quantity
         assertEquals(-.2f, energyMustRun.getAssignedPrice(), 0.0001f); // max-price
         assertEquals(500f, energyMustRun.getOfferedQuantity(), 0.0001f); // min_power per 15min
         assertEquals(.4f, energyMustRun.getRate(), 0.0001f); // full assigned
 
-        TradeRegistryImpl.EnergyTradeElement energy = currentAssignments.get(2);
+        TradeRegistryImpl.EnergyTradeElement energy = currentAssignments.get(3);
         assertEquals(BidType.ENERGY_SUPPLY, energy.getBidType());
         assertEquals(-.2f, energy.getAssignedPrice(), 0.0001f);
         assertEquals(50f, energy.getOfferedPrice(), 0.0001f); //marginal costs 15min
