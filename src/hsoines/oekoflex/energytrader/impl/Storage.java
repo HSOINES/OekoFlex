@@ -46,6 +46,7 @@ public final class Storage implements EOMTrader, BalancingMarketTrader {
     private float lastClearedPrice;
     private BalancingMarketOperator balancingMarketOperator;
     private TradeRegistryImpl storagePowerTradeHistory;
+    private TickStrategy tickStrategy;
 
 
     public Storage(final String name, final String description,
@@ -109,43 +110,40 @@ public final class Storage implements EOMTrader, BalancingMarketTrader {
 
     @Override
     public void makeBidEOM() {
-        Date currentDate = TimeUtil.getCurrentDate();
-        float capacity = storageEnergyTradeHistory.getCapacity(currentDate);
-
-        float tFullLoad = capacity * (socMax - soc) / dischargePower;     // 5.43
-        float fEmpty = capacity * (soc - socMin); // 5.44
-
-
-        //eomMarketOperator.addSupply(new EnergySupply(marginalCosts * 1.1f, soc, this));
-        //eomMarketOperator.addDemand(new EnergyDemand(marginalCosts * 0.9f, energyCapacity - soc, this));
-
+        Long currentTick = TimeUtil.getCurrentTick();
+        if (tickStrategy.getTicksWithHighestPrice().contains(currentTick)){
+            eomMarketOperator.addSupply(new EnergySupply(-3000f, dischargePower*TimeUtil.HOUR_PER_TICK, this));
+        }
+        if (tickStrategy.getTicksWithLowestPrice().contains(currentTick)){
+            eomMarketOperator.addDemand(new EnergyDemand(3000f, chargePower*TimeUtil.HOUR_PER_TICK, this));
+        }
     }
 
     @ScheduledMethod(start = SequenceDefinition.SimulationStart, interval = SequenceDefinition.DayInterval, priority = SequenceDefinition.BalancingMarketBidPriority)
     public void calculateEOMActionsForDay() {
         long startTick = TimeUtil.getCurrentTick();
-        float dischargeEnergy = soc - socMin;
-        float chargeEnergy = socMax - soc;
+        float dischargeEnergy = (soc - socMin) * energyCapacity;
+        float chargeEnergy = (socMax - soc) * energyCapacity;
         int ticksToMinEnergy = (int) Math.floor(dischargeEnergy / (dischargePower * TimeUtil.HOUR_PER_TICK));
         int ticksToMaxEnergy = (int) Math.floor(chargeEnergy / (chargePower * TimeUtil.HOUR_PER_TICK));
 
-        List<Long> ticksWithLowPrice = priceForwardCurve.getTicksWithLowestPrices(ticksToMinEnergy, startTick, SequenceDefinition.DayInterval);
-        float priceForwardDayMax = priceForwardCurve.getMaximum(TimeUtil.getCurrentTick(), SequenceDefinition.DayInterval);
+        List<Long> ticksWithLowestPrice = priceForwardCurve.getTicksWithLowestPrices(ticksToMaxEnergy, startTick, SequenceDefinition.DayInterval);
+        List<Long> ticksWithHighestPrice = priceForwardCurve.getTicksWithHighestPrices(ticksToMinEnergy, startTick, SequenceDefinition.DayInterval);
 
+        tickStrategy = new TickStrategy(ticksWithLowestPrice, ticksWithHighestPrice);
     }
 
     @Override
     public void notifyClearingDone(final Date currentDate, final Market market, final Bid bid, final float clearedPrice, final float rate) {
-        int assignedQuantity = (int) (bid.getQuantity() * rate);
+        float assignedQuantity =  bid.getQuantity() * rate;
         if (bid instanceof EnergyDemand) {
-            soc += assignedQuantity;
+            soc += assignedQuantity / energyCapacity;
             storageEnergyTradeHistory.addAssignedQuantity(currentDate, market, bid.getPrice(), clearedPrice, bid.getQuantity(), rate, bid.getBidType());
         } else if (bid instanceof EnergySupply) {
-            soc -= assignedQuantity;
+            soc -= assignedQuantity / energyCapacity;
             storageEnergyTradeHistory.addAssignedQuantity(currentDate, market, bid.getPrice(), clearedPrice, bid.getQuantity(), rate, bid.getBidType());
         } else if (bid instanceof PowerPositive || bid instanceof PowerNegative){
             storagePowerTradeHistory.addAssignedQuantity(currentDate, market, bid.getPrice(), clearedPrice, bid.getQuantity(), rate, bid.getBidType());
-
         }
         lastClearedPrice = clearedPrice;
         lastAssignmentRate = rate;
@@ -196,5 +194,23 @@ public final class Storage implements EOMTrader, BalancingMarketTrader {
 
     void setSOC(float v) {
       soc = v;
+    }
+
+    private class TickStrategy {
+        private final List<Long> ticksWithLowestPrice;
+        private final List<Long> ticksWithHighestPrice;
+
+        public List<Long> getTicksWithLowestPrice() {
+            return ticksWithLowestPrice;
+        }
+
+        public List<Long> getTicksWithHighestPrice() {
+            return ticksWithHighestPrice;
+        }
+
+        public TickStrategy(List<Long> ticksWithLowestPrice, List<Long> ticksWithHighestPrice) {
+            this.ticksWithLowestPrice = ticksWithLowestPrice;
+            this.ticksWithHighestPrice = ticksWithHighestPrice;
+        }
     }
 }
