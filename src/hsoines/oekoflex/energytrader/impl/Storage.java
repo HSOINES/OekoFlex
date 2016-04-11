@@ -15,7 +15,6 @@ import org.apache.commons.logging.LogFactory;
 import repast.simphony.engine.schedule.ScheduledMethod;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -34,7 +33,7 @@ public final class Storage implements EOMTrader, BalancingMarketTrader {
     private final String description;
     private final float marginalCosts;
     private final float shutdownCosts;
-    private final int capacity;
+    private final int energyCapacity;
     private final float socMax;
     private final float socMin;
     private final int chargePower;
@@ -51,14 +50,14 @@ public final class Storage implements EOMTrader, BalancingMarketTrader {
 
     public Storage(final String name, final String description,
                    final float marginalCosts, final float shutdownCosts,
-                   final int capacity, final float socMax, final float socMin,
+                   final int energyCapacity, final float socMax, final float socMin,
                    final int chargePower, final int dischargePower,
                    PriceForwardCurve priceForwardCurve) {
         this.name = name;
         this.description = description;
         this.marginalCosts = marginalCosts;
         this.shutdownCosts = shutdownCosts;
-        this.capacity = capacity;
+        this.energyCapacity = energyCapacity;
         this.socMax = socMax;
         this.socMin = socMin;
         this.chargePower = chargePower;
@@ -68,8 +67,8 @@ public final class Storage implements EOMTrader, BalancingMarketTrader {
     }
 
     public void init() {
-        storageEnergyTradeHistory = new TradeRegistryImpl(TradeRegistry.Type.PRODUCE, capacity, 1000);
-        storagePowerTradeHistory = new TradeRegistryImpl(TradeRegistry.Type.PRODUCE_AND_CONSUM, capacity, 1000);
+        storageEnergyTradeHistory = new TradeRegistryImpl(TradeRegistry.Type.PRODUCE, energyCapacity, 1000);
+        storagePowerTradeHistory = new TradeRegistryImpl(TradeRegistry.Type.PRODUCE_AND_CONSUM, energyCapacity, 1000);
         soc = socMin;
     }
 
@@ -89,9 +88,9 @@ public final class Storage implements EOMTrader, BalancingMarketTrader {
         float mSpreadEOM = priceForwardCurve.getSpread(TimeUtil.getCurrentTick(), Market.BALANCING_MARKET.getTicks());
         float duration = Market.BALANCING_MARKET.getTicks() * TimeUtil.HOUR_PER_TICK;
 
-        float ePreceding = soc * capacity;
-        float eMin = socMin * capacity;
-        float eMax = socMax * capacity;
+        float ePreceding = soc * energyCapacity;
+        float eMin = socMin * energyCapacity;
+        float eMax = socMax * energyCapacity;
         float eDischarge = dischargePower * duration;
         float eCharge = chargePower * duration;
 
@@ -125,7 +124,7 @@ public final class Storage implements EOMTrader, BalancingMarketTrader {
 
 
         //eomMarketOperator.addSupply(new EnergySupply(marginalCosts * 1.1f, soc, this));
-        //eomMarketOperator.addDemand(new EnergyDemand(marginalCosts * 0.9f, capacity - soc, this));
+        //eomMarketOperator.addDemand(new EnergyDemand(marginalCosts * 0.9f, energyCapacity - soc, this));
 
     }
 
@@ -145,7 +144,7 @@ public final class Storage implements EOMTrader, BalancingMarketTrader {
         lastClearedPrice = clearedPrice;
         lastAssignmentRate = rate;
         if (soc < socMin || soc > socMax) {
-            throw new IllegalStateException("batterylevel exceeds capacity: " + soc + ", MaxLevel: " + capacity);
+            throw new IllegalStateException("batterylevel exceeds energyCapacity: " + soc + ", MaxLevel: " + energyCapacity);
         }
     }
 
@@ -187,5 +186,9 @@ public final class Storage implements EOMTrader, BalancingMarketTrader {
     @Override
     public String getDescription() {
         return description;
+    }
+
+    void setSOC(float v) {
+      soc = v;
     }
 }

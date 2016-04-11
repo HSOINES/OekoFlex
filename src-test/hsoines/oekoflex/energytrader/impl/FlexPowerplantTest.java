@@ -41,7 +41,7 @@ public class FlexPowerplantTest {
         balancingMarketOperator = new BalancingMarketOperatorImpl("test", true, ".", POSITIVE_DEMAND_BALANCING, NEGATIVE_DEMAND_BALANCING);
         eomOperator = new SpotMarketOperatorImpl("test_eom_operator", ".", true);
 
-        final File priceForwardOutFile = new File("run-config/test/price-forward/price-forward.csv");
+        final File priceForwardOutFile = new File("src-test/resources/price-forward.csv");
         final PriceForwardCurve priceForwardCurve = new PriceForwardCurveImpl(priceForwardOutFile);
         priceForwardCurve.readData();
         flexpowerplant = new FlexPowerplant("flexpowerplant", "description",

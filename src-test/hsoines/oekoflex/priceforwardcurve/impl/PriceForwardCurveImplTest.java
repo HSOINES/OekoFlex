@@ -18,7 +18,7 @@ public class PriceForwardCurveImplTest {
 
     @Before
     public void setUp() throws Exception {
-        final File priceForwardOutFile = new File("run-config/test/price-forward/price-forward.csv");
+        final File priceForwardOutFile = new File("src-test/resources/price-forward.csv");
         priceForwardCurve = new PriceForwardCurveImpl(priceForwardOutFile);
         priceForwardCurve.readData();
     }

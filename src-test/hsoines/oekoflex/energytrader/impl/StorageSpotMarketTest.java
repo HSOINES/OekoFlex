@@ -19,18 +19,20 @@ import static org.junit.Assert.assertEquals;
  * Date: 18/01/16
  * Time: 18:23
  */
-public class StorageTest {
+public class StorageSpotMarketTest {
 
+    public static final float SOC_MIN = 0.2f;
+    public static final float SOC_MAX = .9f;
     private Storage storage;
     private SpotMarketOperatorImpl operator;
 
     @Before
     public void setUp() throws Exception {
         RepastTestInitializer.init();
-        final File priceForwardOutFile = new File("run-config/test/price-forward/price-forward.csv");
+        final File priceForwardOutFile = new File("src-test/resources/price-forward.csv");
         final PriceForwardCurve priceForwardCurve = new PriceForwardCurveImpl(priceForwardOutFile);
         priceForwardCurve.readData();
-        storage = new Storage("test", "description", 1f, 0.1f, 1000, 1, 0, 100, 100, priceForwardCurve);
+        storage = new Storage("test", "description", 1f, 0.1f, 1000, SOC_MAX, SOC_MIN, 100, 100, priceForwardCurve);
         operator = new SpotMarketOperatorImpl("test_operator", "run/summary-logs/test", true);
         storage.setSpotMarketOperator(operator);
     }
