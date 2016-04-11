@@ -44,8 +44,8 @@ public class StorageTest {
         operator.addDemand(new EnergyDemand(0.8f, 1000, null));
         operator.clearMarket();
 
-        int load = storage.getSoc();
-        assertEquals(1000, load);
+        float load = storage.getSoc();
+        assertEquals(1000, load, 0.0001f);
     }
 
     @Test
@@ -55,8 +55,8 @@ public class StorageTest {
         operator.addSupply(new EnergySupply(1f, 300, null));
 
         operator.clearMarket();
-        int load = storage.getSoc();
-        assertEquals(500, load);
+        float load = storage.getSoc();
+        assertEquals(500, load, 0.0001f);
     }
 
     @Test

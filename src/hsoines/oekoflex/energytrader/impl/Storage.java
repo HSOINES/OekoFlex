@@ -1,8 +1,6 @@
 package hsoines.oekoflex.energytrader.impl;
 
-import hsoines.oekoflex.bid.Bid;
-import hsoines.oekoflex.bid.EnergyDemand;
-import hsoines.oekoflex.bid.EnergySupply;
+import hsoines.oekoflex.bid.*;
 import hsoines.oekoflex.domain.SequenceDefinition;
 import hsoines.oekoflex.energytrader.BalancingMarketTrader;
 import hsoines.oekoflex.energytrader.EOMTrader;
@@ -16,6 +14,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import repast.simphony.engine.schedule.ScheduledMethod;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -24,6 +24,7 @@ import java.util.List;
  * Date: 18/01/16
  * Time: 16:14
  *
+ * soc: state of charge, in percent
  *
  */
 public final class Storage implements EOMTrader, BalancingMarketTrader {
@@ -39,12 +40,13 @@ public final class Storage implements EOMTrader, BalancingMarketTrader {
     private final int chargePower;
     private final int dischargePower;
     private final PriceForwardCurve priceForwardCurve;
-    private int soc;
+    private float soc;
     private SpotMarketOperator eomMarketOperator;
-    private TradeRegistry batteryTradeRegistry;
+    private TradeRegistry storageEnergyTradeHistory;
     private float lastAssignmentRate;
     private float lastClearedPrice;
     private BalancingMarketOperator balancingMarketOperator;
+    private TradeRegistryImpl storagePowerTradeHistory;
 
 
     public Storage(final String name, final String description,
@@ -66,8 +68,9 @@ public final class Storage implements EOMTrader, BalancingMarketTrader {
     }
 
     public void init() {
-        batteryTradeRegistry = new TradeRegistryImpl(TradeRegistry.Type.PRODUCE, capacity, 1000);
-        soc = 0;
+        storageEnergyTradeHistory = new TradeRegistryImpl(TradeRegistry.Type.PRODUCE, capacity, 1000);
+        storagePowerTradeHistory = new TradeRegistryImpl(TradeRegistry.Type.PRODUCE_AND_CONSUM, capacity, 1000);
+        soc = socMin;
     }
 
     @Override
@@ -80,22 +83,29 @@ public final class Storage implements EOMTrader, BalancingMarketTrader {
         Date currentDate = TimeUtil.getCurrentDate();
         Date precedingDate = TimeUtil.precedingDate(currentDate);
 
-        float priceForwardMin = priceForwardCurve.getMinimum(TimeUtil.getCurrentTick(), Market.BALANCING_MARKET.getTicks());
-        float priceForwardMax = priceForwardCurve.getMaximum(TimeUtil.getCurrentTick(), Market.BALANCING_MARKET.getTicks());
+        //float priceForwardMin = priceForwardCurve.getMinimum(TimeUtil.getCurrentTick(), Market.BALANCING_MARKET.getTicks());
+        //float priceForwardMax = priceForwardCurve.getMaximum(TimeUtil.getCurrentTick(), Market.BALANCING_MARKET.getTicks());
 
-        //float pPreceding = batteryTradeRegistry.getPositiveQuantityUsed(precedingDate);
         float mSpreadEOM = priceForwardCurve.getSpread(TimeUtil.getCurrentTick(), Market.BALANCING_MARKET.getTicks());
+        float duration = Market.BALANCING_MARKET.getTicks() * TimeUtil.HOUR_PER_TICK;
 
+        float ePreceding = soc * capacity;
+        float eMin = socMin * capacity;
+        float eMax = socMax * capacity;
+        float eDischarge = dischargePower * duration;
+        float eCharge = chargePower * duration;
+
+        float ePositive = Math.min(ePreceding - eMin, eDischarge);
+        float eNegative = Math.min(eMax - ePreceding, eCharge);
+
+        float bidPositive = mSpreadEOM * ePositive;
+        float bidNegative = mSpreadEOM * eNegative;
         if (mSpreadEOM >= marginalCosts) {
-            //do bid  positive
-            //do bid  negative
+            balancingMarketOperator.addPositiveSupply(new PowerPositive(bidPositive, ePositive / duration, this));
+            balancingMarketOperator.addNegativeSupply(new PowerNegative(bidNegative, eNegative / duration, this));
+        } else {
+        	log.debug("mSpread < marginalCosts: " + mSpreadEOM + " < " + marginalCosts);
         }
-//        float pNegative = Math.min(pPreceding - powerMin, dischargePower);
-        //balancingMarketOperator.addNegativeSupply(new PowerNegative(bidNegative, pNegative, this));
-
-//        float pPositive = Math.min(powerMax - pPreceding, chargePower);
-        //balancingMarketOperator.addPositiveSupply(new PowerPositive(bidPositive, pPositive, this));
-
     }
 
     @ScheduledMethod(start = SequenceDefinition.SimulationStart, interval = SequenceDefinition.DayInterval, priority = SequenceDefinition.BalancingMarketBidPriority)
@@ -108,7 +118,7 @@ public final class Storage implements EOMTrader, BalancingMarketTrader {
     @Override
     public void makeBidEOM() {
         Date currentDate = TimeUtil.getCurrentDate();
-        float capacity = batteryTradeRegistry.getCapacity(currentDate);
+        float capacity = storageEnergyTradeHistory.getCapacity(currentDate);
 
         float tFullLoad = capacity * (socMax - soc) / dischargePower;     // 5.43
         float fEmpty = capacity * (soc - socMin); // 5.44
@@ -121,12 +131,16 @@ public final class Storage implements EOMTrader, BalancingMarketTrader {
 
     @Override
     public void notifyClearingDone(final Date currentDate, final Market market, final Bid bid, final float clearedPrice, final float rate) {
-        batteryTradeRegistry.addAssignedQuantity(currentDate, market, bid.getPrice(), clearedPrice, bid.getQuantity(), rate, bid.getBidType());
         int assignedQuantity = (int) (bid.getQuantity() * rate);
         if (bid instanceof EnergyDemand) {
             soc += assignedQuantity;
+            storageEnergyTradeHistory.addAssignedQuantity(currentDate, market, bid.getPrice(), clearedPrice, bid.getQuantity(), rate, bid.getBidType());
         } else if (bid instanceof EnergySupply) {
             soc -= assignedQuantity;
+            storageEnergyTradeHistory.addAssignedQuantity(currentDate, market, bid.getPrice(), clearedPrice, bid.getQuantity(), rate, bid.getBidType());
+        } else if (bid instanceof PowerPositive || bid instanceof PowerNegative){
+            storagePowerTradeHistory.addAssignedQuantity(currentDate, market, bid.getPrice(), clearedPrice, bid.getQuantity(), rate, bid.getBidType());
+
         }
         lastClearedPrice = clearedPrice;
         lastAssignmentRate = rate;
@@ -147,7 +161,13 @@ public final class Storage implements EOMTrader, BalancingMarketTrader {
 
     @Override
     public List<TradeRegistryImpl.EnergyTradeElement> getCurrentAssignments() {
-        return batteryTradeRegistry.getEnergyTradeElements(TimeUtil.getCurrentDate());
+        List<TradeRegistryImpl.EnergyTradeElement> energyTradeElements = storageEnergyTradeHistory.getEnergyTradeElements(TimeUtil.getCurrentDate());
+        List<TradeRegistryImpl.EnergyTradeElement> powerTradeElements = storagePowerTradeHistory.getEnergyTradeElements(TimeUtil.getCurrentDate());
+
+        List<TradeRegistryImpl.EnergyTradeElement> result = new ArrayList<>();
+        result.addAll(energyTradeElements);
+        result.addAll(powerTradeElements);
+        return result;
     }
 
     @Override
@@ -155,8 +175,7 @@ public final class Storage implements EOMTrader, BalancingMarketTrader {
         return name;
     }
 
-    public int getSoc() {
-
+    public float getSoc() {
         return soc;
     }
 

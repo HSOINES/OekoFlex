@@ -1,1 +1,2 @@
 name;description;powerMax;powerMin;marginalCosts;shutdownCosts;capacity;socMax;socMin;chargePower;dischargePower
+storage1;test;50;50;1;100;1000;.9;.1;50;50
