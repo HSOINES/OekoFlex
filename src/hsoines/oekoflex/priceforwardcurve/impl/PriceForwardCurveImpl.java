@@ -117,4 +117,12 @@ public final class PriceForwardCurveImpl implements PriceForwardCurve {
         final Float price = priceOnTick.get(tick);
         return price == null ? 0 : price;
     }
+
+    @Override
+    public List<Long> getTicksWithHighestPrices(int nTicks, long fromTick, int intervalTicks) {
+        List<Long> ticksSortedByPriceAscending = getTicksSortedByPriceAscending(fromTick, intervalTicks);
+        Collections.reverse(ticksSortedByPriceAscending);
+
+        return ticksSortedByPriceAscending.subList(0, nTicks);
+    }
 }

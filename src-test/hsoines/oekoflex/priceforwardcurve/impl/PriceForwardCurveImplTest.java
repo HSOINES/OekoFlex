@@ -53,12 +53,24 @@ public class PriceForwardCurveImplTest {
 
     @Test
     public void testTicksWithLowestPrices() throws Exception {
-        List<Long> ticksWithLowestPrices = priceForwardCurve.getTicksWithLowestPrices(5, 10, 10);
-        assertEquals(5, ticksWithLowestPrices.size());
+        List<Long> ticksWithLowestPrices = priceForwardCurve.getTicksWithLowestPrices(6, 10, 10);
+        assertEquals(6, ticksWithLowestPrices.size());
         assertEquals(Long.valueOf(15l), ticksWithLowestPrices.get(0));
         assertEquals(Long.valueOf(14l), ticksWithLowestPrices.get(1));
         assertEquals(Long.valueOf(13l), ticksWithLowestPrices.get(2));
         assertEquals(Long.valueOf(12l), ticksWithLowestPrices.get(3));
         assertEquals(Long.valueOf(10l), ticksWithLowestPrices.get(4));
+        assertEquals(Long.valueOf(19l), ticksWithLowestPrices.get(5));
+    }
+    @Test
+    public void testTicksWithHighestPrices() throws Exception {
+        List<Long> ticksWithHighestPrices = priceForwardCurve.getTicksWithHighestPrices(6, 10, 10);
+        assertEquals(6, ticksWithHighestPrices.size());
+        assertEquals(Long.valueOf(11l), ticksWithHighestPrices.get(0));
+        assertEquals(Long.valueOf(16l), ticksWithHighestPrices.get(1));
+        assertEquals(Long.valueOf(17l), ticksWithHighestPrices.get(2));
+        assertEquals(Long.valueOf(18l), ticksWithHighestPrices.get(3));
+        assertEquals(Long.valueOf(19l), ticksWithHighestPrices.get(4));
+        assertEquals(Long.valueOf(10l), ticksWithHighestPrices.get(5));
     }
 }

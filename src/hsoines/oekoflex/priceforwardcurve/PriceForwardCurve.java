@@ -23,4 +23,6 @@ public interface PriceForwardCurve {
     float getNegativePriceSummation(long currentTick, int ticks);
 
     List<Long> getTicksWithLowestPrices(int nTicks, long fromTick, int intervalTicks);
+
+    List<Long> getTicksWithHighestPrices(int nTicks, long fromTick, int intervalTicks);
 }
