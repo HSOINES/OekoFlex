@@ -11,8 +11,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.text.ParseException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * User: jh
@@ -79,6 +78,29 @@ public final class PriceForwardCurveImpl implements PriceForwardCurve {
             }
         }
         return sum;
+    }
+
+    @Override
+    public List<Long> getTicksWithLowestPrices(int nTicks, long fromTick, int intervalTicks) {
+        List<Long> ticksSortedByPriceAscending = getTicksSortedByPriceAscending(fromTick, intervalTicks);
+        return ticksSortedByPriceAscending.subList(0, nTicks);
+    }
+
+    private List<Long> getTicksSortedByPriceAscending(long fromTick, int intervalTicks) {
+        List<Long> ticksSortedByPriceAscending = new ArrayList<>();
+        for (long tick = fromTick; tick < fromTick + intervalTicks; tick++) {
+            float v = getPriceOnTick(tick);
+            long insertionIndex = ticksSortedByPriceAscending.size();
+            for (Long compareTick : ticksSortedByPriceAscending) {
+                float priceOnTick = getPriceOnTick(compareTick);
+                if (v <= priceOnTick){
+                    insertionIndex = ticksSortedByPriceAscending.indexOf(compareTick);
+                    break;
+                }
+            }
+            ticksSortedByPriceAscending.add((int) insertionIndex, tick);
+        }
+        return ticksSortedByPriceAscending;
     }
 
     @Override

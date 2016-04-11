@@ -4,6 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
@@ -48,5 +49,16 @@ public class PriceForwardCurveImplTest {
         assertEquals(10, spread, 0.00001f);
         spread = priceForwardCurve.getSpread(0, 32);
         assertEquals(10, spread, 0.00001f);
+    }
+
+    @Test
+    public void testTicksWithLowestPrices() throws Exception {
+        List<Long> ticksWithLowestPrices = priceForwardCurve.getTicksWithLowestPrices(5, 10, 10);
+        assertEquals(5, ticksWithLowestPrices.size());
+        assertEquals(Long.valueOf(15l), ticksWithLowestPrices.get(0));
+        assertEquals(Long.valueOf(14l), ticksWithLowestPrices.get(1));
+        assertEquals(Long.valueOf(13l), ticksWithLowestPrices.get(2));
+        assertEquals(Long.valueOf(12l), ticksWithLowestPrices.get(3));
+        assertEquals(Long.valueOf(10l), ticksWithLowestPrices.get(4));
     }
 }

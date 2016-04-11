@@ -2,6 +2,7 @@ package hsoines.oekoflex.priceforwardcurve;
 
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.List;
 
 /**
  * User: jh
@@ -20,4 +21,6 @@ public interface PriceForwardCurve {
     float getMaximum(long currentTick, int ticks);
 
     float getNegativePriceSummation(long currentTick, int ticks);
+
+    List<Long> getTicksWithLowestPrices(int nTicks, long fromTick, int intervalTicks);
 }

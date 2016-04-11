@@ -107,13 +107,6 @@ public final class Storage implements EOMTrader, BalancingMarketTrader {
         }
     }
 
-    @ScheduledMethod(start = SequenceDefinition.SimulationStart, interval = SequenceDefinition.DayInterval, priority = SequenceDefinition.BalancingMarketBidPriority)
-    public void calculateEOMActionsForDay() {
-        float priceForwardDayMin = priceForwardCurve.getMinimum(TimeUtil.getCurrentTick(), SequenceDefinition.DayInterval);
-        float priceForwardDayMax = priceForwardCurve.getMaximum(TimeUtil.getCurrentTick(), SequenceDefinition.DayInterval);
-
-    }
-
     @Override
     public void makeBidEOM() {
         Date currentDate = TimeUtil.getCurrentDate();
@@ -125,6 +118,19 @@ public final class Storage implements EOMTrader, BalancingMarketTrader {
 
         //eomMarketOperator.addSupply(new EnergySupply(marginalCosts * 1.1f, soc, this));
         //eomMarketOperator.addDemand(new EnergyDemand(marginalCosts * 0.9f, energyCapacity - soc, this));
+
+    }
+
+    @ScheduledMethod(start = SequenceDefinition.SimulationStart, interval = SequenceDefinition.DayInterval, priority = SequenceDefinition.BalancingMarketBidPriority)
+    public void calculateEOMActionsForDay() {
+        long startTick = TimeUtil.getCurrentTick();
+        float dischargeEnergy = soc - socMin;
+        float chargeEnergy = socMax - soc;
+        int ticksToMinEnergy = (int) Math.floor(dischargeEnergy / (dischargePower * TimeUtil.HOUR_PER_TICK));
+        int ticksToMaxEnergy = (int) Math.floor(chargeEnergy / (chargePower * TimeUtil.HOUR_PER_TICK));
+
+        List<Long> ticksWithLowPrice = priceForwardCurve.getTicksWithLowestPrices(ticksToMinEnergy, startTick, SequenceDefinition.DayInterval);
+        float priceForwardDayMax = priceForwardCurve.getMaximum(TimeUtil.getCurrentTick(), SequenceDefinition.DayInterval);
 
     }
 
