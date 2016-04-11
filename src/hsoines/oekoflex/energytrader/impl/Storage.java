@@ -127,6 +127,9 @@ public final class Storage implements EOMTrader, BalancingMarketTrader {
         int ticksToMinEnergy = (int) Math.floor(dischargeEnergy / (dischargePower * TimeUtil.HOUR_PER_TICK));
         int ticksToMaxEnergy = (int) Math.floor(chargeEnergy / (chargePower * TimeUtil.HOUR_PER_TICK));
 
+        if (ticksToMaxEnergy > 48) ticksToMaxEnergy = 48;
+        if (ticksToMinEnergy > 48) ticksToMinEnergy = 48;
+
         List<Long> ticksWithLowestPrice = priceForwardCurve.getTicksWithLowestPrices(ticksToMaxEnergy, startTick, SequenceDefinition.DayInterval);
         List<Long> ticksWithHighestPrice = priceForwardCurve.getTicksWithHighestPrices(ticksToMinEnergy, startTick, SequenceDefinition.DayInterval);
 

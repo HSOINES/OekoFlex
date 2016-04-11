@@ -83,6 +83,7 @@ public final class PriceForwardCurveImpl implements PriceForwardCurve {
     @Override
     public List<Long> getTicksWithLowestPrices(int nTicks, long fromTick, int intervalTicks) {
         List<Long> ticksSortedByPriceAscending = getTicksSortedByPriceAscending(fromTick, intervalTicks);
+        if (nTicks > ticksSortedByPriceAscending.size()) nTicks = ticksSortedByPriceAscending.size();
         return ticksSortedByPriceAscending.subList(0, nTicks);
     }
 
@@ -122,7 +123,7 @@ public final class PriceForwardCurveImpl implements PriceForwardCurve {
     public List<Long> getTicksWithHighestPrices(int nTicks, long fromTick, int intervalTicks) {
         List<Long> ticksSortedByPriceAscending = getTicksSortedByPriceAscending(fromTick, intervalTicks);
         Collections.reverse(ticksSortedByPriceAscending);
-
+        if (nTicks > ticksSortedByPriceAscending.size()) nTicks = ticksSortedByPriceAscending.size();
         return ticksSortedByPriceAscending.subList(0, nTicks);
     }
 }
