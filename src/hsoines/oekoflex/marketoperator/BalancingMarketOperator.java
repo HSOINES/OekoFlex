@@ -15,9 +15,9 @@ public interface BalancingMarketOperator extends OekoflexAgent {
 	void clearMarket();
 
 
-	long getTotalClearedPositiveQuantity();
+	float getTotalClearedPositiveQuantity();
 
-	long getTotalClearedNegativeQuantity();
+	float getTotalClearedNegativeQuantity();
 
 	float getLastPositiveAssignmentRate();
 

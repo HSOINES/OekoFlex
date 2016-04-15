@@ -65,7 +65,7 @@ public class MerritOrderGraphTest {
         }
 
         @Override
-        public int getTotalClearedQuantity() {
+        public float getTotalClearedQuantity() {
             return 4;
         }
 

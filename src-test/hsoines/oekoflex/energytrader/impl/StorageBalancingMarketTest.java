@@ -13,7 +13,6 @@ import org.junit.Test;
 import java.io.File;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 
 /**
  * User: jh
@@ -111,12 +110,12 @@ public class StorageBalancingMarketTest {
         }
 
         @Override
-        public long getTotalClearedPositiveQuantity() {
+        public float getTotalClearedPositiveQuantity() {
             return 0;
         }
 
         @Override
-        public long getTotalClearedNegativeQuantity() {
+        public float getTotalClearedNegativeQuantity() {
             return 0;
         }
 

@@ -10,12 +10,11 @@ import hsoines.oekoflex.marketoperator.SpotMarketOperator;
 import hsoines.oekoflex.priceforwardcurve.PriceForwardCurve;
 import hsoines.oekoflex.util.Market;
 import hsoines.oekoflex.util.TimeUtil;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import java.util.Date;
 import java.util.List;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * User: jh
@@ -87,7 +86,7 @@ public final class FlexPowerplant implements EOMTrader, BalancingMarketTrader, M
 
         float pPreceding = (energyTradeRegistry.getQuantityUsed(precedingDate) / TimeUtil.HOUR_PER_TICK);
         if ( pPreceding - powerMin < -0.001f){
-            if (pPreceding == 0){
+            if (pPreceding < 0.001f) {
                 log.info("powerplant stopped.");
                 return;
             } else {
@@ -95,14 +94,13 @@ public final class FlexPowerplant implements EOMTrader, BalancingMarketTrader, M
             }
         }
 
-
-        float pNeg = Math.min(pPreceding - powerMin, powerRampDown) / LATENCY;
+        float pNeg = Math.min(pPreceding - powerMin, powerRampDown / LATENCY);
         float marginalCostsPerBidPeriod = marginalCosts * Market.BALANCING_MARKET.getTicks() * TimeUtil.HOUR_PER_TICK;
         float negativeEOMPrices = priceForwardCurve.getNegativePriceSummation(TimeUtil.getCurrentTick(), Market.BALANCING_MARKET.getTicks());
         final float priceNegative = marginalCostsPerBidPeriod + negativeEOMPrices;
         balancingMarketOperator.addNegativeSupply(new PowerNegative(priceNegative, pNeg, this));
 
-        float pPos = Math.min(powerMax - pPreceding, powerRampUp) / LATENCY;
+        float pPos = Math.min(powerMax - pPreceding, powerRampUp / LATENCY);
         final float pricePositive = priceForwardCurve.getPriceSummation(TimeUtil.getCurrentTick(), Market.BALANCING_MARKET.getTicks());
         balancingMarketOperator.addPositiveSupply(new PowerPositive(pricePositive, pPos, this));
     }
@@ -129,7 +127,7 @@ public final class FlexPowerplant implements EOMTrader, BalancingMarketTrader, M
         float eMustRun = Math.max((powerMin + pNegativeCommited) * t, ePreceding - powerRampDown * t);
         eomMarketOperator.addSupply(new EnergySupplyMustRun(-shutdownCosts / eMustRun, eMustRun, this));
 
-        float eFlex = Math.min((powerMax - pPositiveCommited) * t - eMustRun, ePreceding + powerRampUp * t - eMustRun);
+        float eFlex = Math.min((powerMax - pPositiveCommited) * t, ePreceding + powerRampUp * t) - eMustRun;
         eomMarketOperator.addSupply(new EnergySupply(marginalCosts, eFlex, this));
     }
 

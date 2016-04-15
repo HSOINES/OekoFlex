@@ -4,7 +4,6 @@ import hsoines.oekoflex.OekoflexAgent;
 import hsoines.oekoflex.bid.EnergyDemand;
 import hsoines.oekoflex.bid.EnergySupply;
 import hsoines.oekoflex.domain.SequenceDefinition;
-import org.apache.commons.csv.CSVPrinter;
 import repast.simphony.engine.schedule.ScheduledMethod;
 
 import java.util.List;
@@ -20,7 +19,7 @@ public interface SpotMarketOperator extends OekoflexAgent {
 	@ScheduledMethod(start = SequenceDefinition.SimulationStart, interval = EOMInterval, priority = EOMClearingPriority)
 	void clearMarket();
 
-	int getTotalClearedQuantity();
+	float getTotalClearedQuantity();
 
 	float getLastClearedPrice();
 

@@ -3,7 +3,6 @@ package hsoines.oekoflex.energytrader.impl;
 import hsoines.oekoflex.bid.EnergyDemand;
 import hsoines.oekoflex.bid.EnergySupply;
 import hsoines.oekoflex.marketoperator.SpotMarketOperator;
-import hsoines.oekoflex.marketoperator.impl.SpotMarketOperatorImpl;
 import hsoines.oekoflex.priceforwardcurve.PriceForwardCurve;
 import hsoines.oekoflex.priceforwardcurve.impl.PriceForwardCurveImpl;
 import hsoines.oekoflex.tools.RepastTestInitializer;
@@ -153,7 +152,7 @@ public class StorageSpotMarketTest {
         }
 
         @Override
-        public int getTotalClearedQuantity() {
+        public float getTotalClearedQuantity() {
             return 0;
         }
 

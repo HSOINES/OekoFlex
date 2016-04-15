@@ -85,7 +85,7 @@ public final class EnergyTraderTypeLogger implements OekoflexAgent {
         }
         for (TradeRegistryImpl.EnergyTradeElement currentAssignment : currentAssignments) {
             float capacity = currentAssignment.getCapacity();
-            int assignedQuantity = (int) (currentAssignment.getRate() * currentAssignment.getOfferedQuantity());
+            float assignedQuantity = currentAssignment.getRate() * currentAssignment.getOfferedQuantity();
             boolean mustRunViolation = false;
             if ((currentAssignment.getBidType().equals(BidType.ENERGY_SUPPLY_MUSTRUN) 
             		&& currentAssignment.getRate() - 1f < -.0001f)){

@@ -33,8 +33,8 @@ public final class BalancingMarketOperatorImpl implements BalancingMarketOperato
     private final List<BidSupport> positiveSupplies = new ArrayList<>();
     private final List<BidSupport> negativeSupplies = new ArrayList<>();
 
-    private long totalClearedPositiveQuantity;
-    private long totalClearedNegativeQuantity;
+    private float totalClearedPositiveQuantity;
+    private float totalClearedNegativeQuantity;
 
     private float lastClearedPositiveMaxPrice;
     private float lastClearedNegativeMaxPrice;
@@ -90,9 +90,9 @@ public final class BalancingMarketOperatorImpl implements BalancingMarketOperato
         lastClearedNegativeMaxPrice = negativeClearingData.getLastClearedMaxPrice();
     }
 
-    ClearingData doClearMarketFor(final List<BidSupport> supplies, int quantity) {
+    ClearingData doClearMarketFor(final List<BidSupport> supplies, float quantity) {
         supplies.sort(new BidSupport.SupplySorter());
-        int totalClearedQuantity = 0;
+        float totalClearedQuantity = 0;
         float lastAssignmentRate = 0;
         float lastClearedPrice = 0;
         for (BidSupport bidSupport : supplies) {
@@ -105,7 +105,7 @@ public final class BalancingMarketOperatorImpl implements BalancingMarketOperato
             } else if (totalClearedQuantity >= quantity) {
                 doNotify(bidSupport, marketOperatorListener, 0);
             } else {
-                lastAssignmentRate = (quantity - totalClearedQuantity) / (float) bidSupport.getQuantity();
+                lastAssignmentRate = (quantity - totalClearedQuantity) / bidSupport.getQuantity();
                 doNotify(bidSupport, marketOperatorListener, lastAssignmentRate);
                 totalClearedQuantity += bidSupport.getQuantity() * lastAssignmentRate;
                 lastClearedPrice = bidSupport.getPrice();
@@ -113,13 +113,13 @@ public final class BalancingMarketOperatorImpl implements BalancingMarketOperato
         }
         log.trace("Clearing done.");
         supplies.clear();
-        final int finalTotalClearedQuantity = totalClearedQuantity;
+        final float finalTotalClearedQuantity = totalClearedQuantity;
         final float finalLastAssignmentRate = lastAssignmentRate;
         final float finalLastClearedPrice = lastClearedPrice;
         log.trace("total cleared quantity: " + finalTotalClearedQuantity + ", lasst assignment rate: " + lastAssignmentRate + ", last cleared price: " + lastClearedPrice);
         return new ClearingData() {
             @Override
-            public int getClearedQuantity() {
+            public float getClearedQuantity() {
                 return finalTotalClearedQuantity;
             }
 
@@ -136,12 +136,12 @@ public final class BalancingMarketOperatorImpl implements BalancingMarketOperato
     }
 
     @Override
-    public long getTotalClearedPositiveQuantity() {
+    public float getTotalClearedPositiveQuantity() {
         return totalClearedPositiveQuantity;
     }
 
     @Override
-    public long getTotalClearedNegativeQuantity() {
+    public float getTotalClearedNegativeQuantity() {
         return totalClearedNegativeQuantity;
     }
 
@@ -191,7 +191,7 @@ public final class BalancingMarketOperatorImpl implements BalancingMarketOperato
 
 
     private interface ClearingData {
-        int getClearedQuantity();
+        float getClearedQuantity();
 
         float getLastClearedMaxPrice();
 

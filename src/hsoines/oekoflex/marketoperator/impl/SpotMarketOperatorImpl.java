@@ -4,7 +4,6 @@ import hsoines.oekoflex.bid.Bid;
 import hsoines.oekoflex.bid.BidSupport;
 import hsoines.oekoflex.bid.EnergyDemand;
 import hsoines.oekoflex.bid.EnergySupply;
-import hsoines.oekoflex.builder.CSVParameter;
 import hsoines.oekoflex.energytrader.MarketOperatorListener;
 import hsoines.oekoflex.marketoperator.SpotMarketOperator;
 import hsoines.oekoflex.summary.LoggerFile;
@@ -13,17 +12,12 @@ import hsoines.oekoflex.summary.impl.NullLoggerFile;
 import hsoines.oekoflex.util.Market;
 import hsoines.oekoflex.util.NumberFormatUtil;
 import hsoines.oekoflex.util.TimeUtil;
-import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import repast.simphony.engine.schedule.ScheduledMethod;
 
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
-import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 public class SpotMarketOperatorImpl implements SpotMarketOperator {
     private static final Log log = LogFactory.getLog(SpotMarketOperatorImpl.class);
@@ -34,7 +28,7 @@ public class SpotMarketOperatorImpl implements SpotMarketOperator {
     private List<EnergyDemand> lastEnergyDemands;
     private List<EnergySupply> lastSupplies;
     private final String name;
-    private int clearedQuantity;
+    private float clearedQuantity;
     private float clearedPrice;
     private float lastAssignmentRate;
     private AssignmentType lastAssignmentType;
@@ -84,14 +78,14 @@ public class SpotMarketOperatorImpl implements SpotMarketOperator {
         Iterator<EnergySupply> supplyIterator = this.energySupplies.iterator();
 
         //increments until prices match
-        int totalSupplyQuantity = 0;
-        int totalDemandQuantity = 0;
+        float totalSupplyQuantity = 0;
+        float totalDemandQuantity = 0;
 
         clearedQuantity = 0;
         //Indicates next element:
         // balance < 0 -> energyDemands are fetched
         // balance > 0 -> energySupplies are fetched
-        int balance = 0;
+        float balance = 0;
         //Stops clearing if false
         boolean moreSupplies = true;
         boolean moreDemands = true;
@@ -161,17 +155,19 @@ public class SpotMarketOperatorImpl implements SpotMarketOperator {
         while (energySupply == null || (moreDemands && balance <= 0) || (moreSupplies && balance > 0)); //Demand + Supply immer quantity > 0!!!
 
         clearedQuantity = Math.min(totalDemandQuantity, totalSupplyQuantity);
-        if (balance < 0) {
-            lastAssignmentRate = ((float) energySupply.getQuantity() + balance) / energySupply.getQuantity();
+        if (balance < 0) { //Supply cut
+            lastAssignmentRate = (energySupply.getQuantity() + balance) / energySupply.getQuantity();
             lastAssignmentType = AssignmentType.PartialSupply;
-        } else if (balance > 0) {
-            lastAssignmentRate = ((float) energyDemand.getQuantity() - balance) / energyDemand.getQuantity();
+            clearedQuantity = totalDemandQuantity;
+        } else if (balance > 0) { //Demand cut
+            lastAssignmentRate = (energyDemand.getQuantity() - balance) / energyDemand.getQuantity();
             lastAssignmentType = AssignmentType.PartialDemand;
+            clearedQuantity = totalSupplyQuantity;
         } else {
             lastAssignmentRate = 1;
             lastAssignmentType = AssignmentType.Full;
         }
-        if (lastAssignmentRate > 1) {
+        if (lastAssignmentRate > 1 || lastAssignmentRate < 0) {
             throw new IllegalStateException("lastAssignmentRate: " + lastAssignmentRate);
         }
 
@@ -249,7 +245,7 @@ public class SpotMarketOperatorImpl implements SpotMarketOperator {
     }
 
     @Override
-    public int getTotalClearedQuantity() {
+    public float getTotalClearedQuantity() {
         return clearedQuantity;
     }
 

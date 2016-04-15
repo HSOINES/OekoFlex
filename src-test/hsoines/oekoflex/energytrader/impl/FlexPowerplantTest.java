@@ -123,9 +123,9 @@ public class FlexPowerplantTest {
 
         energyMustRun = currentAssignments.get(2);
         assertEquals(BidType.ENERGY_SUPPLY_MUSTRUN, energyMustRun.getBidType());
+        assertEquals(516.6666f, energyMustRun.getOfferedQuantity(), 0.0001f); // (min_power+ramp-up) / 4
         assertEquals(-.193f, energyMustRun.getOfferedPrice(), 0.001f); // shutdown costs(100) / must-run-quantity(550)
         assertEquals(3000f, energyMustRun.getAssignedPrice(), 0.0001f); // max-price
-        assertEquals(516.6666f, energyMustRun.getOfferedQuantity(), 0.0001f); // (min_power+ramp-up) / 4
         assertEquals(1f, energyMustRun.getRate(), 0.0001f); // full assigned
 
     }

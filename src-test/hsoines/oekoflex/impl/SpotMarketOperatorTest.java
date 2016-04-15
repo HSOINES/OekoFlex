@@ -33,7 +33,7 @@ public class SpotMarketOperatorTest {
 
         spotMarketOperator.clearMarket();
 
-        assertEquals(15, spotMarketOperator.getTotalClearedQuantity());
+        assertEquals(15, spotMarketOperator.getTotalClearedQuantity(), 0.00001);
         assertEquals(7, spotMarketOperator.getLastClearedPrice(), 0.00001);
         assertEquals(4f / 6, spotMarketOperator.getLastAssignmentRate(), 0.00001);
     }
@@ -49,7 +49,7 @@ public class SpotMarketOperatorTest {
 
         spotMarketOperator.clearMarket();
 
-        assertEquals(5, spotMarketOperator.getTotalClearedQuantity());
+        assertEquals(5, spotMarketOperator.getTotalClearedQuantity(), 0.00001);
         assertEquals(7, spotMarketOperator.getLastClearedPrice(), 0.00001);
         assertEquals(5f / 6, spotMarketOperator.getLastAssignmentRate(), 0.00001);
     }
@@ -76,7 +76,7 @@ public class SpotMarketOperatorTest {
 
         spotMarketOperator.clearMarket();
 
-        assertEquals(210, spotMarketOperator.getTotalClearedQuantity());
+        assertEquals(210, spotMarketOperator.getTotalClearedQuantity(), 0.00001);
         assertEquals(0, spotMarketOperator.getLastAssignmentRate(), 0.00001);
         assertEquals(775, spotMarketOperator.getLastClearedPrice(), 0.00001);
     }
@@ -94,7 +94,7 @@ public class SpotMarketOperatorTest {
 
         spotMarketOperator.clearMarket();
 
-        assertEquals(300, spotMarketOperator.getTotalClearedQuantity());
+        assertEquals(300, spotMarketOperator.getTotalClearedQuantity(), 0.00001);
         assertEquals(7.5f, spotMarketOperator.getLastClearedPrice(), 0.00001);
         assertEquals(0.6f, spotMarketOperator.getLastAssignmentRate(), 0.00001);
 
@@ -114,7 +114,7 @@ public class SpotMarketOperatorTest {
 
         spotMarketOperator.clearMarket();
 
-        assertEquals(300, spotMarketOperator.getTotalClearedQuantity());
+        assertEquals(300, spotMarketOperator.getTotalClearedQuantity(), 0.00001);
         assertEquals(7.5f, spotMarketOperator.getLastClearedPrice(), 0.00001);
         assertEquals(.6f, spotMarketOperator.getLastAssignmentRate(), 0.00001);
 

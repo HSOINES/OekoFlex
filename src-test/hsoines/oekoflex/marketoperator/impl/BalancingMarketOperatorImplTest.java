@@ -46,7 +46,7 @@ public class BalancingMarketOperatorImplTest {
         verify(listener, times(4)).notifyClearingDone(Matchers.any(), Matchers.eq(Market.BALANCING_MARKET), Matchers.<Bid>any(), Matchers.anyFloat(), Matchers.anyFloat());
 
         assertEquals(40f, operator.getLastClearedNegativeMaxPrice(), 0.0001f);
-        assertEquals(4000, operator.getTotalClearedNegativeQuantity());
+        assertEquals(4000, operator.getTotalClearedNegativeQuantity(), 0.0001f);
         assertEquals(1, operator.getLastNegativeAssignmentRate(), 0.0001f);
     }
 
@@ -60,7 +60,7 @@ public class BalancingMarketOperatorImplTest {
         operator.clearMarket();
 
         assertEquals(50f, operator.getLastClearedNegativeMaxPrice(), 0.0001f);
-        assertEquals(10000, operator.getTotalClearedNegativeQuantity());
+        assertEquals(10000, operator.getTotalClearedNegativeQuantity(), 0.0001f);
         assertEquals(2f / 3, operator.getLastNegativeAssignmentRate(), 0.0001f);
     }
 
@@ -75,7 +75,7 @@ public class BalancingMarketOperatorImplTest {
         operator.clearMarket();
 
         assertEquals(55f, operator.getLastClearedNegativeMaxPrice(), 0.0001f);
-        assertEquals(10000, operator.getTotalClearedNegativeQuantity());
+        assertEquals(10000, operator.getTotalClearedNegativeQuantity(), 0.0001f);
         assertEquals(1, operator.getLastNegativeAssignmentRate(), 0.0001f);
     }
 }
