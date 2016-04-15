@@ -95,13 +95,14 @@ public final class FlexPowerplant implements EOMTrader, BalancingMarketTrader, M
             }
         }
 
-        float pNeg = Math.min(pPreceding - powerMin, powerRampDown / LATENCY);
+
+        float pNeg = Math.min(pPreceding - powerMin, powerRampDown) / LATENCY;
         float marginalCostsPerBidPeriod = marginalCosts * Market.BALANCING_MARKET.getTicks() * TimeUtil.HOUR_PER_TICK;
         float negativeEOMPrices = priceForwardCurve.getNegativePriceSummation(TimeUtil.getCurrentTick(), Market.BALANCING_MARKET.getTicks());
         final float priceNegative = marginalCostsPerBidPeriod + negativeEOMPrices;
         balancingMarketOperator.addNegativeSupply(new PowerNegative(priceNegative, pNeg, this));
 
-        float pPos = Math.min(powerMax - pPreceding, powerRampUp / LATENCY);
+        float pPos = Math.min(powerMax - pPreceding, powerRampUp) / LATENCY;
         final float pricePositive = priceForwardCurve.getPriceSummation(TimeUtil.getCurrentTick(), Market.BALANCING_MARKET.getTicks());
         balancingMarketOperator.addPositiveSupply(new PowerPositive(pricePositive, pPos, this));
     }
