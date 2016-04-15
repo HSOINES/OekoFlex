@@ -1,3 +1,2 @@
 name;description;powerMax;powerMin;rampUp;rampDown;marginalCosts;shutdownCosts
 NEURATH G;lignite;20000;6000;7000;7000;20,75;534240
-IdealPlant;none;300000;15000;15000;75;1;180000
