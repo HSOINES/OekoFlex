@@ -1,0 +1,5 @@
+name;description;powerMax;powerMin;rampUp;rampDown;marginalCosts;shutdownCosts
+NEURATH G1;lignite;5000;1500;1750;1750;20,75;534240
+NEURATH G2;lignite;5000;1500;1750;1750;20,75;534240
+NEURATH G3;lignite;5000;1500;1750;1750;20,75;534240
+NEURATH G4;lignite;5000;1500;1750;1750;20,75;534240
