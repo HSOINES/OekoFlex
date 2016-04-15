@@ -30,5 +30,5 @@
   <dataValueIds>
     <string>LastClearedPrice</string>
   </dataValueIds>
-  <plotRangeLength>96</plotRangeLength>
+  <plotRangeLength>192</plotRangeLength>
 </repast.simphony.chart2.engine.TimeSeriesChartDescriptor>

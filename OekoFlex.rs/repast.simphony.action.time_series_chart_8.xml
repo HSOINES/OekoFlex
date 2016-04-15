@@ -31,5 +31,5 @@
     <string>LastClearedPositiveMaxPrice</string>
     <string>LastClearedNegativeMaxPrice</string>
   </dataValueIds>
-  <plotRangeLength>96</plotRangeLength>
+  <plotRangeLength>192</plotRangeLength>
 </repast.simphony.chart2.engine.TimeSeriesChartDescriptor>
