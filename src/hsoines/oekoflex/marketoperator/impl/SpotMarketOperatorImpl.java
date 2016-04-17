@@ -187,40 +187,38 @@ public class SpotMarketOperatorImpl implements SpotMarketOperator {
                 .append(getLastAssignmentRate()).append(",")
                 .append(getTotalClearedQuantity()).append(",");
         Date date = TimeUtil.getCurrentDate();
+        float assignmentRate = 1;
         for (EnergyDemand energyDemand : energyDemands) {
             MarketOperatorListener marketOperatorListener = energyDemand.getMarketOperatorListener();
             if (marketOperatorListener != null) {
-                float assignmentRate;
                 if (energyDemand == ratedBid) {
                     assignmentRate = lastAssignmentRate;
-                } else if (energyDemand.getPrice() >= clearedPrice) {
-                    assignmentRate = 1f;
-                } else  {
-                    assignmentRate = 0;
                 }
                 marketOperatorListener.notifyClearingDone(date, Market.SPOT_MARKET, energyDemand, clearedPrice, assignmentRate);
                 logSummary(energyDemand, assignmentRate);
                 logString.append(assignmentRate).append(",")
                         .append(energyDemand.getPrice()).append(",")
                         .append(energyDemand.getQuantity()).append(",");
+                if (assignmentRate < 1){
+                    assignmentRate = 0;
+                }
             }
         }
+        assignmentRate = 1;
         for (EnergySupply supply : this.energySupplies) {
             MarketOperatorListener marketOperatorListener = supply.getMarketOperatorListener();
             if (marketOperatorListener != null) {
-                float assignmentRate = 0;
                 if (supply == ratedBid) {
                     assignmentRate = lastAssignmentRate;
-                } else if (supply.getPrice() <= clearedPrice) {
-                    assignmentRate = 1;
-                } else {
-                    assignmentRate = 0;
                 }
                 marketOperatorListener.notifyClearingDone(date, Market.SPOT_MARKET, supply, clearedPrice, assignmentRate);
                 logSummary(supply, assignmentRate);
                 logString.append(assignmentRate).append(",")
                         .append(supply.getPrice()).append(",")
                         .append(supply.getQuantity()).append(",");
+                if (assignmentRate < 1){
+                    assignmentRate = 0;
+                }
             }
 //            Log allInOneLine = LogFactory.getLog("ALL_IN_ONE_LINE");
 //            allInOneLine.info(logString.toString());
