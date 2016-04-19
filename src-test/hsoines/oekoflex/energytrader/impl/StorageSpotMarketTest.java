@@ -110,7 +110,7 @@ public class StorageSpotMarketTest {
         storage.makeBidEOM();
         operator.addSupply(new EnergySupply(0.8f, 400, null));
         operator.clearMarket();
-        assertEquals(400, storage.getSoc());
+        assertEquals(400, storage.getSoc(), .0001f);
         TimeUtil.nextTick();
         storage.makeBidEOM();
         operator.addDemand(new EnergyDemand(1.2f, 150, null));

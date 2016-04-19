@@ -1,20 +1,26 @@
 package hsoines.oekoflex.energytrader.impl;
 
-import hsoines.oekoflex.bid.BidType;
-import hsoines.oekoflex.bid.EnergyDemand;
+import hsoines.oekoflex.bid.*;
+import hsoines.oekoflex.marketoperator.SpotMarketOperator;
 import hsoines.oekoflex.marketoperator.impl.BalancingMarketOperatorImpl;
 import hsoines.oekoflex.marketoperator.impl.SpotMarketOperatorImpl;
 import hsoines.oekoflex.priceforwardcurve.PriceForwardCurve;
 import hsoines.oekoflex.priceforwardcurve.impl.PriceForwardCurveImpl;
 import hsoines.oekoflex.tools.RepastTestInitializer;
+import hsoines.oekoflex.util.Market;
 import hsoines.oekoflex.util.TimeUtil;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentMatcher;
 
 import java.io.File;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.argThat;
+import static org.mockito.Mockito.*;
 
 /**
  * User: jh
@@ -128,6 +134,65 @@ public class FlexPowerplantTest {
         assertEquals(3000f, energyMustRun.getAssignedPrice(), 0.0001f); // max-price
         assertEquals(1f, energyMustRun.getRate(), 0.0001f); // full assigned
 
+    }
+
+    @Test
+    public void testNeurathF_3Ticks() throws Exception {
+        final int powerRamp = 336;
+        final float marginalCosts = 20.75f;
+        final int shutdownCosts = 53424;
+
+        SpotMarketOperator spotMarketOperator = mock(SpotMarketOperator.class);
+
+        final FlexPowerplant flexPowerplant = new FlexPowerplant("NeurathF", "lignite", 1120, 280, powerRamp, powerRamp, marginalCosts, shutdownCosts, null);
+        flexPowerplant.setSpotMarketOperator(spotMarketOperator);
+
+        TimeUtil.nextTick();
+        flexPowerplant.notifyClearingDone(TimeUtil.getCurrentDate(), Market.BALANCING_MARKET, new PowerPositive(marginalCosts, powerRamp / 3f, null), marginalCosts, 1);
+
+        flexPowerplant.makeBidEOM();
+        EnergySupplyMustRun mustRun = new EnergySupplyMustRun(-shutdownCosts / 70f, 70f, null);
+        EnergySupply flex = new EnergySupply(marginalCosts, 84f, null);
+        flexPowerplant.notifyClearingDone(TimeUtil.getCurrentDate(), Market.SPOT_MARKET, mustRun, 25f, 1);
+        flexPowerplant.notifyClearingDone(TimeUtil.getCurrentDate(), Market.SPOT_MARKET, flex, 25f, 1);
+
+        TimeUtil.nextTick();
+        flexPowerplant.makeBidEOM();
+        EnergySupply flex2 = new EnergySupply(marginalCosts, 168f, null);
+        flexPowerplant.notifyClearingDone(TimeUtil.getCurrentDate(), Market.SPOT_MARKET, mustRun, 25f, 1);
+        flexPowerplant.notifyClearingDone(TimeUtil.getCurrentDate(), Market.SPOT_MARKET, flex2, 25f, 1);
+
+        TimeUtil.nextTick();
+        flexPowerplant.makeBidEOM();
+        EnergySupply flex3 = new EnergySupply(marginalCosts, 98f, null);
+        EnergySupplyMustRun mustRun3 = new EnergySupplyMustRun(-shutdownCosts / 154f, 154f, null);
+        flexPowerplant.notifyClearingDone(TimeUtil.getCurrentDate(), Market.SPOT_MARKET, mustRun, 25f, 1);
+        flexPowerplant.notifyClearingDone(TimeUtil.getCurrentDate(), Market.SPOT_MARKET, flex2, 25f, 1);
+
+        verify(spotMarketOperator, times(1)).addSupply(argThat(new EnergyBidMatcher(flex)));
+        verify(spotMarketOperator, times(1)).addSupply(argThat(new EnergyBidMatcher(flex2)));
+        verify(spotMarketOperator, times(1)).addSupply(argThat(new EnergyBidMatcher(flex3)));
+
+        verify(spotMarketOperator, times(2)).addSupply(argThat(new EnergyBidMatcher(mustRun)));
+        verify(spotMarketOperator, times(1)).addSupply(argThat(new EnergyBidMatcher(mustRun3)));
+    }
+
+    static class EnergyBidMatcher extends ArgumentMatcher<EnergySupply> {
+        private static final Log log = LogFactory.getLog(EnergyBidMatcher.class);
+
+        private final EnergySupply energySupply;
+
+        public EnergyBidMatcher(final EnergySupply energySupply) {
+            this.energySupply = energySupply;
+        }
+
+        @Override
+        public boolean matches(final Object o) {
+            EnergySupply eS = (EnergySupply) o;
+            log.info("Checking: Price=" + energySupply.getPrice() + ", Quantity=" + energySupply.getQuantity() + ", but received: " + eS.getPrice() + ", " + eS.getQuantity());
+            if (energySupply.getPrice() == eS.getPrice() && energySupply.getQuantity() == eS.getQuantity()) return true;
+            return false;
+        }
     }
 
     @Test
