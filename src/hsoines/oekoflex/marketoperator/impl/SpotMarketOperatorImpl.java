@@ -159,19 +159,20 @@ public class SpotMarketOperatorImpl implements SpotMarketOperator {
             lastAssignmentRate = (energySupply.getQuantity() + balance) / energySupply.getQuantity();
             lastAssignmentType = AssignmentType.PartialSupply;
             clearedQuantity = totalDemandQuantity;
+            notifyAssignmentRate(energySupply);
         } else if (balance > 0) { //Demand cut
             lastAssignmentRate = (energyDemand.getQuantity() - balance) / energyDemand.getQuantity();
             lastAssignmentType = AssignmentType.PartialDemand;
             clearedQuantity = totalSupplyQuantity;
+            notifyAssignmentRate(energyDemand);
         } else {
             lastAssignmentRate = 1;
             lastAssignmentType = AssignmentType.Full;
+            notifyAssignmentRate(null);
         }
         if (lastAssignmentRate > 1 || lastAssignmentRate < 0) {
             throw new IllegalStateException("lastAssignmentRate: " + lastAssignmentRate);
         }
-
-        notifyAssignmentRate();
 
         lastEnergyDemands = new ArrayList<>(energyDemands);
         lastSupplies = new ArrayList<>(energySupplies);
@@ -179,47 +180,45 @@ public class SpotMarketOperatorImpl implements SpotMarketOperator {
         energyDemands.clear();
     }
 
-    private void notifyAssignmentRate() {
+    private void notifyAssignmentRate(Bid ratedBid) {
         StringBuilder logString = new StringBuilder();
         logString.append(getName()).append(",")
                 .append(getLastClearedPrice()).append(",")
                 .append(getLastAssignmentRate()).append(",")
                 .append(getTotalClearedQuantity()).append(",");
         Date date = TimeUtil.getCurrentDate();
+        float assignmentRate = 1;
         for (EnergyDemand energyDemand : energyDemands) {
             MarketOperatorListener marketOperatorListener = energyDemand.getMarketOperatorListener();
             if (marketOperatorListener != null) {
-                float assignmentRate;
-                if (energyDemand.getPrice() > clearedPrice) {
-                    assignmentRate = 1f;
-                } else if (energyDemand.getPrice() == clearedPrice) {
+                if (energyDemand == ratedBid) {
                     assignmentRate = lastAssignmentRate;
-                } else {
-                    assignmentRate = 0;
                 }
                 marketOperatorListener.notifyClearingDone(date, Market.SPOT_MARKET, energyDemand, clearedPrice, assignmentRate);
                 logSummary(energyDemand, assignmentRate);
                 logString.append(assignmentRate).append(",")
                         .append(energyDemand.getPrice()).append(",")
                         .append(energyDemand.getQuantity()).append(",");
+                if (assignmentRate < 1){
+                    assignmentRate = 0;
+                }
             }
         }
+        assignmentRate = 1;
         for (EnergySupply supply : this.energySupplies) {
             MarketOperatorListener marketOperatorListener = supply.getMarketOperatorListener();
             if (marketOperatorListener != null) {
-                float assignmentRate = 0;
-                if (supply.getPrice() < clearedPrice) {
-                    assignmentRate = 1;
-                } else if (supply.getPrice() == clearedPrice) {
+                if (supply == ratedBid) {
                     assignmentRate = lastAssignmentRate;
-                } else {
-                    assignmentRate = 0;
                 }
                 marketOperatorListener.notifyClearingDone(date, Market.SPOT_MARKET, supply, clearedPrice, assignmentRate);
                 logSummary(supply, assignmentRate);
                 logString.append(assignmentRate).append(",")
                         .append(supply.getPrice()).append(",")
                         .append(supply.getQuantity()).append(",");
+                if (assignmentRate < 1){
+                    assignmentRate = 0;
+                }
             }
 //            Log allInOneLine = LogFactory.getLog("ALL_IN_ONE_LINE");
 //            allInOneLine.info(logString.toString());
