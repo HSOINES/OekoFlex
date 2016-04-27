@@ -59,7 +59,7 @@ public class FlexPowerplantTest {
 
     @Test
     public void testBidOnTick1() {
-        TimeUtil.nextTick();
+        TimeUtil.startAt(0);
         eomOperator.addDemand(new EnergyDemand(3000, 1000, null));
         flexpowerplant.makeBidEOM();
         eomOperator.clearMarket();
@@ -147,7 +147,7 @@ public class FlexPowerplantTest {
         final FlexPowerplant flexPowerplant = new FlexPowerplant("NeurathF", "lignite", 1120, 280, powerRamp, powerRamp, marginalCosts, shutdownCosts, null);
         flexPowerplant.setSpotMarketOperator(spotMarketOperator);
 
-        TimeUtil.nextTick();
+        TimeUtil.startAt(0);
         flexPowerplant.notifyClearingDone(TimeUtil.getCurrentDate(), Market.BALANCING_MARKET, new PowerPositive(marginalCosts, powerRamp / 3f, null), marginalCosts, 1);
 
         flexPowerplant.makeBidEOM();
@@ -197,7 +197,7 @@ public class FlexPowerplantTest {
 
     @Test
     public void testFlexPowerplantFirstRun() throws Exception {
-        TimeUtil.nextTick();
+        TimeUtil.startAt(0);
         eomOperator.addDemand(new EnergyDemand(3000, 200, null));
         flexpowerplant.makeBidBalancingMarket();
         flexpowerplant.makeBidEOM();
