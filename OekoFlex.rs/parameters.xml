@@ -20,10 +20,10 @@
                isReadOnly="false"
                converter="repast.simphony.parameter.StringConverterFactory$BooleanConverter"
             />
-    <parameter name="preRunDays" displayName="Tage Vorlauf" type="boolean"
-               defaultValue="false"
+    <parameter name="preRunDays" displayName="Tage Vorlauf" type="int"
+               defaultValue="1"
                isReadOnly="false"
-               converter="repast.simphony.parameter.StringConverterFactory$BooleanConverter"
+               converter="repast.simphony.parameter.StringConverterFactory$IntConverter"
             />
 </parameters>
 
