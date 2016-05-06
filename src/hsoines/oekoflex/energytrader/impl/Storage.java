@@ -80,7 +80,12 @@ public final class Storage implements EOMTrader, BalancingMarketTrader {
 
     @Override
     public void makeBidBalancingMarket() {
-        Date currentDate = TimeUtil.getCurrentDate();
+        makeBidBalancingMarket(TimeUtil.getCurrentTick());
+    }
+
+    @Override
+    public void makeBidBalancingMarket(final long currentTick) {
+        Date currentDate = TimeUtil.getDate(currentTick);
         Date precedingDate = TimeUtil.precedingDate(currentDate);
 
         //float priceForwardMin = priceForwardCurve.getMinimum(TimeUtil.getCurrentTick(), Market.BALANCING_MARKET.getTicks());
@@ -104,13 +109,18 @@ public final class Storage implements EOMTrader, BalancingMarketTrader {
             balancingMarketOperator.addPositiveSupply(new PowerPositive(bidPositive, ePositive / duration, this));
             balancingMarketOperator.addNegativeSupply(new PowerNegative(bidNegative, eNegative / duration, this));
         } else {
-        	log.debug("mSpread < marginalCosts: " + mSpreadEOM + " < " + marginalCosts);
+            log.debug("mSpread < marginalCosts: " + mSpreadEOM + " < " + marginalCosts);
         }
     }
 
     @Override
     public void makeBidEOM() {
         Long currentTick = TimeUtil.getCurrentTick();
+        makeBidEOM(currentTick);
+    }
+
+    @Override
+    public void makeBidEOM(final long currentTick) {
         if (tickStrategy.getTicksWithHighestPrice().contains(currentTick)){
             eomMarketOperator.addSupply(new EnergySupply(-3000f, dischargePower*TimeUtil.HOUR_PER_TICK, this));
         }

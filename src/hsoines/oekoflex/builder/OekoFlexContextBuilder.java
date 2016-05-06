@@ -4,6 +4,7 @@ import hsoines.oekoflex.OekoflexAgent;
 import hsoines.oekoflex.builder.traderfactories.FlexPowerplantFactory;
 import hsoines.oekoflex.builder.traderfactories.StorageFactory;
 import hsoines.oekoflex.builder.traderfactories.TotalLoadFactory;
+import hsoines.oekoflex.domain.SequenceDefinition;
 import hsoines.oekoflex.marketoperator.BalancingMarketOperator;
 import hsoines.oekoflex.marketoperator.impl.BalancingMarketOperatorImpl;
 import hsoines.oekoflex.marketoperator.impl.SpotMarketOperatorImpl;
@@ -47,8 +48,14 @@ public class OekoFlexContextBuilder implements ContextBuilder<OekoflexAgent> {
         Parameters p = RunEnvironment.getInstance().getParameters();
         RunEnvironment re = RunEnvironment.getInstance();
         int daysToRun = (int) p.getValue("daysToRun");
+        boolean isPrerunDays = (boolean) p.getValue("preRunDays");
+        int prerunDays = 0;
+        //  if (isPrerunDays){
+        prerunDays = 3;
+        //}
+        int prerunTicks = SequenceDefinition.DayInterval * prerunDays;
 
-        re.endAt(daysToRun * 96 - 1);
+        re.endAt(daysToRun * SequenceDefinition.DayInterval - 1);
 
         boolean loggingActivated = (boolean) p.getValue("loggingActivated");
 
@@ -89,11 +96,11 @@ public class OekoFlexContextBuilder implements ContextBuilder<OekoflexAgent> {
 
             // PriceForwardCurve
             File priceForwardFile = new File(priceForwardOutDir, "price-forward.csv");
-            PriceForwardCurveGenerator priceForwardCurveGenerator = new PriceForwardCurveGenerator(configDir, daysToRun * 96, priceForwardFile);
+            PriceForwardCurveGenerator priceForwardCurveGenerator = new PriceForwardCurveGenerator(configDir, daysToRun * SequenceDefinition.DayInterval, priceForwardFile, prerunDays * SequenceDefinition.DayInterval);
             PriceForwardCurve priceForwardCurve = new PriceForwardCurveImpl(priceForwardFile);
 
             //Consumer
-            TotalLoadFactory.build(configDir, context, spotMarketOperator);
+            TotalLoadFactory.build(configDir, context, spotMarketOperator, prerunDays * SequenceDefinition.DayInterval);
 
             //Producer
             FlexPowerplantFactory.build(configDir, context, spotMarketOperator, balancingMarketOperator, priceForwardCurve);
@@ -102,6 +109,10 @@ public class OekoFlexContextBuilder implements ContextBuilder<OekoflexAgent> {
             //build pfc
             priceForwardCurveGenerator.generate();
             priceForwardCurve.readData();
+
+            // prerun
+            final PreRunner preRunner = new PreRunner(context);
+            preRunner.run(prerunTicks);
         } catch (IOException e) {
             log.error(e.toString(), e);
             re.endRun();

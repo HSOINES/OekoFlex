@@ -16,7 +16,6 @@ public class TotalLoadFactoryTest {
     public void testLoadSample() throws Exception {
         BasicConfigurator.configure();
         File configDir = new File("run-config/scenario1");
-        TotalLoadFactory.build(configDir, new DefaultContext<>(), null);
-
+        TotalLoadFactory.build(configDir, new DefaultContext<>(), null, 0);
     }
 }

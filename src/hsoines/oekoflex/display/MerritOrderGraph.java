@@ -51,7 +51,7 @@ public class MerritOrderGraph implements IDisplay {
         panel = new JPanel();
         panel.setLayout(new BorderLayout());
 
-        chart = new XYChartBuilder().width(800).height(600).title(getClass().getSimpleName()).xAxisTitle("Quantity").yAxisTitle("Bid").build();
+        chart = new XYChartBuilder().width(800).height(600).title(getClass().getSimpleName())/*.xAxisTitle("Quantity").yAxisTitle("Bid")*/.build();
         // Customize Chart
         chart.getStyler().setLegendPosition(Styler.LegendPosition.InsideNW);
         chart.getStyler().setAxisTitlesVisible(false);
@@ -69,6 +69,10 @@ public class MerritOrderGraph implements IDisplay {
         panel.add(new XChartPanel<>(chart), BorderLayout.CENTER);
 
         List<EnergySupply> lastSupplies = eomOperator.getLastSupplies();
+        if (lastSupplies == null) {
+            return;
+        }
+
         List<Float> quantityValues = Collections.synchronizedList(new ArrayList<Float>());
         List<Float> priceValues = Collections.synchronizedList(new ArrayList<Float>());
         float lastQuantity = 0;
@@ -86,6 +90,9 @@ public class MerritOrderGraph implements IDisplay {
         chart.addSeries(SUPPLIES, quantityValues, priceValues);
 
         List<EnergyDemand> lastEnergyDemands = eomOperator.getLastEnergyDemands();
+        if (lastEnergyDemands == null) {
+            return;
+        }
         quantityValues = new ArrayList<>();
         priceValues = new ArrayList<>();
         lastQuantity = 0;

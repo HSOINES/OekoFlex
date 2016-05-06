@@ -25,15 +25,15 @@ public final class TotalLoadFactory {
     private static final Log log = LogFactory.getLog(TotalLoadFactory.class);
 
     public static void build(final File configDir, final Context<OekoflexAgent> context,
-                             final SpotMarketOperatorImpl energyOnlyMarketOperator) throws IOException {
-        Set<TotalLoad> totalLoads = build(configDir);
+                             final SpotMarketOperatorImpl energyOnlyMarketOperator, long prerunTicks) throws IOException {
+        Set<TotalLoad> totalLoads = build(configDir, prerunTicks);
         for (TotalLoad totalLoad : totalLoads) {
             totalLoad.setSpotMarketOperator(energyOnlyMarketOperator);
             context.add(totalLoad);
         }
     }
 
-    public static Set<TotalLoad> build(File configDir) throws IOException {
+    public static Set<TotalLoad> build(File configDir, final long prerunTicks) throws IOException {
         Set<TotalLoad> totalLoads = new HashSet<>();
         File configFile = new File(configDir + "/" + "TotalLoad.cfg.csv");
         FileReader reader = new FileReader(configFile);
@@ -47,7 +47,7 @@ public final class TotalLoadFactory {
                 File dataFile = new File(configDir, dataFileName);
 
                 TotalLoad.Type type = TotalLoad.Type.valueOf(typeString);
-                TotalLoad totalLoad = new TotalLoad(name, description, type, dataFile);
+                TotalLoad totalLoad = new TotalLoad(name, description, type, dataFile, prerunTicks);
                 totalLoads.add(totalLoad);
 
                 log.info("TotalLoad Build done: " + name);

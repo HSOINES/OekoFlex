@@ -25,14 +25,16 @@ public class PriceForwardCurveGenerator {
     private static final Log log = LogFactory.getLog(PriceForwardCurveGenerator.class);
 
     private int ticksToRun;
+    private final long prerunTicks;
     private TotalLoad renewables;
     private TotalLoad totalload;
     private final Set<FlexPowerplant> flexPowerplants;
     private final SpotMarketOperator spotMarketOperator;
     private CSVPrinter csvPrinter;
 
-    public PriceForwardCurveGenerator(File configDir, int ticksToRun, final File priceForwardFile) throws IOException {
+    public PriceForwardCurveGenerator(File configDir, int ticksToRun, final File priceForwardFile, long prerunTicks) throws IOException {
         this.ticksToRun = ticksToRun;
+        this.prerunTicks = prerunTicks;
 
         spotMarketOperator = new SpotMarketOperatorImpl("pfc-spotmarkeroperator", "", false);
         flexPowerplants = FlexPowerplantFactory.build(configDir);
@@ -40,7 +42,7 @@ public class PriceForwardCurveGenerator {
             flexPowerplant.setSpotMarketOperator(spotMarketOperator);
         }
 
-        Set<TotalLoad> totalLoads = TotalLoadFactory.build(configDir);
+        Set<TotalLoad> totalLoads = TotalLoadFactory.build(configDir, prerunTicks);
         for (TotalLoad totalLoad : totalLoads) {
             totalLoad.setSpotMarketOperator(spotMarketOperator);
             if (totalLoad.getName().equals("renewables")) {
@@ -52,21 +54,21 @@ public class PriceForwardCurveGenerator {
         }
         if (!priceForwardFile.getParentFile().exists()) {
             if (!priceForwardFile.getParentFile().mkdirs()) {
-                    throw new IllegalStateException("couldn't create directories.");
-                }
+                throw new IllegalStateException("couldn't create directories.");
             }
-            final Appendable out;
-                try {
-                    out = new FileWriter(priceForwardFile);
-                csvPrinter = CSVParameter.getCSVFormat().withHeader("tick", "price").print(out);
-                } catch (IOException e) {
-                    log.error(e.getLocalizedMessage(), e);
-                }
         }
+        final Appendable out;
+        try {
+            out = new FileWriter(priceForwardFile);
+            csvPrinter = CSVParameter.getCSVFormat().withHeader("tick", "price").print(out);
+        } catch (IOException e) {
+            log.error(e.getLocalizedMessage(), e);
+        }
+    }
 
     public void generate() {
-        for (int tick = 0; tick < ticksToRun; tick++) {
-            TimeUtil.nextTick();
+        TimeUtil.startAt(-prerunTicks);
+        for (long tick = -prerunTicks; tick < ticksToRun; tick++) {
             log.debug("Building pfc for tick: " + tick);
             for (FlexPowerplant flexPowerplant : flexPowerplants) {
                 flexPowerplant.makeBidEOM(tick);
@@ -75,6 +77,7 @@ public class PriceForwardCurveGenerator {
             totalload.makeBidEOM(tick);
             spotMarketOperator.clearMarket();
             logPriceForward(tick, csvPrinter);
+            TimeUtil.nextTick();
         }
         TimeUtil.reset();
 
@@ -85,7 +88,7 @@ public class PriceForwardCurveGenerator {
         }
     }
 
-    public void logPriceForward(int tick, CSVPrinter csvPrinter) {
+    public void logPriceForward(long tick, CSVPrinter csvPrinter) {
         try {
             csvPrinter.printRecord(tick, OekoFlexContextBuilder.defaultNumberFormat.format(spotMarketOperator.getLastClearedPrice()));
         } catch (IOException e) {

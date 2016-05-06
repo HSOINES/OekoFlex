@@ -21,6 +21,13 @@ import java.util.List;
  */
 public interface TradeRegistry {
 
+    /*
+        Gets the maximum tick with data set
+     */
+    long getLatestCapacity();
+
+    void duplicateCapacity(long prerunTicks);
+
     enum Type {PRODUCE, CONSUM, PRODUCE_AND_CONSUM}
 
     Type getType();
@@ -45,7 +52,7 @@ public interface TradeRegistry {
     /* List of assigned energy/power elements*/
     List<TradeRegistryImpl.EnergyTradeElement> getEnergyTradeElements(Date date);
 
-    void setCapacity(long tick, float demand);
+    void setCapacity(long tick, float capacity);
 
     float getCapacity(Date date);
 

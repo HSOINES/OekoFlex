@@ -23,7 +23,7 @@ public final class TimeUtil {
     public static Date startDate;
     public static OekoflexDateFormat dateFormat = new OekoflexDateFormat();
 
-    private static int internalTick = Integer.MIN_VALUE;
+    private static long internalTick = Long.MIN_VALUE;
 
     static {
         TimeZone.setDefault(TimeZone.getTimeZone("GMT"));
@@ -112,7 +112,7 @@ public final class TimeUtil {
         internalTick = Integer.MIN_VALUE;
     }
 
-    public static void startAt(int start) {
+    public static void startAt(long start) {
         internalTick = start;
     }
 

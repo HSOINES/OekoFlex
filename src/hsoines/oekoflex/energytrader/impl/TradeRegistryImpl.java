@@ -22,18 +22,25 @@ public final class TradeRegistryImpl implements TradeRegistry {
     private final float initialcapacity;
     private int maxElements;
     private final Map<Long, Float> capacities;
+    private long latestCapacity;
 
-    public TradeRegistryImpl(Type type, float quantity2, int maxElements) {
+    public TradeRegistryImpl(Type type, float capacity, int maxElements) {
         this.type = type;
-        this.initialcapacity = quantity2;
+        this.initialcapacity = capacity;
         this.maxElements = maxElements;
         tradeElements = new ArrayList<>();
         capacities = new HashMap<>();
+        latestCapacity = 0;
     }
 
-    public TradeRegistryImpl(Type produce, int powerMax, int i, float startQuantity) {
-        this(produce, powerMax, i);
+    public TradeRegistryImpl(Type type, int capacity, int maxElements, float startQuantity) {
+        this(type, capacity, maxElements);
         addQuantity(-1, Market.START_VALUE, 0, 0, startQuantity, 1, BidType.START_VALUE);
+    }
+
+    @Override
+    public long getLatestCapacity() {
+        return latestCapacity;
     }
 
     @Override
@@ -108,6 +115,9 @@ public final class TradeRegistryImpl implements TradeRegistry {
             log.warn("tick <" + tick + "> already assigned. Will be overriden.");
         }
         capacities.put(tick, demand);
+        if (tick > latestCapacity) {
+            latestCapacity = tick;
+        }
     }
 
     @Override
@@ -115,6 +125,15 @@ public final class TradeRegistryImpl implements TradeRegistry {
         long tick = TimeUtil.getTick(date);
         Float capacity = getSafeAndSetInitialCapacity(tick);
         return capacity;
+    }
+
+    @Override
+    public void duplicateCapacity(final long prerunTicks) {
+        final long latestTick = getLatestCapacity();
+        final long startDuplicateTick = latestTick - prerunTicks + 1;
+        for (long i = 0; i < prerunTicks; i++) {
+            setCapacity(i - prerunTicks, getCapacity(TimeUtil.getDate(startDuplicateTick + i)));
+        }
     }
 
     Float getSafeAndSetInitialCapacity(final long tick) {
@@ -138,7 +157,7 @@ public final class TradeRegistryImpl implements TradeRegistry {
 
     private void addQuantity(final long tick, final Market market, float offeredPrice, final float clearedprice, float offeredQuantity, final float rate, final BidType bidType) {
         float remainingCapacity = getRemainingCapacity(tick);
-        float assignedQuantity = (float) Math.floor(offeredQuantity * rate);
+        float assignedQuantity = offeredQuantity * rate;
         if (remainingCapacity < assignedQuantity) {
             throw new IllegalStateException("Assigned quantity should not exceed the maximum quantity.");
         } else {
@@ -149,6 +168,10 @@ public final class TradeRegistryImpl implements TradeRegistry {
             tradeElements.add(new EnergyTradeElement(tick, market, offeredPrice, clearedprice, offeredQuantity, rate, capacity, bidType));
             if (tradeElements.size() > maxElements) tradeElements.remove(0);
         }
+    }
+
+    int getNTicks() {
+        return capacities.size();
     }
 
     public static class EnergyTradeElement {

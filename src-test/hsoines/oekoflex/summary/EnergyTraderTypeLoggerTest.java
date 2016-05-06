@@ -102,6 +102,11 @@ public class EnergyTraderTypeLoggerTest {
 
         }
 
+        @Override
+        public void makeBidEOM(final long currentTick) {
+
+        }
+
     }
 
     private static class MyBalancingMarketTrader implements BalancingMarketTrader {
@@ -135,6 +140,11 @@ public class EnergyTraderTypeLoggerTest {
 
         @Override
         public void makeBidBalancingMarket() {
+
+        }
+
+        @Override
+        public void makeBidBalancingMarket(final long currentTick) {
 
         }
 
