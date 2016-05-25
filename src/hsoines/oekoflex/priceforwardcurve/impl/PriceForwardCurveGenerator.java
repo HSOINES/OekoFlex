@@ -36,7 +36,7 @@ public class PriceForwardCurveGenerator {
         this.ticksToRun = ticksToRun;
         this.prerunTicks = prerunTicks;
 
-        spotMarketOperator = new SpotMarketOperatorImpl("pfc-spotmarkeroperator", "", false);
+        spotMarketOperator = new SpotMarketOperatorImpl("pfc-spotmarketoperator", "", false);
         flexPowerplants = FlexPowerplantFactory.build(configDir);
         for (FlexPowerplant flexPowerplant : flexPowerplants) {
             flexPowerplant.setSpotMarketOperator(spotMarketOperator);
