@@ -53,6 +53,29 @@
 			<fileset dir="." casesensitive="no">
 				<exclude name="**/src/**" />
 				<exclude name="**/docs/**" />
+				<exclude name="out/**"/>
+				<exclude name="output/**"/>
+				<exclude name="run/**"/>
+				<exclude name="velocity.log*"/>
+				<exclude name="debug.log*"/>
+				<exclude name="freezedried_data/**"/>
+				<exclude name="integration/**"/>
+				<exclude name="launchers/**"/>
+				<exclude name="misc/**"/>
+				<exclude name="src-gen/**"/>
+				<exclude name="src-test/**"/>
+				<exclude name="java_*"/>
+				<exclude name="Oekoflex.iml"/>
+				<exclude name="Oekoflex.ipr"/>
+				<exclude name="Oekoflex.iws"/>
+				<exclude name="BalancingMarketOperatorImpl.log.csv"/>
+				<exclude name="check-negative-power.xlsx"/>
+				<exclude name="EOMOperatorImpl.log.csv"/>
+				<exclude name="RegelEnergieMarketOperatorImpl.log.csv"/>
+				<exclude name="SpotMarketOperatorImpl.log.csv"/>
+				<exclude name="ssh_remote_model.log"/>
+				<exclude name="test.csv"/>
+				<exclude name=""/>
 			</fileset>
 		</copy>
 
