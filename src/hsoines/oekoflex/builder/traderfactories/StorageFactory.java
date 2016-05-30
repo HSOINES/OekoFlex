@@ -3,7 +3,7 @@ package hsoines.oekoflex.builder.traderfactories;
 import hsoines.oekoflex.OekoflexAgent;
 import hsoines.oekoflex.builder.CSVParameter;
 import hsoines.oekoflex.builder.OekoFlexContextBuilder;
-import hsoines.oekoflex.energytrader.impl.Storage;
+import hsoines.oekoflex.energytrader.impl.SimpleStorage;
 import hsoines.oekoflex.marketoperator.BalancingMarketOperator;
 import hsoines.oekoflex.marketoperator.SpotMarketOperator;
 import hsoines.oekoflex.priceforwardcurve.PriceForwardCurve;
@@ -49,7 +49,7 @@ public final class StorageFactory {
                 int chargePower = Integer.parseInt(parameters.get("chargePower"));
                 int dischargePower = Integer.parseInt(parameters.get("dischargePower"));
 
-                Storage storage = new Storage(name, description,
+                SimpleStorage storage = new SimpleStorage(name, description,
                         marginalCosts, shutdownCosts, capacity,
                         socMax, socMin, chargePower, dischargePower,
                         priceForwardCurve);
