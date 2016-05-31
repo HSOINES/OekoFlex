@@ -52,7 +52,8 @@ public final class StorageFactory {
                 SimpleStorage storage = new SimpleStorage(name, description,
                         marginalCosts, shutdownCosts, capacity,
                         socMax, socMin, chargePower, dischargePower,
-                        priceForwardCurve);
+                        priceForwardCurve,
+                        true);
                 storage.setSpotMarketOperator(spotMarketOperator);
                 storage.setBalancingMarketOperator(balancingMarketOperator);
                 context.add(storage);

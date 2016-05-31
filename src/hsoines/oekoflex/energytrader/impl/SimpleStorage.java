@@ -39,6 +39,7 @@ public final class SimpleStorage implements EOMTrader, BalancingMarketTrader {
     private final int chargePower;
     private final int dischargePower;
     private final PriceForwardCurve priceForwardCurve;
+    private final boolean shuffle;
     private float soc;
     private SpotMarketOperator eomMarketOperator;
     private TradeRegistry storageEnergyTradeHistory;
@@ -54,7 +55,8 @@ public final class SimpleStorage implements EOMTrader, BalancingMarketTrader {
                          final float marginalCosts, final float shutdownCosts,
                          final int energyCapacity, final float socMax, final float socMin,
                          final int chargePower, final int dischargePower,
-                         PriceForwardCurve priceForwardCurve) {
+                         PriceForwardCurve priceForwardCurve,
+                         boolean shuffle) {
         this.name = name;
         this.description = description;
         this.marginalCosts = marginalCosts;
@@ -65,6 +67,7 @@ public final class SimpleStorage implements EOMTrader, BalancingMarketTrader {
         this.chargePower = chargePower;
         this.dischargePower = dischargePower;
         this.priceForwardCurve = priceForwardCurve;
+        this.shuffle = shuffle;
         sellTicks = new ArrayList<>();
         init();
     }
@@ -102,21 +105,23 @@ public final class SimpleStorage implements EOMTrader, BalancingMarketTrader {
             float dischargeEnergy = dischargePower * .25f;//sollte nicht noetig sein: Math.min(dischargePower * .25f, (soc - socMin)*energyCapacity);
             eomMarketOperator.addSupply(new EnergySupply(-3000, dischargeEnergy, this));
             sellTicks.remove(currentTick);
-        } else {
+        } else if (soc + chargePower * 0.25 / energyCapacity < socMax) {
             float minMargin = .5f;  //todo: parameter
-            final List<Long> ticksWithHighestPrices = priceForwardCurve.getTicksWithHighestPrices(24, currentTick, 12);
-            Collections.shuffle(ticksWithHighestPrices);   // todo
+            final List<Long> ticksWithHighestPrices = priceForwardCurve.getTicksWithHighestPrices(24, currentTick, 96); //todo: 24/96 ?
+            if (shuffle) Collections.shuffle(ticksWithHighestPrices);   // todo
             for (Long tickWithHighestPrice : ticksWithHighestPrices) {
                 float priceOnSellTick = priceForwardCurve.getPriceOnTick(tickWithHighestPrice);
                 if (priceOnSellTick - minMargin > priceForwardCurve.getPriceOnTick(currentTick)) {
                     if (!sellTicks.contains(tickWithHighestPrice)) {
                         sellTicks.add(tickWithHighestPrice);
-                        float chargeEnergy = Math.min(chargePower * .25f, (socMax - soc) * energyCapacity);     //todo: too much
+                        float chargeEnergy = chargePower * .25f;
                         eomMarketOperator.addDemand(new EnergyDemand(3000, chargeEnergy, this));
                         break;
                     }
                 }
             }
+        } else {
+            log.info("soc boundary: " + soc);
         }
     }
 

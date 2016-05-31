@@ -9,6 +9,8 @@ import hsoines.oekoflex.marketoperator.impl.SpotMarketOperatorImpl;
 import hsoines.oekoflex.priceforwardcurve.PriceForwardCurve;
 import hsoines.oekoflex.priceforwardcurve.impl.PriceForwardCurveImpl;
 import hsoines.oekoflex.util.Market;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.BasicConfigurator;
 import org.junit.Before;
 import org.junit.Test;
@@ -25,8 +27,11 @@ import static org.junit.Assert.assertEquals;
  * Time: 00:06
  */
 public class SimpleStorage2Test {
+    private static final Log log = LogFactory.getLog(SimpleStorage2Test.class);
 
     private SimpleStorage simpleStorage;
+    private SpotMarketOperator operator;
+    private long step = 0;
 
     @Before
     public void setUp() throws Exception {
@@ -35,50 +40,40 @@ public class SimpleStorage2Test {
         final PriceForwardCurve priceForwardCurve = new PriceForwardCurveImpl(priceForwardOutFile);
         priceForwardCurve.readData();
 
-        simpleStorage = new SimpleStorage("test", "description", 0, 0, 200, 0.9f, .1f, 2, 2, priceForwardCurve);
+        simpleStorage = new SimpleStorage("test", "description", 0, 0, 5, 0.9f, .1f, 2, 2, priceForwardCurve, false);
+        operator = new SpotMarketOperatorImpl("test", "src-test", false);
 
     }
 
     @Test
     public void testBid() throws Exception {
-        final SpotMarketOperator operator = new SpotMarketOperatorImpl("test", "src-test", false);
-
         simpleStorage.setSpotMarketOperator(operator);
-        simpleStorage.makeBidEOM(0);
+        makeNextBid();
+        assertEquals(.20f, simpleStorage.getSoc(), 0.0001f);
+        makeNextBid();
+        assertEquals(.30f, simpleStorage.getSoc(), 0.0001f);
+        makeNextBid();
+        assertEquals(.40f, simpleStorage.getSoc(), 0.0001f);
+        makeNextBid();
+        assertEquals(.50f, simpleStorage.getSoc(), 0.0001f);
+        makeNextBid();
+        assertEquals(.60f, simpleStorage.getSoc(), 0.0001f);
+        makeNextBid();
+        assertEquals(.70f, simpleStorage.getSoc(), 0.0001f);
+        makeNextBid();
+        assertEquals(.80f, simpleStorage.getSoc(), 0.0001f);
+        makeNextBid();
+        assertEquals(.80f, simpleStorage.getSoc(), 0.0001f);
+        makeNextBid();
+        assertEquals(.80f, simpleStorage.getSoc(), 0.0001f);
+    }
+
+    void makeNextBid() {
+        log.info("Tick: " + step);
+        simpleStorage.makeBidEOM(step++);
         operator.addDemand(new EnergyDemand(0, 1000, new MyMarketOperatorListener()));
         operator.addSupply(new EnergySupply(0, 1000, new MyMarketOperatorListener()));
         operator.clearMarket();
-        assertEquals(.1 + .25f, simpleStorage.getSoc(), 0.0001f);
-        simpleStorage.makeBidEOM(1);
-        simpleStorage.makeBidEOM(2);
-        simpleStorage.makeBidEOM(3);
-        simpleStorage.makeBidEOM(4);
-        simpleStorage.makeBidEOM(5);
-        simpleStorage.makeBidEOM(6);
-        simpleStorage.makeBidEOM(7);
-        simpleStorage.makeBidEOM(8);
-        simpleStorage.makeBidEOM(9);
-        simpleStorage.makeBidEOM(10);
-        simpleStorage.makeBidEOM(11);
-        simpleStorage.makeBidEOM(12);
-        simpleStorage.makeBidEOM(13);
-        simpleStorage.makeBidEOM(14);
-        simpleStorage.makeBidEOM(15);
-        simpleStorage.makeBidEOM(16);
-        simpleStorage.makeBidEOM(17);
-        simpleStorage.makeBidEOM(18);
-        simpleStorage.makeBidEOM(19);
-        simpleStorage.makeBidEOM(20);
-        simpleStorage.makeBidEOM(21);
-        simpleStorage.makeBidEOM(22);
-        simpleStorage.makeBidEOM(23);
-        simpleStorage.makeBidEOM(24);
-        simpleStorage.makeBidEOM(25);
-        simpleStorage.makeBidEOM(26);
-        simpleStorage.makeBidEOM(27);
-        simpleStorage.makeBidEOM(28);
-        simpleStorage.makeBidEOM(29);
-
     }
 
     @Test

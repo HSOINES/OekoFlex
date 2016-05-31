@@ -30,8 +30,7 @@ public class SimpleStorageTest {
         final PriceForwardCurve priceForwardCurve = new PriceForwardCurveImpl(priceForwardOutFile);
         priceForwardCurve.readData();
 
-        simpleStorage = new SimpleStorage("test", "description", 0, 0, 200, 0.9f, .1f, 2, 2, priceForwardCurve);
-
+        simpleStorage = new SimpleStorage("test", "description", 0, 0, 200, 0.9f, .1f, 2, 2, priceForwardCurve, false);
     }
 
     @Test
@@ -101,12 +100,6 @@ public class SimpleStorageTest {
 
     }
 
-    @Test
-    public void testOverload() throws Exception {
-
-
-    }
-
     private static class MySpotMarketOperator implements SpotMarketOperator {
         private EnergyDemand energyDemand;
         private EnergySupply supply;
@@ -169,11 +162,20 @@ public class SimpleStorageTest {
         }
 
         public EnergyDemand getEnergyDemand() {
-            return energyDemand;
+            EnergyDemand tmp = energyDemand;
+            energyDemand = null;
+            return tmp;
         }
 
         public EnergySupply getEnergySupply() {
-            return supply;
+            EnergySupply tmp = supply;
+            supply = null;
+            return tmp;
+        }
+
+        public void reset() {
+            energyDemand = null;
+            supply = null;
         }
     }
 }
