@@ -31,6 +31,7 @@ public class SimpleStorageTest {
         priceForwardCurve.readData();
 
         simpleStorage = new SimpleStorage("test", "description", 0, 0, 200, 0.9f, .1f, 2, 2, priceForwardCurve, false);
+        simpleStorage.setSOC(.5f);
     }
 
     @Test
