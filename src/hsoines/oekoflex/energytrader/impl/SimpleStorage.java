@@ -102,8 +102,8 @@ public final class SimpleStorage implements EOMTrader, BalancingMarketTrader {
     public void makeBidEOM(final long currentTick) {
         if (sellTicks.contains(currentTick)) {
             //todo nur die menge verkaufen, die auch eingekauft wurde! dies kann an der oberen grenze variieren.
-            if (soc - dischargePower * .25 > socMin) {
-                float dischargeEnergy = dischargePower * .25f;//sollte nicht noetig sein: Math.min(dischargePower * .25f, (soc - socMin)*energyCapacity);
+            float dischargeEnergy = dischargePower * .25f;//sollte nicht noetig sein: Math.min(dischargePower * .25f, (soc - socMin)*energyCapacity);
+            if (soc - dischargeEnergy / energyCapacity > socMin) {
                 eomMarketOperator.addSupply(new EnergySupply(-3000, dischargeEnergy, this));
             }
             sellTicks.remove(currentTick);
