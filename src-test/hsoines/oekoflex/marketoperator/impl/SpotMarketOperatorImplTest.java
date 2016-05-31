@@ -3,7 +3,6 @@ package hsoines.oekoflex.marketoperator.impl;
 import hsoines.oekoflex.bid.Bid;
 import hsoines.oekoflex.bid.EnergyDemand;
 import hsoines.oekoflex.bid.EnergySupply;
-import hsoines.oekoflex.bid.PowerPositive;
 import hsoines.oekoflex.energytrader.MarketOperatorListener;
 import hsoines.oekoflex.tools.RepastTestInitializer;
 import hsoines.oekoflex.util.Market;
@@ -15,11 +14,8 @@ import java.io.File;
 import java.util.Date;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 /**
  * User: jh
@@ -43,6 +39,7 @@ public class SpotMarketOperatorImplTest {
 
     @Test
     public void testClearingWithRegularEnergyBids() throws Exception {
+        operator.addDemand(new EnergyDemand(1, 2000, listener));
         operator.addDemand(new EnergyDemand(20, 2000, listener));
         operator.addSupply(new EnergySupply(10, 500, listener));
         operator.addSupply(new EnergySupply(11, 500, listener));
@@ -87,14 +84,16 @@ public class SpotMarketOperatorImplTest {
         operator.addSupply(new EnergySupply(-829.09f, 2.75f, listener));
         operator.addSupply(new EnergySupply(-829.09f, 2.75f, listener));
         operator.addSupply(new EnergySupply(-829.09f, 2.75f, listener)); //Sum: 844,75, n=28
+        operator.addSupply(new EnergySupply(3000f, 1f, listener));
 
-        operator.addDemand(new EnergyDemand(20, 844, listener));
+        operator.addDemand(new EnergyDemand(20, 840, listener));
+        operator.addDemand(new EnergyDemand(20, 4, listener));
 
         operator.clearMarket();
 
         assertEquals(844f, operator.getTotalClearedQuantity(), 0.0001f);
-        verify(listener, times(28)).notifyClearingDone(any(Date.class), Matchers.eq(Market.SPOT_MARKET), Matchers.any(EnergySupply.class), Matchers.eq(-829.09f), Matchers.eq(1.0f));
-        verify(listener, times(1)).notifyClearingDone(any(Date.class), Matchers.eq(Market.SPOT_MARKET), Matchers.any(EnergySupply.class), Matchers.eq(-829.09f), Matchers.eq(0.72727275f));
+        verify(listener, times(1)).notifyClearingDone(any(Date.class), Matchers.eq(Market.SPOT_MARKET), Matchers.any(Bid.class), Matchers.eq(-829.09f), Matchers.eq(0.72727275f));
+        verify(listener, times(29)).notifyClearingDone(any(Date.class), Matchers.eq(Market.SPOT_MARKET), Matchers.any(Bid.class), Matchers.eq(-829.09f), Matchers.eq(1.0f));
     }
 
     @Test

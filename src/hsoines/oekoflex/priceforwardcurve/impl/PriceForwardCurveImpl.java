@@ -114,7 +114,8 @@ public final class PriceForwardCurveImpl implements PriceForwardCurve {
         return min;
     }
 
-    private float getPriceOnTick(final long tick) {
+    @Override
+    public float getPriceOnTick(final long tick) {
         final Float price = priceOnTick.get(tick);
         return price == null ? 0 : price;
     }

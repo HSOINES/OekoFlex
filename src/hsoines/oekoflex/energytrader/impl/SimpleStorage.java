@@ -15,6 +15,7 @@ import org.apache.commons.logging.LogFactory;
 import repast.simphony.engine.schedule.ScheduledMethod;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -32,7 +33,7 @@ public final class SimpleStorage implements EOMTrader, BalancingMarketTrader {
     private final String description;
     private final float marginalCosts;
     private final float shutdownCosts;
-    private final int energyCapacity;
+    private final float energyCapacity;
     private final float socMax;
     private final float socMin;
     private final int chargePower;
@@ -46,7 +47,7 @@ public final class SimpleStorage implements EOMTrader, BalancingMarketTrader {
     private BalancingMarketOperator balancingMarketOperator;
     private TradeRegistryImpl storagePowerTradeHistory;
     private TickStrategy tickStrategy;
-    private final List<Integer> sellTicks;
+    private final List<Long> sellTicks;
 
 
     public SimpleStorage(final String name, final String description,
@@ -96,14 +97,26 @@ public final class SimpleStorage implements EOMTrader, BalancingMarketTrader {
 
     @Override
     public void makeBidEOM(final long currentTick) {
-        priceForwardCurve.getTicksWithHighestPrices(24, currentTick, 12);
-
-
-        if (tickStrategy.getTicksWithHighestPrice().contains(currentTick)) {
-            eomMarketOperator.addSupply(new EnergySupply(-3000f, dischargePower * TimeUtil.HOUR_PER_TICK, this));
-        }
-        if (tickStrategy.getTicksWithLowestPrice().contains(currentTick)) {
-            eomMarketOperator.addDemand(new EnergyDemand(3000f, chargePower * TimeUtil.HOUR_PER_TICK, this));
+        if (sellTicks.contains(currentTick)) {
+            //todo nur die menge verkaufen, die auch eingekauft wurde! dies kann an der oberen grenze variieren.
+            float dischargeEnergy = dischargePower * .25f;//sollte nicht noetig sein: Math.min(dischargePower * .25f, (soc - socMin)*energyCapacity);
+            eomMarketOperator.addSupply(new EnergySupply(-3000, dischargeEnergy, this));
+            sellTicks.remove(currentTick);
+        } else {
+            float minMargin = .5f;  //todo: parameter
+            final List<Long> ticksWithHighestPrices = priceForwardCurve.getTicksWithHighestPrices(24, currentTick, 12);
+            Collections.shuffle(ticksWithHighestPrices);   // todo
+            for (Long tickWithHighestPrice : ticksWithHighestPrices) {
+                float priceOnSellTick = priceForwardCurve.getPriceOnTick(tickWithHighestPrice);
+                if (priceOnSellTick - minMargin > priceForwardCurve.getPriceOnTick(currentTick)) {
+                    if (!sellTicks.contains(tickWithHighestPrice)) {
+                        sellTicks.add(tickWithHighestPrice);
+                        float chargeEnergy = Math.min(chargePower * .25f, (socMax - soc) * energyCapacity);     //todo: too much
+                        eomMarketOperator.addDemand(new EnergyDemand(3000, chargeEnergy, this));
+                        break;
+                    }
+                }
+            }
         }
     }
 
@@ -134,7 +147,7 @@ public final class SimpleStorage implements EOMTrader, BalancingMarketTrader {
             soc -= assignedQuantity / energyCapacity;
             storageEnergyTradeHistory.addAssignedQuantity(currentDate, market, bid.getPrice(), clearedPrice, bid.getQuantity(), rate, bid.getBidType());
         } else if (bid instanceof PowerPositive || bid instanceof PowerNegative) {
-            storagePowerTradeHistory.addAssignedQuantity(currentDate, market, bid.getPrice(), clearedPrice, bid.getQuantity(), rate, bid.getBidType());
+            throw new IllegalStateException("not used");
         }
         lastClearedPrice = clearedPrice;
         lastAssignmentRate = rate;
@@ -156,12 +169,12 @@ public final class SimpleStorage implements EOMTrader, BalancingMarketTrader {
     @Override
     public List<TradeRegistryImpl.EnergyTradeElement> getCurrentAssignments() {
         List<TradeRegistryImpl.EnergyTradeElement> energyTradeElements = storageEnergyTradeHistory.getEnergyTradeElements(TimeUtil.getCurrentDate());
-        List<TradeRegistryImpl.EnergyTradeElement> powerTradeElements = storagePowerTradeHistory.getEnergyTradeElements(TimeUtil.getCurrentDate());
+        //List<TradeRegistryImpl.EnergyTradeElement> powerTradeElements = storagePowerTradeHistory.getEnergyTradeElements(TimeUtil.getCurrentDate());
 
-        List<TradeRegistryImpl.EnergyTradeElement> result = new ArrayList<>();
-        result.addAll(energyTradeElements);
-        result.addAll(powerTradeElements);
-        return result;
+        //List<TradeRegistryImpl.EnergyTradeElement> result = new ArrayList<>();
+        //result.addAll(energyTradeElements);
+        //result.addAll(powerTradeElements);
+        return energyTradeElements;
     }
 
     @Override

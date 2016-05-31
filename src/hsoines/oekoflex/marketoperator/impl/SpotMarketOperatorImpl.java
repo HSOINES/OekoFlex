@@ -159,16 +159,16 @@ public class SpotMarketOperatorImpl implements SpotMarketOperator {
             lastAssignmentRate = (energySupply.getQuantity() + balance) / energySupply.getQuantity();
             lastAssignmentType = AssignmentType.PartialSupply;
             clearedQuantity = totalDemandQuantity;
-            notifyAssignmentRate(energySupply);
+            notifyAssignmentRate(energySupply, moreDemands ? energyDemand : null);
         } else if (balance > 0) { //Demand cut
             lastAssignmentRate = (energyDemand.getQuantity() - balance) / energyDemand.getQuantity();
             lastAssignmentType = AssignmentType.PartialDemand;
             clearedQuantity = totalSupplyQuantity;
-            notifyAssignmentRate(energyDemand);
+            notifyAssignmentRate(energyDemand, moreSupplies ? energySupply : null);
         } else {
             lastAssignmentRate = 1;
             lastAssignmentType = AssignmentType.Full;
-            notifyAssignmentRate(null);
+            notifyAssignmentRate(energyDemand, energySupply);
         }
         if (lastAssignmentRate > 1 || lastAssignmentRate < 0) {
             throw new IllegalStateException("lastAssignmentRate: " + lastAssignmentRate);
@@ -180,7 +180,7 @@ public class SpotMarketOperatorImpl implements SpotMarketOperator {
         energyDemands.clear();
     }
 
-    private void notifyAssignmentRate(Bid ratedBid) {
+    private void notifyAssignmentRate(final Bid ratedBid, final Bid behindLastBid) {
         StringBuilder logString = new StringBuilder();
         logString.append(getName()).append(",")
                 .append(getLastClearedPrice()).append(",")
@@ -188,41 +188,47 @@ public class SpotMarketOperatorImpl implements SpotMarketOperator {
                 .append(getTotalClearedQuantity()).append(",");
         Date date = TimeUtil.getCurrentDate();
         float assignmentRate = 1;
-        boolean ratedBidFound = false;
+        boolean stop = false;
         for (EnergyDemand energyDemand : energyDemands) {
             MarketOperatorListener marketOperatorListener = energyDemand.getMarketOperatorListener();
+            if (energyDemand == ratedBid) {
+                assignmentRate = lastAssignmentRate;
+                stop = true;
+            }
+            if (energyDemand == behindLastBid) {
+                break;
+            }
             if (marketOperatorListener != null) {
-                if (energyDemand == ratedBid) {
-                    assignmentRate = lastAssignmentRate;
-                    ratedBidFound = true;
-                }
                 marketOperatorListener.notifyClearingDone(date, Market.SPOT_MARKET, energyDemand, clearedPrice, assignmentRate);
                 logSummary(energyDemand, assignmentRate);
                 logString.append(assignmentRate).append(",")
                         .append(energyDemand.getPrice()).append(",")
                         .append(energyDemand.getQuantity()).append(",");
-                if (ratedBidFound) {
-                    assignmentRate = 0;
-                }
+            }
+            if (stop) {
+                assignmentRate = 0;
             }
         }
         assignmentRate = 1;
-        ratedBidFound = false;
+        stop = false;
         for (EnergySupply supply : this.energySupplies) {
             MarketOperatorListener marketOperatorListener = supply.getMarketOperatorListener();
+            if (supply == ratedBid) {
+                assignmentRate = lastAssignmentRate;
+                stop = true;
+            }
+            if (supply == behindLastBid) {
+                break;
+            }
             if (marketOperatorListener != null) {
-                if (supply == ratedBid) {
-                    assignmentRate = lastAssignmentRate;
-                    ratedBidFound = true;
-                }
                 marketOperatorListener.notifyClearingDone(date, Market.SPOT_MARKET, supply, clearedPrice, assignmentRate);
                 logSummary(supply, assignmentRate);
                 logString.append(assignmentRate).append(",")
                         .append(supply.getPrice()).append(",")
                         .append(supply.getQuantity()).append(",");
-                if (ratedBidFound) {
-                    assignmentRate = 0;
-                }
+            }
+            if (stop) {
+                assignmentRate = 0;
             }
 //            Log allInOneLine = LogFactory.getLog("ALL_IN_ONE_LINE");
 //            allInOneLine.info(logString.toString());
@@ -264,7 +270,7 @@ public class SpotMarketOperatorImpl implements SpotMarketOperator {
 
     @ScheduledMethod(start = ScheduledMethod.END)
     public void stop() {
-                logger.close();
+        logger.close();
     }
 
     public float getPrice() {  //dummy, da chart nicht sauber laeuft

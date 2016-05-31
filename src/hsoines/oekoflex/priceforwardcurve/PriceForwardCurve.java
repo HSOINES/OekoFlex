@@ -24,5 +24,7 @@ public interface PriceForwardCurve {
 
     List<Long> getTicksWithLowestPrices(int nTicks, long fromTick, int intervalTicks);
 
+    float getPriceOnTick(long tick);
+
     List<Long> getTicksWithHighestPrices(int nTicks, long fromTick, int intervalTicks);
 }
