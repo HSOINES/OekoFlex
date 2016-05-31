@@ -102,8 +102,10 @@ public final class SimpleStorage implements EOMTrader, BalancingMarketTrader {
     public void makeBidEOM(final long currentTick) {
         if (sellTicks.contains(currentTick)) {
             //todo nur die menge verkaufen, die auch eingekauft wurde! dies kann an der oberen grenze variieren.
-            float dischargeEnergy = dischargePower * .25f;//sollte nicht noetig sein: Math.min(dischargePower * .25f, (soc - socMin)*energyCapacity);
-            eomMarketOperator.addSupply(new EnergySupply(-3000, dischargeEnergy, this));
+            if (soc - dischargePower * .25 > socMin) {
+                float dischargeEnergy = dischargePower * .25f;//sollte nicht noetig sein: Math.min(dischargePower * .25f, (soc - socMin)*energyCapacity);
+                eomMarketOperator.addSupply(new EnergySupply(-3000, dischargeEnergy, this));
+            }
             sellTicks.remove(currentTick);
         } else if (soc + chargePower * 0.25 / energyCapacity < socMax) {
             float minMargin = .5f;  //todo: parameter
@@ -157,7 +159,7 @@ public final class SimpleStorage implements EOMTrader, BalancingMarketTrader {
         lastClearedPrice = clearedPrice;
         lastAssignmentRate = rate;
         if (soc < socMin || soc > socMax) {
-            throw new IllegalStateException("batterylevel exceeds energyCapacity: " + soc + ", MaxLevel: " + energyCapacity);
+            throw new IllegalStateException("batterylevel exceeds energyCapacity: " + soc + ", MaxLevel: " + energyCapacity + ", assigned: " + assignedQuantity);
         }
     }
 

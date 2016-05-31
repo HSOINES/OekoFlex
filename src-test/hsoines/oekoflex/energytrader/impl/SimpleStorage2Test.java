@@ -66,6 +66,36 @@ public class SimpleStorage2Test {
         assertEquals(.80f, simpleStorage.getSoc(), 0.0001f);
         makeNextBid();
         assertEquals(.80f, simpleStorage.getSoc(), 0.0001f);
+        makeNextBid();
+        assertEquals(.80f, simpleStorage.getSoc(), 0.0001f);
+        makeNextBid();
+        assertEquals(.80f, simpleStorage.getSoc(), 0.0001f);
+        makeNextBid();
+        assertEquals(.70f, simpleStorage.getSoc(), 0.0001f);
+        makeNextBid();
+        assertEquals(.80f, simpleStorage.getSoc(), 0.0001f);
+        makeNextBid();
+        assertEquals(.80f, simpleStorage.getSoc(), 0.0001f);
+        makeNextBid();
+        assertEquals(.80f, simpleStorage.getSoc(), 0.0001f);
+        makeNextBid();
+        assertEquals(.80f, simpleStorage.getSoc(), 0.0001f);
+        makeNextBid();
+        assertEquals(.70f, simpleStorage.getSoc(), 0.0001f);
+        makeNextBid();
+        assertEquals(.60f, simpleStorage.getSoc(), 0.0001f);
+        makeNextBid();
+        assertEquals(.50f, simpleStorage.getSoc(), 0.0001f);
+        makeNextBid();
+        assertEquals(.40f, simpleStorage.getSoc(), 0.0001f);
+        makeNextBid();
+        assertEquals(.30f, simpleStorage.getSoc(), 0.0001f);
+        makeNextBid();
+        assertEquals(.20f, simpleStorage.getSoc(), 0.0001f);
+        makeNextBid();
+        assertEquals(.10f, simpleStorage.getSoc(), 0.0001f);
+        makeNextBid();
+        assertEquals(.10f, simpleStorage.getSoc(), 0.0001f);
     }
 
     void makeNextBid() {
