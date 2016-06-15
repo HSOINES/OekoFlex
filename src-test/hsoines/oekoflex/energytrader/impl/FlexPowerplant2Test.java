@@ -7,6 +7,7 @@ import hsoines.oekoflex.priceforwardcurve.impl.PriceForwardCurveImpl;
 import hsoines.oekoflex.tools.RepastTestInitializer;
 import hsoines.oekoflex.util.Market;
 import hsoines.oekoflex.util.TimeUtil;
+import org.apache.log4j.BasicConfigurator;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -34,6 +35,8 @@ public class FlexPowerplant2Test {
 
     @Before
     public void setUp() throws Exception {
+        BasicConfigurator.configure();
+
         RepastTestInitializer.init();
         eomOperator = new TestSpotMarketOperator();
 
@@ -54,46 +57,46 @@ public class FlexPowerplant2Test {
 
         float eMustRun = POWER_MIN * TimeUtil.HOUR_PER_TICK;
         pFlex = POWER_RAMP_UP;
-        checkBids(eMustRun, pFlex, 1, 1);
+        checkEOMBids(eMustRun, pFlex, 1, 1);
         //->POWER: 2100
 
         eMustRun = (POWER_MIN) * TimeUtil.HOUR_PER_TICK;
         pFlex = 2 * POWER_RAMP_UP;
-        checkBids(eMustRun, pFlex, 1, 1);
+        checkEOMBids(eMustRun, pFlex, 1, 1);
         //->POWER: 2200
 
         eMustRun = POWER_MIN * TimeUtil.HOUR_PER_TICK;
         pFlex = 3 * POWER_RAMP_UP;
-        checkBids(eMustRun, pFlex, 1, 1);
+        checkEOMBids(eMustRun, pFlex, 1, 1);
         //->POWER: 2300
 
         pFlex = POWER_RAMP_DOWN + POWER_RAMP_UP;
         eMustRun = (2300 - POWER_RAMP_DOWN) * TimeUtil.HOUR_PER_TICK;
-        checkBids(eMustRun, pFlex, 1, 1);
+        checkEOMBids(eMustRun, pFlex, 1, 1);
         //->POWER: 2400
 
         pFlex = POWER_RAMP_DOWN;
         eMustRun = (2400 - POWER_RAMP_DOWN) * TimeUtil.HOUR_PER_TICK;
-        checkBids(eMustRun, pFlex, 1, 1);
+        checkEOMBids(eMustRun, pFlex, 1, 1);
         //->POWER: 2400
 
         pFlex = POWER_RAMP_DOWN;
         eMustRun = (2400 - POWER_RAMP_DOWN) * TimeUtil.HOUR_PER_TICK;
-        checkBids(eMustRun, pFlex, 1, 0);
+        checkEOMBids(eMustRun, pFlex, 1, 0);
         //->POWER: 2200
 
         pFlex = POWER_RAMP_DOWN + POWER_RAMP_UP;
         eMustRun = (2200 - POWER_RAMP_DOWN) * TimeUtil.HOUR_PER_TICK;
-        checkBids(eMustRun, pFlex, 1, 0);
+        checkEOMBids(eMustRun, pFlex, 1, 0);
         //->POWER: 2000
 
         pFlex = POWER_RAMP_UP;
         eMustRun = (2000) * TimeUtil.HOUR_PER_TICK;
-        checkBids(eMustRun, pFlex, 1, 0);
+        checkEOMBids(eMustRun, pFlex, 1, 0);
         //->POWER: 2000
     }
 
-    void checkBids(final float eMustRun, final float pFlex, final float mustRunRate, final float flexRate) {
+    void checkEOMBids(final float eMustRun, final float pFlex, final float mustRunRate, final float flexRate) {
         flexpowerplant.makeBidEOM();
         int i = (int) TimeUtil.getCurrentTick() * 2;
         final EnergySupply energySupply0 = eomOperator.getEnergySupply(i);

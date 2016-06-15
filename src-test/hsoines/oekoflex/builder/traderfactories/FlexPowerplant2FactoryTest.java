@@ -11,10 +11,10 @@ import java.io.File;
  * Date: 27/01/16
  * Time: 22:45
  */
-public class FlexPowerplantFactoryTest {
+public class FlexPowerplant2FactoryTest {
     @Test
     public void testIt() throws Exception {
         BasicConfigurator.configure();
-        FlexPowerplantFactory.build(new File("run-config/test"), new DefaultContext<>(), null, null, null);
+        FlexPowerplant2Factory.build(new File("run-config/test"), new DefaultContext<>(), null, null, null);
     }
 }

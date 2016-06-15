@@ -2,7 +2,7 @@ package hsoines.oekoflex.priceforwardcurve.impl;
 
 import hsoines.oekoflex.builder.CSVParameter;
 import hsoines.oekoflex.builder.OekoFlexContextBuilder;
-import hsoines.oekoflex.builder.traderfactories.FlexPowerplantFactory;
+import hsoines.oekoflex.builder.traderfactories.FlexPowerplant2Factory;
 import hsoines.oekoflex.builder.traderfactories.TotalLoadFactory;
 import hsoines.oekoflex.energytrader.impl.FlexPowerplant;
 import hsoines.oekoflex.energytrader.impl.TotalLoad;
@@ -37,7 +37,7 @@ public class PriceForwardCurveGenerator {
         this.prerunTicks = prerunTicks;
 
         spotMarketOperator = new SpotMarketOperatorImpl("pfc-spotmarketoperator", "", false);
-        flexPowerplants = FlexPowerplantFactory.build(configDir);
+        flexPowerplants = FlexPowerplant2Factory.build(configDir);
         for (FlexPowerplant flexPowerplant : flexPowerplants) {
             flexPowerplant.setSpotMarketOperator(spotMarketOperator);
         }
