@@ -17,7 +17,6 @@ import org.junit.Test;
 
 import java.io.File;
 import java.util.Date;
-import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
@@ -110,76 +109,6 @@ public class SimpleStorage2Test {
     public void testOverload() throws Exception {
 
 
-    }
-
-    private static class MySpotMarketOperator implements SpotMarketOperator {
-        private EnergyDemand energyDemand;
-        private EnergySupply supply;
-
-        @Override
-        public void addDemand(final EnergyDemand energyDemand) {
-            this.energyDemand = energyDemand;
-            supply = null;
-        }
-
-        @Override
-        public void addSupply(final EnergySupply supply) {
-            this.supply = supply;
-            energyDemand = null;
-        }
-
-        @Override
-        public void clearMarket() {
-
-        }
-
-        @Override
-        public float getTotalClearedQuantity() {
-            return 0;
-        }
-
-        @Override
-        public float getLastClearedPrice() {
-            return 0;
-        }
-
-        @Override
-        public float getLastAssignmentRate() {
-            return 0;
-        }
-
-        @Override
-        public void stop() {
-
-        }
-
-        @Override
-        public List<EnergySupply> getLastSupplies() {
-            return null;
-        }
-
-        @Override
-        public List<EnergyDemand> getLastEnergyDemands() {
-            return null;
-        }
-
-        @Override
-        public AssignmentType getLastAssignmentType() {
-            return null;
-        }
-
-        @Override
-        public String getName() {
-            return null;
-        }
-
-        public EnergyDemand getEnergyDemand() {
-            return energyDemand;
-        }
-
-        public EnergySupply getEnergySupply() {
-            return supply;
-        }
     }
 
     private static class MyMarketOperatorListener implements MarketOperatorListener {
