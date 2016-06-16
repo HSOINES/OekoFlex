@@ -4,7 +4,7 @@ import hsoines.oekoflex.builder.CSVParameter;
 import hsoines.oekoflex.builder.OekoFlexContextBuilder;
 import hsoines.oekoflex.builder.traderfactories.FlexPowerplant2Factory;
 import hsoines.oekoflex.builder.traderfactories.TotalLoadFactory;
-import hsoines.oekoflex.energytrader.impl.FlexPowerplant;
+import hsoines.oekoflex.energytrader.impl.FlexPowerplant2;
 import hsoines.oekoflex.energytrader.impl.TotalLoad;
 import hsoines.oekoflex.marketoperator.SpotMarketOperator;
 import hsoines.oekoflex.marketoperator.impl.SpotMarketOperatorImpl;
@@ -28,7 +28,7 @@ public class PriceForwardCurveGenerator {
     private final long prerunTicks;
     private TotalLoad renewables;
     private TotalLoad totalload;
-    private final Set<FlexPowerplant> flexPowerplants;
+    private final Set<FlexPowerplant2> flexPowerplants;
     private final SpotMarketOperator spotMarketOperator;
     private CSVPrinter csvPrinter;
 
@@ -38,7 +38,7 @@ public class PriceForwardCurveGenerator {
 
         spotMarketOperator = new SpotMarketOperatorImpl("pfc-spotmarketoperator", "", false);
         flexPowerplants = FlexPowerplant2Factory.build(configDir);
-        for (FlexPowerplant flexPowerplant : flexPowerplants) {
+        for (FlexPowerplant2 flexPowerplant : flexPowerplants) {
             flexPowerplant.setSpotMarketOperator(spotMarketOperator);
         }
 
@@ -70,7 +70,7 @@ public class PriceForwardCurveGenerator {
         TimeUtil.startAt(-prerunTicks);
         for (long tick = -prerunTicks; tick < ticksToRun; tick++) {
             log.debug("Building pfc for tick: " + tick);
-            for (FlexPowerplant flexPowerplant : flexPowerplants) {
+            for (FlexPowerplant2 flexPowerplant : flexPowerplants) {
                 flexPowerplant.makeBidEOM(tick);
             }
             renewables.makeBidEOM(tick);

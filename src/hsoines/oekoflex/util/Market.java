@@ -19,4 +19,8 @@ public enum Market {
     public int getTicks() {
         return ticks;
     }
+
+    public float getDurationInHours() {
+        return getTicks() * TimeUtil.HOUR_PER_TICK;
+    }
 }

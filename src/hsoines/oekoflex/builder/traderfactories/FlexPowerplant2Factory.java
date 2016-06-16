@@ -42,7 +42,6 @@ public final class FlexPowerplant2Factory {
             context.add(flexPowerplant);
         }
     }
-
     public static Set<FlexPowerplant2> build(File configDir) throws IOException {
         File configFile = new File(configDir + "/" + "FlexiblePowerplant.cfg.csv");
         FileReader reader = new FileReader(configFile);
