@@ -28,9 +28,9 @@ import java.util.List;
 public final class FlexPowerplant2 implements EOMTrader, BalancingMarketTrader, MarketOperatorListener {
     private static final Log log = LogFactory.getLog(FlexPowerplant2.class);
 
-    public static final float LATENCY = 3f;
+    static final float LATENCY = 3f;
+    static final float FACTOR_BALANCING_CALL = .2f;
 
-    private static final float factorBalancingCall = .2f;
     private final String name;
     private final String description;
     private final int powerMax;
@@ -99,15 +99,19 @@ public final class FlexPowerplant2 implements EOMTrader, BalancingMarketTrader, 
         final float durationInHours = Market.BALANCING_MARKET.getDurationInHours();
 
         float pNeg = Math.min(pPreceding - powerMin, powerRampDown / LATENCY);
-        final float priceNegative = -Math.min(((pfcCosts - marginalCosts) * durationInHours * powerMin) / pNeg, 0)
-                - factorBalancingCall * durationInHours * marginalCosts;
-        balancingMarketOperator.addNegativeSupply(new PowerNegative(priceNegative, pNeg, this));
+        if (pNeg > 0) {
+            final float priceNegative = -Math.min(((pfcCosts - marginalCosts) * durationInHours * powerMin) / pNeg, 0)
+                    - FACTOR_BALANCING_CALL * durationInHours * marginalCosts;
+            balancingMarketOperator.addNegativeSupply(new PowerNegative(priceNegative, pNeg, this));
+        }
 
         float pPos = Math.min(powerMax - pPreceding, powerRampUp / LATENCY);
-        final float pricePositive = Math.max((pfcCosts - marginalCosts) * durationInHours, 0)
-                - Math.min(((pfcCosts - marginalCosts) * durationInHours * powerMin) / pPos, 0)
-                + factorBalancingCall * durationInHours * marginalCosts;
-        balancingMarketOperator.addPositiveSupply(new PowerPositive(pricePositive, pPos, this));
+        if (pPos > 0) {
+            final float pricePositive = Math.max((pfcCosts - marginalCosts) * durationInHours, 0)
+                    - Math.min(((pfcCosts - marginalCosts) * durationInHours * powerMin) / pPos, 0)
+                    + FACTOR_BALANCING_CALL * durationInHours * marginalCosts;
+            balancingMarketOperator.addPositiveSupply(new PowerPositive(pricePositive, pPos, this));
+        }
     }
 
     @Override

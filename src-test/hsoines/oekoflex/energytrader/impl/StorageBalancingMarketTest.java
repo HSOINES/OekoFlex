@@ -2,7 +2,6 @@ package hsoines.oekoflex.energytrader.impl;
 
 import hsoines.oekoflex.bid.PowerNegative;
 import hsoines.oekoflex.bid.PowerPositive;
-import hsoines.oekoflex.marketoperator.BalancingMarketOperator;
 import hsoines.oekoflex.marketoperator.impl.SpotMarketOperatorImpl;
 import hsoines.oekoflex.priceforwardcurve.PriceForwardCurve;
 import hsoines.oekoflex.priceforwardcurve.impl.PriceForwardCurveImpl;
@@ -29,7 +28,7 @@ public class StorageBalancingMarketTest {
     public static final float SOC_MIN = .2f;
     private Storage storage;
     private SpotMarketOperatorImpl operator;
-    private TestingBalancingMarketOperator balancingMarketOperator;
+    private TestBalancingMarketOperator balancingMarketOperator;
 
     @Before
     public void setUp() throws Exception {
@@ -38,7 +37,7 @@ public class StorageBalancingMarketTest {
         final PriceForwardCurve priceForwardCurve = new PriceForwardCurveImpl(priceForwardOutFile);
         priceForwardCurve.readData();
         storage = new Storage("test", "description", MARGINAL_COSTS, 0.1f, ENERGY_CAPACITY, SOC_MAX, SOC_MIN, CHARGE_POWER, DISCHARGE_POWER, priceForwardCurve);
-        balancingMarketOperator = new TestingBalancingMarketOperator();
+        balancingMarketOperator = new TestBalancingMarketOperator();
         storage.setBalancingMarketOperator(balancingMarketOperator);
     }
 
@@ -89,67 +88,4 @@ public class StorageBalancingMarketTest {
         assertEquals(DISCHARGE_POWER * 4 * 10, lastPowerPositive.getPrice(), 0.0001f);
     }
 
-    private static class TestingBalancingMarketOperator implements BalancingMarketOperator {
-
-        private PowerNegative lastPowerNegative;
-        private PowerPositive lastPowerPositive;
-
-        @Override
-        public void addPositiveSupply(PowerPositive supply) {
-            lastPowerPositive = supply;
-        }
-
-        @Override
-        public void addNegativeSupply(PowerNegative supply) {
-            lastPowerNegative = supply;
-        }
-
-        @Override
-        public void clearMarket() {
-
-        }
-
-        @Override
-        public float getTotalClearedPositiveQuantity() {
-            return 0;
-        }
-
-        @Override
-        public float getTotalClearedNegativeQuantity() {
-            return 0;
-        }
-
-        @Override
-        public float getLastPositiveAssignmentRate() {
-            return 0;
-        }
-
-        @Override
-        public float getLastClearedNegativeMaxPrice() {
-            return 0;
-        }
-
-        @Override
-        public float getLastNegativeAssignmentRate() {
-            return 0;
-        }
-
-        @Override
-        public float getLastClearedPositiveMaxPrice() {
-            return 0;
-        }
-
-        @Override
-        public String getName() {
-            return null;
-        }
-
-        public PowerNegative getLastPowerNegative() {
-            return lastPowerNegative;
-        }
-
-        public PowerPositive getLastPowerPositive() {
-            return lastPowerPositive;
-        }
-    }
 }
