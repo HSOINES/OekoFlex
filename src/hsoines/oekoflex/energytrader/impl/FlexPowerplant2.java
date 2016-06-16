@@ -95,20 +95,20 @@ public final class FlexPowerplant2 implements EOMTrader, BalancingMarketTrader, 
             }
         }
 
-        float pfcCosts = priceForwardCurve.getPriceSummation(TimeUtil.getCurrentTick(), Market.BALANCING_MARKET.getTicks());
+        float pfcCostsAverage = priceForwardCurve.getPriceSummation(TimeUtil.getCurrentTick(), Market.BALANCING_MARKET.getTicks()) / Market.BALANCING_MARKET.getTicks();
         final float durationInHours = Market.BALANCING_MARKET.getDurationInHours();
 
         float pNeg = Math.min(pPreceding - powerMin, powerRampDown / LATENCY);
         if (pNeg > 0) {
-            final float priceNegative = -Math.min(((pfcCosts - marginalCosts) * durationInHours * powerMin) / pNeg, 0)
+            final float priceNegative = -Math.min(((pfcCostsAverage - marginalCosts) * durationInHours * powerMin) / pNeg, 0)
                     - FACTOR_BALANCING_CALL * durationInHours * marginalCosts;
             balancingMarketOperator.addNegativeSupply(new PowerNegative(priceNegative, pNeg, this));
         }
 
         float pPos = Math.min(powerMax - pPreceding, powerRampUp / LATENCY);
         if (pPos > 0) {
-            final float pricePositive = Math.max((pfcCosts - marginalCosts) * durationInHours, 0)
-                    - Math.min(((pfcCosts - marginalCosts) * durationInHours * powerMin) / pPos, 0)
+            final float pricePositive = Math.max((pfcCostsAverage - marginalCosts) * durationInHours, 0)
+                    - Math.min(((pfcCostsAverage - marginalCosts) * durationInHours * powerMin) / pPos, 0)
                     + FACTOR_BALANCING_CALL * durationInHours * marginalCosts;
             balancingMarketOperator.addPositiveSupply(new PowerPositive(pricePositive, pPos, this));
         }

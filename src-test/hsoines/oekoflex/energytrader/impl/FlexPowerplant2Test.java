@@ -60,8 +60,8 @@ public class FlexPowerplant2Test {
         float pPos = POWER_RAMP_UP / FlexPowerplant2.LATENCY;
         float pNeg = 0;
         // tick = 0
-        // PFC Price = 16;
-        float posPrice = (16 - MARGINAL_COSTS) * 4 + FlexPowerplant2.FACTOR_BALANCING_CALL * MARGINAL_COSTS * 4;
+        // PFC Price = 256;
+        float posPrice = (256/16 - MARGINAL_COSTS) * 4 + FlexPowerplant2.FACTOR_BALANCING_CALL * MARGINAL_COSTS * 4;
         float negPrice = -FlexPowerplant2.FACTOR_BALANCING_CALL * MARGINAL_COSTS * 4;
         checkBalancingMarketBids(pPos, pNeg, posPrice, negPrice);
         float eMustRun = POWER_MIN * TimeUtil.HOUR_PER_TICK;
@@ -72,9 +72,9 @@ public class FlexPowerplant2Test {
         // tick = 1
         pPos = POWER_RAMP_UP / FlexPowerplant2.LATENCY;
         pNeg = POWER_RAMP_DOWN / FlexPowerplant2.LATENCY;
-        // PFC Price = -1;
-        posPrice = -(-1 - MARGINAL_COSTS) * 4 * POWER_MIN / pPos + FlexPowerplant2.FACTOR_BALANCING_CALL * MARGINAL_COSTS * 4;
-        negPrice = -(-1 - MARGINAL_COSTS) * 4 * POWER_MIN / pNeg - FlexPowerplant2.FACTOR_BALANCING_CALL * MARGINAL_COSTS * 4;
+        // PFC Price = -16;
+        posPrice = -(-16/16 - MARGINAL_COSTS) * 4 * POWER_MIN / pPos + FlexPowerplant2.FACTOR_BALANCING_CALL * MARGINAL_COSTS * 4;
+        negPrice = -(-16/16 - MARGINAL_COSTS) * 4 * POWER_MIN / pNeg - FlexPowerplant2.FACTOR_BALANCING_CALL * MARGINAL_COSTS * 4;
         checkBalancingMarketBids(pPos, pNeg, posPrice, negPrice);
         eMustRun = (POWER_MIN) * TimeUtil.HOUR_PER_TICK;
         pFlex = 2 * POWER_RAMP_UP;
@@ -108,11 +108,11 @@ public class FlexPowerplant2Test {
         //->POWER: 2400
 
         // tick = 5
-        // PFC Price = -1;
+        // PFC Price = -16;
         pPos = 0;
         pNeg = POWER_RAMP_DOWN / FlexPowerplant2.LATENCY;
         posPrice = -1; //dont care
-        negPrice = -(-1 - MARGINAL_COSTS) * 4 * POWER_MIN / pNeg - FlexPowerplant2.FACTOR_BALANCING_CALL * MARGINAL_COSTS * 4;
+        negPrice = -(-16/16 - MARGINAL_COSTS) * 4 * POWER_MIN / pNeg - FlexPowerplant2.FACTOR_BALANCING_CALL * MARGINAL_COSTS * 4;
         checkBalancingMarketBids(pPos, pNeg, posPrice, negPrice);
         pFlex = POWER_RAMP_DOWN;
         eMustRun = (2400 - POWER_RAMP_DOWN) * TimeUtil.HOUR_PER_TICK;
@@ -120,11 +120,11 @@ public class FlexPowerplant2Test {
         //->POWER: 2200
 
         // tick = 6
-        // PFC Price = -1;
+        // PFC Price = -16;
         pPos = POWER_RAMP_UP / FlexPowerplant2.LATENCY;
         pNeg = POWER_RAMP_DOWN / FlexPowerplant2.LATENCY;
-        posPrice = -(-1 - MARGINAL_COSTS) * 4 * POWER_MIN / pPos + FlexPowerplant2.FACTOR_BALANCING_CALL * MARGINAL_COSTS * 4;
-        negPrice = -(-1 - MARGINAL_COSTS) * 4 * POWER_MIN / pNeg - FlexPowerplant2.FACTOR_BALANCING_CALL * MARGINAL_COSTS * 4;
+        posPrice = -(-16/16 - MARGINAL_COSTS) * 4 * POWER_MIN / pPos + FlexPowerplant2.FACTOR_BALANCING_CALL * MARGINAL_COSTS * 4;
+        negPrice = -(-16/16 - MARGINAL_COSTS) * 4 * POWER_MIN / pNeg - FlexPowerplant2.FACTOR_BALANCING_CALL * MARGINAL_COSTS * 4;
         checkBalancingMarketBids(pPos, pNeg, posPrice, negPrice);
         pFlex = POWER_RAMP_DOWN + POWER_RAMP_UP;
         eMustRun = (2200 - POWER_RAMP_DOWN) * TimeUtil.HOUR_PER_TICK;
