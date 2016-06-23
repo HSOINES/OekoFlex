@@ -25,6 +25,7 @@ import java.util.List;
  * powerMin: Minimum Power of PowerPlant
  * powerRampUp/Down: MWh/15min
  */
+@Deprecated
 public final class FlexPowerplant implements EOMTrader, BalancingMarketTrader, MarketOperatorListener {
     private static final Log log = LogFactory.getLog(FlexPowerplant.class);
 

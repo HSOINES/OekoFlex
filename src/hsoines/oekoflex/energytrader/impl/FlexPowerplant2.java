@@ -37,6 +37,7 @@ public final class FlexPowerplant2 implements EOMTrader, BalancingMarketTrader, 
     private final int powerMin;
     private final float shutdownCosts;
     private final PriceForwardCurve priceForwardCurve;
+    private float efficiency;
     private final int powerRampUp;
     private final int powerRampDown;
     private final float marginalCosts;
@@ -49,6 +50,7 @@ public final class FlexPowerplant2 implements EOMTrader, BalancingMarketTrader, 
 
     public FlexPowerplant2(final String name, final String description,
                            final int powerMax, final int powerMin,
+                           final float efficiency,
                            final int powerRampUp, final int powerRampDown,
                            final float marginalCosts, final float shutdownCosts,
                            final PriceForwardCurve priceForwardCurve) {
@@ -56,6 +58,7 @@ public final class FlexPowerplant2 implements EOMTrader, BalancingMarketTrader, 
         this.description = description;
         this.powerMax = powerMax;
         this.powerMin = powerMin;
+        this.efficiency = efficiency;
         this.powerRampUp = powerRampUp;
         this.powerRampDown = powerRampDown;
         this.marginalCosts = marginalCosts;

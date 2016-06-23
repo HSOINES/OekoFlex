@@ -32,7 +32,7 @@ import java.util.Properties;
 public class OekoFlexContextBuilder implements ContextBuilder<OekoflexAgent> {
     private static final Log log = LogFactory.getLog(OekoFlexContextBuilder.class);
 
-    static final Locale defaultlocale = Locale.GERMAN;
+    public static final Locale defaultlocale = Locale.GERMAN;
     public static NumberFormat defaultNumberFormat;
 
     static {

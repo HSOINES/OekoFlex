@@ -29,6 +29,8 @@ public final class FlexPowerplant2Factory {
     private static final Log log = LogFactory.getLog(FlexPowerplant2Factory.class);
     private static PriceForwardCurve priceForwardCurve;
 
+
+
     public static void build(final File configDir,
                              final Context<OekoflexAgent> context,
                              final SpotMarketOperatorImpl energyOnlyMarketOperator,
@@ -53,16 +55,18 @@ public final class FlexPowerplant2Factory {
                 String description = parameters.get("description");
                 int powerMax = Integer.parseInt(parameters.get("powerMax"));
                 int powerMin = Integer.parseInt(parameters.get("powerMin"));
+                float efficiency = OekoFlexContextBuilder.defaultNumberFormat.parse(parameters.get("efficiency")).floatValue();
                 int rampUp = Integer.parseInt(parameters.get("rampUp"));
                 int rampDown = Integer.parseInt(parameters.get("rampDown"));
                 float marginalCosts = OekoFlexContextBuilder.defaultNumberFormat.parse(parameters.get("marginalCosts")).floatValue();
                 float shutdownCosts = OekoFlexContextBuilder.defaultNumberFormat.parse(parameters.get("shutdownCosts")).floatValue();
 
-                FlexPowerplant2 flexPowerplant = new FlexPowerplant2(name, description, powerMax, powerMin, rampUp, rampDown, marginalCosts, shutdownCosts, priceForwardCurve);
+                FlexPowerplant2 flexPowerplant = new FlexPowerplant2(name, description, powerMax, powerMin, efficiency, rampUp, rampDown, marginalCosts, shutdownCosts, priceForwardCurve);
                 flexPowerplants.add(flexPowerplant);
                 log.info("FlexPowerplant2 Build done for <" + name + ">.");
             } catch (NumberFormatException e) {
                 log.error(e.getMessage(), e);
+                throw e;
             } catch (ParseException e) {
                 log.error(e.toString(), e);
             }

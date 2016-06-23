@@ -3,6 +3,7 @@ package hsoines.oekoflex.energytrader.impl;
 import hsoines.oekoflex.bid.EnergySupply;
 import hsoines.oekoflex.bid.PowerNegative;
 import hsoines.oekoflex.bid.PowerPositive;
+import hsoines.oekoflex.builder.OekoFlexContextBuilder;
 import hsoines.oekoflex.priceforwardcurve.PriceForwardCurve;
 import hsoines.oekoflex.priceforwardcurve.impl.PriceForwardCurveImpl;
 import hsoines.oekoflex.tools.RepastTestInitializer;
@@ -13,6 +14,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
+import java.text.DecimalFormat;
+import java.util.Locale;
 
 import static org.junit.Assert.assertEquals;
 
@@ -30,6 +33,7 @@ public class FlexPowerplant2Test {
     public static final int POWER_MAX = 2400;
     public static final int POSITIVE_DEMAND_BALANCING = 100;
     public static final int NEGATIVE_DEMAND_BALANCING = 100;
+    public static final float EFFICIENCY = .25f;
     private TestBalancingMarketOperator balancingMarketOperator;
     private FlexPowerplant2 flexpowerplant;
     private TestSpotMarketOperator eomOperator;
@@ -46,7 +50,7 @@ public class FlexPowerplant2Test {
         final PriceForwardCurve priceForwardCurve = new PriceForwardCurveImpl(priceForwardOutFile);
         priceForwardCurve.readData();
         flexpowerplant = new FlexPowerplant2("flexpowerplant", "description",
-                POWER_MAX, POWER_MIN, POWER_RAMP_UP, POWER_RAMP_DOWN, MARGINAL_COSTS, SHUTDOWN_COSTS,
+                POWER_MAX, POWER_MIN, EFFICIENCY, POWER_RAMP_UP, POWER_RAMP_DOWN, MARGINAL_COSTS, SHUTDOWN_COSTS,
                 priceForwardCurve);
         flexpowerplant.setBalancingMarketOperator(balancingMarketOperator);
         flexpowerplant.setSpotMarketOperator(eomOperator);
