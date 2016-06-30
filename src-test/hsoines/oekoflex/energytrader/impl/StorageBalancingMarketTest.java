@@ -2,6 +2,7 @@ package hsoines.oekoflex.energytrader.impl;
 
 import hsoines.oekoflex.bid.PowerNegative;
 import hsoines.oekoflex.bid.PowerPositive;
+import hsoines.oekoflex.energytrader.tools.TestBalancingMarketOperator;
 import hsoines.oekoflex.marketoperator.impl.SpotMarketOperatorImpl;
 import hsoines.oekoflex.priceforwardcurve.PriceForwardCurve;
 import hsoines.oekoflex.priceforwardcurve.impl.PriceForwardCurveImpl;

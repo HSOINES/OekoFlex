@@ -18,6 +18,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.HashSet;
+import java.util.Properties;
 import java.util.Set;
 
 /**
@@ -35,16 +36,18 @@ public final class FlexPowerplant2Factory {
                              final Context<OekoflexAgent> context,
                              final SpotMarketOperatorImpl energyOnlyMarketOperator,
                              final BalancingMarketOperator balancingMarketOperator,
-                             final PriceForwardCurve priceForwardCurve) throws IOException {
+                             final PriceForwardCurve priceForwardCurve,
+                             final Properties globalProperties) throws IOException {
         FlexPowerplant2Factory.priceForwardCurve = priceForwardCurve;
-        Set<FlexPowerplant2> flexPowerplants = build(configDir);
+        Set<FlexPowerplant2> flexPowerplants = build(configDir, globalProperties);
         for (FlexPowerplant2 flexPowerplant : flexPowerplants) {
             flexPowerplant.setBalancingMarketOperator(balancingMarketOperator);
             flexPowerplant.setSpotMarketOperator(energyOnlyMarketOperator);
             context.add(flexPowerplant);
         }
     }
-    public static Set<FlexPowerplant2> build(File configDir) throws IOException {
+
+    public static Set<FlexPowerplant2> build(File configDir, final Properties globalProperties) throws IOException {
         File configFile = new File(configDir + "/" + "FlexiblePowerplant.cfg.csv");
         FileReader reader = new FileReader(configFile);
         CSVParser format = CSVParameter.getCSVFormat().parse(reader);
@@ -61,7 +64,14 @@ public final class FlexPowerplant2Factory {
                 float marginalCosts = OekoFlexContextBuilder.defaultNumberFormat.parse(parameters.get("marginalCosts")).floatValue();
                 float shutdownCosts = OekoFlexContextBuilder.defaultNumberFormat.parse(parameters.get("shutdownCosts")).floatValue();
 
-                FlexPowerplant2 flexPowerplant = new FlexPowerplant2(name, description, powerMax, powerMin, efficiency, rampUp, rampDown, marginalCosts, shutdownCosts, priceForwardCurve);
+                float variableCosts = getVariableCosts(globalProperties, description);
+                float fuelCosts = getFuelCosts(globalProperties, description);
+                final float emissionRate = getEmissionRate(globalProperties, description);
+
+                float co2CertificateCosts = Float.parseFloat(globalProperties.getProperty("CO2CertificatesCosts"));
+                FlexPowerplant2 flexPowerplant = new FlexPowerplant2(name, description, powerMax, powerMin, efficiency, rampUp, rampDown,
+                        shutdownCosts, FlexPowerplant2Factory.priceForwardCurve,
+                        variableCosts, fuelCosts, co2CertificateCosts, emissionRate);
                 flexPowerplants.add(flexPowerplant);
                 log.info("FlexPowerplant2 Build done for <" + name + ">.");
             } catch (NumberFormatException e) {
@@ -72,5 +82,81 @@ public final class FlexPowerplant2Factory {
             }
         }
         return flexPowerplants;
+    }
+
+    static float getVariableCosts(final Properties globalProperties, final String description) {
+        float variableCosts;
+        switch (description) {
+            case "lignite":
+                variableCosts = Float.parseFloat(globalProperties.getProperty("VariableCosts_Lignite"));
+                break;
+            case "hard coal":
+                variableCosts = Float.parseFloat(globalProperties.getProperty("VariableCosts_HardCoal"));
+                break;
+            case "natural gas (open cycle)":
+                variableCosts = Float.parseFloat(globalProperties.getProperty("VariableCosts_NaturalGasOpenCycle"));
+                break;
+            case "natural gas (combined cycle)":
+                final String variableCosts_naturalGasCombinedCycle = globalProperties.getProperty("VariableCosts_NaturalGasCombinedCycle");
+                variableCosts = Float.parseFloat(variableCosts_naturalGasCombinedCycle);
+                break;
+            case "oil":
+                variableCosts = Float.parseFloat(globalProperties.getProperty("VariableCosts_Oil"));
+                break;
+            default:
+                throw new IllegalArgumentException("not supported type:" + description);
+
+        }
+        return variableCosts;
+    }
+
+    static float getFuelCosts(final Properties globalProperties, final String description) {
+        float variableCosts;
+        switch (description) {
+            case "lignite":
+                variableCosts = Float.parseFloat(globalProperties.getProperty("FuelCosts_Lignite"));
+                break;
+            case "hard coal":
+                variableCosts = Float.parseFloat(globalProperties.getProperty("FuelCosts_HardCoal"));
+                break;
+            case "natural gas (open cycle)":
+                variableCosts = Float.parseFloat(globalProperties.getProperty("FuelCosts_NaturalGasOpenCycle"));
+                break;
+            case "natural gas (combined cycle)":
+                variableCosts = Float.parseFloat(globalProperties.getProperty("FuelCosts_NaturalGasCombinedCycle"));
+                break;
+            case "oil":
+                variableCosts = Float.parseFloat(globalProperties.getProperty("FuelCosts_Oil"));
+                break;
+            default:
+                throw new IllegalArgumentException("not supported type:" + description);
+
+        }
+        return variableCosts;
+    }
+
+    static float getEmissionRate(final Properties globalProperties, final String description) {
+        float variableCosts;
+        switch (description) {
+            case "lignite":
+                variableCosts = Float.parseFloat(globalProperties.getProperty("EmissionRate_Lignite"));
+                break;
+            case "hard coal":
+                variableCosts = Float.parseFloat(globalProperties.getProperty("EmissionRate_HardCoal"));
+                break;
+            case "natural gas (open cycle)":
+                variableCosts = Float.parseFloat(globalProperties.getProperty("EmissionRate_NaturalGasOpenCycle"));
+                break;
+            case "natural gas (combined cycle)":
+                variableCosts = Float.parseFloat(globalProperties.getProperty("EmissionRate_NaturalGasCombinedCycle"));
+                break;
+            case "oil":
+                variableCosts = Float.parseFloat(globalProperties.getProperty("EmissionRate_Oil"));
+                break;
+            default:
+                throw new IllegalArgumentException("not supported type:" + description);
+
+        }
+        return variableCosts;
     }
 }

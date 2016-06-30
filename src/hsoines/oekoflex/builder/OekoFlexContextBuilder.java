@@ -92,14 +92,14 @@ public class OekoFlexContextBuilder implements ContextBuilder<OekoflexAgent> {
 
             // PriceForwardCurve
             File priceForwardFile = new File(priceForwardOutDir, "price-forward.csv");
-            PriceForwardCurveGenerator priceForwardCurveGenerator = new PriceForwardCurveGenerator(configDir, daysToRun * SequenceDefinition.DayInterval, priceForwardFile, prerunDays * SequenceDefinition.DayInterval);
+            PriceForwardCurveGenerator priceForwardCurveGenerator = new PriceForwardCurveGenerator(configDir, daysToRun * SequenceDefinition.DayInterval, priceForwardFile, prerunDays * SequenceDefinition.DayInterval, globalProperties);
             PriceForwardCurve priceForwardCurve = new PriceForwardCurveImpl(priceForwardFile);
 
             //Consumer
             TotalLoadFactory.build(configDir, context, spotMarketOperator, prerunDays * SequenceDefinition.DayInterval);
 
             //Producer
-            FlexPowerplant2Factory.build(configDir, context, spotMarketOperator, balancingMarketOperator, priceForwardCurve);
+            FlexPowerplant2Factory.build(configDir, context, spotMarketOperator, balancingMarketOperator, priceForwardCurve, globalProperties);
             StorageFactory.build(configDir, context, spotMarketOperator, balancingMarketOperator, priceForwardCurve);
 
             //build pfc
@@ -120,7 +120,7 @@ public class OekoFlexContextBuilder implements ContextBuilder<OekoflexAgent> {
         return context;
     }
 
-    Properties loadProperties(final File configDir) throws IOException {
+    public static Properties loadProperties(final File configDir) throws IOException {
         Properties globalProperties = new Properties();
         File globalPropertiesFile = new File(configDir, "Global.properties");
         FileInputStream is = new FileInputStream(globalPropertiesFile);

@@ -2,13 +2,13 @@ package hsoines.oekoflex.builder.traderfactories;
 
 import hsoines.oekoflex.builder.OekoFlexContextBuilder;
 import org.apache.log4j.BasicConfigurator;
-import org.junit.Assert;
 import org.junit.Test;
 import repast.simphony.context.DefaultContext;
 
 import java.io.File;
 import java.text.DecimalFormat;
 import java.util.Locale;
+import java.util.Properties;
 
 /**
  * User: jh
@@ -24,6 +24,8 @@ public class FlexPowerplant2FactoryTest {
     @Test
     public void testIt() throws Exception {
         BasicConfigurator.configure();
-            FlexPowerplant2Factory.build(new File("run-config/test"), new DefaultContext<>(), null, null, null);
+        final File configDir = new File("run-config/test");
+        Properties globalProperties = OekoFlexContextBuilder.loadProperties(configDir);
+        FlexPowerplant2Factory.build(configDir, new DefaultContext<>(), null, null, null, globalProperties);
     }
 }

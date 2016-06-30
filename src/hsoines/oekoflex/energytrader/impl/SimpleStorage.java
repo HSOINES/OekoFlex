@@ -198,6 +198,13 @@ public final class SimpleStorage implements EOMTrader, BalancingMarketTrader {
         this.balancingMarketOperator = balancingMarketOperator;
     }
 
+
+    @Override
+    public float getCurrentPower() {
+        throw new IllegalStateException("not implemented");
+    }
+
+
     @Override
     public String getDescription() {
         return description;

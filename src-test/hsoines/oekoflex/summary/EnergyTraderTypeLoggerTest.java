@@ -107,6 +107,13 @@ public class EnergyTraderTypeLoggerTest {
 
         }
 
+
+        @Override
+        public float getCurrentPower() {
+            throw new IllegalStateException("not implemented");
+        }
+
+
     }
 
     private static class MyBalancingMarketTrader implements BalancingMarketTrader {

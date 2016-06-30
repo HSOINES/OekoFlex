@@ -1,21 +1,16 @@
 package hsoines.oekoflex.energytrader.impl;
 
-import hsoines.oekoflex.bid.EnergySupply;
-import hsoines.oekoflex.bid.PowerNegative;
-import hsoines.oekoflex.bid.PowerPositive;
-import hsoines.oekoflex.builder.OekoFlexContextBuilder;
+import hsoines.oekoflex.energytrader.tools.TestBalancingMarketOperator;
+import hsoines.oekoflex.energytrader.tools.TestSpotMarketOperator;
 import hsoines.oekoflex.priceforwardcurve.PriceForwardCurve;
 import hsoines.oekoflex.priceforwardcurve.impl.PriceForwardCurveImpl;
 import hsoines.oekoflex.tools.RepastTestInitializer;
-import hsoines.oekoflex.util.Market;
 import hsoines.oekoflex.util.TimeUtil;
 import org.apache.log4j.BasicConfigurator;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
-import java.text.DecimalFormat;
-import java.util.Locale;
 
 import static org.junit.Assert.assertEquals;
 
@@ -34,146 +29,64 @@ public class FlexPowerplant2Test {
     public static final int POSITIVE_DEMAND_BALANCING = 100;
     public static final int NEGATIVE_DEMAND_BALANCING = 100;
     public static final float EFFICIENCY = .25f;
-    private TestBalancingMarketOperator balancingMarketOperator;
+    private TestBalancingMarketOperator testBalancingMarketOperator;
     private FlexPowerplant2 flexpowerplant;
-    private TestSpotMarketOperator eomOperator;
+    private TestSpotMarketOperator testEomOperator;
+    private PriceForwardCurve priceForwardCurve;
+    private float emissionRate;
+    private float efficiency;
 
     @Before
     public void setUp() throws Exception {
         BasicConfigurator.configure();
 
         RepastTestInitializer.init();
-        eomOperator = new TestSpotMarketOperator();
-        balancingMarketOperator = new TestBalancingMarketOperator();
+        testEomOperator = new TestSpotMarketOperator();
+        testBalancingMarketOperator = new TestBalancingMarketOperator();
 
         final File priceForwardOutFile = new File("src-test/resources/price-forward-flex.csv");
-        final PriceForwardCurve priceForwardCurve = new PriceForwardCurveImpl(priceForwardOutFile);
+        priceForwardCurve = new PriceForwardCurveImpl(priceForwardOutFile);
         priceForwardCurve.readData();
         flexpowerplant = new FlexPowerplant2("flexpowerplant", "description",
-                POWER_MAX, POWER_MIN, EFFICIENCY, POWER_RAMP_UP, POWER_RAMP_DOWN, MARGINAL_COSTS, SHUTDOWN_COSTS,
-                priceForwardCurve);
-        flexpowerplant.setBalancingMarketOperator(balancingMarketOperator);
-        flexpowerplant.setSpotMarketOperator(eomOperator);
+                POWER_MAX, POWER_MIN, POWER_RAMP_UP, POWER_RAMP_DOWN, SHUTDOWN_COSTS,
+                priceForwardCurve, MARGINAL_COSTS);
+        flexpowerplant.setBalancingMarketOperator(testBalancingMarketOperator);
+        flexpowerplant.setSpotMarketOperator(testEomOperator);
     }
 
     @Test
     public void testSpotMarketBid() throws Exception {
-        float pFlex;
         TimeUtil.startAt(0);
+        assertEquals(256, priceForwardCurve.getPriceSummation(TimeUtil.getCurrentTick(), 16), 0.00001f);
+        testBalancingMarketOperator.makeBid(flexpowerplant).checkEnergyPos(33.3333f, 57.6f).checkEnergyNeg(0, 0).notifyRatePos(1).notifyRateNeg(0);
 
-        float pPos = POWER_RAMP_UP / FlexPowerplant2.LATENCY;
-        float pNeg = 0;
-        // tick = 0
-        // PFC Price = 256;
-        float posPrice = (256/16 - MARGINAL_COSTS) * 4 + FlexPowerplant2.FACTOR_BALANCING_CALL * MARGINAL_COSTS * 4;
-        float negPrice = -FlexPowerplant2.FACTOR_BALANCING_CALL * MARGINAL_COSTS * 4;
-        checkBalancingMarketBids(pPos, pNeg, posPrice, negPrice);
-        float eMustRun = POWER_MIN * TimeUtil.HOUR_PER_TICK;
-        pFlex = POWER_RAMP_UP;
-        checkEOMBids(eMustRun, pFlex, 1, 1);
-        //->POWER: 2100
+        testEomOperator.makeBid(flexpowerplant).checkQuantities(new float[]{500, 25}).checkPrices(new float[]{-50000 / 500f + 2, 2}).notifyRates(new float[]{1f, 1f}).checkPower(2100);
 
-        // tick = 1
-        pPos = POWER_RAMP_UP / FlexPowerplant2.LATENCY;
-        pNeg = POWER_RAMP_DOWN / FlexPowerplant2.LATENCY;
-        // PFC Price = -16;
-        posPrice = -(-16/16 - MARGINAL_COSTS) * 4 * POWER_MIN / pPos + FlexPowerplant2.FACTOR_BALANCING_CALL * MARGINAL_COSTS * 4;
-        negPrice = -(-16/16 - MARGINAL_COSTS) * 4 * POWER_MIN / pNeg - FlexPowerplant2.FACTOR_BALANCING_CALL * MARGINAL_COSTS * 4;
-        checkBalancingMarketBids(pPos, pNeg, posPrice, negPrice);
-        eMustRun = (POWER_MIN) * TimeUtil.HOUR_PER_TICK;
-        pFlex = 2 * POWER_RAMP_UP;
-        checkEOMBids(eMustRun, pFlex, 1, 1);
-        //->POWER: 2200
-
-        // tick = 2
-        flexpowerplant.makeBidBalancingMarket();
-        eMustRun = POWER_MIN * TimeUtil.HOUR_PER_TICK;
-        pFlex = 3 * POWER_RAMP_UP;
-        checkEOMBids(eMustRun, pFlex, 1, 1);
-        //->POWER: 2300
-
-        // tick = 3
-        flexpowerplant.makeBidBalancingMarket();
-        pFlex = POWER_RAMP_DOWN + POWER_RAMP_UP;
-        eMustRun = (2300 - POWER_RAMP_DOWN) * TimeUtil.HOUR_PER_TICK;
-        checkEOMBids(eMustRun, pFlex, 1, 1);
-        //->POWER: 2400
-
-        // tick = 4
-        // PFC Price = 2;
-        pPos = 0;
-        pNeg = POWER_RAMP_DOWN / FlexPowerplant2.LATENCY;
-        posPrice = -1;//dont care
-        negPrice = -FlexPowerplant2.FACTOR_BALANCING_CALL * MARGINAL_COSTS * 4;
-        checkBalancingMarketBids(pPos, pNeg, posPrice, negPrice);
-        pFlex = POWER_RAMP_DOWN;
-        eMustRun = (2400 - POWER_RAMP_DOWN) * TimeUtil.HOUR_PER_TICK;
-        checkEOMBids(eMustRun, pFlex, 1, 1);
-        //->POWER: 2400
-
-        // tick = 5
-        // PFC Price = -16;
-        pPos = 0;
-        pNeg = POWER_RAMP_DOWN / FlexPowerplant2.LATENCY;
-        posPrice = -1; //dont care
-        negPrice = -(-16/16 - MARGINAL_COSTS) * 4 * POWER_MIN / pNeg - FlexPowerplant2.FACTOR_BALANCING_CALL * MARGINAL_COSTS * 4;
-        checkBalancingMarketBids(pPos, pNeg, posPrice, negPrice);
-        pFlex = POWER_RAMP_DOWN;
-        eMustRun = (2400 - POWER_RAMP_DOWN) * TimeUtil.HOUR_PER_TICK;
-        checkEOMBids(eMustRun, pFlex, 1, 0);
-        //->POWER: 2200
-
-        // tick = 6
-        // PFC Price = -16;
-        pPos = POWER_RAMP_UP / FlexPowerplant2.LATENCY;
-        pNeg = POWER_RAMP_DOWN / FlexPowerplant2.LATENCY;
-        posPrice = -(-16/16 - MARGINAL_COSTS) * 4 * POWER_MIN / pPos + FlexPowerplant2.FACTOR_BALANCING_CALL * MARGINAL_COSTS * 4;
-        negPrice = -(-16/16 - MARGINAL_COSTS) * 4 * POWER_MIN / pNeg - FlexPowerplant2.FACTOR_BALANCING_CALL * MARGINAL_COSTS * 4;
-        checkBalancingMarketBids(pPos, pNeg, posPrice, negPrice);
-        pFlex = POWER_RAMP_DOWN + POWER_RAMP_UP;
-        eMustRun = (2200 - POWER_RAMP_DOWN) * TimeUtil.HOUR_PER_TICK;
-        checkEOMBids(eMustRun, pFlex, 1, 0);
-        //->POWER: 2000
-
-        // tick = 7
-        pFlex = POWER_RAMP_UP;
-        eMustRun = (2000) * TimeUtil.HOUR_PER_TICK;
-        checkEOMBids(eMustRun, pFlex, 1, 0);
-        //->POWER: 2000
-    }
-
-    private void checkBalancingMarketBids(final float pPos, final float pNeg, final float posPrice, final float negPrice) {
-        flexpowerplant.makeBidBalancingMarket();
-        int i = (int) TimeUtil.getCurrentTick();
-
-        if (pPos > 0) {
-            final PowerPositive powerPositive = balancingMarketOperator.getPowerPositive(i);
-            assertEquals(pPos, powerPositive.getQuantity(), 0.0001f);
-            assertEquals(posPrice, powerPositive.getPrice(), 0.0001f);
-        } else {
-            balancingMarketOperator.addPositiveSupply(new PowerPositive(0, 0, null));
+        TimeUtil.startAt(1);
+        testEomOperator.makeBid(flexpowerplant).checkQuantities(new float[]{500, 50}).checkPrices(new float[]{-50000 / 500f + 2, 2}).notifyRates(new float[]{1f, 1f}).checkPower(2200);
+        TimeUtil.startAt(2);
+        testEomOperator.makeBid(flexpowerplant).checkQuantities(new float[]{500, 75}).checkPrices(new float[]{-50000 / 500f + 2, 2}).notifyRates(new float[]{1f, 1f}).checkPower(2300);
+        TimeUtil.startAt(3);
+        testEomOperator.makeBid(flexpowerplant).checkQuantities(new float[]{525, 66.6666f}).checkPrices(new float[]{-50000 / 525f + 2, 2}).notifyRates(new float[]{1f, 1f}).checkPower(2366.6666f);
+        for (int i = 4; i < 16; i++) {
+            TimeUtil.startAt(i);
+            testEomOperator.makeBid(flexpowerplant).checkQuantities(new float[]{541.6666f, 50}).checkPrices(new float[]{-50000 / 541.6666f + 2, 2}).notifyRates(new float[]{1f, 1f}).checkPower(2366.6666f);
         }
-
-        if (pNeg > 0) {
-            final PowerNegative powerNegative = balancingMarketOperator.getPowerNegative(i);
-            assertEquals(pNeg, powerNegative.getQuantity(), 0.0001f);
-            assertEquals(negPrice, powerNegative.getPrice(), 0.0001f);
-        } else {
-            balancingMarketOperator.addNegativeSupply(new PowerNegative(0, 0, null));
-        }
+        TimeUtil.startAt(16);
     }
 
-    private void checkEOMBids(final float eMustRun, final float pFlex, final float mustRunRate, final float flexRate) {
-        flexpowerplant.makeBidEOM();
-        int i = (int) TimeUtil.getCurrentTick() * 2;
-        final EnergySupply energySupply0 = eomOperator.getEnergySupply(i);
-        assertEquals(eMustRun, energySupply0.getQuantity(), 0.00001f);
-        assertEquals(-SHUTDOWN_COSTS / eMustRun + MARGINAL_COSTS, energySupply0.getPrice(), 0.00001f);
-        final EnergySupply energySupply1 = eomOperator.getEnergySupply(i + 1);
-        assertEquals(pFlex * TimeUtil.HOUR_PER_TICK, energySupply1.getQuantity(), 0.00001f);
-        assertEquals(MARGINAL_COSTS, energySupply1.getPrice(), 0.00001f);
-        flexpowerplant.notifyClearingDone(TimeUtil.getCurrentDate(), Market.SPOT_MARKET, energySupply0, 0f, mustRunRate);
-        flexpowerplant.notifyClearingDone(TimeUtil.getCurrentDate(), Market.SPOT_MARKET, energySupply1, 0f, flexRate);
-        TimeUtil.nextTick();
+    @Test
+    public void testMarginalCosts() throws Exception {
+        final int variableCosts = 3;
+        final int fuelCosts = 6;
+        final int co2CertificateCosts = 7;
+        emissionRate = .6f;
+        efficiency = .9f;
+        assertEquals(14.333333f, FlexPowerplant2.calculateMarginalCosts(variableCosts, fuelCosts, co2CertificateCosts, emissionRate, efficiency), 0.00001f);
     }
+
+    @Test
+    public void testName() throws Exception {
+    }
+
 }

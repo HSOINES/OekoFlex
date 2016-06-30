@@ -25,4 +25,5 @@ public interface EOMTrader extends MarketTrader, MarketOperatorListener {
     void makeBidEOM(long currentTick);
 
 
+    float getCurrentPower();
 }

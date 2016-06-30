@@ -1,0 +1,25 @@
+name;description;capacity;ChargingPower;efficiency_Charge;DischargingPower;efficiency_Discharge;SoC_min;SoC_max;variableCosts_Charge;variableCosts_Discharge
+Tanzmühle - Rabenleite;pumped storage power plant;404;25;0,814;35;0,875;0,1;1;1,46;1,04
+Leitzach II;pumped storage power plant;550;38;0,856;49;0,903;0,1;1;1,41;1,09
+Leitzach I;pumped storage power plant;550;40;0,856;51;0,903;0,1;1;1,41;1,09
+Hohenwarte I;pumped storage power plant;504;34;0,8;63;0,866;0,1;1;1,48;1,02
+Bleiloch;pumped storage power plant;640;32;0,802;80;0,867;0,1;1;1,47;1,03
+Wendefurth;pumped storage power plant;523;72;0,82;80;0,88;0,1;1;1,45;1,05
+Glems;pumped storage power plant;560;68;0,838;90;0,892;0,1;1;1,43;1,07
+Reisach - Rabenleite;pumped storage power plant;630;84;0,85;100;0,899;0,1;1;1,42;1,08
+Geesthacht;pumped storage power plant;600;96;0,808;105;0,872;0,1;1;1,47;1,03
+Ränkhausen;pumped storage power plant;690;140;0,85;140;0,899;0,1;1;1,42;1,08
+Waldeck I;pumped storage power plant;478;96;0,873;140;0,915;0,1;1;1,39;1,11
+Häusern;pumped storage power plant;514;104;0,82;144;0,879;0,1;1;1,45;1,05
+Koepchenwerk Herdecke II;pumped storage power plant;590;153;0,85;153;0,899;0,1;1;1,42;1,08
+Happurg;pumped storage power plant;900;126;0,832;160;0,888;0,1;1;1,44;1,06
+Langenprozelten;pumped storage power plant;950;154;0,85;168;0,899;0,1;1;1,42;1,08
+Waldshut;pumped storage power plant;581;80;0,79;176;0,859;0,1;1;1,49;1,01
+Erzhausen;pumped storage power plant;940;230;0,844;220;0,895;0,1;1;1,42;1,08
+Witznau;pumped storage power plant;880;128;0,766;220;0,843;0,1;1;1,52;0,98
+Hohenwarte II;pumped storage power plant;2087;310;0,8;320;0,866;0,1;1;1,48;1,02
+Säckingen;pumped storage power plant;2064;301;0,861;353;0,907;0,1;1;1,40;1,10
+Waldeck II;pumped storage power plant;3428;476;0,873;440;0,915;0,1;1;1,39;1,11
+Wehr;pumped storage power plant;6076;1000;0,856;992;0,903;0,1;1;1,41;1,09
+Markersbach;pumped storage power plant;4018;1140;0,837;1050;0,891;0,1;1;1,43;1,07
+Goldisthal;pumped storage power plant;8480;1140;0,879;1060;0,919;0,1;1;1,38;1,12

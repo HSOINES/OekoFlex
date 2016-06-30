@@ -139,6 +139,11 @@ public final class FlexPowerplant implements EOMTrader, BalancingMarketTrader, M
     }
 
     @Override
+    public float getCurrentPower() {
+        throw new IllegalStateException("not implemented");
+    }
+
+    @Override
     public void setBalancingMarketOperator(final BalancingMarketOperator balancingMarketOperator) {
         this.balancingMarketOperator = balancingMarketOperator;
     }

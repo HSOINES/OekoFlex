@@ -136,5 +136,12 @@ public final class TotalLoad implements EOMTrader {
         return description;
     }
 
+
+    @Override
+    public float getCurrentPower() {
+        throw new IllegalStateException("not implemented");
+    }
+
+
     public enum Type {DEMAND, SUPPLY}
 }

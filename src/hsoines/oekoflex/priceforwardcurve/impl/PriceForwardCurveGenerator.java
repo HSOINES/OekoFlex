@@ -16,6 +16,7 @@ import org.apache.commons.logging.LogFactory;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Properties;
 import java.util.Set;
 
 /**
@@ -32,12 +33,12 @@ public class PriceForwardCurveGenerator {
     private final SpotMarketOperator spotMarketOperator;
     private CSVPrinter csvPrinter;
 
-    public PriceForwardCurveGenerator(File configDir, int ticksToRun, final File priceForwardFile, long prerunTicks) throws IOException {
+    public PriceForwardCurveGenerator(File configDir, int ticksToRun, final File priceForwardFile, long prerunTicks, final Properties globalProperties) throws IOException {
         this.ticksToRun = ticksToRun;
         this.prerunTicks = prerunTicks;
 
         spotMarketOperator = new SpotMarketOperatorImpl("pfc-spotmarketoperator", "", false);
-        flexPowerplants = FlexPowerplant2Factory.build(configDir);
+        flexPowerplants = FlexPowerplant2Factory.build(configDir, globalProperties);
         for (FlexPowerplant2 flexPowerplant : flexPowerplants) {
             flexPowerplant.setSpotMarketOperator(spotMarketOperator);
         }
