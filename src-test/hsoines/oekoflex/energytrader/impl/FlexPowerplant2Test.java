@@ -58,12 +58,11 @@ public class FlexPowerplant2Test {
     public void testSpotMarketBid() throws Exception {
         TimeUtil.startAt(0);
         assertEquals(256, priceForwardCurve.getPriceSummation(TimeUtil.getCurrentTick(), 16), 0.00001f);
-        testBalancingMarketOperator.makeBid(flexpowerplant).checkEnergyPos(33.3333f, 57.6f).checkEnergyNeg(0, 0).notifyRatePos(1).notifyRateNeg(0);
-
-        testEomOperator.makeBid(flexpowerplant).checkQuantities(new float[]{500, 25}).checkPrices(new float[]{-50000 / 500f + 2, 2}).notifyRates(new float[]{1f, 1f}).checkPower(2100);
+        testBalancingMarketOperator.makeBid(flexpowerplant).checkPowerPos(33.3333f, 57.6f).checkPowerNeg(0, 0).notifyRatePos(1).notifyRateNeg(0);
+        testEomOperator.makeBid(flexpowerplant).checkQuantities(new float[]{500, 16.666667f}).checkPrices(new float[]{-50000 / 500f + 2, 2}).notifyRates(new float[]{1f, 1f}).checkPower(2066.66667f);
 
         TimeUtil.startAt(1);
-        testEomOperator.makeBid(flexpowerplant).checkQuantities(new float[]{500, 50}).checkPrices(new float[]{-50000 / 500f + 2, 2}).notifyRates(new float[]{1f, 1f}).checkPower(2200);
+        testEomOperator.makeBid(flexpowerplant).checkQuantities(new float[]{500, 33.33333f}).checkPrices(new float[]{-50000 / 500f + 2, 2}).notifyRates(new float[]{1f, 1f}).checkPower(2133.3333f);
         TimeUtil.startAt(2);
         testEomOperator.makeBid(flexpowerplant).checkQuantities(new float[]{500, 75}).checkPrices(new float[]{-50000 / 500f + 2, 2}).notifyRates(new float[]{1f, 1f}).checkPower(2300);
         TimeUtil.startAt(3);
@@ -73,6 +72,8 @@ public class FlexPowerplant2Test {
             testEomOperator.makeBid(flexpowerplant).checkQuantities(new float[]{541.6666f, 50}).checkPrices(new float[]{-50000 / 541.6666f + 2, 2}).notifyRates(new float[]{1f, 1f}).checkPower(2366.6666f);
         }
         TimeUtil.startAt(16);
+        testBalancingMarketOperator.makeBid(flexpowerplant).checkPowerPos(33.3333f, 57.6f).checkPowerNeg(0, 0).notifyRatePos(1).notifyRateNeg(0);
+
     }
 
     @Test

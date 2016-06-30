@@ -190,8 +190,6 @@ public final class FlexPowerplant2 implements EOMTrader, BalancingMarketTrader, 
                 energyTradeRegistry.addAssignedQuantity(currentDate, market, bid.getPrice(), clearedPrice, bid.getQuantity(), rate, bid.getBidType());
                 break;
             case POWER_NEGATIVE:
-                //todo
-
             case POWER_POSITIVE:
                 powerTradeRegistry.addAssignedQuantity(currentDate, market, bid.getPrice(), clearedPrice, bid.getQuantity(), rate, bid.getBidType());
                 break;

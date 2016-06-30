@@ -100,7 +100,7 @@ public class TestBalancingMarketOperator implements BalancingMarketOperator {
         return powerPositives.get(i);
     }
 
-    public TestBalancingMarketOperator checkEnergyPos(final float posEnergy, final float posPrice) {
+    public TestBalancingMarketOperator checkPowerPos(final float posEnergy, final float posPrice) {
         if (posEnergy > 0) {
             assertEquals(posEnergy, getLastPowerPositive().getQuantity(), 0.001f);
             assertEquals(posPrice, getLastPowerPositive().getPrice(), 0.001f);
@@ -110,7 +110,7 @@ public class TestBalancingMarketOperator implements BalancingMarketOperator {
         return this;
     }
 
-    public TestBalancingMarketOperator checkEnergyNeg(final float negEnergy, final float negPrice) {
+    public TestBalancingMarketOperator checkPowerNeg(final float negEnergy, final float negPrice) {
         if (negEnergy > 0) {
             assertEquals(negEnergy, getLastPowerNegative().getQuantity(), 0.001f);
             assertEquals(negPrice, getLastPowerNegative().getPrice(), 0.001f);
