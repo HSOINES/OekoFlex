@@ -1,3 +1,11 @@
 Brennstoffkosten
 Zertifikatspreis
 spez. Emissionspreis
+
+
+Typen:
+Hard Coal: Steinkohle
+Lignite: Braunkohle
+Natural Gas Combined Cycle: Gas+Dampfkraftwerk
+Natural Gas Open Cycle: Gasturbinenkraftwerk
+

@@ -147,7 +147,7 @@ public final class FlexPowerplant2 implements EOMTrader, BalancingMarketTrader, 
         float priceMustRun = -shutdownCosts / eMustRun + marginalCosts;
         eomMarketOperator.addSupply(new EnergySupplyMustRun(priceMustRun, eMustRun, this));
 
-        float eFlex = Math.min((powerMax - pPositiveCommited) * t, ePreceding + powerRampUp * t) - eMustRun;
+        float eFlex = Math.min((powerMax - pPositiveCommited) * t, ePreceding + (powerRampUp - pPositiveCommited) * t) - eMustRun;
         float priceFlex = marginalCosts;
         eomMarketOperator.addSupply(new EnergySupply(priceFlex, eFlex, this));
     }
@@ -172,6 +172,8 @@ public final class FlexPowerplant2 implements EOMTrader, BalancingMarketTrader, 
                 energyTradeRegistry.addAssignedQuantity(currentDate, market, bid.getPrice(), clearedPrice, bid.getQuantity(), rate, bid.getBidType());
                 break;
             case POWER_NEGATIVE:
+                //todo
+
             case POWER_POSITIVE:
                 powerTradeRegistry.addAssignedQuantity(currentDate, market, bid.getPrice(), clearedPrice, bid.getQuantity(), rate, bid.getBidType());
                 break;
