@@ -35,7 +35,7 @@ public final class FlexPowerplant2 implements EOMTrader, BalancingMarketTrader, 
     private final String description;
     private final int powerMax;
     private final int powerMin;
-    private final float shutdownCosts;
+    private final float startStopCosts;
     private final PriceForwardCurve priceForwardCurve;
     private final int powerRampUp;
     private final int powerRampDown;
@@ -50,21 +50,21 @@ public final class FlexPowerplant2 implements EOMTrader, BalancingMarketTrader, 
     public FlexPowerplant2(final String name, final String description,
                            final int powerMax, final int powerMin,
                            final float efficiency,
-                           final int powerRampUp, final int powerRampDown, final float shutdownCosts,
+                           final int powerRampUp, final int powerRampDown, final float startStopCosts,
                            final PriceForwardCurve priceForwardCurve,
                            final float variableCosts, final float fuelCosts, final float co2CertificateCosts,
                            final float emissionRate) {
-        this(name, description, powerMax, powerMin, powerRampUp, powerRampDown, shutdownCosts, priceForwardCurve,
+        this(name, description, powerMax, powerMin, powerRampUp, powerRampDown, startStopCosts, priceForwardCurve,
                 FlexPowerplant2.calculateMarginalCosts(variableCosts, fuelCosts, co2CertificateCosts, emissionRate, efficiency));
     }
 
     static float calculateMarginalCosts(final float variableCosts, final float fuelCosts, final float co2CertificateCosts, final float emissionRate, final float efficiency) {
-        return fuelCosts / efficiency + (co2CertificateCosts * emissionRate / efficiency);//todo + variableCosts;
+        return fuelCosts / efficiency + (co2CertificateCosts * emissionRate / efficiency) + variableCosts;
     }
 
     FlexPowerplant2(final String name, final String description,
                     final int powerMax, final int powerMin,
-                    final int powerRampUp, final int powerRampDown, final float shutdownCosts,
+                    final int powerRampUp, final int powerRampDown, final float startStopCosts,
                     final PriceForwardCurve priceForwardCurve,
                     final float marginalCosts) {
         this.name = name;
@@ -73,7 +73,7 @@ public final class FlexPowerplant2 implements EOMTrader, BalancingMarketTrader, 
         this.powerMin = powerMin;
         this.powerRampUp = powerRampUp;
         this.powerRampDown = powerRampDown;
-        this.shutdownCosts = shutdownCosts;
+        this.startStopCosts = startStopCosts;
         this.priceForwardCurve = priceForwardCurve;
         this.marginalCosts = marginalCosts;
         init();
@@ -116,7 +116,7 @@ public final class FlexPowerplant2 implements EOMTrader, BalancingMarketTrader, 
 
         float pNeg = Math.min(pPreceding - powerMin, powerRampDown / LATENCY);
         if (pNeg > 0) {
-            final float priceNegative = Math.abs(Math.min(((pfcCostsAverage - marginalCosts) * durationInHours * powerMin) / pNeg, 0))
+            final float priceNegative = Math.abs(Math.min(((pfcCostsAverage - marginalCosts) * durationInHours * (powerMin+pNeg)) / pNeg, 0))
                     - FACTOR_BALANCING_CALL * durationInHours * marginalCosts;
             balancingMarketOperator.addNegativeSupply(new PowerNegative(priceNegative, pNeg, this));
         }
@@ -124,7 +124,7 @@ public final class FlexPowerplant2 implements EOMTrader, BalancingMarketTrader, 
         float pPos = Math.min(powerMax - pPreceding, powerRampUp / LATENCY);
         if (pPos > 0) {
             final float pricePositive = Math.max((pfcCostsAverage - marginalCosts) * durationInHours, 0)
-                    - Math.abs(Math.min(((pfcCostsAverage - marginalCosts) * durationInHours * powerMin) / pPos, 0))
+                    + Math.abs(Math.min(((pfcCostsAverage - marginalCosts) * durationInHours * powerMin) / pPos, 0))
                     + FACTOR_BALANCING_CALL * durationInHours * marginalCosts;
             balancingMarketOperator.addPositiveSupply(new PowerPositive(pricePositive, pPos, this));
         }
@@ -157,7 +157,7 @@ public final class FlexPowerplant2 implements EOMTrader, BalancingMarketTrader, 
         }
 
         float eMustRun = Math.max((powerMin + pNegativeCommited) * t, ePreceding - powerRampDown * t);
-        float priceMustRun = -shutdownCosts / eMustRun + marginalCosts;
+        float priceMustRun = -startStopCosts *(powerMax) / powerMin + marginalCosts;
         eomMarketOperator.addSupply(new EnergySupplyMustRun(priceMustRun, eMustRun, this));
 
         float eFlex = Math.min((powerMax - pPositiveCommited) * t, ePreceding + (powerRampUp - pPositiveCommited) * t) - eMustRun;
