@@ -23,7 +23,7 @@ import java.util.List;
  * <p>
  * marginalCosts: Euro/MWh
  * powerMin: Minimum Power of PowerPlant
- * powerRampUp/Down: MWh/15min
+ * powerRampUp/Down: MW in 15min
  */
 public final class FlexPowerplant2 implements EOMTrader, BalancingMarketTrader, MarketOperatorListener {
     private static final Log log = LogFactory.getLog(FlexPowerplant2.class);
