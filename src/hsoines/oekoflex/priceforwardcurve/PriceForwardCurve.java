@@ -10,21 +10,51 @@ import java.util.List;
  * Time: 18:45
  */
 public interface PriceForwardCurve {
+    /*
+        Liest die Daten aus der PFC-Datei aus
+     */
     void readData() throws IOException, ParseException;
 
-    float getPriceSummation(long currentTick, int ticks);
+    /*
+        Addiert alle Preise
+        @fromTick: start
+        @ticks: Anzahl Ticks
+     */
+    float getPriceSummation(long fromTick, int ticks);
 
-    float getSpread(long currentTick, int ticks);
+    /*
+        Maximale Differenz
+        @fromTick: start
+        @ticks: Anzahl Ticks
+     */
+    float getSpread(long fromTick, int ticks);
 
-    float getMinimum(long currentTick, int ticks);
+    /*
+        Maximum/Minimum
+        @fromTick: start
+        @ticks: Anzahl Ticks
+     */
+    float getMinimum(long fromTick, int ticks);
+    float getMaximum(long fromTick, int ticks);
 
-    float getMaximum(long currentTick, int ticks);
+    /*
+        Summe der negativen Preise
+        @fromTick: start
+        @ticks: Anzahl der Ticks
+     */
+    float getNegativePriceSummation(long fromTick, int ticks);
 
-    float getNegativePriceSummation(long currentTick, int ticks);
-
-    List<Long> getTicksWithLowestPrices(int nTicks, long fromTick, int intervalTicks);
-
+    /*
+        Preis zum entsprechenden Tick
+     */
     float getPriceOnTick(long tick);
 
+    /*
+        nTicks: Zahl der gewünschten Ticks
+        fromTick: Start-Tick
+        intervalTicks: Anzahl der Ticks in denen gesucht wird
+        @return: Die Liste mit den Ticks, die die Vorgaben erfüllen. Enthält maximal nTicks Ticks.
+     */
+    List<Long> getTicksWithLowestPrices(int nTicks, long fromTick, int intervalTicks);
     List<Long> getTicksWithHighestPrices(int nTicks, long fromTick, int intervalTicks);
 }
