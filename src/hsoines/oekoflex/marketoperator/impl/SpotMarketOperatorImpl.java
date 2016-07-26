@@ -283,7 +283,7 @@ public class SpotMarketOperatorImpl implements SpotMarketOperator {
         return name;
     }
 
-    public List<EnergySupply> getLastSupplies() {
+    public List<EnergySupply> getLastEnergySupplies() {
         return lastSupplies;
     }
 

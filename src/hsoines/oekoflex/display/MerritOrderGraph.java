@@ -68,7 +68,7 @@ public class MerritOrderGraph implements IDisplay {
 
         panel.add(new XChartPanel<>(chart), BorderLayout.CENTER);
 
-        List<EnergySupply> lastSupplies = eomOperator.getLastSupplies();
+        List<EnergySupply> lastSupplies = eomOperator.getLastEnergySupplies();
         if (lastSupplies == null) {
             return;
         }

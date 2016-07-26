@@ -172,7 +172,7 @@ public class StorageSpotMarketTest {
         }
 
         @Override
-        public List<EnergySupply> getLastSupplies() {
+        public List<EnergySupply> getLastEnergySupplies() {
             return null;
         }
 

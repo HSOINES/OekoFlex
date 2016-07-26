@@ -143,7 +143,7 @@ public class SimpleStorageTest {
         }
 
         @Override
-        public List<EnergySupply> getLastSupplies() {
+        public List<EnergySupply> getLastEnergySupplies() {
             return null;
         }
 
