@@ -52,6 +52,7 @@ public class FlexPowerplant2Test {
                 priceForwardCurve, MARGINAL_COSTS);
         flexpowerplant.setBalancingMarketOperator(testBalancingMarketOperator);
         flexpowerplant.setSpotMarketOperator(testEomOperator);
+
     }
 
     @Test
