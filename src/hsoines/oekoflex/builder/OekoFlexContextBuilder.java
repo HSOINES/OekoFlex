@@ -45,8 +45,9 @@ public class OekoFlexContextBuilder implements ContextBuilder<OekoflexAgent> {
     	log.info("locale: " + Locale.getDefault().getDisplayName());
         context.setId("OekoFlex");
 
-        Parameters p = RunEnvironment.getInstance().getParameters();
         RunEnvironment re = RunEnvironment.getInstance();
+        Parameters p = re.getParameters();
+        
         int daysToRun = (int) p.getValue("daysToRun");
         int prerunDays = (int) p.getValue("preRunDays");
         int prerunTicks = SequenceDefinition.DayInterval * prerunDays;
