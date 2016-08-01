@@ -50,6 +50,7 @@ public class LearningStorage implements EOMTrader, BalancingMarketTrader{
         setStateOfCharge(0.0f);
         energyCapacity = 100.0f;
     }
+
 	@Override
 	public float getLastAssignmentRate() {
 		return this.lastAssignmentRate ;
