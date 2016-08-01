@@ -138,8 +138,8 @@ public class LearningStorage implements EOMTrader, BalancingMarketTrader{
 		
 		int minIndex = Math.min(lowestPrices.size(), highestPrices.size());
 		int targetIndex = 0;
-		float matchHigh = Float.NaN;
-		float matchLow = Float.NaN;
+		float matchHigh = 3000.0f;
+		float matchLow = -3000.0f;
 		
 		for(; targetIndex < minIndex ; targetIndex++){
 			
@@ -149,15 +149,20 @@ public class LearningStorage implements EOMTrader, BalancingMarketTrader{
 			boolean sp = checkPositiveSpread( high , low);
 			
 			if(sp){
-				matchHigh = high;
-				matchLow = low;
 				break;
 			}	
 		}
 		
-		if (targetIndex == minIndex  ){
-			// TODO  nothing is matched
+		
+		if (highestPrices.size() > targetIndex ){
+			matchHigh = highestPrices.get(targetIndex);	
 		}
+		
+		if (lowestPrices.size() > targetIndex ){
+			matchLow = lowestPrices.get(targetIndex);	
+		}
+		
+		
 		
 		float curPrice = pfc.getPriceOnTick(currentTick);
 		
