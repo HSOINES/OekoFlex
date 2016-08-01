@@ -85,7 +85,7 @@ public class MerritOrderGraphTest {
         }
 
         @Override
-        public List<EnergySupply> getLastSupplies() {
+        public List<EnergySupply> getLastEnergySupplies() {
             return Collections.singletonList(new EnergySupply(234f, 100f, null));
         }
 
