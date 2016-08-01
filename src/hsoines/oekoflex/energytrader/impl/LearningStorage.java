@@ -74,7 +74,20 @@ public class LearningStorage implements EOMTrader, BalancingMarketTrader{
 
 	@Override
 	public void notifyClearingDone(Date currentDate, Market market, Bid bid, float clearedPrice, float rate) {
-		// TODO Auto-generated method stub
+		if(market.equals(Market.SPOT_MARKET)){
+			energyTradeRegistry.addAssignedQuantity(currentDate, market, bid.getPrice(), clearedPrice, bid.getQuantity(), rate, bid.getBidType());
+			switch(bid.getBidType()){
+				case ENERGY_SUPPLY:
+					stateOfCharge -= (bid.getQuantity() * rate)/energyCapacity;
+					break;
+				case ENERGY_DEMAND:
+					stateOfCharge += (bid.getQuantity() * rate)/energyCapacity;
+					break;
+				default:
+					throw new IllegalStateException("neither ENERGY_SUPPLY nor ENERGY_DEMAND Bidtype");
+			}
+			
+		}
 		
 	}
 
