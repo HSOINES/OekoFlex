@@ -13,6 +13,10 @@ import java.util.TimeZone;
  * User: jh
  * Date: 17/12/15
  * Time: 07:58
+ * Kapselt Repast-Ticks
+ * Stellt Umgebung zum Testen ohne Repast-Scheduler bereit
+ * Rechnet Datum und Tick um
+ *
  */
 public final class TimeUtil {
     private static final Log log = LogFactory.getLog(TimeUtil.class);

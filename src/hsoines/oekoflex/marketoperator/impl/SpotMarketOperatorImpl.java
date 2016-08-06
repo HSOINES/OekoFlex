@@ -19,6 +19,13 @@ import repast.simphony.engine.schedule.ScheduledMethod;
 import java.io.IOException;
 import java.util.*;
 
+
+/**
+ * User: jh
+ * Date: 17/01/16
+ * Time: 23:07
+ * Räumt den Spotmarkt und notifiziert die EnergieTrader
+ */
 public class SpotMarketOperatorImpl implements SpotMarketOperator {
     private static final Log log = LogFactory.getLog(SpotMarketOperatorImpl.class);
 

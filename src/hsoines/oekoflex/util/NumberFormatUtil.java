@@ -7,6 +7,7 @@ import java.text.NumberFormat;
  * User: jh
  * Date: 18/01/16
  * Time: 14:20
+ * Verwendete Zahlenformate
  */
 public final class NumberFormatUtil {
 

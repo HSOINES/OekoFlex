@@ -8,6 +8,9 @@ import repast.simphony.engine.schedule.ScheduledMethod;
  * User: jh
  * Date: 03/12/15
  * Time: 08:29
+ *
+ * Gibt Angebote an den Spotmarkt
+
  */
 public interface EOMTrader extends MarketTrader, MarketOperatorListener {
 

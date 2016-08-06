@@ -20,6 +20,7 @@ import java.util.Set;
  * User: jh
  * Date: 07/01/16
  * Time: 21:32
+ * Verbraucher/Erzeuger, der auf Basis einer CSV-Datei (tick, Price) Angebote macht.
  */
 public final class TotalLoadFactory {
     private static final Log log = LogFactory.getLog(TotalLoadFactory.class);

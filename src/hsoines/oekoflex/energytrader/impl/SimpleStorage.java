@@ -25,6 +25,7 @@ import java.util.List;
  * Time: 16:14
  * <p>
  * soc: state of charge, in percent
+ * Test-Storage
  */
 public final class SimpleStorage implements EOMTrader, BalancingMarketTrader {
     private static final Log log = LogFactory.getLog(SimpleStorage.class);

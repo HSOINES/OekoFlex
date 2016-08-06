@@ -21,6 +21,7 @@ import java.util.Set;
 
 /**
  * Created by jhense on 13.03.2016.
+ * erzeugt PFC
  */
 public class PriceForwardCurveGenerator {
     private static final Log log = LogFactory.getLog(PriceForwardCurveGenerator.class);

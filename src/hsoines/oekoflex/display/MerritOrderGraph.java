@@ -21,6 +21,13 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+
+/**
+ * User: jh
+ * Date: 17/01/16
+ * Time: 23:07
+ * Merrit-Order Graph.
+ */
 public class MerritOrderGraph implements IDisplay {
 
     public static final String SUPPLIES = "Supplies";

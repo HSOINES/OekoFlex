@@ -13,7 +13,10 @@ import java.util.*;
  * User: jh
  * Date: 17/12/15
  * Time: 08:08
- */
+ * a) Speichert die abgerufene Energie/Leistung
+ * b) Speichert die Menge pro Tick (für TotalLoad)
+ *
+ **/
 public final class TradeRegistryImpl implements TradeRegistry {
     private static final Log log = LogFactory.getLog(TradeRegistryImpl.class);
 

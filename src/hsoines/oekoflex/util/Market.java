@@ -4,6 +4,7 @@ package hsoines.oekoflex.util;
  * User: jh
  * Date: 07/01/16
  * Time: 13:52
+ * Definitionen zu MarktInfos
  */
 public enum Market {
     SPOT_MARKET(1),       //EOM

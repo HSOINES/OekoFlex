@@ -8,6 +8,7 @@ import java.util.List;
  * User: jh
  * Date: 30/03/16
  * Time: 18:45
+ * Hält die Daten der ermittelten prognostizierten Preise
  */
 public interface PriceForwardCurve {
     /*

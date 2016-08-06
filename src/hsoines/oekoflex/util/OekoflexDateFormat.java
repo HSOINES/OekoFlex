@@ -8,6 +8,7 @@ import java.util.Date;
  * User: jh
  * Date: 18/01/16
  * Time: 11:36
+ * Datum-Format
  */
 public final class OekoflexDateFormat extends SimpleDateFormat {
     public OekoflexDateFormat() {

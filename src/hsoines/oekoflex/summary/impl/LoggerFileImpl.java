@@ -17,6 +17,8 @@ import java.util.concurrent.TimeUnit;
  * User: jh
  * Date: 07/01/16
  * Time: 23:56
+ * Loggt in Datei
+ * Basiert auf log4j
  */
 public final class LoggerFileImpl implements LoggerFile {
     private static final Log log = LogFactory.getLog(LoggerFileImpl.class);

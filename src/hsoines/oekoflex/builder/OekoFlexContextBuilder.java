@@ -29,6 +29,16 @@ import java.text.ParseException;
 import java.util.Locale;
 import java.util.Properties;
 
+
+/**
+ * User: jh
+ * Date: 17/01/16
+ * Time: 23:07
+ * Baut kompletten Context auf.
+ * - simuliert Ticks > 0
+ * - Baut PFC auf
+ * - Instantiiert alle Agents
+ */
 public class OekoFlexContextBuilder implements ContextBuilder<OekoflexAgent> {
     private static final Log log = LogFactory.getLog(OekoFlexContextBuilder.class);
 

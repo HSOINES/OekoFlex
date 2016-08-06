@@ -24,7 +24,7 @@ import java.util.List;
  * Time: 16:14
  *
  * soc: state of charge, in percent
- *
+ * Klasse nicht aktueller Stand (6.8.2016)
  */
 public final class Storage implements EOMTrader, BalancingMarketTrader {
     private static final Log log = LogFactory.getLog(Storage.class);
