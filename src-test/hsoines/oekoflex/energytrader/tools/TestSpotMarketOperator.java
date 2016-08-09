@@ -107,6 +107,9 @@ public class TestSpotMarketOperator implements SpotMarketOperator {
         this.eomTrader = eomTrader;
         lastEnergyDemand = null;
         lastEnergySupply = null;
+        energySupplies.clear();
+        energyDemands.clear();
+
         eomTrader.makeBidEOM();
         return this;
     }

@@ -78,7 +78,7 @@ public class FlexPowerplant2Test {
         }
         TimeUtil.startAt(16);
         //PFC = -9
-        testBalancingMarketOperator.makeBid(flexpowerplant).checkPowerPos(33.3333f, 2641.6064f).checkPowerNeg(66.6666f, 0).notifyRatePos(1).notifyRateNeg(0);
+        testBalancingMarketOperator.makeBid(flexpowerplant).checkPowerPos(33.3333f, 2641.6064f).checkPowerNeg(66.6666f, 0).notifyRatePos(1).notifyRateNeg(0);//todo: preis prüfen
 
     }
 

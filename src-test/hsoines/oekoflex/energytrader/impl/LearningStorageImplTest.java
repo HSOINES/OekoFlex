@@ -48,7 +48,9 @@ public class LearningStorageImplTest {
     public void testSpotMarketBid() throws Exception {
         TimeUtil.startAt(0);
 //        testEomOperator.makeBid(lst).checkQuantities(new float[]{500, 16.666667f}).checkSupplyPrices(new float[]{-120 + 2, 2}).notifySupplyRates(new float[]{1f, 1f}).checkPower(2066.66667f);
-        	testEomOperator.makeBid(lst).checkDemandQuantities(new float[]{2.5f}).checkDemandPrices(new float[]{3000}).notifyDemandRates(new float[]{1f}).checkPower(10);
+        testEomOperator.makeBid(lst).checkDemandQuantities(new float[]{2.5f}).checkDemandPrices(new float[]{3000}).notifyDemandRates(new float[]{1f}).checkPower(10);
+        TimeUtil.startAt(1);
+        testEomOperator.makeBid(lst).checkDemandQuantities(new float[]{2.5f}).checkDemandPrices(new float[]{3000}).notifyDemandRates(new float[]{.5f}).checkPower(5);
 
         
 //        TimeUtil.startAt(1);

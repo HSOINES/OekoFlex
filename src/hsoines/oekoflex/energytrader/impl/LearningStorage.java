@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 
 import hsoines.oekoflex.bid.Bid;
+import hsoines.oekoflex.bid.BidType;
 import hsoines.oekoflex.bid.EnergyDemand;
 import hsoines.oekoflex.bid.EnergySupply;
 import hsoines.oekoflex.energytrader.BalancingMarketTrader;
@@ -33,8 +34,9 @@ public class LearningStorage implements EOMTrader, BalancingMarketTrader{
     private float dischargePower;
     private float energyCapacity;
     private PriceForwardCurve pfc;
-	
-    public LearningStorage(final String name, final String description,final int powerMax, final int powerMin, final int chargePower, final int dischargePower, final float startStopCosts,final PriceForwardCurve priceForwardCurve,final float marginalCosts) {
+	private EnergyTradeElement currentAssignment;
+
+	public LearningStorage(final String name, final String description,final int powerMax, final int powerMin, final int chargePower, final int dischargePower, final float startStopCosts,final PriceForwardCurve priceForwardCurve,final float marginalCosts) {
 		this.name = name;
 		this.description = description;
 		this.pfc = priceForwardCurve;
@@ -65,8 +67,7 @@ public class LearningStorage implements EOMTrader, BalancingMarketTrader{
 
 	@Override
 	public List<EnergyTradeElement> getCurrentAssignments() {
-		// TODO Auto-generated method stub
-		return null;
+		return Collections.singletonList(currentAssignment);
 	}
 
 	@Override
@@ -82,7 +83,9 @@ public class LearningStorage implements EOMTrader, BalancingMarketTrader{
 	@Override
 	public void notifyClearingDone(Date currentDate, Market market, Bid bid, float clearedPrice, float rate) {
 		if(market.equals(Market.SPOT_MARKET)){
-			energyTradeRegistry.addAssignedQuantity(currentDate, market, bid.getPrice(), clearedPrice, bid.getQuantity(), rate, bid.getBidType());
+			float maxPower = bid.getBidType()== BidType.ENERGY_DEMAND? chargePower:dischargePower;
+			currentAssignment = new EnergyTradeElement(TimeUtil.getTick(currentDate),
+					market, bid.getPrice(),clearedPrice, bid.getQuantity(),rate, maxPower, bid.getBidType());
 			switch(bid.getBidType()){
 				case ENERGY_SUPPLY:
 					stateOfCharge -= (bid.getQuantity() * rate)/energyCapacity;
@@ -215,9 +218,7 @@ public class LearningStorage implements EOMTrader, BalancingMarketTrader{
 
 	@Override
 	public float getCurrentPower() {
-		// TODO Auto-generated method stub
-		// Ask how state of charge mal xyz
-		return 0;
+		return currentAssignment.getOfferedQuantity()*currentAssignment.getRate()/TimeUtil.HOUR_PER_TICK;
 	}
 
 	public float getStateOfCharge() {
