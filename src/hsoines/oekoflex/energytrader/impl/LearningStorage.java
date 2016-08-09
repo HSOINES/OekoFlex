@@ -188,20 +188,21 @@ public class LearningStorage implements EOMTrader, BalancingMarketTrader{
 		
 		
 		float curPrice = pfc.getPriceOnTick(currentTick);
-//		
-//		if(curPrice > matchLow && stateOfCharge*energyCapacity > dischargePower*TimeUtil.HOUR_PER_TICK){
-//	        eomMarketOperator.addSupply(new EnergySupply(-3000f, dischargePower*TimeUtil.HOUR_PER_TICK, this));
-//
-//		}else if(curPrice < matchHigh &&  stateOfCharge*energyCapacity > chargePower*TimeUtil.HOUR_PER_TICK){
-//			eomMarketOperator.addDemand(new EnergyDemand(3000f, chargePower*TimeUtil.HOUR_PER_TICK, this));
-//		}
+
+		if(curPrice > matchLow && stateOfCharge*energyCapacity > dischargePower*TimeUtil.HOUR_PER_TICK){
+	        eomMarketOperator.addSupply(new EnergySupply(-3000f, dischargePower*TimeUtil.HOUR_PER_TICK, this));
+
+		}else if(curPrice < matchHigh &&  stateOfCharge*energyCapacity > chargePower*TimeUtil.HOUR_PER_TICK){
+			eomMarketOperator.addDemand(new EnergyDemand(3000f, chargePower*TimeUtil.HOUR_PER_TICK, this));
+		}
+/*
 		if(curPrice > matchHigh){
 			eomMarketOperator.addDemand(new EnergyDemand(3000f, chargePower*TimeUtil.HOUR_PER_TICK, this));
 
 		}else if(curPrice < matchLow){
 	        eomMarketOperator.addSupply(new EnergySupply(-3000f, dischargePower*TimeUtil.HOUR_PER_TICK, this));
-
 		}
+		*/
 		
 		
 	}
