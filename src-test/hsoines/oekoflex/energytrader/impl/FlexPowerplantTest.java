@@ -27,6 +27,7 @@ import static org.mockito.Mockito.*;
  * Date: 27/01/16
  * Time: 22:15
  */
+@Deprecated
 public class FlexPowerplantTest {
 
     public static final float SHUTDOWN_COSTS = 100f;

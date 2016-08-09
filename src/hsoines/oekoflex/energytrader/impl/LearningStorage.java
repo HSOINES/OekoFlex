@@ -135,11 +135,11 @@ public class LearningStorage implements EOMTrader, BalancingMarketTrader{
 
 	@Override
 	public void makeBidEOM(long currentTick) {
-		int numberOfLowest = (int)Math.floor((energyCapacity*stateOfCharge)/chargePower);
-		int numberOfHighest = (int)Math.floor((energyCapacity*(1.0f-stateOfCharge))/chargePower);
+		int numberOfDischarge = (int)Math.floor((energyCapacity*stateOfCharge)/chargePower);
+		int numberOfCharge = (int)Math.floor((energyCapacity*(1.0f-stateOfCharge))/chargePower);
 		
-		List<Long> lowestTicks = pfc.getTicksWithLowestPrices(numberOfLowest, TimeUtil.getCurrentTick(), 96);
-		List<Long> highestTicks =  pfc.getTicksWithHighestPrices(numberOfHighest, TimeUtil.getCurrentTick(), 96);
+		List<Long> lowestTicks = pfc.getTicksWithLowestPrices(numberOfDischarge, TimeUtil.getCurrentTick(), 96);
+		List<Long> highestTicks =  pfc.getTicksWithHighestPrices(numberOfCharge, TimeUtil.getCurrentTick(), 96);
 		
 		List<Float> lowestPrices = new ArrayList<>();
 		List<Float> highestPrices = new ArrayList<>();
@@ -189,22 +189,18 @@ public class LearningStorage implements EOMTrader, BalancingMarketTrader{
 		
 		float curPrice = pfc.getPriceOnTick(currentTick);
 
-		if(curPrice > matchLow && stateOfCharge*energyCapacity > dischargePower*TimeUtil.HOUR_PER_TICK){
+/*		if(curPrice > matchLow && stateOfCharge*energyCapacity > dischargePower*TimeUtil.HOUR_PER_TICK){
 	        eomMarketOperator.addSupply(new EnergySupply(-3000f, dischargePower*TimeUtil.HOUR_PER_TICK, this));
 
 		}else if(curPrice < matchHigh &&  stateOfCharge*energyCapacity > chargePower*TimeUtil.HOUR_PER_TICK){
 			eomMarketOperator.addDemand(new EnergyDemand(3000f, chargePower*TimeUtil.HOUR_PER_TICK, this));
 		}
-/*
-		if(curPrice > matchHigh){
+	*/
+		if( numberOfDischarge > 0 && curPrice > matchHigh){
+			eomMarketOperator.addSupply(new EnergySupply(-3000f, dischargePower*TimeUtil.HOUR_PER_TICK, this));
+		}else if(numberOfCharge > 0 && curPrice < matchLow){
 			eomMarketOperator.addDemand(new EnergyDemand(3000f, chargePower*TimeUtil.HOUR_PER_TICK, this));
-
-		}else if(curPrice < matchLow){
-	        eomMarketOperator.addSupply(new EnergySupply(-3000f, dischargePower*TimeUtil.HOUR_PER_TICK, this));
 		}
-		*/
-		
-		
 	}
 	
 	private boolean checkPositiveSpread(Float highMArketPrice , Float lowMarketPrice){
