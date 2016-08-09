@@ -83,8 +83,5 @@ public class LearningStorageImplTest {
 //        assertEquals(14.333333f, FlexPowerplant2.calculateMarginalCosts(variableCosts, fuelCosts, co2CertificateCosts, emissionRate, efficiency), 0.00001f);
 //    }
 
-    @Test
-    public void testName() throws Exception {
-    }
 
 }

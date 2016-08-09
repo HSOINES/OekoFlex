@@ -57,7 +57,7 @@ public class LearningStorage implements EOMTrader, BalancingMarketTrader{
     	powerTradeRegistry = new TradeRegistryImpl(TradeRegistry.Type.PRODUCE_AND_CONSUM, energyCapacity, 1000);
         setStateOfCharge(0.0f);
         
-        energyCapacity = 100.0f;// Constructor setting energyCapacity???
+        energyCapacity = 120.0f;// Constructor setting energyCapacity???
     }
 
 	@Override
