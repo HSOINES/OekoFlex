@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * User: jh
@@ -110,7 +111,8 @@ public class TestSpotMarketOperator implements SpotMarketOperator {
         return this;
     }
 
-    public TestSpotMarketOperator checkQuantities(final float[] quantities) {
+    public TestSpotMarketOperator checkSupplyQuantities(final float[] quantities) {
+        assertTrue("Supply quantity not same: " + energySupplies.size(), quantities.length == energySupplies.size());
         for (int i = 0; i < quantities.length; i++) {
             final EnergySupply energySupply = energySupplies.get(energySupplies.size() - quantities.length + i);
             assertEquals(quantities[i], energySupply.getQuantity(), 0.001f);

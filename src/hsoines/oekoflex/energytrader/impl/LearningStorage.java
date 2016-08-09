@@ -45,10 +45,17 @@ public class LearningStorage implements EOMTrader, BalancingMarketTrader{
     }
 
     public void init() {
+    	// EOM/Spotmarket traderegistry
     	energyTradeRegistry = new TradeRegistryImpl(TradeRegistry.Type.PRODUCE, energyCapacity, 1000);
+    	
+    	// Why not :
+//    	energyTradeRegistry = new TradeRegistryImpl(TradeRegistry.Type.PRODUCE_AND_CONSUM, energyCapacity, 1000);
+    	
+    	// BPM traderegistry
     	powerTradeRegistry = new TradeRegistryImpl(TradeRegistry.Type.PRODUCE_AND_CONSUM, energyCapacity, 1000);
         setStateOfCharge(0.0f);
-        energyCapacity = 100.0f;
+        
+        energyCapacity = 100.0f;// Constructor setting energyCapacity???
     }
 
 	@Override
@@ -74,7 +81,20 @@ public class LearningStorage implements EOMTrader, BalancingMarketTrader{
 
 	@Override
 	public void notifyClearingDone(Date currentDate, Market market, Bid bid, float clearedPrice, float rate) {
-		// TODO Auto-generated method stub
+		if(market.equals(Market.SPOT_MARKET)){
+			energyTradeRegistry.addAssignedQuantity(currentDate, market, bid.getPrice(), clearedPrice, bid.getQuantity(), rate, bid.getBidType());
+			switch(bid.getBidType()){
+				case ENERGY_SUPPLY:
+					stateOfCharge -= (bid.getQuantity() * rate)/energyCapacity;
+					break;
+				case ENERGY_DEMAND:
+					stateOfCharge += (bid.getQuantity() * rate)/energyCapacity;
+					break;
+				default:
+					throw new IllegalStateException("neither ENERGY_SUPPLY nor ENERGY_DEMAND Bidtype");
+			}
+			
+		}
 		
 	}
 
@@ -126,15 +146,15 @@ public class LearningStorage implements EOMTrader, BalancingMarketTrader{
 		}
 		
 		for (Long highestTick : highestTicks){
-			lowestPrices.add(pfc.getPriceOnTick(highestTick));
+			highestPrices.add(pfc.getPriceOnTick(highestTick));
 		}
 		
 		
 		lowestPrices.sort(Float::compare); // sorts asc
 		Collections.reverse(lowestPrices); // reverse to have list desc
 		highestPrices.sort(Float::compare);// sorts asc
-		
-		java.util.Collections.reverse(lowestPrices);
+		//Collections.reverse(highestPrices); // reverse to have list desc
+
 		
 		int minIndex = Math.min(lowestPrices.size(), highestPrices.size());
 		int targetIndex = 0;
@@ -165,14 +185,20 @@ public class LearningStorage implements EOMTrader, BalancingMarketTrader{
 		
 		
 		float curPrice = pfc.getPriceOnTick(currentTick);
-		
+//		
+//		if(curPrice > matchLow && stateOfCharge*energyCapacity > dischargePower*TimeUtil.HOUR_PER_TICK){
+//	        eomMarketOperator.addSupply(new EnergySupply(-3000f, dischargePower*TimeUtil.HOUR_PER_TICK, this));
+//
+//		}else if(curPrice < matchHigh &&  stateOfCharge*energyCapacity > chargePower*TimeUtil.HOUR_PER_TICK){
+//			eomMarketOperator.addDemand(new EnergyDemand(3000f, chargePower*TimeUtil.HOUR_PER_TICK, this));
+//		}
 		if(curPrice > matchHigh){
-	        eomMarketOperator.addSupply(new EnergySupply(-3000f, dischargePower*TimeUtil.HOUR_PER_TICK, this));
+			eomMarketOperator.addDemand(new EnergyDemand(3000f, chargePower*TimeUtil.HOUR_PER_TICK, this));
 
 		}else if(curPrice < matchLow){
-			eomMarketOperator.addDemand(new EnergyDemand(3000f, chargePower*TimeUtil.HOUR_PER_TICK, this));
+	        eomMarketOperator.addSupply(new EnergySupply(-3000f, dischargePower*TimeUtil.HOUR_PER_TICK, this));
+
 		}
-	
 		
 		
 	}
