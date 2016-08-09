@@ -120,10 +120,27 @@ public class TestSpotMarketOperator implements SpotMarketOperator {
         return this;
     }
 
-    public TestSpotMarketOperator notifyRates(final float[] rates) {
+    public TestSpotMarketOperator checkDemandQuantities(final float[] quantities) {
+        assertTrue("Demand quantity not same: " + energyDemands.size(), quantities.length == energyDemands.size());
+        for (int i = 0; i < quantities.length; i++) {
+            final EnergyDemand energyDemand = energyDemands.get(energyDemands.size() - quantities.length + i);
+            assertEquals(quantities[i], energyDemand.getQuantity(), 0.001f);
+        }
+        return this;
+    }
+
+    public TestSpotMarketOperator notifySupplyRates(final float[] rates) {
         for (int i = 0; i < rates.length; i++) {
             final EnergySupply energySupply = energySupplies.get(energySupplies.size() - rates.length + i);
             eomTrader.notifyClearingDone(TimeUtil.getCurrentDate(), Market.SPOT_MARKET, energySupply, 0, rates[i]);
+        }
+        return this;
+    }
+
+    public TestSpotMarketOperator notifyDemandRates(final float[] rates) {
+        for (int i = 0; i < rates.length; i++) {
+            final EnergyDemand energyDemand = energyDemands.get(energyDemands.size() - rates.length + i);
+            eomTrader.notifyClearingDone(TimeUtil.getCurrentDate(), Market.SPOT_MARKET, energyDemand, 0, rates[i]);
         }
         return this;
     }
@@ -133,10 +150,18 @@ public class TestSpotMarketOperator implements SpotMarketOperator {
         return this;
     }
 
-    public TestSpotMarketOperator checkPrices(final float[] prices) {
+    public TestSpotMarketOperator checkSupplyPrices(final float[] prices) {
         for (int i = 0; i < prices.length; i++) {
             final EnergySupply energySupply = energySupplies.get(energySupplies.size() - prices.length + i);
             assertEquals(prices[i], energySupply.getPrice(), 0.001f);
+        }
+        return this;
+    }
+
+   public TestSpotMarketOperator checkDemandPrices(final float[] prices) {
+        for (int i = 0; i < prices.length; i++) {
+            final EnergyDemand energyDemand = energyDemands.get(energyDemands.size() - prices.length + i);
+            assertEquals(prices[i], energyDemand.getPrice(), 0.001f);
         }
         return this;
     }

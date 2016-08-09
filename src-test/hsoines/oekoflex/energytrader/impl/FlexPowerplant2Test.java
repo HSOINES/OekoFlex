@@ -60,21 +60,21 @@ public class FlexPowerplant2Test {
         TimeUtil.startAt(0);
         assertEquals(256, priceForwardCurve.getPriceSummation(TimeUtil.getCurrentTick(), 16), 0.00001f);
         testBalancingMarketOperator.makeBid(flexpowerplant).checkPowerPos(33.3333f, 57.6f).checkPowerNeg(0, 0).notifyRatePos(1).notifyRateNeg(0);
-        testEomOperator.makeBid(flexpowerplant).checkSupplyQuantities(new float[]{500, 16.666667f}).checkPrices(new float[]{-120 + 2, 2}).notifyRates(new float[]{1f, 1f}).checkPower(2066.66667f);
+        testEomOperator.makeBid(flexpowerplant).checkSupplyQuantities(new float[]{500, 16.666667f}).checkSupplyPrices(new float[]{-120 + 2, 2}).notifySupplyRates(new float[]{1f, 1f}).checkPower(2066.66667f);
 
         TimeUtil.startAt(1);
-        testEomOperator.makeBid(flexpowerplant).checkSupplyQuantities(new float[]{500, 33.33333f}).checkPrices(new float[]{-120 + 2, 2}).notifyRates(new float[]{1f, 1f}).checkPower(2133.3333f);
+        testEomOperator.makeBid(flexpowerplant).checkSupplyQuantities(new float[]{500, 33.33333f}).checkSupplyPrices(new float[]{-120 + 2, 2}).notifySupplyRates(new float[]{1f, 1f}).checkPower(2133.3333f);
         TimeUtil.startAt(2);
-        testEomOperator.makeBid(flexpowerplant).checkSupplyQuantities(new float[]{500, 50}).checkPrices(new float[]{-120 + 2, 2}).notifyRates(new float[]{1f, 1f}).checkPower(2200);
+        testEomOperator.makeBid(flexpowerplant).checkSupplyQuantities(new float[]{500, 50}).checkSupplyPrices(new float[]{-120 + 2, 2}).notifySupplyRates(new float[]{1f, 1f}).checkPower(2200);
         TimeUtil.startAt(3);
-        testEomOperator.makeBid(flexpowerplant).checkSupplyQuantities(new float[]{500, 66.6666f}).checkPrices(new float[]{-120 + 2, 2}).notifyRates(new float[]{1f, 1f}).checkPower(2266.6666f);
+        testEomOperator.makeBid(flexpowerplant).checkSupplyQuantities(new float[]{500, 66.6666f}).checkSupplyPrices(new float[]{-120 + 2, 2}).notifySupplyRates(new float[]{1f, 1f}).checkPower(2266.6666f);
         TimeUtil.startAt(4);
-        testEomOperator.makeBid(flexpowerplant).checkSupplyQuantities(new float[]{516.6666f, 66.6666f}).checkPrices(new float[]{-120 + 2, 2}).notifyRates(new float[]{1f, 1f}).checkPower(2333.3333f);
+        testEomOperator.makeBid(flexpowerplant).checkSupplyQuantities(new float[]{516.6666f, 66.6666f}).checkSupplyPrices(new float[]{-120 + 2, 2}).notifySupplyRates(new float[]{1f, 1f}).checkPower(2333.3333f);
         TimeUtil.startAt(5);
-        testEomOperator.makeBid(flexpowerplant).checkSupplyQuantities(new float[]{533.3333f, 58.3333f}).checkPrices(new float[]{-120 + 2, 2}).notifyRates(new float[]{1f, 1f}).checkPower(2366.6666f);
+        testEomOperator.makeBid(flexpowerplant).checkSupplyQuantities(new float[]{533.3333f, 58.3333f}).checkSupplyPrices(new float[]{-120 + 2, 2}).notifySupplyRates(new float[]{1f, 1f}).checkPower(2366.6666f);
         for (int i = 6; i < 16; i++) {
             TimeUtil.startAt(i);
-            testEomOperator.makeBid(flexpowerplant).checkSupplyQuantities(new float[]{541.6666f, 50f}).checkPrices(new float[]{-120 + 2, 2}).notifyRates(new float[]{1f, 1f}).checkPower(2366.6666f);
+            testEomOperator.makeBid(flexpowerplant).checkSupplyQuantities(new float[]{541.6666f, 50f}).checkSupplyPrices(new float[]{-120 + 2, 2}).notifySupplyRates(new float[]{1f, 1f}).checkPower(2366.6666f);
         }
         TimeUtil.startAt(16);
         //PFC = -9

@@ -21,15 +21,7 @@ import static org.junit.Assert.assertEquals;
  * Time: 21:22
  */
 public class LearningStorageImplTest {
-    public static final float START_STOP_COSTS = 100f;
-    public static final float MARGINAL_COSTS = 2f;
-    public static final int POWER_RAMP_DOWN = 200;
-    public static final int POWER_RAMP_UP = 100;
-    public static final int POWER_MIN = 2000;
-    public static final int POWER_MAX = 2400;
-    public static final int POSITIVE_DEMAND_BALANCING = 100;
-    public static final int NEGATIVE_DEMAND_BALANCING = 100;
-    public static final float EFFICIENCY = .25f;
+
     private TestBalancingMarketOperator testBalancingMarketOperator;
     private TestSpotMarketOperator testEomOperator;
     private PriceForwardCurve priceForwardCurve;
@@ -55,23 +47,23 @@ public class LearningStorageImplTest {
     @Test
     public void testSpotMarketBid() throws Exception {
         TimeUtil.startAt(0);
-//        testEomOperator.makeBid(lst).checkQuantities(new float[]{500, 16.666667f}).checkPrices(new float[]{-120 + 2, 2}).notifyRates(new float[]{1f, 1f}).checkPower(2066.66667f);
-        	testEomOperator.makeBid(lst).checkSupplyQuantities(new float[]{2.5f}).checkPrices(new float[]{3000}).notifyRates(new float[]{1f}).checkPower(10);
+//        testEomOperator.makeBid(lst).checkQuantities(new float[]{500, 16.666667f}).checkSupplyPrices(new float[]{-120 + 2, 2}).notifySupplyRates(new float[]{1f, 1f}).checkPower(2066.66667f);
+        	testEomOperator.makeBid(lst).checkDemandQuantities(new float[]{2.5f}).checkDemandPrices(new float[]{3000}).notifyDemandRates(new float[]{1f}).checkPower(10);
 
         
 //        TimeUtil.startAt(1);
-//        testEomOperator.makeBid(flexpowerplant).checkQuantities(new float[]{2,5f}).checkPrices(new float[]{3000}).notifyRates(new float[]{1f}).checkPower(10);
+//        testEomOperator.makeBid(flexpowerplant).checkQuantities(new float[]{2,5f}).checkSupplyPrices(new float[]{3000}).notifySupplyRates(new float[]{1f}).checkPower(10);
 //        TimeUtil.startAt(2);
-//        testEomOperator.makeBid(flexpowerplant).checkQuantities(new float[]{500, 50}).checkPrices(new float[]{-120 + 2, 2}).notifyRates(new float[]{1f, 1f}).checkPower(2200);
+//        testEomOperator.makeBid(flexpowerplant).checkQuantities(new float[]{500, 50}).checkSupplyPrices(new float[]{-120 + 2, 2}).notifySupplyRates(new float[]{1f, 1f}).checkPower(2200);
 //        TimeUtil.startAt(3);
-//        testEomOperator.makeBid(flexpowerplant).checkQuantities(new float[]{500, 66.6666f}).checkPrices(new float[]{-120 + 2, 2}).notifyRates(new float[]{1f, 1f}).checkPower(2266.6666f);
+//        testEomOperator.makeBid(flexpowerplant).checkQuantities(new float[]{500, 66.6666f}).checkSupplyPrices(new float[]{-120 + 2, 2}).notifySupplyRates(new float[]{1f, 1f}).checkPower(2266.6666f);
 //        TimeUtil.startAt(4);
-//        testEomOperator.makeBid(flexpowerplant).checkQuantities(new float[]{516.6666f, 66.6666f}).checkPrices(new float[]{-120 + 2, 2}).notifyRates(new float[]{1f, 1f}).checkPower(2333.3333f);
+//        testEomOperator.makeBid(flexpowerplant).checkQuantities(new float[]{516.6666f, 66.6666f}).checkSupplyPrices(new float[]{-120 + 2, 2}).notifySupplyRates(new float[]{1f, 1f}).checkPower(2333.3333f);
 //        TimeUtil.startAt(5);
-//        testEomOperator.makeBid(flexpowerplant).checkQuantities(new float[]{533.3333f, 58.3333f}).checkPrices(new float[]{-120 + 2, 2}).notifyRates(new float[]{1f, 1f}).checkPower(2366.6666f);
+//        testEomOperator.makeBid(flexpowerplant).checkQuantities(new float[]{533.3333f, 58.3333f}).checkSupplyPrices(new float[]{-120 + 2, 2}).notifySupplyRates(new float[]{1f, 1f}).checkPower(2366.6666f);
 //        for (int i = 6; i < 16; i++) {
 //            TimeUtil.startAt(i);
-//            testEomOperator.makeBid(flexpowerplant).checkQuantities(new float[]{541.6666f, 50f}).checkPrices(new float[]{-120 + 2, 2}).notifyRates(new float[]{1f, 1f}).checkPower(2366.6666f);
+//            testEomOperator.makeBid(flexpowerplant).checkQuantities(new float[]{541.6666f, 50f}).checkSupplyPrices(new float[]{-120 + 2, 2}).notifySupplyRates(new float[]{1f, 1f}).checkPower(2366.6666f);
 //        }
 //        TimeUtil.startAt(16);
 //        //PFC = -9
