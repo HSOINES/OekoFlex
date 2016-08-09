@@ -138,8 +138,8 @@ public class LearningStorage implements EOMTrader, BalancingMarketTrader{
 		int numberOfDischarge = (int)Math.floor((energyCapacity*stateOfCharge)/dischargePower);
 		int numberOfCharge = (int)Math.floor((energyCapacity*(1.0f-stateOfCharge))/chargePower);
 		
-		List<Long> lowestTicks = pfc.getTicksWithLowestPrices(numberOfDischarge, TimeUtil.getCurrentTick(), 96);
-		List<Long> highestTicks =  pfc.getTicksWithHighestPrices(numberOfCharge, TimeUtil.getCurrentTick(), 96);
+		List<Long> lowestTicks = pfc.getTicksWithLowestPrices(numberOfCharge, TimeUtil.getCurrentTick(), 96);
+		List<Long> highestTicks =  pfc.getTicksWithHighestPrices(numberOfDischarge , TimeUtil.getCurrentTick(), 96);
 		
 		List<Float> lowestPrices = new ArrayList<>();
 		List<Float> highestPrices = new ArrayList<>();
