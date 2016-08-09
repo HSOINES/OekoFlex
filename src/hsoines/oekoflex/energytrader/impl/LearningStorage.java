@@ -57,7 +57,7 @@ public class LearningStorage implements EOMTrader, BalancingMarketTrader{
     	powerTradeRegistry = new TradeRegistryImpl(TradeRegistry.Type.PRODUCE_AND_CONSUM, energyCapacity, 1000);
         setStateOfCharge(0.0f);
         
-        energyCapacity = 120.0f;// Constructor setting energyCapacity???
+        energyCapacity = 160.0f;// Constructor setting energyCapacity???
     }
 
 	@Override
@@ -135,7 +135,7 @@ public class LearningStorage implements EOMTrader, BalancingMarketTrader{
 
 	@Override
 	public void makeBidEOM(long currentTick) {
-		int numberOfDischarge = (int)Math.floor((energyCapacity*stateOfCharge)/chargePower);
+		int numberOfDischarge = (int)Math.floor((energyCapacity*stateOfCharge)/dischargePower);
 		int numberOfCharge = (int)Math.floor((energyCapacity*(1.0f-stateOfCharge))/chargePower);
 		
 		List<Long> lowestTicks = pfc.getTicksWithLowestPrices(numberOfDischarge, TimeUtil.getCurrentTick(), 96);
@@ -159,7 +159,7 @@ public class LearningStorage implements EOMTrader, BalancingMarketTrader{
 		//Collections.reverse(highestPrices); // reverse to have list desc
 
 		
-		int minIndex = Math.min(lowestPrices.size(), highestPrices.size());
+		int minIndex = Math.min(lowestPrices.size()-1, highestPrices.size()-1);
 		int targetIndex = 0;
 		float matchHigh = 3000.0f;
 		float matchLow = -3000.0f;
@@ -181,7 +181,7 @@ public class LearningStorage implements EOMTrader, BalancingMarketTrader{
 			matchHigh = highestPrices.get(targetIndex);	
 		}
 		
-		if (lowestPrices.size() > targetIndex ){
+		if (lowestPrices.size() > targetIndex){
 			matchLow = lowestPrices.get(targetIndex);	
 		}
 		
