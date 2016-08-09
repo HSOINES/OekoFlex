@@ -52,7 +52,6 @@ public class FlexPowerplant2Test {
                 priceForwardCurve, MARGINAL_COSTS);
         flexpowerplant.setBalancingMarketOperator(testBalancingMarketOperator);
         flexpowerplant.setSpotMarketOperator(testEomOperator);
-
     }
 
     @Test
@@ -77,8 +76,8 @@ public class FlexPowerplant2Test {
             testEomOperator.makeBid(flexpowerplant).checkSupplyQuantities(new float[]{541.6666f, 50f}).checkSupplyPrices(new float[]{-120 + 2, 2}).notifySupplyRates(new float[]{1f, 1f}).checkPower(2366.6666f);
         }
         TimeUtil.startAt(16);
-        //PFC = -9
-        testBalancingMarketOperator.makeBid(flexpowerplant).checkPowerPos(33.3333f, 2641.6064f).checkPowerNeg(66.6666f, 0).notifyRatePos(1).notifyRateNeg(0);//todo: preis prüfen
+        //PFC = -9, MC=2, Pmin=2000, Pangebot=66.66666, => 17.54
+        testBalancingMarketOperator.makeBid(flexpowerplant).checkPowerPos(33.3333f, 2641.6064f).checkPowerNeg(66.6666f, 1362.4f).notifyRatePos(1).notifyRateNeg(0);//todo: preis prüfen
 
     }
 
