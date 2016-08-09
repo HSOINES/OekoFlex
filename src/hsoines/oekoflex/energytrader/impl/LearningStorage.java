@@ -207,7 +207,7 @@ public class LearningStorage implements EOMTrader, BalancingMarketTrader{
 		
 		float spread = highMArketPrice - lowMarketPrice; // TODO later impl complete formula
 		
-		return (spread < 0.0001f);
+		return (spread > 0.0001f);
 		
 	}
 	
