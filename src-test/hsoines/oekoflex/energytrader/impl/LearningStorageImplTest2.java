@@ -1,6 +1,5 @@
 package hsoines.oekoflex.energytrader.impl;
 
-import static org.junit.Assert.*;
 import hsoines.oekoflex.energytrader.tools.TestBalancingMarketOperator;
 import hsoines.oekoflex.energytrader.tools.TestSpotMarketOperator;
 import hsoines.oekoflex.priceforwardcurve.PriceForwardCurve;
@@ -31,7 +30,7 @@ public class LearningStorageImplTest2 {
 	        final File priceForwardOutFile = new File("src-test/resources/pfc-learning-storage2.csv");
 	        priceForwardCurve = new PriceForwardCurveImpl(priceForwardOutFile);
 	        priceForwardCurve.readData();
-	        lst = new LearningStorage("l1", "skf", 120, 120, 10, 10, 0, priceForwardCurve, 0);
+	        lst = new LearningStorage("l1", "learningStorageTestFacility", 40, 40, 0, priceForwardCurve, 0, 160.0f, 0.25f);
 	        lst.setStateOfCharge(0.25f);
 	        lst.setBalancingMarketOperator(testBalancingMarketOperator);
 	        lst.setSpotMarketOperator(testEomOperator);
@@ -41,18 +40,19 @@ public class LearningStorageImplTest2 {
 	    @Test
 	    public void testSpotMarketBid() throws Exception {
 	        TimeUtil.startAt(0);
-	        testEomOperator.makeBid(lst).checkDemandQuantities(new float[]{}).checkSupplyPrices(new float[]{}).checkSupplyQuantities(new float[]{}).checkDemandPrices(new float[]{}).notifyDemandRates(new float[]{});
+	        testEomOperator.makeBid(lst).checkDemandQuantities(new float[]{}).checkSupplyPrices(new float[]{}).checkSupplyQuantities(new float[]{}).checkDemandPrices(new float[]{}).notifyDemandRates(new float[]{}).checkStateOfCharge(40.0f/160.0f);
 	        TimeUtil.startAt(1);
-	        testEomOperator.makeBid(lst).checkDemandQuantities(new float[]{}).checkSupplyPrices(new float[]{}).checkSupplyQuantities(new float[]{}).checkDemandPrices(new float[]{}).notifyDemandRates(new float[]{});
+	        testEomOperator.makeBid(lst).checkDemandQuantities(new float[]{}).checkSupplyPrices(new float[]{}).checkSupplyQuantities(new float[]{}).checkDemandPrices(new float[]{}).notifyDemandRates(new float[]{}).checkStateOfCharge(40.0f/160.0f);
 	        TimeUtil.startAt(2);
-	        testEomOperator.makeBid(lst).checkDemandQuantities(new float[]{2.5f}).checkDemandPrices(new float[]{3000f}).notifyDemandRates(new float[]{1.0f}).checkPower(10);
-//	        TimeUtil.startAt(3);
-//	        TimeUtil.startAt(4);
-//	        TimeUtil.startAt(5);
-//	        TimeUtil.startAt(6);
-//	        TimeUtil.startAt(7);
-//	        TimeUtil.startAt(8);
-//	        TimeUtil.startAt(9);
+	        testEomOperator.makeBid(lst).checkDemandQuantities(new float[]{10f}).checkDemandPrices(new float[]{3000f}).notifyDemandRates(new float[]{1.0f}).checkPower(40).checkStateOfCharge(50.0f/160.0f);
+	        TimeUtil.startAt(3);
+	        testEomOperator.makeBid(lst).checkDemandQuantities(new float[]{10f}).checkDemandPrices(new float[]{3000f}).checkSupplyPrices(new float[]{}).checkSupplyQuantities(new float[]{}).notifyDemandRates(new float[]{1.0f}).checkPower(40).checkStateOfCharge(60.0f/160.0f);
+	        TimeUtil.startAt(4);
+	        TimeUtil.startAt(5);
+	        TimeUtil.startAt(6);
+	        TimeUtil.startAt(7);
+	        TimeUtil.startAt(8);
+	        TimeUtil.startAt(9);
 //	        
 //	        
 //	        TimeUtil.startAt(10);

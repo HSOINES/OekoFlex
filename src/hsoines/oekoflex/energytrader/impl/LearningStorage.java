@@ -23,46 +23,28 @@ public class LearningStorage implements EOMTrader, BalancingMarketTrader{
 	
 	private final String name;
     private final String description;
-
     private SpotMarketOperator eomMarketOperator;
-    private TradeRegistry energyTradeRegistry;
-    private TradeRegistry powerTradeRegistry;
-    private float lastAssignmentRate;
-    private float lastClearedPrice;
-    private float stateOfCharge;
-    private float chargePower;
-    private float dischargePower;
-    private float energyCapacity;
-    private PriceForwardCurve pfc;
-	private EnergyTradeElement currentAssignment;
-
-	public LearningStorage(final String name, final String description,final int powerMax, final int powerMin, final int chargePower, final int dischargePower, final float startStopCosts,final PriceForwardCurve priceForwardCurve,final float marginalCosts) {
+    private float stateOfCharge;					// Percentage how full/empty the storage is
+    private float chargePower;						// Power that can be charged in 15 Minutes
+    private float dischargePower;					// Power that can be discharged in 15 Minutes
+    private float energyCapacity;					// Whole amount of Power that can stored in stored
+    private PriceForwardCurve pfc;					// PriceForwardCurve for current tick
+	private EnergyTradeElement currentAssignment; 	// only last assignment is needed so this replaces the EOM TradeRegistry 
+	
+	// chargePower and disChargePower is measured as MW  so eg 10MWh/15min = 40 MW
+	public LearningStorage(final String name, final String description, final int chargePower, final int dischargePower, final float startStopCosts,final PriceForwardCurve priceForwardCurve,final float marginalCosts ,final float energyCapacity , final float stateOfCharge) {
 		this.name = name;
-		this.description = description;
-		this.pfc = priceForwardCurve;
-		this.chargePower = chargePower;
-		this.dischargePower = dischargePower;
-		this.dischargePower = this.chargePower; // Delete later, if rampUp and ramDown differ
-		this.init();
+		this.description = description;			
+		this.pfc = priceForwardCurve;			
+		this.chargePower = chargePower;			
+		this.dischargePower = dischargePower;	
+		this.energyCapacity = energyCapacity;	
+		this.stateOfCharge = stateOfCharge;		
     }
-
-    public void init() {
-    	// EOM/Spotmarket traderegistry
-    	energyTradeRegistry = new TradeRegistryImpl(TradeRegistry.Type.PRODUCE, energyCapacity, 1000);
-    	
-    	// Why not :
-//    	energyTradeRegistry = new TradeRegistryImpl(TradeRegistry.Type.PRODUCE_AND_CONSUM, energyCapacity, 1000);
-    	
-    	// BPM traderegistry
-    	powerTradeRegistry = new TradeRegistryImpl(TradeRegistry.Type.PRODUCE_AND_CONSUM, energyCapacity, 1000);
-        setStateOfCharge(0.0f);
-        
-        energyCapacity = 160.0f;// Constructor setting energyCapacity???
-    }
-
+	
 	@Override
 	public float getLastAssignmentRate() {
-		return this.lastAssignmentRate ;
+		return this.currentAssignment.getRate() ;
 	}
 
 	@Override
@@ -82,23 +64,25 @@ public class LearningStorage implements EOMTrader, BalancingMarketTrader{
 
 	@Override
 	public void notifyClearingDone(Date currentDate, Market market, Bid bid, float clearedPrice, float rate) {
+		
 		if(market.equals(Market.SPOT_MARKET)){
-			float maxPower = bid.getBidType()== BidType.ENERGY_DEMAND? chargePower:dischargePower;
-			currentAssignment = new EnergyTradeElement(TimeUtil.getTick(currentDate),
-					market, bid.getPrice(),clearedPrice, bid.getQuantity(),rate, maxPower, bid.getBidType());
-			switch(bid.getBidType()){
+			
+			BidType currentBidType = bid.getBidType();
+			float currentQuantity  = bid.getQuantity();		
+			
+			switch(currentBidType){
 				case ENERGY_SUPPLY:
-					stateOfCharge -= (bid.getQuantity() * rate)/energyCapacity;
+					this.setStateOfCharge(stateOfCharge - (currentQuantity * rate)/energyCapacity);
+					currentAssignment = new EnergyTradeElement(TimeUtil.getTick(currentDate),market, bid.getPrice(),clearedPrice, currentQuantity ,rate, dischargePower, currentBidType);
 					break;
 				case ENERGY_DEMAND:
-					stateOfCharge += (bid.getQuantity() * rate)/energyCapacity;
+					this.setStateOfCharge(stateOfCharge + (currentQuantity * rate)/energyCapacity);
+					currentAssignment = new EnergyTradeElement(TimeUtil.getTick(currentDate),market, bid.getPrice(),clearedPrice, currentQuantity ,rate, chargePower, currentBidType);
 					break;
 				default:
-					throw new IllegalStateException("neither ENERGY_SUPPLY nor ENERGY_DEMAND Bidtype");
+					throw new IllegalStateException("Neither ENERGY_SUPPLY nor ENERGY_DEMAND Bidtype, BidType is: " + currentBidType.toString());
 			}
-			
 		}
-		
 	}
 
 	@Override
@@ -112,20 +96,19 @@ public class LearningStorage implements EOMTrader, BalancingMarketTrader{
 	}
 
 	@Override
-	public void setBalancingMarketOperator(
-		BalancingMarketOperator balancingMarketOperator) {
-		// TODO Auto-generated method stub
-		
+	public void setBalancingMarketOperator(BalancingMarketOperator balancingMarketOperator) {
+		// TODO Auto-generated method stub	
 	}
 
 	@Override
 	public void setSpotMarketOperator(SpotMarketOperator spotMarketOperator) {
 		this.eomMarketOperator = spotMarketOperator;
 	}
-
+	
 	@Override
 	public float getLastClearedPrice() {
-		return lastClearedPrice;
+		return currentAssignment.getAssignedPrice();
+
 	}
 
 	@Override
@@ -135,13 +118,13 @@ public class LearningStorage implements EOMTrader, BalancingMarketTrader{
 
 	@Override
 	public void makeBidEOM(long currentTick) {
-		int numberOfDischarge = (int)Math.floor((energyCapacity*stateOfCharge)/dischargePower);
-		int numberOfCharge = (int)Math.floor((energyCapacity*(1.0f-stateOfCharge))/chargePower);
+		int numberOfDischarge = (int)Math.floor((energyCapacity*stateOfCharge)/(dischargePower*TimeUtil.HOUR_PER_TICK));		// Number of full Units  (that can be discharged before the storage is empty)
+		int numberOfCharge = (int)Math.floor((energyCapacity*(1.0f-stateOfCharge))/(chargePower*TimeUtil.HOUR_PER_TICK));		// Number of empty Units (that can be charged before the storage is empty)
 		
-		List<Long> lowestTicks = pfc.getTicksWithLowestPrices(numberOfCharge, TimeUtil.getCurrentTick(), 96);
+		List<Long> lowestTicks  = pfc.getTicksWithLowestPrices(numberOfCharge, TimeUtil.getCurrentTick(), 96);
 		List<Long> highestTicks =  pfc.getTicksWithHighestPrices(numberOfDischarge , TimeUtil.getCurrentTick(), 96);
 		
-		List<Float> lowestPrices = new ArrayList<>();
+		List<Float> lowestPrices  = new ArrayList<>();
 		List<Float> highestPrices = new ArrayList<>();
 		
 		for (Long lowestTick : lowestTicks){
@@ -152,12 +135,9 @@ public class LearningStorage implements EOMTrader, BalancingMarketTrader{
 			highestPrices.add(pfc.getPriceOnTick(highestTick));
 		}
 		
-		
 		lowestPrices.sort(Float::compare); // sorts asc
 		Collections.reverse(lowestPrices); // reverse to have list desc
 		highestPrices.sort(Float::compare);// sorts asc
-		//Collections.reverse(highestPrices); // reverse to have list desc
-
 		
 		int minIndex = Math.min(lowestPrices.size()-1, highestPrices.size()-1);
 		int targetIndex = 0;
@@ -169,7 +149,7 @@ public class LearningStorage implements EOMTrader, BalancingMarketTrader{
 			float high = highestPrices.get(targetIndex);
 			float low = lowestPrices.get(targetIndex);
 			
-			boolean sp = checkPositiveSpread( high , low);
+			boolean sp = checkPositiveSpread(high, low);
 			
 			if(sp){
 				break;
@@ -185,17 +165,8 @@ public class LearningStorage implements EOMTrader, BalancingMarketTrader{
 			matchLow = lowestPrices.get(targetIndex);	
 		}
 		
-		
-		
 		float curPrice = pfc.getPriceOnTick(currentTick);
-
-/*		if(curPrice > matchLow && stateOfCharge*energyCapacity > dischargePower*TimeUtil.HOUR_PER_TICK){
-	        eomMarketOperator.addSupply(new EnergySupply(-3000f, dischargePower*TimeUtil.HOUR_PER_TICK, this));
-
-		}else if(curPrice < matchHigh &&  stateOfCharge*energyCapacity > chargePower*TimeUtil.HOUR_PER_TICK){
-			eomMarketOperator.addDemand(new EnergyDemand(3000f, chargePower*TimeUtil.HOUR_PER_TICK, this));
-		}
-	*/
+		
 		if( numberOfDischarge > 0 && curPrice > matchHigh){
 			eomMarketOperator.addSupply(new EnergySupply(-3000f, dischargePower*TimeUtil.HOUR_PER_TICK, this));
 		}else if(numberOfCharge > 0 && curPrice < matchLow){
@@ -203,16 +174,15 @@ public class LearningStorage implements EOMTrader, BalancingMarketTrader{
 		}
 	}
 	
-	private boolean checkPositiveSpread(Float highMArketPrice , Float lowMarketPrice){
+	// Checks spread for current high/low price Combination and returns true if spread > 0
+	private boolean checkPositiveSpread(Float highMarketPrice , Float lowMarketPrice){
 		
-		float spread = highMArketPrice - lowMarketPrice; // TODO later impl complete formula
+		float spread = highMarketPrice - lowMarketPrice; // TODO later implement complete formula
 		
 		return (spread > 0.0001f);
 		
 	}
 	
-	
-
 	@Override
 	public float getCurrentPower() {
 		return currentAssignment.getOfferedQuantity()*currentAssignment.getRate()/TimeUtil.HOUR_PER_TICK;
@@ -223,12 +193,11 @@ public class LearningStorage implements EOMTrader, BalancingMarketTrader{
 	}
 
 	public void setStateOfCharge(float stateOfCharge) {
-		if(stateOfCharge > -0.0000001f){
+		if(stateOfCharge > -0.0000001f && stateOfCharge <= 100.0f){
 			this.stateOfCharge = stateOfCharge;
 		}else{
-			throw new IllegalStateException("stateOfCharge would be set to negative level");
+			throw new IllegalStateException("stateOfCharge would be set to an illegal level. Would be set to: " + stateOfCharge);
 		}
 	}
-	
 	
 }

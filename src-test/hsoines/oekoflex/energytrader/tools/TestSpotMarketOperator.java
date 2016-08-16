@@ -3,6 +3,7 @@ package hsoines.oekoflex.energytrader.tools;
 import hsoines.oekoflex.bid.EnergyDemand;
 import hsoines.oekoflex.bid.EnergySupply;
 import hsoines.oekoflex.energytrader.EOMTrader;
+import hsoines.oekoflex.energytrader.impl.LearningStorage;
 import hsoines.oekoflex.marketoperator.SpotMarketOperator;
 import hsoines.oekoflex.util.Market;
 import hsoines.oekoflex.util.TimeUtil;
@@ -168,4 +169,14 @@ public class TestSpotMarketOperator implements SpotMarketOperator {
         }
         return this;
     }
+   
+  // Checks if eomTrader is a Storage and then
+  // Compares expected StateofCharge with StateofCharge for current tick
+  public TestSpotMarketOperator checkStateOfCharge(final float socExcpected){
+	  if(eomTrader instanceof LearningStorage){
+		  LearningStorage ls = (LearningStorage)eomTrader;
+		  assertEquals(socExcpected , ls.getStateOfCharge(), 0.001f);
+	  }
+	  return this;
+  }
 }

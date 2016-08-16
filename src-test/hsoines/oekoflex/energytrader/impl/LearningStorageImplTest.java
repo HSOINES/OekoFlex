@@ -38,7 +38,7 @@ public class LearningStorageImplTest {
         final File priceForwardOutFile = new File("src-test/resources/pfc-learning-storage.csv");
         priceForwardCurve = new PriceForwardCurveImpl(priceForwardOutFile);
         priceForwardCurve.readData();
-        lst = new LearningStorage("l1", "skf", 120, 120, 10, 10, 0, priceForwardCurve, 0);
+        lst = new LearningStorage("l1", "skl", 10, 10, 0, priceForwardCurve, 0,160.0f,0.0f);
         lst.setBalancingMarketOperator(testBalancingMarketOperator);
         lst.setSpotMarketOperator(testEomOperator);
 
