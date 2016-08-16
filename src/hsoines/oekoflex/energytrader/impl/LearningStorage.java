@@ -32,7 +32,7 @@ public class LearningStorage implements EOMTrader, BalancingMarketTrader{
 	private EnergyTradeElement currentAssignment; 	// only last assignment is needed so this replaces the EOM TradeRegistry 
 	
 	// chargePower and disChargePower is measured as MW  so eg 10MWh/15min = 40 MW
-	public LearningStorage(final String name, final String description, final int chargePower, final int dischargePower, final float startStopCosts,final PriceForwardCurve priceForwardCurve,final float marginalCosts ,final float energyCapacity , final float stateOfCharge) {
+	LearningStorage(final String name, final String description, final int chargePower, final int dischargePower, final float startStopCosts,final PriceForwardCurve priceForwardCurve,final float marginalCosts ,final float energyCapacity , final float stateOfCharge) {
 		this.name = name;
 		this.description = description;			
 		this.pfc = priceForwardCurve;			
@@ -41,6 +41,10 @@ public class LearningStorage implements EOMTrader, BalancingMarketTrader{
 		this.energyCapacity = energyCapacity;	
 		this.stateOfCharge = stateOfCharge;		
     }
+	
+	 public LearningStorage(final String name, final String description, final int chargePower, final int dischargePower, final float startStopCosts,final PriceForwardCurve priceForwardCurve,final float marginalCosts ,final float energyCapacity ) {
+		 this(name,description,chargePower,dischargePower,startStopCosts,priceForwardCurve,marginalCosts,energyCapacity,0);
+	 }
 	
 	@Override
 	public float getLastAssignmentRate() {

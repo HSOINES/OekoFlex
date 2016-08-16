@@ -2,6 +2,7 @@ package hsoines.oekoflex.builder;
 
 import hsoines.oekoflex.OekoflexAgent;
 import hsoines.oekoflex.builder.traderfactories.FlexPowerplant2Factory;
+import hsoines.oekoflex.builder.traderfactories.LearningStorageFactory;
 import hsoines.oekoflex.builder.traderfactories.StorageFactory;
 import hsoines.oekoflex.builder.traderfactories.TotalLoadFactory;
 import hsoines.oekoflex.domain.SequenceDefinition;
@@ -12,9 +13,11 @@ import hsoines.oekoflex.priceforwardcurve.PriceForwardCurve;
 import hsoines.oekoflex.priceforwardcurve.impl.PriceForwardCurveGenerator;
 import hsoines.oekoflex.priceforwardcurve.impl.PriceForwardCurveImpl;
 import hsoines.oekoflex.summary.impl.EnergyTraderTypeLogger;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
 import repast.simphony.context.Context;
 import repast.simphony.dataLoader.ContextBuilder;
 import repast.simphony.engine.environment.RunEnvironment;
@@ -111,8 +114,9 @@ public class OekoFlexContextBuilder implements ContextBuilder<OekoflexAgent> {
 
             //Producer
             FlexPowerplant2Factory.build(configDir, context, spotMarketOperator, balancingMarketOperator, priceForwardCurve, globalProperties);
-            StorageFactory.build(configDir, context, spotMarketOperator, balancingMarketOperator, priceForwardCurve);
-
+            //StorageFactory.build(configDir, context, spotMarketOperator, balancingMarketOperator, priceForwardCurve);
+            LearningStorageFactory.build(configDir, context, spotMarketOperator, balancingMarketOperator, priceForwardCurve);
+            
             //build pfc
             priceForwardCurveGenerator.generate();
             priceForwardCurve.readData();
