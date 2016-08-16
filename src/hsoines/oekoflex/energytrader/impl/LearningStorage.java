@@ -53,6 +53,9 @@ public class LearningStorage implements EOMTrader, BalancingMarketTrader{
 
 	@Override
 	public List<EnergyTradeElement> getCurrentAssignments() {
+		if(currentAssignment.getBidType() == BidType.NULL_BID){
+			return new ArrayList<EnergyTradeElement>();
+		}
 		return Collections.singletonList(currentAssignment);
 	}
 
@@ -122,6 +125,8 @@ public class LearningStorage implements EOMTrader, BalancingMarketTrader{
 
 	@Override
 	public void makeBidEOM(long currentTick) {
+		this.currentAssignment = new EnergyTradeElement(currentTick, Market.SPOT_MARKET, 0,0, 0 ,0, 0, BidType.NULL_BID);
+		
 		int numberOfDischarge = (int)Math.floor((energyCapacity*stateOfCharge)/(dischargePower*TimeUtil.HOUR_PER_TICK));		// Number of full Units  (that can be discharged before the storage is empty)
 		int numberOfCharge = (int)Math.floor((energyCapacity*(1.0f-stateOfCharge))/(chargePower*TimeUtil.HOUR_PER_TICK));		// Number of empty Units (that can be charged before the storage is empty)
 		
@@ -171,6 +176,7 @@ public class LearningStorage implements EOMTrader, BalancingMarketTrader{
 		
 		float curPrice = pfc.getPriceOnTick(currentTick);
 		
+		
 		if( numberOfDischarge > 0 && curPrice > matchHigh){
 			eomMarketOperator.addSupply(new EnergySupply(-3000f, dischargePower*TimeUtil.HOUR_PER_TICK, this));
 		}else if(numberOfCharge > 0 && curPrice < matchLow){
@@ -197,7 +203,7 @@ public class LearningStorage implements EOMTrader, BalancingMarketTrader{
 	}
 
 	public void setStateOfCharge(float stateOfCharge) {
-		if(stateOfCharge > -0.0000001f && stateOfCharge <= 100.0f){
+		if(stateOfCharge > -0.0000001f && stateOfCharge <= 1.0f){
 			this.stateOfCharge = stateOfCharge;
 		}else{
 			throw new IllegalStateException("stateOfCharge would be set to an illegal level. Would be set to: " + stateOfCharge);
