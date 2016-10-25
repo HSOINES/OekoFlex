@@ -51,6 +51,20 @@ public final class PriceForwardCurveImpl implements PriceForwardCurve {
         }
         return sum;
     }
+    
+    /**
+     * calculates the average price of an interval within the pfc tarting at currentTick and ending at currentick + ticks
+     * 
+     * @param currentTick Tick to start the interval
+     * @param ticks		  amount of ticks to look into the future
+     * @return			  the average price over the given interval
+     */
+    public float avgPriceOverTicks(final long currentTick, final int ticks) {
+        float sum = this.getPriceSummation( currentTick,  ticks);
+        float avg = sum/ticks;
+        return avg;
+    }
+    
 
     @Override
     public float getSpread(final long currentTick, final int ticks) {

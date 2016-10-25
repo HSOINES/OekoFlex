@@ -1,0 +1,6 @@
+tick;traderType;traderName;bidType;offeredPrice;offeredQuantity;assignedQuantity
+1;FlexPowerplant;flexpowerplant;POWER_POSITIVE;17;33,33;33,33;
+1;FlexPowerplant;flexpowerplant;POWER_NEGATIVE;204;66,67;66,67;
+tick;traderType;traderName;bidType;offeredPrice;offeredQuantity;assignedQuantity
+tick;traderType;traderName;bidType;offeredPrice;offeredQuantity;assignedQuantity
+0;FlexPowerplant;flexpowerplant;POWER_POSITIVE;16;33,33;33,33;

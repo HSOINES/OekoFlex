@@ -20,6 +20,7 @@ public class TestSorting {
         for (Float aFloat : list) {
             System.out.println(aFloat);
         }
-
+        
+        System.out.println(list);
     }
 }

@@ -1,0 +1,11 @@
+tick;traderType;traderName;bidType;offeredPrice;clearedPrice;offeredQuantity;assignedQuantity
+0;FlexPowerplant;flexpowerplant;EnergySupplyMustRun;-0,2;3000;500;500;
+0;FlexPowerplant;flexpowerplant;EnergySupply;50;3000;25;25;
+1;FlexPowerplant;flexpowerplant;EnergySupplyMustRun;-0,2;3000;500;500;
+1;FlexPowerplant;flexpowerplant;EnergySupply;50;3000;50;50;
+2;FlexPowerplant;flexpowerplant;EnergySupplyMustRun;-0,19;3000;516,67;516,67;
+2;FlexPowerplant;flexpowerplant;EnergySupply;50;3000;58,33;58,33;
+tick;traderType;traderName;bidType;offeredPrice;clearedPrice;offeredQuantity;assignedQuantity
+tick;traderType;traderName;bidType;offeredPrice;clearedPrice;offeredQuantity;assignedQuantity
+0;FlexPowerplant;flexpowerplant;EnergySupplyMustRun;-0,2;-0,2;500;200;
+0;FlexPowerplant;flexpowerplant;EnergySupply;50;-0,2;25;0;

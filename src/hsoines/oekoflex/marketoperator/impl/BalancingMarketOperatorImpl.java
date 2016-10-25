@@ -23,7 +23,7 @@ import java.util.List;
  * User: jh
  * Date: 27/01/16
  * Time: 20:45
- * Räumt Regelenergiemarkt für a) positive b) negative Leistungen
+ * RÃ¤umt Regelenergiemarkt fÃ¼r a) positive b) negative Leistungen
  */
 public final class BalancingMarketOperatorImpl implements BalancingMarketOperator {
     private static final Log log = LogFactory.getLog(BalancingMarketOperatorImpl.class);

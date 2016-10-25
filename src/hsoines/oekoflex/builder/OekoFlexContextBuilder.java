@@ -2,6 +2,7 @@ package hsoines.oekoflex.builder;
 
 import hsoines.oekoflex.OekoflexAgent;
 import hsoines.oekoflex.builder.traderfactories.FlexPowerplant2Factory;
+import hsoines.oekoflex.builder.traderfactories.FlexPowerplant3Factory;
 import hsoines.oekoflex.builder.traderfactories.LearningStorageFactory;
 import hsoines.oekoflex.builder.traderfactories.StorageFactory;
 import hsoines.oekoflex.builder.traderfactories.TotalLoadFactory;
@@ -109,12 +110,13 @@ public class OekoFlexContextBuilder implements ContextBuilder<OekoflexAgent> {
             PriceForwardCurveGenerator priceForwardCurveGenerator = new PriceForwardCurveGenerator(configDir, daysToRun * SequenceDefinition.DayInterval, priceForwardFile, prerunDays * SequenceDefinition.DayInterval, globalProperties);
             PriceForwardCurve priceForwardCurve = new PriceForwardCurveImpl(priceForwardFile);
 
-            //Consumer
+            //Consumers
             TotalLoadFactory.build(configDir, context, spotMarketOperator, prerunDays * SequenceDefinition.DayInterval);
 
-            //Producer
-            FlexPowerplant2Factory.build(configDir, context, spotMarketOperator, balancingMarketOperator, priceForwardCurve, globalProperties);
-            //StorageFactory.build(configDir, context, spotMarketOperator, balancingMarketOperator, priceForwardCurve);
+            //Producers
+            // FlexPowerplant2Factory.build(configDir, context, spotMarketOperator, balancingMarketOperator, priceForwardCurve, globalProperties);
+            FlexPowerplant3Factory.build(configDir, context, spotMarketOperator, balancingMarketOperator, priceForwardCurve, globalProperties);
+            // StorageFactory.build(configDir, context, spotMarketOperator, balancingMarketOperator, priceForwardCurve);
             LearningStorageFactory.build(configDir, context, spotMarketOperator, balancingMarketOperator, priceForwardCurve);
             
             //build pfc

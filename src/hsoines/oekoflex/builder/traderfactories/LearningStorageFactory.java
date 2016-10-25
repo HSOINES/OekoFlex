@@ -4,7 +4,6 @@ import hsoines.oekoflex.OekoflexAgent;
 import hsoines.oekoflex.builder.CSVParameter;
 import hsoines.oekoflex.builder.OekoFlexContextBuilder;
 import hsoines.oekoflex.energytrader.impl.LearningStorage;
-import hsoines.oekoflex.energytrader.impl.SimpleStorage;
 import hsoines.oekoflex.marketoperator.BalancingMarketOperator;
 import hsoines.oekoflex.marketoperator.SpotMarketOperator;
 import hsoines.oekoflex.priceforwardcurve.PriceForwardCurve;

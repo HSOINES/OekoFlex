@@ -10,6 +10,7 @@ import hsoines.oekoflex.marketoperator.SpotMarketOperator;
 import hsoines.oekoflex.priceforwardcurve.PriceForwardCurve;
 import hsoines.oekoflex.util.Market;
 import hsoines.oekoflex.util.TimeUtil;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -20,20 +21,19 @@ import java.util.List;
  * User: jh
  * Date: 18/01/16
  * Time: 16:14
- * <p>
  * marginalCosts: Euro/MWh
- * powerMin: Minimum Power of PowerPlant
+ * powerMin: Minimum Power of PowerPlant (sollte in MW sein)
  * powerRampUp/Down: MW in 15min
  */
 public final class FlexPowerplant2 implements EOMTrader, BalancingMarketTrader, MarketOperatorListener {
     private static final Log log = LogFactory.getLog(FlexPowerplant2.class);
 
-    static final float LATENCY = 3f;
-    static final float FACTOR_BALANCING_CALL = .2f;
+    static final float LATENCY = 3f; 				// for BPM, trade per 5 min
+    static final float FACTOR_BALANCING_CALL = .2f;	// Factor_Regelenergieabruf 
 
     private final String name;
     private final String description;
-    private final int powerMax;
+    private final int powerMax;	
     private final int powerMin;
     private final float startStopCosts;
     private final PriceForwardCurve priceForwardCurve;
@@ -82,7 +82,7 @@ public final class FlexPowerplant2 implements EOMTrader, BalancingMarketTrader, 
 
     public void init() {
         energyTradeRegistry = new TradeRegistryImpl(TradeRegistry.Type.PRODUCE, powerMax, 1000, powerMin * TimeUtil.HOUR_PER_TICK);
-        powerTradeRegistry = new TradeRegistryImpl(TradeRegistry.Type.PRODUCE, powerMax, 1000);
+        powerTradeRegistry  = new TradeRegistryImpl(TradeRegistry.Type.PRODUCE, powerMax, 1000);
     }
 
     @Override
@@ -98,7 +98,7 @@ public final class FlexPowerplant2 implements EOMTrader, BalancingMarketTrader, 
 
     @Override
     public void makeBidBalancingMarket(long currentTick) {
-        Date currentDate = TimeUtil.getDate(currentTick);
+        Date currentDate   = TimeUtil.getDate(currentTick);
         Date precedingDate = TimeUtil.precedingDate(currentDate);
 
         float pPreceding = (energyTradeRegistry.getQuantityUsed(precedingDate) / TimeUtil.HOUR_PER_TICK);
@@ -114,14 +114,14 @@ public final class FlexPowerplant2 implements EOMTrader, BalancingMarketTrader, 
         float pfcCostsAverage = priceForwardCurve.getPriceSummation(TimeUtil.getCurrentTick(), Market.BALANCING_MARKET.getTicks()) / Market.BALANCING_MARKET.getTicks();
         final float durationInHours = Market.BALANCING_MARKET.getDurationInHours();
 
-        float pNeg = Math.min(pPreceding - powerMin, powerRampDown / LATENCY);
+        float pNeg = Math.min(pPreceding - powerMin, powerRampDown / LATENCY); 
         if (pNeg > 0) {
             final float priceNegative = Math.abs(Math.min(((pfcCostsAverage - marginalCosts) * durationInHours * (powerMin+pNeg)) / pNeg, 0))
                     - FACTOR_BALANCING_CALL * durationInHours * marginalCosts;
             balancingMarketOperator.addNegativeSupply(new PowerNegative(priceNegative, pNeg, this));
         }
 
-        float pPos = Math.min(powerMax - pPreceding, powerRampUp / LATENCY);
+        float pPos = Math.min(powerMax - pPreceding, powerRampUp / LATENCY); // PAsst
         if (pPos > 0) {
             final float pricePositive = Math.max((pfcCostsAverage - marginalCosts) * durationInHours, 0)
                     + Math.abs(Math.min(((pfcCostsAverage - marginalCosts) * durationInHours * powerMin) / pPos, 0))
@@ -140,12 +140,14 @@ public final class FlexPowerplant2 implements EOMTrader, BalancingMarketTrader, 
     public void makeBidEOM(long currentTick) {
         float t = TimeUtil.HOUR_PER_TICK;
 
-        Date currentDate = TimeUtil.getDate(currentTick);
+        Date currentDate   = TimeUtil.getDate(currentTick);
         Date precedingDate = TimeUtil.precedingDate(currentDate);
 
         float pPositiveCommited = powerTradeRegistry.getPositiveQuantityUsed(currentDate);
         float pNegativeCommited = powerTradeRegistry.getNegativeQuantityUsed(currentDate);
-        float ePreceding = energyTradeRegistry.getQuantityUsed(precedingDate);
+        
+        float ePreceding        = energyTradeRegistry.getQuantityUsed(precedingDate);
+        
         if (ePreceding / TimeUtil.HOUR_PER_TICK - powerMin < -0.001f) {
             if (ePreceding == 0) {
                 ePreceding = (powerMin - powerRampUp) * TimeUtil.HOUR_PER_TICK;
@@ -193,6 +195,8 @@ public final class FlexPowerplant2 implements EOMTrader, BalancingMarketTrader, 
             case POWER_POSITIVE:
                 powerTradeRegistry.addAssignedQuantity(currentDate, market, bid.getPrice(), clearedPrice, bid.getQuantity(), rate, bid.getBidType());
                 break;
+		default:
+			throw new IllegalStateException("No matching Bidtype, BidType is: " + bid.getBidType());
         }
         if (market.equals(Market.SPOT_MARKET)) {
             this.lastClearedPrice = clearedPrice;

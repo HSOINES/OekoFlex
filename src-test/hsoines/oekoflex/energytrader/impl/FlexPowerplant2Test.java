@@ -20,19 +20,20 @@ import static org.junit.Assert.assertEquals;
  * Time: 21:22
  */
 public class FlexPowerplant2Test {
-    public static final float START_STOP_COSTS = 100f;
-    public static final float MARGINAL_COSTS = 2f;
-    public static final int POWER_RAMP_DOWN = 200;
-    public static final int POWER_RAMP_UP = 100;
-    public static final int POWER_MIN = 2000;
-    public static final int POWER_MAX = 2400;
-    public static final int POSITIVE_DEMAND_BALANCING = 100;
-    public static final int NEGATIVE_DEMAND_BALANCING = 100;
+    public static final float START_STOP_COSTS = 100f;	// Euro/MWh
+    public static final float MARGINAL_COSTS = 2f;		// Euro/MWh
+    public static final int POWER_RAMP_DOWN = 200;	// pro 15min MW
+    public static final int POWER_RAMP_UP = 100;	// pro 15min MW
+    public static final int POWER_MIN = 2000;	// MW
+    public static final int POWER_MAX = 2400;	// MW
+//  public static final int POSITIVE_DEMAND_BALANCING = 100;
+//  public static final int NEGATIVE_DEMAND_BALANCING = 100;
     public static final float EFFICIENCY = .25f;
     private TestBalancingMarketOperator testBalancingMarketOperator;
     private FlexPowerplant2 flexpowerplant;
     private TestSpotMarketOperator testEomOperator;
     private PriceForwardCurve priceForwardCurve;
+    
     private float emissionRate;
     private float efficiency;
 
@@ -77,7 +78,7 @@ public class FlexPowerplant2Test {
         }
         TimeUtil.startAt(16);
         //PFC = -9, MC=2, Pmin=2000, Pangebot=66.66666, => 17.54
-        testBalancingMarketOperator.makeBid(flexpowerplant).checkPowerPos(33.3333f, 2641.6064f).checkPowerNeg(66.6666f, 1362.4f).notifyRatePos(1).notifyRateNeg(0);//todo: preis prüfen
+        testBalancingMarketOperator.makeBid(flexpowerplant).checkPowerPos(33.3333f, 2641.6064f).checkPowerNeg(66.6666f, 1362.4f).notifyRatePos(1).notifyRateNeg(0);//todo: preis prï¿½fen
 
     }
 

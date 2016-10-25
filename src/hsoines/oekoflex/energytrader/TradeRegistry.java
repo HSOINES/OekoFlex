@@ -21,7 +21,7 @@ import java.util.List;
  */
 public interface TradeRegistry {
 
-    /*
+    /**
         Gets the maximum tick with data set
      */
     long getLatestCapacity();
@@ -31,25 +31,26 @@ public interface TradeRegistry {
     enum Type {PRODUCE, CONSUM, PRODUCE_AND_CONSUM}
 
     Type getType();
-    /*
+    
+    /**
         Adds new assigned quantity to the History
         @return the quantity added, if bigger than max quantity, an error is thrown.
      */
     void addAssignedQuantity(final Date date, final Market market, final float offeredPrice, final float assignedPrice, final float offeredQuantity, float assignedRate, final BidType bidType);
 
-    /* Energy/Power available at a certain point of time */
+    /** Energy/Power available at a certain point of time */
     float getRemainingCapacity(Date date, final Market market);
 
-    /* All Energy/Power assigned at a certain point of time */
+    /** All Energy/Power assigned at a certain point of time */
     float getQuantityUsed(Date date);
 
-    /* Positive Energy/Power assigned at a certain point of time */
+    /** Positive Energy/Power assigned at a certain point of time */
     float getPositiveQuantityUsed(Date date);
 
-    /* Negative Energy/Power assigned at a certain point of time */
+    /** Negative Energy/Power assigned at a certain point of time */
     float getNegativeQuantityUsed(Date date);
 
-    /* List of assigned energy/power elements*/
+    /** List of assigned energy/power elements*/
     List<TradeRegistryImpl.EnergyTradeElement> getEnergyTradeElements(Date date);
 
     void setCapacity(long tick, float capacity);

@@ -11,7 +11,7 @@ import hsoines.oekoflex.bid.EnergyDemand;
 import hsoines.oekoflex.bid.EnergySupply;
 import hsoines.oekoflex.energytrader.BalancingMarketTrader;
 import hsoines.oekoflex.energytrader.EOMTrader;
-import hsoines.oekoflex.energytrader.TradeRegistry;
+//import hsoines.oekoflex.energytrader.TradeRegistry;
 import hsoines.oekoflex.energytrader.impl.TradeRegistryImpl.EnergyTradeElement;
 import hsoines.oekoflex.marketoperator.BalancingMarketOperator;
 import hsoines.oekoflex.marketoperator.SpotMarketOperator;
@@ -24,14 +24,14 @@ public class LearningStorage implements EOMTrader, BalancingMarketTrader{
 	private final String name;
     private final String description;
     private SpotMarketOperator eomMarketOperator;
-    private float stateOfCharge;					// Percentage how full/empty the storage is
+    private float stateOfCharge;					// Percentage how full the storage is
     private float chargePower;						// Power that can be charged in 15 Minutes
     private float dischargePower;					// Power that can be discharged in 15 Minutes
     private float energyCapacity;					// Whole amount of Power that can stored in stored
     private PriceForwardCurve pfc;					// PriceForwardCurve for current tick
 	private EnergyTradeElement currentAssignment; 	// only last assignment is needed so this replaces the EOM TradeRegistry 
 	
-	// chargePower and disChargePower is measured as MW  so eg 10MWh/15min = 40 MW
+	// chargePower and disChargePower is measured as MW  so e.g. 10MWh/15min = 40 MW
 	LearningStorage(final String name, final String description, final int chargePower, final int dischargePower, final float startStopCosts,final PriceForwardCurve priceForwardCurve,final float marginalCosts ,final float energyCapacity , final float stateOfCharge) {
 		this.name = name;
 		this.description = description;			
@@ -71,7 +71,6 @@ public class LearningStorage implements EOMTrader, BalancingMarketTrader{
 
 	@Override
 	public void notifyClearingDone(Date currentDate, Market market, Bid bid, float clearedPrice, float rate) {
-		
 		if(market.equals(Market.SPOT_MARKET)){
 			
 			BidType currentBidType = bid.getBidType();
@@ -128,10 +127,15 @@ public class LearningStorage implements EOMTrader, BalancingMarketTrader{
 		this.currentAssignment = new EnergyTradeElement(currentTick, Market.SPOT_MARKET, 0,0, 0 ,0, 0, BidType.NULL_BID);
 		
 		int numberOfDischarge = (int)Math.floor((energyCapacity*stateOfCharge)/(dischargePower*TimeUtil.HOUR_PER_TICK));		// Number of full Units  (that can be discharged before the storage is empty)
-		int numberOfCharge = (int)Math.floor((energyCapacity*(1.0f-stateOfCharge))/(chargePower*TimeUtil.HOUR_PER_TICK));		// Number of empty Units (that can be charged before the storage is empty)
+		int numberOfCharge    = (int)Math.floor((energyCapacity*(1.0f-stateOfCharge))/(chargePower*TimeUtil.HOUR_PER_TICK));	// Number of empty Units (that can be charged before the storage is empty)
 		
-		List<Long> lowestTicks  = pfc.getTicksWithLowestPrices(numberOfCharge, TimeUtil.getCurrentTick(), 96);
-		List<Long> highestTicks =  pfc.getTicksWithHighestPrices(numberOfDischarge , TimeUtil.getCurrentTick(), 96);
+		// Vorausschau mit variablen ticks 
+		// früher statisch auf 96 ticks = 24h
+		// int ticksintoFuture = 96;	
+		int ticksintoFuture   = numberOfDischarge+numberOfCharge;
+					
+		List<Long> lowestTicks  = pfc.getTicksWithLowestPrices(numberOfCharge, TimeUtil.getCurrentTick(), ticksintoFuture);
+		List<Long> highestTicks = pfc.getTicksWithHighestPrices(numberOfDischarge , TimeUtil.getCurrentTick(), ticksintoFuture);
 		
 		List<Float> lowestPrices  = new ArrayList<>();
 		List<Float> highestPrices = new ArrayList<>();
@@ -184,7 +188,7 @@ public class LearningStorage implements EOMTrader, BalancingMarketTrader{
 		}
 	}
 	
-	// Checks spread for current high/low price Combination and returns true if spread > 0
+	// Checks spread for current high/low price combination and returns true if spread > 0
 	private boolean checkPositiveSpread(Float highMarketPrice , Float lowMarketPrice){
 		
 		float spread = highMarketPrice - lowMarketPrice; // TODO later implement complete formula

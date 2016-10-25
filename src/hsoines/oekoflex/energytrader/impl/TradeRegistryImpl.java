@@ -14,7 +14,7 @@ import java.util.*;
  * Date: 17/12/15
  * Time: 08:08
  * a) Speichert die abgerufene Energie/Leistung
- * b) Speichert die Menge pro Tick (für TotalLoad)
+ * b) Speichert die Menge pro Tick (fÃ¼r TotalLoad)
  *
  **/
 public final class TradeRegistryImpl implements TradeRegistry {

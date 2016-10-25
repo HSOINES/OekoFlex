@@ -119,6 +119,7 @@ public class TestSpotMarketOperator implements SpotMarketOperator {
         assertTrue("Supply quantity not same: " + energySupplies.size(), quantities.length == energySupplies.size());
         for (int i = 0; i < quantities.length; i++) {
             final EnergySupply energySupply = energySupplies.get(energySupplies.size() - quantities.length + i);
+            System.out.println(energySupply.getQuantity());
             assertEquals(quantities[i], energySupply.getQuantity(), 0.001f);
         }
         return this;
