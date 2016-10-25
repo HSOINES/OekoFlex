@@ -35,9 +35,6 @@ public class FlexPowerplant3 implements EOMTrader, BalancingMarketTrader, Market
 	/** for BPM, trade per 5 minutes */
 	static final float LATENCY = 3f;				
 	
-	/** factor balancing call / Faktor Regelenergieabruf */
-	static final float FACTOR_BALANCING_CALL = .2f; 
-	
 	/** name of the flexible power plant */
 	private final String name;
 	
@@ -245,7 +242,7 @@ public class FlexPowerplant3 implements EOMTrader, BalancingMarketTrader, Market
 		
 		if (mengeRegelleistungPpos > 0) {
 			leistungspreisPpos = Math.max((pfcCostsAverage - marginalCosts) * dtau, 0)+ Math.abs(Math.min(((pfcCostsAverage - marginalCosts) * dtau * powerMin) / mengeRegelleistungPpos, 0));
-			arbeitspreisPpos   = FACTOR_BALANCING_CALL * dtau * marginalCosts; // FACTOR_BALANCING_CALL := Faktor Regelenergieabruf
+			arbeitspreisPpos   =  marginalCosts; // FACTOR_BALANCING_CALL := Faktor Regelenergieabruf
 			gebotspreisPpos    = leistungspreisPpos + arbeitspreisPpos; 
 		}else{
 			gebotspreisPpos    = 0;
@@ -272,7 +269,7 @@ public class FlexPowerplant3 implements EOMTrader, BalancingMarketTrader, Market
 		
 		if (mengeRegelleistungPneg > 0) {
 			leistungspreisPneg = Math.abs(Math.min(((pfcCostsAverage - marginalCosts) * dtau * (powerMin + mengeRegelleistungPneg)) / mengeRegelleistungPneg, 0));
-			arbeitspreisPneg   = FACTOR_BALANCING_CALL * dtau * marginalCosts;
+			arbeitspreisPneg   = -marginalCosts;
 			gebotspreisPneg    = leistungspreisPneg - arbeitspreisPneg;
 		}else{
 			gebotspreisPneg    = 0;
