@@ -114,9 +114,9 @@ public class OekoFlexContextBuilder implements ContextBuilder<OekoflexAgent> {
             TotalLoadFactory.build(configDir, context, spotMarketOperator, prerunDays * SequenceDefinition.DayInterval);
 
             //Producers
-            // FlexPowerplant2Factory.build(configDir, context, spotMarketOperator, balancingMarketOperator, priceForwardCurve, globalProperties);
-            FlexPowerplant3Factory.build(configDir, context, spotMarketOperator, balancingMarketOperator, priceForwardCurve, globalProperties);
-            // StorageFactory.build(configDir, context, spotMarketOperator, balancingMarketOperator, priceForwardCurve);
+            FlexPowerplant2Factory.build(configDir, context, spotMarketOperator, balancingMarketOperator, priceForwardCurve, globalProperties);
+//            FlexPowerplant3Factory.build(configDir, context, spotMarketOperator, balancingMarketOperator, priceForwardCurve, globalProperties);
+//            StorageFactory.build(configDir, context, spotMarketOperator, balancingMarketOperator, priceForwardCurve);
             LearningStorageFactory.build(configDir, context, spotMarketOperator, balancingMarketOperator, priceForwardCurve);
             
             //build pfc

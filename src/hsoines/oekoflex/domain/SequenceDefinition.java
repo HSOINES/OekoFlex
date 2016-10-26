@@ -4,9 +4,10 @@ package hsoines.oekoflex.domain;
  * User: jh
  * Date: 08/01/16
  * Time: 12:25
- * Festlegung der Priorit‰ten, Reihenfolgen
+ * Festlegung der Priorit√§ten, Reihenfolgen
  */
 public final class SequenceDefinition {
+	
     //Priorities
     public static final int PriceForwardCurveGeneratorPriority = 1000;
     public static final int BalancingMarketBidPriority = 100;
@@ -15,6 +16,7 @@ public final class SequenceDefinition {
     public static final int EOMClearingPriority = 49;
 
     public static final int ReportingPriority = 1;
+    
     //Intervals
     public static final int BalancingMarketInterval = 16;
 

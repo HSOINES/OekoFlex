@@ -18,7 +18,7 @@ import repast.simphony.visualization.IDisplay;
  * User: jh
  * Date: 17/01/16
  * Time: 23:07
- * Stellt den Merrit-Order Graph zur Verfügung
+ * Stellt den Merrit-Order Graph zur VerfÃ¼gung
  */
 public class OekoflexModelInitializer implements ModelInitializer {
     private IDisplay display;
