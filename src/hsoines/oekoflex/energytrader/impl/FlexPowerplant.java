@@ -17,10 +17,6 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * User: jh
- * Date: 18/01/16
- * Time: 16:14
- * <p>
  * marginalCosts: Euro/MWh
  * powerMin: Minimum Power of PowerPlant
  * powerRampUp/Down: MWh/15min

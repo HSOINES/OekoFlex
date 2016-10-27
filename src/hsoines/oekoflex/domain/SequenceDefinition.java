@@ -1,9 +1,6 @@
 package hsoines.oekoflex.domain;
 
 /**
- * User: jh
- * Date: 08/01/16
- * Time: 12:25
  * Festlegung der Prioritäten, Reihenfolgen
  */
 public final class SequenceDefinition {

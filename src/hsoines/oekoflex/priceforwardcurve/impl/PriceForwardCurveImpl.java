@@ -14,9 +14,6 @@ import java.text.ParseException;
 import java.util.*;
 
 /**
- * User: jh
- * Date: 30/03/16
- * Time: 18:47
  * verwaltet PFC
  */
 public final class PriceForwardCurveImpl implements PriceForwardCurve {

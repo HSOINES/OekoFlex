@@ -7,9 +7,6 @@ import hsoines.oekoflex.util.Market;
 import java.util.Date;
 
 /**
- * User: jh
- * Date: 04/12/15
- * Time: 19:12
  * Callback für die bearbeiteten Angebote der EnergyTrader
  */
 public interface MarketOperatorListener extends OekoflexAgent {

@@ -22,9 +22,7 @@ import java.util.Properties;
 import java.util.Set;
 
 /**
- * User: jh
- * Date: 07/01/16
- * Time: 21:32
+ * 
  */
 public final class FlexPowerplant2Factory {
     private static final Log log = LogFactory.getLog(FlexPowerplant2Factory.class);

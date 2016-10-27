@@ -19,10 +19,6 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * User: jh
- * Date: 18/01/16
- * Time: 16:14
- *
  * soc: state of charge, in percent
  * Klasse nicht aktueller Stand (6.8.2016)
  */

@@ -14,9 +14,6 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 /**
- * User: jh
- * Date: 07/01/16
- * Time: 23:56
  * Loggt in Datei
  * Basiert auf log4j
  */

@@ -5,9 +5,6 @@ import hsoines.oekoflex.marketoperator.BalancingMarketOperator;
 import repast.simphony.engine.schedule.ScheduledMethod;
 
 /**
- * User: jh
- * Date: 03/12/15
- * Time: 08:29
  * Gibt Angebote an den Regelenergiemarkt
  */
 public interface BalancingMarketTrader extends MarketTrader, MarketOperatorListener {

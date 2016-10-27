@@ -23,6 +23,9 @@ import org.apache.commons.logging.LogFactory;
 
 import repast.simphony.context.Context;
 
+/**
+ * 
+ */
 public class FlexPowerplant3Factory {
 	 private static final Log log = LogFactory.getLog(FlexPowerplant3Factory.class);
 	    private static PriceForwardCurve priceForwardCurve;

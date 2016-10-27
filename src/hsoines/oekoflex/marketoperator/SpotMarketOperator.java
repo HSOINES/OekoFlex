@@ -11,42 +11,42 @@ import java.util.List;
 import static hsoines.oekoflex.domain.SequenceDefinition.EOMClearingPriority;
 import static hsoines.oekoflex.domain.SequenceDefinition.EOMInterval;
 
-/*
+/**
 	Bereinigt den SpotMarkt
-	-> Empfängt Gebote als Supplies und Demands von den MarketTradern
+	-> EmpfÃ¤ngt Gebote als Supplies und Demands von den MarketTradern
 	-> Ermittelt den Marktpreis
-	-> Notifiziert die MarketTrader über das Ergebnis ihres Angebots
+	-> Notifiziert die MarketTrader Ã¼ber das Ergebnis ihres Angebots
 
-	Für die Diagrammanzeige werden Getter bereitgestellt
+	FÃ¼r die Diagrammanzeige werden Getter bereitgestellt
  */
 public interface SpotMarketOperator extends OekoflexAgent {
-	/*
-		Übergabe der Angebote
+	/**
+		Ãœbergabe der Angebote
 	 */
 	 void addDemand(EnergyDemand energyDemand);
 	 void addSupply(EnergySupply supply);
 
-	/*
-		Markträumung, wird von Repast-Scheduler aufgerufen
+	/**
+		MarktrÃ¤umung, wird von Repast-Scheduler aufgerufen
 	 */
 	@ScheduledMethod(start = SequenceDefinition.SimulationStart, interval = EOMInterval, priority = EOMClearingPriority)
 	void clearMarket();
 
-	/*
-		Getter für Diagramm
+	/**
+		Getter fÃ¼r Diagramm
 	 */
 	float getTotalClearedQuantity();
 	float getLastClearedPrice();
 	float getLastAssignmentRate();
 
-	/* 
+	/**
 		Cleanup 
 	 */
 	@ScheduledMethod(start = ScheduledMethod.END)
 	void stop();
 
-	/*
-		Zugriff für Merrit Order Graph
+	/**
+		Zugriff fÃ¼r Merrit Order Graph
 	 */
 	List<EnergySupply> getLastEnergySupplies();
 	List<EnergyDemand> getLastEnergyDemands();

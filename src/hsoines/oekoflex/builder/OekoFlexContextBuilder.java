@@ -35,9 +35,6 @@ import java.util.Properties;
 
 
 /**
- * User: jh
- * Date: 17/01/16
- * Time: 23:07
  * Baut kompletten Context auf.
  * - simuliert Ticks > 0
  * - Baut PFC auf
@@ -98,8 +95,8 @@ public class OekoFlexContextBuilder implements ContextBuilder<OekoflexAgent> {
             }
 
             Properties globalProperties = loadProperties(configDir);
-            int positiveDemandREM = Integer.parseInt((String) globalProperties.get("positiveDemandREM"));
-            int negativeDemandREM = Integer.parseInt((String) globalProperties.get("negativeDemandREM"));
+            int positiveDemandREM = Integer.parseInt((String) globalProperties.get("positiveDemandREM"));	// TODO: fragen: Was ist positiveDemandREM
+            int negativeDemandREM = Integer.parseInt((String) globalProperties.get("negativeDemandREM"));	// TODO: fragen: Was ist negativeDemandREM
             SpotMarketOperatorImpl spotMarketOperator = new SpotMarketOperatorImpl("EOM_Operator", logDirName, loggingActivated);
             BalancingMarketOperator balancingMarketOperator = new BalancingMarketOperatorImpl("BalancingMarketOperator", loggingActivated, logDirName, positiveDemandREM, negativeDemandREM);
             context.add(spotMarketOperator);
@@ -110,7 +107,7 @@ public class OekoFlexContextBuilder implements ContextBuilder<OekoflexAgent> {
             PriceForwardCurveGenerator priceForwardCurveGenerator = new PriceForwardCurveGenerator(configDir, daysToRun * SequenceDefinition.DayInterval, priceForwardFile, prerunDays * SequenceDefinition.DayInterval, globalProperties);
             PriceForwardCurve priceForwardCurve = new PriceForwardCurveImpl(priceForwardFile);
 
-            //Consumers
+            // Consumers
             TotalLoadFactory.build(configDir, context, spotMarketOperator, prerunDays * SequenceDefinition.DayInterval);
 
             //Producers
@@ -119,7 +116,7 @@ public class OekoFlexContextBuilder implements ContextBuilder<OekoflexAgent> {
 //            StorageFactory.build(configDir, context, spotMarketOperator, balancingMarketOperator, priceForwardCurve);
             LearningStorageFactory.build(configDir, context, spotMarketOperator, balancingMarketOperator, priceForwardCurve);
             
-            //build pfc
+            // build pfc
             priceForwardCurveGenerator.generate();
             priceForwardCurve.readData();
 

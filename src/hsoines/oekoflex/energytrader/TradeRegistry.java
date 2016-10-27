@@ -8,10 +8,6 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * User: jh
- * Date: 17/12/15
- * Time: 08:02
- *
  * Encapsulates information about quantities offered and assigned to energyproducers.
  *
  * offered quantities: quantities are offered to a marketoperator

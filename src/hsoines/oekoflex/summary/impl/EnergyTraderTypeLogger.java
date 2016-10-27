@@ -20,9 +20,6 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * User: jh
- * Date: 15/01/16
- * Time: 23:18
  * Loggt Infos der EnergyTrader
  */
 public final class EnergyTraderTypeLogger implements OekoflexAgent {

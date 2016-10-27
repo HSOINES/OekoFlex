@@ -21,9 +21,7 @@ import java.io.IOException;
 import java.text.ParseException;
 
 /**
- * User: jh
- * Date: 07/01/16
- * Time: 21:32
+ * 
  */
 public final class LearningStorageFactory {
     private static final Log log = LogFactory.getLog(LearningStorageFactory.class);

@@ -20,10 +20,6 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * User: jh
- * Date: 18/01/16
- * Time: 16:14
- * <p>
  * soc: state of charge, in percent
  * Test-Storage
  */

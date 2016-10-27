@@ -14,10 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * User: jh
- * Date: 06/05/16
- * Time: 17:24
- * Simuliert Ticks < 0
+ * 
  */
 public final class PreRunner {
     private final Context<OekoflexAgent> context;

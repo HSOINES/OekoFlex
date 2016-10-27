@@ -5,9 +5,7 @@ import hsoines.oekoflex.energytrader.MarketOperatorListener;
 import java.util.Comparator;
 
 /**
- * User: jh
- * Date: 22/01/16
- * Time: 22:27
+ * 
  */
 public abstract class BidSupport implements Bid {
     protected final float price;

@@ -19,6 +19,9 @@ import hsoines.oekoflex.priceforwardcurve.PriceForwardCurve;
 import hsoines.oekoflex.util.Market;
 import hsoines.oekoflex.util.TimeUtil;
 
+/**
+ * 
+ */
 public class LearningStorage implements EOMTrader, BalancingMarketTrader{
 	
 	private final String name;

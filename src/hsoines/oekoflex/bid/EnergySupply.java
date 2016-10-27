@@ -3,6 +3,9 @@ package hsoines.oekoflex.bid;
 import hsoines.oekoflex.energytrader.MarketOperatorListener;
 import hsoines.oekoflex.energytrader.impl.FlexPowerplant;
 
+/**
+ * 
+ */
 public class EnergySupply extends EnergyBid {
 
     public EnergySupply(float price, float quantity, MarketOperatorListener marketOperatorListener) {

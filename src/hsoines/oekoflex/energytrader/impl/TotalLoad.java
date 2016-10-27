@@ -23,10 +23,6 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * User: jh
- * Date: 17/01/16
- * Time: 23:03
- * <p>
  * Die csv-Datei beschreibt die Energie pro 15 Minuten.
  */
 public final class TotalLoad implements EOMTrader {
