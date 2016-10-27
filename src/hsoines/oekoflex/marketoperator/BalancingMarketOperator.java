@@ -47,13 +47,30 @@ public interface BalancingMarketOperator extends OekoflexAgent {
 	
 	/** 
 	 * Getter for Tests
-	 * @return amount of positive power cleared
+	 * @return amount of negative power cleared
 	 */
 	float getTotalClearedNegativeQuantity();
 
-	/** Getter for diagram */
+	/** 
+	 * Getter for diagram
+	 * @return last positive assignment rate
+	 */
 	float getLastPositiveAssignmentRate();
+	
+	/** Getter for diagram  
+	 * @return last cleared negative max price
+	 */
 	float getLastClearedNegativeMaxPrice();
+	
+	/** 
+	 * Getter for diagram 
+	 * @return last negative assignment rate
+	 */
 	float getLastNegativeAssignmentRate();
+	
+	/** 
+	 * Getter for diagram 
+	 * @return last cleared positive max price
+	 */
 	float getLastClearedPositiveMaxPrice();
 }

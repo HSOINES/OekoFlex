@@ -173,48 +173,52 @@ public final class BalancingMarketOperatorImpl implements BalancingMarketOperato
         };
     }
 
-    /**
-     * 
-     */
+    /** 
+	 * Getter for Tests
+	 * @return amount of positive power cleared
+	 */
     @Override
     public float getTotalClearedPositiveQuantity() {
         return totalClearedPositiveQuantity;
     }
 
-    /**
-     * 
-     */
+    /** 
+	 * Getter for Tests
+	 * @return amount of negative power cleared
+	 */
     @Override
     public float getTotalClearedNegativeQuantity() {
         return totalClearedNegativeQuantity;
     }
 
-    /**
-     * 
-     */
+    /** 
+	 * Getter for diagram
+	 * @return last positive assignment rate
+	 */
     @Override
     public float getLastPositiveAssignmentRate() {
         return lastPositiveAssignmentRate;
     }
 
-    /**
-     * 
-     */
+    /** Getter for diagram  
+	 * @return last cleared negative max price
+	 */
     @Override
     public float getLastClearedNegativeMaxPrice() {
         return lastClearedNegativeMaxPrice;
     }
 
-    /**
-     * 
-     */
+    /** 
+	 * Getter for diagram 
+	 * @return last negative assignment rate
+	 */
     @Override
     public float getLastNegativeAssignmentRate() {
         return lastNegativeAssignmentRate;
     }
 
     /**
-     * 
+     * This function notifies every agent, that has a bid for the current tick how their bid went
      * @param bidSupport
      * @param marketOperatorListener
      * @param assignRate
@@ -233,23 +237,24 @@ public final class BalancingMarketOperatorImpl implements BalancingMarketOperato
     }
     
     /**
-     * 
+     * @return name of the balancing power market operator
      */
     @Override
     public String getName() {
         return name;
     }
     
-    /**
-     * 
-     */
+    /** 
+	 * Getter for diagram 
+	 * @return last cleared positive max price
+	 */
     @Override
     public float getLastClearedPositiveMaxPrice() {
         return lastClearedPositiveMaxPrice;
     }
 
     /**
-     * 
+     * Stop of the market operator, is called by the Repast scheduler
      */
     @ScheduledMethod(start = ScheduledMethod.END)
     public void stop() {
