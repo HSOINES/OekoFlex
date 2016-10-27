@@ -24,7 +24,8 @@ import org.apache.commons.logging.LogFactory;
 import repast.simphony.context.Context;
 
 /**
- * 
+ * Factory class for the flexible power plant 3 class
+ * reads values of the csv files and creates fpp3 agents based on this information
  */
 public class FlexPowerplant3Factory {
 	 private static final Log log = LogFactory.getLog(FlexPowerplant3Factory.class);

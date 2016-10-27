@@ -1,7 +1,11 @@
 package hsoines.oekoflex.util;
 
 /**
- * Definitionen zu MarktInfos
+ * Definitions of market informations for
+ * <ul>
+ * 		<li> spotmarket,
+ * 		<li> balancing power market
+ * </ul>
  */
 public enum Market {
     SPOT_MARKET(1),       //EOM

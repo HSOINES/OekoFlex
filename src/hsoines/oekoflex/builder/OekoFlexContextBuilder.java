@@ -35,10 +35,13 @@ import java.util.Properties;
 
 
 /**
- * Baut kompletten Context auf.
- * - simuliert Ticks > 0
- * - Baut PFC auf
- * - Instantiiert alle Agents
+ * Builds the entire context for Repast simphony.
+ * <uL>
+ * 	<li> simulates tick > 0
+ * 	<li> builds the price forward curve
+ * 	<li> instances all agents
+ * </ul>
+ * @implements ContextBuilder<OekoflexAgent>
  */
 public class OekoFlexContextBuilder implements ContextBuilder<OekoflexAgent> {
     private static final Log log = LogFactory.getLog(OekoFlexContextBuilder.class);
@@ -50,7 +53,9 @@ public class OekoFlexContextBuilder implements ContextBuilder<OekoflexAgent> {
         Locale.setDefault(OekoFlexContextBuilder.defaultlocale);
         OekoFlexContextBuilder.defaultNumberFormat = DecimalFormat.getNumberInstance();
     }
-
+    /**
+     * 
+     */
     @Override
     public Context build(Context<OekoflexAgent> context) {
     	log.info("locale: " + Locale.getDefault().getDisplayName());
@@ -133,7 +138,13 @@ public class OekoFlexContextBuilder implements ContextBuilder<OekoflexAgent> {
 
         return context;
     }
-
+    
+    /**
+     * 
+     * @param configDir
+     * @return
+     * @throws IOException
+     */
     public static Properties loadProperties(final File configDir) throws IOException {
         Properties globalProperties = new Properties();
         File globalPropertiesFile = new File(configDir, "Global.properties");

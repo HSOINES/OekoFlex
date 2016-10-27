@@ -21,7 +21,8 @@ import java.io.IOException;
 import java.text.ParseException;
 
 /**
- * 
+ * Factory class for the learning storage plant 3 class
+ * reads values of the csv-files and creates learning storage agents based on this information
  */
 public final class LearningStorageFactory {
     private static final Log log = LogFactory.getLog(LearningStorageFactory.class);

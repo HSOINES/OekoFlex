@@ -3,7 +3,7 @@ package hsoines.oekoflex.summary.impl;
 import hsoines.oekoflex.summary.LoggerFile;
 
 /**
- * Logger, der nichts loggt....
+ * Logger who does not log anything
  */
 public class NullLoggerFile implements LoggerFile {
     @Override

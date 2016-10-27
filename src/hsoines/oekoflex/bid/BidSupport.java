@@ -18,16 +18,25 @@ public abstract class BidSupport implements Bid {
         this.marketOperatorListener = marketOperatorListener;
     }
 
+    /**
+     * @return the specific market listener, either EOM or BPM listener
+     */
     @Override
     public MarketOperatorListener getMarketOperatorListener() {
         return marketOperatorListener;
     }
-
+    
+    /**
+     * @return the price [Euro/MW] or [Euro/MWh] depending on type of bid
+     */
     @Override
     public float getPrice() {
          return price;
      }
-
+    
+    /**
+     * @return the amount/quantity [MW] or [MWh] depending on type of bid
+     */
      @Override
      public float getQuantity() {
          return quantity;

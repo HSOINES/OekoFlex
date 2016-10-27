@@ -125,7 +125,7 @@ public final class Storage implements EOMTrader, BalancingMarketTrader {
         }
     }
 
-    @ScheduledMethod(start = SequenceDefinition.SimulationStart, interval = SequenceDefinition.DayInterval, priority = SequenceDefinition.BalancingMarketBidPriority)
+    @ScheduledMethod(start = SequenceDefinition.SimulationStart, interval = SequenceDefinition.DayInterval, priority = SequenceDefinition.BPMBidPriority)
     public void calculateEOMActionsForDay() {
         long startTick = TimeUtil.getCurrentTick();
         float dischargeEnergy = (soc - socMin) * energyCapacity;

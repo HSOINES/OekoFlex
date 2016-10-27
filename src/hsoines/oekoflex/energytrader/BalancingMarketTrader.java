@@ -8,7 +8,7 @@ import repast.simphony.engine.schedule.ScheduledMethod;
  * Gibt Angebote an den Regelenergiemarkt
  */
 public interface BalancingMarketTrader extends MarketTrader, MarketOperatorListener {
-    @ScheduledMethod(start = SequenceDefinition.SimulationStart, interval = SequenceDefinition.BalancingMarketInterval, priority = SequenceDefinition.BalancingMarketBidPriority)
+    @ScheduledMethod(start = SequenceDefinition.SimulationStart, interval = SequenceDefinition.BalancingMarketInterval, priority = SequenceDefinition.BPMBidPriority)
     void makeBidBalancingMarket();
 
     /*

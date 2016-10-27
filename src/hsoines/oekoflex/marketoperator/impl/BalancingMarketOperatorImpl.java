@@ -20,7 +20,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Räumt Regelenergiemarkt für a) positive b) negative Leistungen
+ * Operates and clears the balancing power market for
+ *<ul>
+ *	<li>a) positive power
+ *	<li>b) negative power
+ *</ul> 
  */
 public final class BalancingMarketOperatorImpl implements BalancingMarketOperator {
     private static final Log log = LogFactory.getLog(BalancingMarketOperatorImpl.class);
@@ -41,23 +45,39 @@ public final class BalancingMarketOperatorImpl implements BalancingMarketOperato
     private float lastNegativeAssignmentRate;
 
     private LoggerFile logger;
-
-    public BalancingMarketOperatorImpl(String name, final boolean loggingActivated, String logDirName, final int positiveDemandREM, final int negativeDemandREM) throws IOException {
+    
+    /**
+     * 
+     * @param name				name of this balancing market operator
+     * @param loggingActivated	is the logging activated true = yes , otherwise false
+     * @param logDirName		name of directory for the logging
+     * @param positiveDemandBPM	amount of positive demand of this balancing market
+     * @param negativeDemandBPM amount of negative demand of this balancing market
+     * @throws IOException
+     */
+    public BalancingMarketOperatorImpl(String name, final boolean loggingActivated, String logDirName, final int positiveDemandBPM, final int negativeDemandBPM) throws IOException {
         this.name = name;
-        this.positiveQuantity = positiveDemandREM;
-        this.negativeQuantity = negativeDemandREM;
+        this.positiveQuantity = positiveDemandBPM; // REM = Regelenergiemarkt.
+        this.negativeQuantity = negativeDemandBPM;
         if (loggingActivated) {
             initLogging(logDirName);
         } else {
             logger = new NullLoggerFile();
         }
     }
-
+    /**
+     * 
+     * @param logDirName 	name of directory for the logging
+     * @throws IOException
+     */
     private void initLogging(final String logDirName) throws IOException {
         logger = new LoggerFileImpl(this.getClass().getSimpleName(), logDirName);
         logger.log("tick;traderType;traderName;bidType;offeredPrice;offeredQuantity;assignedQuantity");
     }
-
+    
+    /**
+     * @param supply
+     */
     @Override
     public void addPositiveSupply(final PowerPositive supply) {
         if (supply.getQuantity() < 0.00001) {
@@ -65,7 +85,10 @@ public final class BalancingMarketOperatorImpl implements BalancingMarketOperato
         }
         positiveSupplies.add(supply);
     }
-
+    
+    /**
+     * @param supply
+     */
     @Override
     public void addNegativeSupply(final PowerNegative supply) {
         if (supply.getQuantity() < 0.00001) {
@@ -73,7 +96,10 @@ public final class BalancingMarketOperatorImpl implements BalancingMarketOperato
         }
         negativeSupplies.add(supply);
     }
-
+    
+    /**
+     * 
+     */
     @Override
     public void clearMarket() {
         log.trace("positive clearing.");
@@ -87,7 +113,13 @@ public final class BalancingMarketOperatorImpl implements BalancingMarketOperato
         lastNegativeAssignmentRate = negativeClearingData.getAssignmentRate();
         lastClearedNegativeMaxPrice = negativeClearingData.getLastClearedMaxPrice();
     }
-
+    
+    /**
+     * 
+     * @param supplies
+     * @param quantity
+     * @return
+     */
     ClearingData doClearMarketFor(final List<BidSupport> supplies, float quantity) {
         supplies.sort(new BidSupport.SupplySorter());
         float totalClearedQuantity = 0;
@@ -133,31 +165,52 @@ public final class BalancingMarketOperatorImpl implements BalancingMarketOperato
         };
     }
 
+    /**
+     * 
+     */
     @Override
     public float getTotalClearedPositiveQuantity() {
         return totalClearedPositiveQuantity;
     }
 
+    /**
+     * 
+     */
     @Override
     public float getTotalClearedNegativeQuantity() {
         return totalClearedNegativeQuantity;
     }
 
+    /**
+     * 
+     */
     @Override
     public float getLastPositiveAssignmentRate() {
         return lastPositiveAssignmentRate;
     }
 
+    /**
+     * 
+     */
     @Override
     public float getLastClearedNegativeMaxPrice() {
         return lastClearedNegativeMaxPrice;
     }
 
+    /**
+     * 
+     */
     @Override
     public float getLastNegativeAssignmentRate() {
         return lastNegativeAssignmentRate;
     }
 
+    /**
+     * 
+     * @param bidSupport
+     * @param marketOperatorListener
+     * @param assignRate
+     */
     void doNotify(final BidSupport bidSupport, final MarketOperatorListener marketOperatorListener, float assignRate) {
         long tick = TimeUtil.getCurrentTick();
         marketOperatorListener.notifyClearingDone(TimeUtil.getDate(tick), Market.BALANCING_MARKET, bidSupport, bidSupport.getPrice(), assignRate);
@@ -170,24 +223,34 @@ public final class BalancingMarketOperatorImpl implements BalancingMarketOperato
                 + NumberFormatUtil.format(bidSupport.getQuantity()) + ";"
                 + NumberFormatUtil.format(bidSupport.getQuantity() * assignRate) + ";");
     }
-
+    
+    /**
+     * 
+     */
     @Override
     public String getName() {
         return name;
     }
-
+    
+    /**
+     * 
+     */
     @Override
     public float getLastClearedPositiveMaxPrice() {
         return lastClearedPositiveMaxPrice;
     }
 
-
+    /**
+     * 
+     */
     @ScheduledMethod(start = ScheduledMethod.END)
     public void stop() {
         logger.close();
     }
 
-
+    /**
+     * 
+     */
     private interface ClearingData {
         float getClearedQuantity();
 

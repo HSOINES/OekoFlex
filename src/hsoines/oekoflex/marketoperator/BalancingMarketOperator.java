@@ -25,7 +25,7 @@ public interface BalancingMarketOperator extends OekoflexAgent {
 	/*
 		Marktr�umung, wird von Repast-Scheduler aufgerufen
 	 */
-	@ScheduledMethod(start = SequenceDefinition.SimulationStart, interval = SequenceDefinition.BalancingMarketInterval, priority = SequenceDefinition.BalancingMarketClearingPriority)
+	@ScheduledMethod(start = SequenceDefinition.SimulationStart, interval = SequenceDefinition.BalancingMarketInterval, priority = SequenceDefinition.BPMClearingPriority)
 	void clearMarket();
 
 	/*
