@@ -71,8 +71,8 @@ public class SpotMarketOperatorImpl implements SpotMarketOperator {
 
     @Override
     public void clearMarket() {
-        energyDemands.sort(new BidSupport.DemandSorter());
-        energySupplies.sort(new BidSupport.SupplySorter());
+        energyDemands.sort(new BidSupport.DemandComparator());
+        energySupplies.sort(new BidSupport.SupplyComparator());
 
         if (energyDemands.size() < 1 || this.energySupplies.size() < 1) {
             throw new IllegalStateException("Sizes unsufficient! SupportSize: "

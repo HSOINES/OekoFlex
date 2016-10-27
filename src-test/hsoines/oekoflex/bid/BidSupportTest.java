@@ -16,7 +16,7 @@ public class BidSupportTest {
 
     @Test
     public void testDemandSorter() throws Exception {
-        final BidSupport.DemandSorter demandSorter = new BidSupport.DemandSorter();
+        final BidSupport.DemandComparator demandSorter = new BidSupport.DemandComparator();
         List<Bid> list = new ArrayList<>();
         list.add(new EnergyDemand(10, 10, null));
         list.add(new EnergyDemand(9, 10, null));
@@ -45,7 +45,7 @@ public class BidSupportTest {
 
     @Test
     public void testSupplySorter() throws Exception {
-        final BidSupport.SupplySorter demandSorter = new BidSupport.SupplySorter();
+        final BidSupport.SupplyComparator demandSorter = new BidSupport.SupplyComparator();
         List<Bid> list = new ArrayList<>();
         list.add(new EnergySupply(10, 10, null));
         list.add(new EnergySupply(9, 10, null));

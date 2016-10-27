@@ -3,7 +3,7 @@ package hsoines.oekoflex.bid;
 import hsoines.oekoflex.energytrader.MarketOperatorListener;
 
 /**
- * Demand oder Nachfrage, die von den EnergyTradern an die MarketOperator gegeben werden
+ * Interface for the Demand of energy traders to the market operator
  */
 public interface Bid {
     MarketOperatorListener getMarketOperatorListener();

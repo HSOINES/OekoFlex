@@ -8,10 +8,17 @@ import java.util.Comparator;
  * 
  */
 public abstract class BidSupport implements Bid {
+	
     protected final float price;
     private final float quantity;
     private final MarketOperatorListener marketOperatorListener;
-
+    
+    /***
+     * 
+     * @param price		price of this power in [Euro/MW] or energy in [Euro/MWh]
+	 * @param quantity	amount of power in [MW] or energy in [Euro/MWh]
+	 * @param marketOperatorListener listener of a market which listens to this specific bid -> energy only listener
+     */
     public BidSupport(final float price, final float quantity, final MarketOperatorListener marketOperatorListener) {
         this.price = price;
         this.quantity = quantity;
@@ -42,8 +49,10 @@ public abstract class BidSupport implements Bid {
          return quantity;
      }
 
-
-    public static class SupplySorter implements Comparator<Bid> {
+    /**
+     *  
+     */
+    public static class SupplyComparator implements Comparator<Bid> {
 
         @Override
         public int compare(Bid o1, Bid o2) {
@@ -55,7 +64,11 @@ public abstract class BidSupport implements Bid {
         }
     }
 
-    public static class DemandSorter implements Comparator<Bid> {
+    /**
+     * 
+     *
+     */
+    public static class DemandComparator implements Comparator<Bid> {
         @Override
         public int compare(Bid o1, Bid o2) {
             final int compare = Float.compare(o2.getPrice(), o1.getPrice());

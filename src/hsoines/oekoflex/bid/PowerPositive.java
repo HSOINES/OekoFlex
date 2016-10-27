@@ -12,7 +12,7 @@ public final class PowerPositive extends PowerBid {
 	 * 
 	 * @param price		price of this power in [Euro/MW]
 	 * @param quantity	amount of power in [MW]
-	 * @param marketOperatorListener listener of a market which listens to this specific bid
+	 * @param marketOperatorListener listener of a market which listens to this specific bid -> balancing power listener
 	 */
     public PowerPositive(float price, float quantity, MarketOperatorListener marketOperatorListener) {
         super(price, quantity, marketOperatorListener);

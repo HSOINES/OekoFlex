@@ -1,7 +1,7 @@
 package hsoines.oekoflex.bid;
 
 /**
- * 
+ * This enum specifies all types of bids to market operators
  */
 public enum BidType {
     ENERGY_DEMAND(false), 

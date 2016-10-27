@@ -12,14 +12,14 @@ public final class PowerNegative extends PowerBid {
 	 * 
 	 * @param price		price of this power in [Euro/MW]
 	 * @param quantity	amount of power in [MW]
-	 * @param marketOperatorListener listener of a market which listens to this specific bid
+	 * @param marketOperatorListener listener of a market which listens to this specific bid -> balancing power listener
 	 */
     public PowerNegative(float price, float quantity, MarketOperatorListener marketOperatorListener) {
         super(price, quantity, marketOperatorListener);
     }
     
     /**
-     * @return returns the specific bid type, here: POWER_POSITIVE
+     * @return returns the specific bid type, here: POWER_NEGATIVE
      */
     @Override
     public BidType getBidType() {

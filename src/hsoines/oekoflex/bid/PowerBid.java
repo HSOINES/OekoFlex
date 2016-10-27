@@ -6,6 +6,7 @@ import hsoines.oekoflex.energytrader.MarketOperatorListener;
  * 
  */
 public abstract class PowerBid extends BidSupport {
+	
 	/**
 	 * Constructor, with constructor channeling,calls the superclass BidSupport
 	 * 

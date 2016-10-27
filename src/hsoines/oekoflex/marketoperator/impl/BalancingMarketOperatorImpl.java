@@ -121,7 +121,7 @@ public final class BalancingMarketOperatorImpl implements BalancingMarketOperato
      * @return
      */
     ClearingData doClearMarketFor(final List<BidSupport> supplies, float quantity) {
-        supplies.sort(new BidSupport.SupplySorter());
+        supplies.sort(new BidSupport.SupplyComparator());
         float totalClearedQuantity = 0;
         float lastAssignmentRate = 0;
         float lastClearedPrice = 0;
