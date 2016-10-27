@@ -7,36 +7,51 @@ import hsoines.oekoflex.domain.SequenceDefinition;
 import repast.simphony.engine.schedule.ScheduledMethod;
 
 /**
-	Bereinigt den Regelenergiemarkt
-	-> Empf�ngt Gebote als Supplies und Demands von den MarketTradern
-	-> Ermittelt die Gebote, welche angenommen werden (Preis entspricht dem des Gebots)
-	-> Notifiziert die MarketTrader �ber das Ergebnis ihres Angebots
-
-	Für die Diagrammanzeige werden Getter bereitgestellt
+ * Clears the balancing power market
+ * <ul>
+ * 	<li> gets bids as supplies or demands from the market traders
+ * 	<li> determines the bids that are accepted 
+ * 	<li> notifies the market traders that their bids are accepted or denied
+ * </ul>
+ * <p>
+ * <p>
+ * Furthermore has getter functions for:
+ * <ul>
+ * 	<li> JUnit tests, and
+ * 	<li> the diagram
+ * </ul>
  */
 public interface BalancingMarketOperator extends OekoflexAgent {
 
-	/*
-		�bergabe der Angebote
-	 */
+	/**
+     * @param supply the positive power to add
+     */
 	void addPositiveSupply(PowerPositive supply);
+	
+	/**
+     * @param negative the positive power to add
+     */
 	void addNegativeSupply(PowerNegative supply);
 
-	/*
-		Marktr�umung, wird von Repast-Scheduler aufgerufen
+	/**
+	 * market clearing, is called by the Repast scheduler 
 	 */
 	@ScheduledMethod(start = SequenceDefinition.SimulationStart, interval = SequenceDefinition.BalancingMarketInterval, priority = SequenceDefinition.BPMClearingPriority)
 	void clearMarket();
 
-	/*
-		Getter f�r Tests
+	/** 
+	 * Getter for Tests
+	 * @return amount of positive power cleared
 	 */
 	float getTotalClearedPositiveQuantity();
+	
+	/** 
+	 * Getter for Tests
+	 * @return amount of positive power cleared
+	 */
 	float getTotalClearedNegativeQuantity();
 
-	/*
-    	Getter f�r Diagramm
- 	*/
+	/** Getter for diagram */
 	float getLastPositiveAssignmentRate();
 	float getLastClearedNegativeMaxPrice();
 	float getLastNegativeAssignmentRate();

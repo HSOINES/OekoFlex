@@ -20,11 +20,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Operates and clears the balancing power market for
- *<ul>
- *	<li>a) positive power
- *	<li>b) negative power
- *</ul> 
+ * Clears the balancing power market
+ * <ul>
+ * 	<li> gets bids as supplies or demands from the market traders
+ * 	<li> determines the bids that are accepted 
+ * 	<li> notifies the market traders that their bids are accepted or denied
+ * </ul>
+ * <p>
+ * <p>
+ * Furthermore has getter functions for:
+ * <ul>
+ * 	<li> JUnit tests, and
+ * 	<li> the diagram
+ * </ul>
  */
 public final class BalancingMarketOperatorImpl implements BalancingMarketOperator {
     private static final Log log = LogFactory.getLog(BalancingMarketOperatorImpl.class);
@@ -76,7 +84,7 @@ public final class BalancingMarketOperatorImpl implements BalancingMarketOperato
     }
     
     /**
-     * @param supply
+     * @param supply the positive power to add
      */
     @Override
     public void addPositiveSupply(final PowerPositive supply) {
@@ -87,7 +95,7 @@ public final class BalancingMarketOperatorImpl implements BalancingMarketOperato
     }
     
     /**
-     * @param supply
+     * @param supply the negative power to add
      */
     @Override
     public void addNegativeSupply(final PowerNegative supply) {
