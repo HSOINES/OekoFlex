@@ -32,18 +32,23 @@ public class FlexPowerplant3Factory {
 	    private static PriceForwardCurve priceForwardCurve;
 
 
-
-	    public static void build(final File configDir,
-	                             final Context<OekoflexAgent> context,
-	                             final SpotMarketOperatorImpl energyOnlyMarketOperator,
-	                             final BalancingMarketOperator balancingMarketOperator,
-	                             final PriceForwardCurve priceForwardCurve,
-	                             final Properties globalProperties) throws IOException {
-	        FlexPowerplant3Factory.priceForwardCurve = priceForwardCurve;
+	 /**
+	 * 
+	 * @param configDir the config directory
+	 * @param context the Repast context
+	 * @param spotMarketOperator operator for the energy only market
+	 * @param balancingMarketOperator operator for the balancing power market
+	 * @param priceForwardCurve the specific price forward curve for this scenario
+	 * @param globalProperties global properties for scenario
+	 * @throws IOException
+	 */
+	    public static void build(final File configDir,final Context<OekoflexAgent> context, final SpotMarketOperatorImpl spotMarketMarketOperator, final BalancingMarketOperator balancingMarketOperator,final PriceForwardCurve priceForwardCurve, final Properties globalProperties) throws IOException {
+	        
+	    	FlexPowerplant3Factory.priceForwardCurve = priceForwardCurve;
 	        Set<FlexPowerplant2> flexPowerplants = build(configDir, globalProperties);
 	        for (FlexPowerplant2 flexPowerplant : flexPowerplants) {
 	            flexPowerplant.setBalancingMarketOperator(balancingMarketOperator);
-	            flexPowerplant.setSpotMarketOperator(energyOnlyMarketOperator);
+	            flexPowerplant.setSpotMarketOperator(spotMarketMarketOperator);
 	            context.add(flexPowerplant);
 	        }
 	    }

@@ -25,15 +25,24 @@ import java.text.ParseException;
  * reads values of the csv-files and creates learning storage agents based on this information
  */
 public final class LearningStorageFactory {
+	/** */
     private static final Log log = LogFactory.getLog(LearningStorageFactory.class);
-
-    public static void build(final File configDir,
-                             final Context<OekoflexAgent> context,
-                             final SpotMarketOperator spotMarketOperator, final BalancingMarketOperator balancingMarketOperator,
-                             final PriceForwardCurve priceForwardCurve) throws IOException {
-        File configFile = new File(configDir + "/" + "LearningStorage.cfg.csv");
+    
+    /**
+     * 
+     * @param configDir	the config directory
+     * @param context	the Repast context
+     * @param spotMarketOperator	operator for the energy only market
+     * @param balancingMarketOperator operator for the balancing power market
+     * @param priceForwardCurve	the specific price forward curve for this scenario
+     * @throws IOException
+     */
+    public static void build(final File configDir, final Context<OekoflexAgent> context, final SpotMarketOperator spotMarketOperator, final BalancingMarketOperator balancingMarketOperator, final PriceForwardCurve priceForwardCurve) throws IOException {
+        
+    	File configFile = new File(configDir + "/" + "LearningStorage.cfg.csv");
         FileReader reader = new FileReader(configFile);
         CSVParser format = CSVParameter.getCSVFormat().parse(reader);
+        
         for (CSVRecord parameters : format) {
             try {
                 String name = parameters.get("name");

@@ -17,20 +17,27 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Verbraucher/Erzeuger, der auf Basis einer CSV-Datei (tick, Price) Angebote macht.
+ * Consumer/Producer, which are defined in a CSV-file (tick, Price) and offers based on the file.
  */
 public final class TotalLoadFactory {
     private static final Log log = LogFactory.getLog(TotalLoadFactory.class);
-
-    public static void build(final File configDir, final Context<OekoflexAgent> context,
-                             final SpotMarketOperatorImpl energyOnlyMarketOperator, long prerunTicks) throws IOException {
+    
+    /**
+     * 
+     * @param configDir	the config directory
+     * @param context	the Repast context
+     * @param spotMarketOperator	operator for the energy only market
+     * @param prerunTicks	number of ticks for prerun 
+     * @throws IOException
+     */
+    public static void build(final File configDir, final Context<OekoflexAgent> context, final SpotMarketOperatorImpl spotMarketMarketOperator, long prerunTicks) throws IOException {
         Set<TotalLoad> totalLoads = build(configDir, prerunTicks);
         for (TotalLoad totalLoad : totalLoads) {
-            totalLoad.setSpotMarketOperator(energyOnlyMarketOperator);
+            totalLoad.setSpotMarketOperator(spotMarketMarketOperator);
             context.add(totalLoad);
         }
     }
-
+    
     public static Set<TotalLoad> build(File configDir, final long prerunTicks) throws IOException {
         Set<TotalLoad> totalLoads = new HashSet<>();
         File configFile = new File(configDir + "/" + "TotalLoad.cfg.csv");
