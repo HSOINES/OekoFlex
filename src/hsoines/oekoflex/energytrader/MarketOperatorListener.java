@@ -7,6 +7,7 @@ import hsoines.oekoflex.util.Market;
 import java.util.Date;
 
 /**
+ * test
  * Callback für die bearbeiteten Angebote der EnergyTrader
  */
 public interface MarketOperatorListener extends OekoflexAgent {
