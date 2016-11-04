@@ -12,7 +12,7 @@ import static hsoines.oekoflex.domain.SequenceDefinition.EOMClearingPriority;
 import static hsoines.oekoflex.domain.SequenceDefinition.EOMInterval;
 
 /**
- * Clears the energy only market
+ * Clears the energy only market:
  * <ul>
  * 	<li> gets bids as supplies or demands from the market traders
  * 	<li> determines the bids and marketprice that are accepted 
