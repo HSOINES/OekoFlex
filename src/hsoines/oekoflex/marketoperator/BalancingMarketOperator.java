@@ -7,6 +7,7 @@ import hsoines.oekoflex.domain.SequenceDefinition;
 import repast.simphony.engine.schedule.ScheduledMethod;
 
 /**
+ * Interface for the EOM Markettrader
  * Clears the balancing power market
  * <ul>
  * 	<li> gets bids as supplies or demands from the market traders
