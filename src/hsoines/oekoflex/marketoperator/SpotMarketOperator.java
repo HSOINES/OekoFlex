@@ -12,46 +12,82 @@ import static hsoines.oekoflex.domain.SequenceDefinition.EOMClearingPriority;
 import static hsoines.oekoflex.domain.SequenceDefinition.EOMInterval;
 
 /**
-	Bereinigt den SpotMarkt
-	-> Empfängt Gebote als Supplies und Demands von den MarketTradern
-	-> Ermittelt den Marktpreis
-	-> Notifiziert die MarketTrader über das Ergebnis ihres Angebots
-
-	Für die Diagrammanzeige werden Getter bereitgestellt
+ * Clears the energy only market
+ * <ul>
+ * 	<li> gets bids as supplies or demands from the market traders
+ * 	<li> determines the bids and marketprice that are accepted 
+ * 	<li> notifies the market traders that their bids are accepted or denied
+ * </ul>
+ * <p>
+ * <p>
+ * Furthermore has getter functions for:
+ * <ul>
+ * 	<li> JUnit tests, and
+ * 	<li> the diagram
+ * </ul>
  */
 public interface SpotMarketOperator extends OekoflexAgent {
+	
 	/**
-		Übergabe der Angebote
-	 */
+     * @param energyDemand the energy demand to add
+     */
 	 void addDemand(EnergyDemand energyDemand);
+	 
+	 /**
+	  * 
+	  * @param supply the energy supply to add
+	  */
 	 void addSupply(EnergySupply supply);
 
 	/**
-		Markträumung, wird von Repast-Scheduler aufgerufen
+	 *	market clearing, is called by the Repast scheduler 
 	 */
 	@ScheduledMethod(start = SequenceDefinition.SimulationStart, interval = EOMInterval, priority = EOMClearingPriority)
 	void clearMarket();
 
-	/**
-		Getter für Diagramm
+	/** 
+	 * Getter for diagram
+	 * @return total cleared quantity
 	 */
 	float getTotalClearedQuantity();
+	
+	/** 
+	 * Getter for diagram
+	 * @return last cleared price
+	 */
 	float getLastClearedPrice();
+	
+	/** 
+	 * Getter for diagram
+	 * @return last  assignment rate
+	 */
 	float getLastAssignmentRate();
 
+	/** 
+	 * Getter for diagram
+	 * @return last  energy supplies
+	 */
+	List<EnergySupply> getLastEnergySupplies();
+	
+	/** 
+	 * Getter for diagram
+	 * @return last  energy demands
+	 */
+	List<EnergyDemand> getLastEnergyDemands();
+	
+	/** 
+	 * Getter for diagram
+	 * @return last  assignment type
+	 */
+	AssignmentType getLastAssignmentType();
+	
 	/**
 		Cleanup 
 	 */
 	@ScheduledMethod(start = ScheduledMethod.END)
 	void stop();
-
-	/**
-		Zugriff für Merrit Order Graph
-	 */
-	List<EnergySupply> getLastEnergySupplies();
-	List<EnergyDemand> getLastEnergyDemands();
-	AssignmentType getLastAssignmentType();
-
+	
+	
 	enum AssignmentType{
 		PartialDemand, PartialSupply, Full
 	}
