@@ -12,11 +12,11 @@ import static hsoines.oekoflex.domain.SequenceDefinition.EOMClearingPriority;
 import static hsoines.oekoflex.domain.SequenceDefinition.EOMInterval;
 
 /**
- * Interface for the EOM Markettrader
+ * Interface for the EOM market trader
  * Clears the energy only market:
  * <ul>
  * 	<li> gets bids as supplies or demands from the market traders
- * 	<li> determines the bids and marketprice that are accepted 
+ * 	<li> determines the bids and market price that are accepted 
  * 	<li> notifies the market traders that their bids are accepted or denied
  * </ul>
  * <p>

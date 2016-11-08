@@ -8,6 +8,7 @@ import repast.simphony.engine.schedule.ScheduledMethod;
  * Gibt Angebote an den Regelenergiemarkt
  */
 public interface BalancingMarketTrader extends MarketTrader, MarketOperatorListener {
+	// TODO: Muss angepasst werden, sodass die Trennung zwischen Arbeitspreis und Leistungspreis funktioniert
     @ScheduledMethod(start = SequenceDefinition.SimulationStart, interval = SequenceDefinition.BalancingMarketInterval, priority = SequenceDefinition.BPMBidPriority)
     void makeBidBalancingMarket();
 

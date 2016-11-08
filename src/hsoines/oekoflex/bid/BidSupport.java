@@ -50,7 +50,8 @@ public abstract class BidSupport implements Bid {
      }
 
     /**
-     *  
+     *  Sorts by price, in case prices are the same sorts by quantity
+     *  smaller prices before bigger ones, if both prices are the same the bigger quantity is first
      */
     public static class SupplyComparator implements Comparator<Bid> {
 

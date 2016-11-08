@@ -86,8 +86,8 @@ public class FlexPowerplant3 implements EOMTrader, BalancingMarketTrader, Market
 	/**
 	 * Constructor 1
 	 */ 
-	public FlexPowerplant3(final String name, final String description, final int powerMax, final int powerMin, final float efficiency,	final int powerRampUp, final int powerRampDown,	final PriceForwardCurve priceForwardCurve, final float variableCosts, final float fuelCosts, final float co2CertificateCosts, final float emissionRate, final float cost_startUp , final float cost_shutDown)  {
-		this(name, description, powerMax, powerMin, powerRampUp, powerRampDown, priceForwardCurve, FlexPowerplant2.calculateMarginalCosts(variableCosts, fuelCosts, co2CertificateCosts, emissionRate, efficiency), cost_startUp, cost_shutDown);
+	public FlexPowerplant3(final String name, final String description, final int powerMax, final int powerMin, final float efficiency,	final int powerRampUp, final int powerRampDown,	final PriceForwardCurve priceForwardCurve, final float startStopCosts, final float fuelCosts, final float co2CertificateCosts, final float emissionRate, final float cost_startUp , final float cost_shutDown)  {
+		this(name, description, powerMax, powerMin, powerRampUp, powerRampDown, priceForwardCurve, FlexPowerplant2.calculateMarginalCosts(startStopCosts, fuelCosts, co2CertificateCosts, emissionRate, efficiency), cost_startUp, cost_shutDown);
 	}
 
 	/**
@@ -95,8 +95,8 @@ public class FlexPowerplant3 implements EOMTrader, BalancingMarketTrader, Market
 	 *
 	 * @return      marginal costs as [€/MWh]
 	 */ 
-	static float calculateMarginalCosts(final float variableCosts, final float fuelCosts, final float co2CertificateCosts, final float emissionRate, final float efficiency) {
-		return fuelCosts / efficiency + (co2CertificateCosts * emissionRate / efficiency) + variableCosts;
+	static float calculateMarginalCosts(final float variableCosts, final float startStopCosts, final float co2CertificateCosts, final float emissionRate, final float efficiency) {
+		return startStopCosts / efficiency + (co2CertificateCosts * emissionRate / efficiency) + variableCosts;
 	}
 	
 	/**

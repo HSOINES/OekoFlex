@@ -4,6 +4,7 @@ import hsoines.oekoflex.OekoflexAgent;
 import hsoines.oekoflex.builder.CSVParameter;
 import hsoines.oekoflex.builder.OekoFlexContextBuilder;
 import hsoines.oekoflex.energytrader.impl.FlexPowerplant2;
+import hsoines.oekoflex.energytrader.impl.FlexPowerplant3;
 import hsoines.oekoflex.marketoperator.BalancingMarketOperator;
 import hsoines.oekoflex.marketoperator.impl.SpotMarketOperatorImpl;
 import hsoines.oekoflex.priceforwardcurve.PriceForwardCurve;
@@ -45,19 +46,19 @@ public class FlexPowerplant3Factory {
 	    public static void build(final File configDir,final Context<OekoflexAgent> context, final SpotMarketOperatorImpl spotMarketMarketOperator, final BalancingMarketOperator balancingMarketOperator,final PriceForwardCurve priceForwardCurve, final Properties globalProperties) throws IOException {
 	        
 	    	FlexPowerplant3Factory.priceForwardCurve = priceForwardCurve;
-	        Set<FlexPowerplant2> flexPowerplants = build(configDir, globalProperties);
-	        for (FlexPowerplant2 flexPowerplant : flexPowerplants) {
+	        Set<FlexPowerplant3> flexPowerplants = build(configDir, globalProperties);
+	        for (FlexPowerplant3 flexPowerplant : flexPowerplants) {
 	            flexPowerplant.setBalancingMarketOperator(balancingMarketOperator);
 	            flexPowerplant.setSpotMarketOperator(spotMarketMarketOperator);
 	            context.add(flexPowerplant);
 	        }
 	    }
 
-	    public static Set<FlexPowerplant2> build(File configDir, final Properties globalProperties) throws IOException {
+	    public static Set<FlexPowerplant3> build(File configDir, final Properties globalProperties) throws IOException {
 	        File configFile = new File(configDir + "/" + "FlexiblePowerplant.cfg.csv");
 	        FileReader reader = new FileReader(configFile);
 	        CSVParser format = CSVParameter.getCSVFormat().parse(reader);
-	        Set<FlexPowerplant2> flexPowerplants = new HashSet<>();
+	        Set<FlexPowerplant3> flexPowerplants = new HashSet<>();
 	        for (CSVRecord parameters : format) {
 	            try {
 	                String name = parameters.get("name");
@@ -74,7 +75,9 @@ public class FlexPowerplant3Factory {
 	                final float startStopCosts = getStartStopCosts(globalProperties, description);
 
 	                float co2CertificateCosts = Float.parseFloat(globalProperties.getProperty("CO2CertificatesCosts"));
-	                FlexPowerplant2 flexPowerplant = new FlexPowerplant2(name, description, powerMax, powerMin, efficiency, rampUp, rampDown, startStopCosts, FlexPowerplant3Factory.priceForwardCurve, variableCosts, fuelCosts, co2CertificateCosts, emissionRate);
+	                float cost_startUp = 1.0f; // TODO: read values from csv
+					float cost_shutDown = 1.0f;// TODO: read values from csv
+					FlexPowerplant3 flexPowerplant = new FlexPowerplant3(name, description, powerMax, powerMin, efficiency, rampUp, rampDown, FlexPowerplant3Factory.priceForwardCurve, startStopCosts, fuelCosts, co2CertificateCosts, emissionRate,cost_startUp, cost_shutDown);
 	                flexPowerplants.add(flexPowerplant);
 	                log.info("FlexPowerplant2 Build done for <" + name + ">.");
 	            } catch (NumberFormatException e) {

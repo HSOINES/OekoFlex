@@ -40,8 +40,8 @@ public final class BalancingMarketOperatorImpl implements BalancingMarketOperato
     private final String name;
     private final int positiveQuantity;
     private final int negativeQuantity;
-    private final List<BidSupport> positiveSupplies = new ArrayList<>();
-    private final List<BidSupport> negativeSupplies = new ArrayList<>();
+    private final List<BidSupport> positiveSupplies = new ArrayList<>(); // wiso final, sollte die Liste nicht mit jedem Tick neu generiert werden???
+    private final List<BidSupport> negativeSupplies = new ArrayList<>(); // wiso final, sollte die Liste nicht mit jedem Tick neu generiert werden???
 
     private float totalClearedPositiveQuantity;
     private float totalClearedNegativeQuantity;
@@ -65,7 +65,7 @@ public final class BalancingMarketOperatorImpl implements BalancingMarketOperato
      */
     public BalancingMarketOperatorImpl(String name, final boolean loggingActivated, String logDirName, final int positiveDemandBPM, final int negativeDemandBPM) throws IOException {
         this.name = name;
-        this.positiveQuantity = positiveDemandBPM; // REM = Regelenergiemarkt.
+        this.positiveQuantity = positiveDemandBPM; 
         this.negativeQuantity = negativeDemandBPM;
         if (loggingActivated) {
             initLogging(logDirName);
@@ -110,13 +110,15 @@ public final class BalancingMarketOperatorImpl implements BalancingMarketOperato
      */
     @Override
     public void clearMarket() {
+    	
         log.trace("positive clearing.");
-        ClearingData positiveClearingData = doClearMarketFor(positiveSupplies, positiveQuantity);
+        ClearingData positiveClearingData = doClearMarketFor(positiveSupplies, positiveQuantity); // positiveSupplies-> wiso final, sollte die Liste nicht mit jedem Tick neu generiert werden???
         totalClearedPositiveQuantity = positiveClearingData.getClearedQuantity();
         lastPositiveAssignmentRate = positiveClearingData.getAssignmentRate();
         lastClearedPositiveMaxPrice = positiveClearingData.getLastClearedMaxPrice();
+        
         log.trace("negative clearing.");
-        ClearingData negativeClearingData = doClearMarketFor(negativeSupplies, negativeQuantity);
+        ClearingData negativeClearingData = doClearMarketFor(negativeSupplies, negativeQuantity); // negativeSupplies-> wiso final, sollte die Liste nicht mit jedem Tick neu generiert werden???
         totalClearedNegativeQuantity = negativeClearingData.getClearedQuantity();
         lastNegativeAssignmentRate = negativeClearingData.getAssignmentRate();
         lastClearedNegativeMaxPrice = negativeClearingData.getLastClearedMaxPrice();
@@ -129,32 +131,41 @@ public final class BalancingMarketOperatorImpl implements BalancingMarketOperato
      * @return
      */
     ClearingData doClearMarketFor(final List<BidSupport> supplies, float quantity) {
-        supplies.sort(new BidSupport.SupplyComparator());
+        supplies.sort(new BidSupport.SupplyComparator()); // smaller prices before bigger ones, in case they are the same bigger quantities first 
+        
         float totalClearedQuantity = 0;
         float lastAssignmentRate = 0;
         float lastClearedPrice = 0;
+        
         for (BidSupport bidSupport : supplies) {
-            MarketOperatorListener marketOperatorListener = bidSupport.getMarketOperatorListener();
-            if (totalClearedQuantity + bidSupport.getQuantity() < quantity) {
+            MarketOperatorListener marketOperatorListener = bidSupport.getMarketOperatorListener(); // Wiso nicht ausserhalb der Schleife???!!!!
+            
+            if (totalClearedQuantity + bidSupport.getQuantity() < quantity) {	// Completely fulfilled bids
                 totalClearedQuantity += bidSupport.getQuantity();
-                lastAssignmentRate = 1;
+                lastAssignmentRate = 1;							
                 doNotify(bidSupport, marketOperatorListener, 1);
                 lastClearedPrice = bidSupport.getPrice();
-            } else if (totalClearedQuantity >= quantity) {
+            } else if (totalClearedQuantity >= quantity) {						// none fulfilled bids
                 doNotify(bidSupport, marketOperatorListener, 0);
-            } else {
+            } else {															// partially fulfilled bids
                 lastAssignmentRate = (quantity - totalClearedQuantity) / bidSupport.getQuantity();
                 doNotify(bidSupport, marketOperatorListener, lastAssignmentRate);
                 totalClearedQuantity += bidSupport.getQuantity() * lastAssignmentRate;
                 lastClearedPrice = bidSupport.getPrice();
+                
             }
         }
+        
         log.trace("Clearing done.");
+        
         supplies.clear();
+        
         final float finalTotalClearedQuantity = totalClearedQuantity;
         final float finalLastAssignmentRate = lastAssignmentRate;
         final float finalLastClearedPrice = lastClearedPrice;
+        
         log.trace("total cleared quantity: " + finalTotalClearedQuantity + ", lasst assignment rate: " + lastAssignmentRate + ", last cleared price: " + lastClearedPrice);
+        
         return new ClearingData() {
             @Override
             public float getClearedQuantity() {
@@ -271,5 +282,27 @@ public final class BalancingMarketOperatorImpl implements BalancingMarketOperato
 
         float getAssignmentRate();
     }
+
+	@Override
+	public void clearMarketCapacityPrice() {
+
+        log.trace("positive clearing.");
+        ClearingData positiveClearingData = doClearMarketFor(positiveSupplies, positiveQuantity); // positiveSupplies-> wiso final, sollte die Liste nicht mit jedem Tick neu generiert werden???
+        totalClearedPositiveQuantity = positiveClearingData.getClearedQuantity();
+        lastPositiveAssignmentRate = positiveClearingData.getAssignmentRate();
+        lastClearedPositiveMaxPrice = positiveClearingData.getLastClearedMaxPrice();
+        
+        log.trace("negative clearing.");
+        ClearingData negativeClearingData = doClearMarketFor(negativeSupplies, negativeQuantity); // negativeSupplies-> wiso final, sollte die Liste nicht mit jedem Tick neu generiert werden???
+        totalClearedNegativeQuantity = negativeClearingData.getClearedQuantity();
+        lastNegativeAssignmentRate = negativeClearingData.getAssignmentRate();
+        lastClearedNegativeMaxPrice = negativeClearingData.getLastClearedMaxPrice();
+		
+	}
+	@Override
+	public void clearMarketenergyPrice() {
+		// TODO Auto-generated method stub
+		
+	}
 
 }

@@ -7,7 +7,7 @@ import hsoines.oekoflex.domain.SequenceDefinition;
 import repast.simphony.engine.schedule.ScheduledMethod;
 
 /**
- * Interface for the EOM Markettrader
+ * Interface for the EOM market trader
  * Clears the balancing power market
  * <ul>
  * 	<li> gets bids as supplies or demands from the market traders
@@ -34,12 +34,27 @@ public interface BalancingMarketOperator extends OekoflexAgent {
      */
 	void addNegativeSupply(PowerNegative supply);
 
+	
+	// 
 	/**
+	 * Original one , soon to be deprecated
+	 * 
 	 * market clearing, is called by the Repast scheduler 
 	 */
-	@ScheduledMethod(start = SequenceDefinition.SimulationStart, interval = SequenceDefinition.BalancingMarketInterval, priority = SequenceDefinition.BPMClearingPriority)
+	@ScheduledMethod(start = SequenceDefinition.SimulationStart, interval = SequenceDefinition.BalancingMarketInterval, priority = SequenceDefinition.BPMClearingPriorityCapacityPrice)
 	void clearMarket();
-
+	
+	// Every 16 ticks clearing for Leistungspreis
+	@ScheduledMethod(start = SequenceDefinition.SimulationStart, interval = SequenceDefinition.BalancingMarketInterval, priority = SequenceDefinition.BPMClearingPriorityCapacityPrice)
+	void clearMarketCapacityPrice();
+	
+	
+	// Every tick clearing for Arbeitspreis
+	@ScheduledMethod(start = SequenceDefinition.SimulationStart, interval = SequenceDefinition.EOMInterval, priority = SequenceDefinition.BPMClearingPriorityEnergyPrice)
+	void clearMarketenergyPrice();
+	
+	
+	
 	/** 
 	 * Getter for Tests
 	 * @return amount of positive power cleared
@@ -74,4 +89,7 @@ public interface BalancingMarketOperator extends OekoflexAgent {
 	 * @return last cleared positive max price
 	 */
 	float getLastClearedPositiveMaxPrice();
+	
+	// Warum gibt es beim SpotMarketOperator eine stop() Methode mit
+	// Repast Scheduler und nicht hier??
 }

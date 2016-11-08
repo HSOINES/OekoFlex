@@ -1,7 +1,7 @@
 package hsoines.oekoflex.builder;
 
 import hsoines.oekoflex.OekoflexAgent;
-import hsoines.oekoflex.builder.traderfactories.FlexPowerplant2Factory;
+
 import hsoines.oekoflex.builder.traderfactories.FlexPowerplant3Factory;
 import hsoines.oekoflex.builder.traderfactories.LearningStorageFactory;
 import hsoines.oekoflex.builder.traderfactories.StorageFactory;
@@ -116,8 +116,8 @@ public class OekoFlexContextBuilder implements ContextBuilder<OekoflexAgent> {
             TotalLoadFactory.build(configDir, context, spotMarketOperator, prerunDays * SequenceDefinition.DayInterval);
 
             //Producers
-            FlexPowerplant2Factory.build(configDir, context, spotMarketOperator, balancingMarketOperator, priceForwardCurve, globalProperties);
-//            FlexPowerplant3Factory.build(configDir, context, spotMarketOperator, balancingMarketOperator, priceForwardCurve, globalProperties);
+//            FlexPowerplant2Factory.build(configDir, context, spotMarketOperator, balancingMarketOperator, priceForwardCurve, globalProperties);
+            FlexPowerplant3Factory.build(configDir, context, spotMarketOperator, balancingMarketOperator, priceForwardCurve, globalProperties);
 //            StorageFactory.build(configDir, context, spotMarketOperator, balancingMarketOperator, priceForwardCurve);
             LearningStorageFactory.build(configDir, context, spotMarketOperator, balancingMarketOperator, priceForwardCurve);
             
