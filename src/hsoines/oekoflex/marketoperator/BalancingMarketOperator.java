@@ -41,8 +41,6 @@ public interface BalancingMarketOperator extends OekoflexAgent {
 	 * 
 	 * market clearing, is called by the Repast scheduler 
 	 */
-	@ScheduledMethod(start = SequenceDefinition.SimulationStart, interval = SequenceDefinition.BalancingMarketInterval, priority = SequenceDefinition.BPMClearingPriorityCapacityPrice)
-	void clearMarket();
 	
 	// Every 16 ticks clearing for Leistungspreis
 	@ScheduledMethod(start = SequenceDefinition.SimulationStart, interval = SequenceDefinition.BalancingMarketInterval, priority = SequenceDefinition.BPMClearingPriorityCapacityPrice)
@@ -51,7 +49,7 @@ public interface BalancingMarketOperator extends OekoflexAgent {
 	
 	// Every tick clearing for Arbeitspreis
 	@ScheduledMethod(start = SequenceDefinition.SimulationStart, interval = SequenceDefinition.EOMInterval, priority = SequenceDefinition.BPMClearingPriorityEnergyPrice)
-	void clearMarketenergyPrice();
+	void clearMarketEnergyPrice();
 	
 	
 	
@@ -89,6 +87,10 @@ public interface BalancingMarketOperator extends OekoflexAgent {
 	 * @return last cleared positive max price
 	 */
 	float getLastClearedPositiveMaxPrice();
+
+	void addNegativeSupplyArbeitspreis(PowerNegative pNegSupplyArbeitspreis);
+
+	void addPositiveSupplyArbeitspreis(PowerPositive pPosSupplyArbeitspreis);
 	
 	// Warum gibt es beim SpotMarketOperator eine stop() Methode mit
 	// Repast Scheduler und nicht hier??

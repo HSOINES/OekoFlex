@@ -5,7 +5,7 @@ import hsoines.oekoflex.builder.OekoFlexContextBuilder;
 //import hsoines.oekoflex.builder.traderfactories.FlexPowerplant2Factory;
 import hsoines.oekoflex.builder.traderfactories.FlexPowerplant3Factory;
 import hsoines.oekoflex.builder.traderfactories.TotalLoadFactory;
-import hsoines.oekoflex.energytrader.impl.FlexPowerplant2;
+//import hsoines.oekoflex.energytrader.impl.FlexPowerplant2;
 import hsoines.oekoflex.energytrader.impl.FlexPowerplant3;
 import hsoines.oekoflex.energytrader.impl.TotalLoad;
 import hsoines.oekoflex.marketoperator.SpotMarketOperator;
@@ -77,6 +77,7 @@ public class PriceForwardCurveGenerator {
         TimeUtil.startAt(-prerunTicks);
         for (long tick = -prerunTicks; tick < ticksToRun; tick++) {
             log.debug("Building pfc for tick: " + tick);
+//            for (FlexPowerplant2 flexPowerplant : flexPowerplants) {
             for (FlexPowerplant3 flexPowerplant : flexPowerplants) {
                 flexPowerplant.makeBidEOM(tick);
             }

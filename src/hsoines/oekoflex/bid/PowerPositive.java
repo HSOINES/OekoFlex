@@ -7,6 +7,8 @@ import hsoines.oekoflex.energytrader.MarketOperatorListener;
  */
 public final class PowerPositive extends PowerBid {
 	
+	public BidType b;;
+
 	/**
 	 * Constructor, with constructor channeling,calls the superclass PowerBid
 	 * 
@@ -14,8 +16,9 @@ public final class PowerPositive extends PowerBid {
 	 * @param quantity	amount of power in [MW]
 	 * @param marketOperatorListener listener of a market which listens to this specific bid -> balancing power listener
 	 */
-    public PowerPositive(float price, float quantity, MarketOperatorListener marketOperatorListener) {
+    public PowerPositive(float price, float quantity, MarketOperatorListener marketOperatorListener,BidType bt) {
         super(price, quantity, marketOperatorListener);
+        this.b = bt;
     }
     
     /**
@@ -23,7 +26,7 @@ public final class PowerPositive extends PowerBid {
      */
     @Override
     public BidType getBidType() {
-        return BidType.POWER_POSITIVE;
+        return b;
     }
 
 }

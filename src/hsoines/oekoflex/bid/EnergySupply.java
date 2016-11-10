@@ -1,7 +1,7 @@
 package hsoines.oekoflex.bid;
 
 import hsoines.oekoflex.energytrader.MarketOperatorListener;
-import hsoines.oekoflex.energytrader.impl.FlexPowerplant;
+import hsoines.oekoflex.energytrader.impl.FlexPowerplant3;
 
 /**
  * bid for an energy supply the kind of energy bid

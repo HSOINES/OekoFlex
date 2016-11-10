@@ -3,7 +3,6 @@ package hsoines.oekoflex.builder.traderfactories;
 import hsoines.oekoflex.OekoflexAgent;
 import hsoines.oekoflex.builder.CSVParameter;
 import hsoines.oekoflex.builder.OekoFlexContextBuilder;
-import hsoines.oekoflex.energytrader.impl.FlexPowerplant2;
 import hsoines.oekoflex.energytrader.impl.FlexPowerplant3;
 import hsoines.oekoflex.marketoperator.BalancingMarketOperator;
 import hsoines.oekoflex.marketoperator.impl.SpotMarketOperatorImpl;
@@ -72,12 +71,12 @@ public class FlexPowerplant3Factory {
 	                float variableCosts = getVariableCosts(globalProperties, description);
 	                float fuelCosts = getFuelCosts(globalProperties, description);
 	                final float emissionRate = getEmissionRate(globalProperties, description);
-	                final float startStopCosts = getStartStopCosts(globalProperties, description);
+//	                final float startStopCosts = getStartStopCosts(globalProperties, description); // Notwendig???
 
 	                float co2CertificateCosts = Float.parseFloat(globalProperties.getProperty("CO2CertificatesCosts"));
 	                float cost_startUp = 1.0f; // TODO: read values from csv
 					float cost_shutDown = 1.0f;// TODO: read values from csv
-					FlexPowerplant3 flexPowerplant = new FlexPowerplant3(name, description, powerMax, powerMin, efficiency, rampUp, rampDown, FlexPowerplant3Factory.priceForwardCurve, startStopCosts, fuelCosts, co2CertificateCosts, emissionRate,cost_startUp, cost_shutDown);
+					FlexPowerplant3 flexPowerplant = new FlexPowerplant3(name, description, powerMax, powerMin, efficiency, rampUp, rampDown, FlexPowerplant3Factory.priceForwardCurve, variableCosts, fuelCosts, co2CertificateCosts, emissionRate,cost_startUp, cost_shutDown);
 	                flexPowerplants.add(flexPowerplant);
 	                log.info("FlexPowerplant2 Build done for <" + name + ">.");
 	            } catch (NumberFormatException e) {
@@ -90,7 +89,8 @@ public class FlexPowerplant3Factory {
 	        return flexPowerplants;
 	    }
 
-	    private static float getStartStopCosts(Properties globalProperties, String description) {
+	    @SuppressWarnings("unused")
+		private static float getStartStopCosts(Properties globalProperties, String description) {
 	        float startStopCosts;
 	        switch (description) {
 	            case "lignite":

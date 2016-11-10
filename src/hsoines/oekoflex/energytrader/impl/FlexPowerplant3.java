@@ -83,11 +83,16 @@ public class FlexPowerplant3 implements EOMTrader, BalancingMarketTrader, Market
 	private final float dt   = 0.25f;
 	private final float dtau = 4.0f;
 	
+	private float powerPreceding;
+	
+	private float negativeQuantityAssignedBPM ;
+	float positiveQuantityAssignedBPM;
+	
 	/**
 	 * Constructor 1
 	 */ 
-	public FlexPowerplant3(final String name, final String description, final int powerMax, final int powerMin, final float efficiency,	final int powerRampUp, final int powerRampDown,	final PriceForwardCurve priceForwardCurve, final float startStopCosts, final float fuelCosts, final float co2CertificateCosts, final float emissionRate, final float cost_startUp , final float cost_shutDown)  {
-		this(name, description, powerMax, powerMin, powerRampUp, powerRampDown, priceForwardCurve, FlexPowerplant2.calculateMarginalCosts(startStopCosts, fuelCosts, co2CertificateCosts, emissionRate, efficiency), cost_startUp, cost_shutDown);
+	public FlexPowerplant3(final String name, final String description, final int powerMax, final int powerMin, final float efficiency,	final int powerRampUp, final int powerRampDown,	final PriceForwardCurve priceForwardCurve, final float variableCosts, final float fuelCosts, final float co2CertificateCosts, final float emissionRate, final float cost_startUp , final float cost_shutDown)  {
+		this(name, description, powerMax, powerMin, powerRampUp, powerRampDown, priceForwardCurve, FlexPowerplant3.calculateMarginalCosts(variableCosts, fuelCosts, co2CertificateCosts, emissionRate, efficiency), cost_startUp, cost_shutDown);
 	}
 
 	/**
@@ -167,27 +172,34 @@ public class FlexPowerplant3 implements EOMTrader, BalancingMarketTrader, Market
 	public void notifyClearingDone(Date currentDate, Market market, Bid bid, float clearedPrice, float rate) {
 		switch (bid.getBidType()) {
 			case ENERGY_SUPPLY_MUSTRUN:
-				if (rate < 0.0001f) { return; }  	// TODO:  What is this??
-				if (1 - rate > 0.00001f) {			// TODO:  What is this??
+				if (rate < 0.0001f) { return; }  	// Schrott zur Absicherung
+				if (1 - rate > 0.00001f) {			
 					log.error("rate of MUSTRUN < 1: " + rate + ", Plant: " + getName());
-					energyTradeRegistry.addAssignedQuantity(currentDate, market, bid.getPrice(), 0, bid.getQuantity(), 1 - rate, BidType.ENERGY_SUPPLY_MUSTRUN_COMPLEMENT);
-				}
+					energyTradeRegistry.addAssignedQuantity(currentDate, market, bid.getPrice(), 0, bid.getQuantity(), 1 - rate, BidType.ENERGY_SUPPLY_MUSTRUN_COMPLEMENT); // Warum 1-rate???
+				}									// Ende vom Schrott zur Absicherung
 			case ENERGY_SUPPLY:
 				energyTradeRegistry.addAssignedQuantity(currentDate, market, bid.getPrice(), clearedPrice, bid.getQuantity(), rate, bid.getBidType());
 				break;
-			case POWER_NEGATIVE:
-			case POWER_POSITIVE:
+			case POWER_NEGATIVE_ARBEITSPREIS:
+			case POWER_POSITIVE_ARBEITSPREIS:
 				powerTradeRegistry.addAssignedQuantity(currentDate, market, bid.getPrice(), clearedPrice, bid.getQuantity(), rate, bid.getBidType());
+				break;
+			case POWER_NEGATIVE:
+				negativeQuantityAssignedBPM = bid.getQuantity()*rate;
+				break;
+			case POWER_POSITIVE:
+				positiveQuantityAssignedBPM =  bid.getQuantity()*rate;
 				break;
 			default:
 				throw new IllegalStateException("No matching Bidtype, BidType is: " + bid.getBidType());
 		}
 		
+		calculateAndSetPowerPreceding();   // EOM Market responded, so we calculate Power Preceding
+		
 		if (market.equals(Market.SPOT_MARKET)) {
 			this.lastClearedPrice = clearedPrice;
 			this.lastAssignmentRate = rate;
 		}
-
 	}
 
 	/**
@@ -218,7 +230,7 @@ public class FlexPowerplant3 implements EOMTrader, BalancingMarketTrader, Market
 		Date currentDate = TimeUtil.getDate(currentTick);
 		Date precedingDate = TimeUtil.precedingDate(currentDate); // precedingDate = currentDate plus 15min 
 	
-		float pPreceding = (energyTradeRegistry.getQuantityUsed(precedingDate) * 4); // power = energy * 4 
+		
 
 		float pfcCostsAverage = priceForwardCurve.avgPriceOverTicks(currentTick, Market.BALANCING_MARKET.getTicks());//  Market.BALANCING_MARKET.getTicks() is equivalent to 16
 		
@@ -226,85 +238,51 @@ public class FlexPowerplant3 implements EOMTrader, BalancingMarketTrader, Market
 		float pRampDown = (powerRampDown / LATENCY);
 		
 		
-		// 1.1 Bestimmung Gebotsmenge am Regelenergiemarkt – positive Regelleistung
-		float mengeRegelleistungPpos = Math.min(powerMax - pPreceding, pRampUp);;
+		// 1.1 Bestimmung Gebotsmenge am Regelenergiemarkt - positive Regelleistung
+		float mengeRegelleistungPpos = Math.min(powerMax - powerPreceding, pRampUp);;
 		
 		if (mengeRegelleistungPpos < 5) {
 			mengeRegelleistungPpos = 0;
 		}
-
-		
-		// 1.2 Bestimmung Leistungspreis am Regelenergiemarkt – positive Regelleistung
-		float leistungspreisPpos, arbeitspreisPpos , gebotspreisPpos;
 		
 		if (mengeRegelleistungPpos > 0) {
-			leistungspreisPpos = Math.max((pfcCostsAverage - marginalCosts) * dtau, 0)+ Math.abs(Math.min(((pfcCostsAverage - marginalCosts) * dtau * powerMin) / mengeRegelleistungPpos, 0));
-			arbeitspreisPpos   =  marginalCosts; // FACTOR_BALANCING_CALL := Faktor Regelenergieabruf
-			gebotspreisPpos    = leistungspreisPpos + arbeitspreisPpos; 
-		}else{
-			gebotspreisPpos    = 0;
-		}
-		
-		// 1.3 Angebotsabgabe der positiven Regelleistung
-		if(mengeRegelleistungPpos > 0){
-			PowerPositive pPosSupply= new PowerPositive(gebotspreisPpos, mengeRegelleistungPpos, this);
+			// 1.2 Bestimmung Leistungspreis am Regelenergiemarkt - positive Regelleistung
+			float leistungspreisPpos = Math.max((pfcCostsAverage - marginalCosts) * dtau, 0)+ Math.abs(Math.min(((pfcCostsAverage - marginalCosts) * dtau * powerMin) / mengeRegelleistungPpos, 0));
+			float arbeitspreisPpos   =  marginalCosts; // FACTOR_BALANCING_CALL := Faktor Regelenergieabruf
+			
+			// 1.3 Angebotsabgabe der positiven Regelleistung
+			PowerPositive pPosSupply= new PowerPositive(leistungspreisPpos, mengeRegelleistungPpos, this , BidType.POWER_POSITIVE_LEISTUNGSPREIS);
 			balancingMarketOperator.addPositiveSupply(pPosSupply);
+			
+			PowerPositive pPosSupplyArbeitspreis= new PowerPositive(arbeitspreisPpos, mengeRegelleistungPpos, this, BidType.POWER_POSITIVE_ARBEITSPREIS);
+			balancingMarketOperator.addPositiveSupplyArbeitspreis(pPosSupplyArbeitspreis);
 		}
 		
 		
 		
-		// 2.1 Bestimmung Gebotsmenge am Regelenergiemarkt – negative Regelleistung
-		float mengeRegelleistungPneg = Math.min(pPreceding - powerMin, pRampDown);;
+		// 2.1 Bestimmung Gebotsmenge am Regelenergiemarkt - negative Regelleistung
+		float mengeRegelleistungPneg = Math.min(powerPreceding - powerMin, pRampDown);  //Checked 10.11.2016
 		
 		if (mengeRegelleistungPneg < 5) {
 			mengeRegelleistungPneg = 0;
 		}
 		
 		
-		// 2.2 Bestimmung Leistungspreis am Regelenergiemarkt – negative Regelleistung
-		float leistungspreisPneg, arbeitspreisPneg , gebotspreisPneg;
-		
 		if (mengeRegelleistungPneg > 0) {
-			leistungspreisPneg = Math.abs(Math.min(((pfcCostsAverage - marginalCosts) * dtau * (powerMin + mengeRegelleistungPneg)) / mengeRegelleistungPneg, 0));
-			arbeitspreisPneg   = -marginalCosts;
-			gebotspreisPneg    = leistungspreisPneg - arbeitspreisPneg;
-		}else{
-			gebotspreisPneg    = 0;
-		}
-		
-		
-		// 2.3 Angebotsabgabe der negativen Regelleistung
-		if (mengeRegelleistungPneg > 0) {
-			PowerNegative pNegSupply =new PowerNegative(gebotspreisPneg, mengeRegelleistungPneg, this);
+			// 2.2 Bestimmung Leistungspreis am Regelenergiemarkt - negative Regelleistung
+			float leistungspreisPneg = Math.abs(Math.min(((pfcCostsAverage - marginalCosts) * dtau * (powerMin + mengeRegelleistungPneg)) / mengeRegelleistungPneg, 0));
+			float arbeitspreisPneg   = -marginalCosts;
+			
+			// 2.3 Angebotsabgabe der negativen Regelleistung
+			PowerNegative pNegSupply =new PowerNegative(leistungspreisPneg, mengeRegelleistungPneg, this,BidType.POWER_NEGATIVE_LEISTUNGSPREIS);
 			balancingMarketOperator.addNegativeSupply(pNegSupply);
+			
+			PowerNegative pNegSupplyArbeitspreis =new PowerNegative(arbeitspreisPneg, mengeRegelleistungPneg, this,BidType.POWER_NEGATIVE_ARBEITSPREIS);
+			balancingMarketOperator.addNegativeSupplyArbeitspreis(pNegSupplyArbeitspreis);
 		}
+
 	}
 	
-	/**
-	 * @param balancingMarketOperator  the operator to set for the balancing power market
-	 */ 
-	@Override
-	public void setBalancingMarketOperator(BalancingMarketOperator balancingMarketOperator) {
-		this.balancingMarketOperator = balancingMarketOperator;
-	}
-
-	/**
-	 * @param spotMarketOperator  the operator to set for the spotmarket / Energy only market
-	 */ 
-	@Override
-	public void setSpotMarketOperator(SpotMarketOperator spotMarketOperator) {
-		this.eomMarketOperator = spotMarketOperator;
-
-	}
-
-	/**
-	 * @return      last cleared price
-	 */ 
-	@Override
-	public float getLastClearedPrice() {
-		return lastClearedPrice;
-	}
-
 	/**
 	 * Will be called by the EOM market-operator to invite the agents to  make bids .
 	 * Calls makeBidEOM(long currentTick)
@@ -328,39 +306,70 @@ public class FlexPowerplant3 implements EOMTrader, BalancingMarketTrader, Market
 		Date currentDate   = TimeUtil.getDate(currentTick);
         Date precedingDate = TimeUtil.precedingDate(currentDate);
 
-        float pPositiveCommited = powerTradeRegistry.getPositiveQuantityUsed(currentDate);
-        float pNegativeCommited = powerTradeRegistry.getNegativeQuantityUsed(currentDate);
+        float pPositiveCommited = powerTradeRegistry.getPositiveQuantityUsed(currentDate); // 
+        float pNegativeCommited = powerTradeRegistry.getNegativeQuantityUsed(currentDate); //
         
-        float ePreceding        = energyTradeRegistry.getQuantityUsed(precedingDate);
+        float ePreceding        = energyTradeRegistry.getQuantityUsed(precedingDate); 
         
-        float pPreceding = ePreceding * 4;
+        float pPreceding = ePreceding * 4; // EOM Momentanleistung im tick t-1
         
 		float pConstRampUp   = powerRampUp   / 2;
 		float pConstRampDown = powerRampDown / 2;
 		
 		// 1.1 Ermittlung Gebotsmenge des Must-Run-Gebots [MWh]
-        float pMustRun = Math.max((pPreceding - pNegativeCommited + pPositiveCommited)- pConstRampDown  + pNegativeCommited , (powerMin + pNegativeCommited));
-        float eMustRun = pMustRun / 4;
+        float pMustRun = Math.max(powerPreceding - pConstRampDown  + negativeQuantityAssignedBPM , (powerMin + pNegativeCommited));
+        float eMustRun = 0;
         
-		// 1.2 Ermittlung Gebotspreis des Must-Run-Gebots [€/MWh]
-        float priceMustRun = (((cost_shutDown- cost_startUp)*powerMax)/powerMin)*dt + marginalCosts;
+		if (pMustRun * dt >= 1) {
+			eMustRun = pMustRun * dt;
+
+			// 1.2 Ermittlung Gebotspreis des Must-Run-Gebots [Euro/MWh]
+			float priceMustRun = -1.0f * (((cost_shutDown - cost_startUp) * powerMax) / powerMin) * dt + marginalCosts;
+
+			// 1.3 Abgabe Must-Run-Gebot
+			EnergySupplyMustRun mustRunSupply = new EnergySupplyMustRun(priceMustRun, eMustRun, this);
+			eomMarketOperator.addSupply(mustRunSupply);
+		}
+      
         
-		// 1.3 Abgabe Must-Run-Gebot
-        EnergySupplyMustRun mustRunSupply = new EnergySupplyMustRun(priceMustRun, eMustRun, this) ;
-        eomMarketOperator.addSupply(mustRunSupply);
-       
+		// 2.1 Ermittlung Gebotsmenge des Flexibilit�tsgebots [MW]
+        float pFlex = Math.min((powerMax - positiveQuantityAssignedBPM - pMustRun),(pConstRampUp - positiveQuantityAssignedBPM)-pMustRun);
+        float eFlex  = 0;
         
-		// 2.1 Ermittlung Gebotsmenge des Flexibilitätsgebots [MW]
-        float pFlex = Math.min((powerMax - pPositiveCommited - pMustRun),(pPreceding-pNegativeCommited+pPositiveCommited)+(pConstRampUp-pPositiveCommited)-pMustRun);
-        float eFlex = pFlex / 4;
-        
-		// 2.2 Ermittlung Gebotspreis des Flexibilitätsgebots [€/MWh]
-		float priceFlex = marginalCosts;
-		
-		// 2.3 Abgabe Flexibilitätsgebot
-		EnergySupply flexSupply = new EnergySupply(priceFlex, eFlex, this);
-		eomMarketOperator.addSupply(flexSupply);
-		
+		if (pFlex * dt >= 1) {
+			eMustRun = pMustRun * dt;
+			// 2.2 Ermittlung Gebotspreis des Flexibilitaetsangebots [Euro/MWh]
+			float priceFlex = marginalCosts;
+
+			// 2.3 Abgabe Flexibilit�tsgebot
+			EnergySupply flexSupply = new EnergySupply(priceFlex, eFlex, this);
+			eomMarketOperator.addSupply(flexSupply);
+        	
+        }
+	}
+	
+	/**
+	 * @param balancingMarketOperator  the operator to set for the balancing power market
+	 */ 
+	@Override
+	public void setBalancingMarketOperator(BalancingMarketOperator balancingMarketOperator) {
+		this.balancingMarketOperator = balancingMarketOperator;
+	}
+
+	/**
+	 * @param spotMarketOperator  the operator to set for the spotmarket / Energy only market
+	 */ 
+	@Override
+	public void setSpotMarketOperator(SpotMarketOperator spotMarketOperator) {
+		this.eomMarketOperator = spotMarketOperator;
+	}
+
+	/**
+	 * @return      last cleared price
+	 */ 
+	@Override
+	public float getLastClearedPrice() {
+		return lastClearedPrice;
 	}
 
 	/**
@@ -371,5 +380,29 @@ public class FlexPowerplant3 implements EOMTrader, BalancingMarketTrader, Market
 	public float getCurrentPower() {
 		return energyTradeRegistry.getQuantityUsed(TimeUtil.getCurrentDate()) * dtau;
 	}
+	
+	/**
+	 * 
+	 */
+	private void calculateAndSetPowerPreceding(){
+		
+		long currentTick = TimeUtil.getCurrentTick();
+		Date currentDate   = TimeUtil.getDate(currentTick);
+        Date precedingDate = TimeUtil.precedingDate(currentDate);// precedingDate = currentDate plus 15min 
 
+		float pPositiveCommited = powerTradeRegistry.getPositiveQuantityUsed(precedingDate); 	// 
+        float pNegativeCommited = powerTradeRegistry.getNegativeQuantityUsed(precedingDate); 	//
+        float powerEOMpreceding = energyTradeRegistry.getQuantityUsed(precedingDate) * 4;		// power = energy * 4 
+        
+        
+		powerPreceding = powerEOMpreceding- pNegativeCommited +  pPositiveCommited; 
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	private float getPowerPreceding(){
+		return powerPreceding;
+	}
 }

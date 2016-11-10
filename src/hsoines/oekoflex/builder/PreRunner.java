@@ -45,7 +45,10 @@ public final class PreRunner {
                 for (BalancingMarketTrader balancingMarketTrader : balancingMarketTraders) {
                     balancingMarketTrader.makeBidBalancingMarket(currentTick);
                 }
-                balancingMarketOperator.clearMarket();
+                if(TimeUtil.getCurrentTick() % 15 == 0){  				// TODO: Check and debug
+                	balancingMarketOperator.clearMarketCapacityPrice();	// TODO: Check and debug
+                }														// TODO: Check and debug
+                balancingMarketOperator.clearMarketEnergyPrice();		// TODO: Check and debug
             }
             for (EOMTrader eomTrader : eomTraders) {
                 eomTrader.makeBidEOM(currentTick);

@@ -4,7 +4,6 @@ import hsoines.oekoflex.OekoflexAgent;
 
 import hsoines.oekoflex.builder.traderfactories.FlexPowerplant3Factory;
 import hsoines.oekoflex.builder.traderfactories.LearningStorageFactory;
-import hsoines.oekoflex.builder.traderfactories.StorageFactory;
 import hsoines.oekoflex.builder.traderfactories.TotalLoadFactory;
 import hsoines.oekoflex.domain.SequenceDefinition;
 import hsoines.oekoflex.marketoperator.BalancingMarketOperator;

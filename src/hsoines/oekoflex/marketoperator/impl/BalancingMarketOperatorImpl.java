@@ -42,6 +42,10 @@ public final class BalancingMarketOperatorImpl implements BalancingMarketOperato
     private final int negativeQuantity;
     private final List<BidSupport> positiveSupplies = new ArrayList<>(); // wiso final, sollte die Liste nicht mit jedem Tick neu generiert werden???
     private final List<BidSupport> negativeSupplies = new ArrayList<>(); // wiso final, sollte die Liste nicht mit jedem Tick neu generiert werden???
+    
+    // Liste der ArbeitspreisGebote
+    private  List<BidSupport> positiveSuppliesArbeitsPreis = new ArrayList<>(); 
+    private  List<BidSupport> negativeSuppliesArbeitsPreis = new ArrayList<>(); 
 
     private float totalClearedPositiveQuantity;
     private float totalClearedNegativeQuantity;
@@ -107,25 +111,6 @@ public final class BalancingMarketOperatorImpl implements BalancingMarketOperato
     
     /**
      * 
-     */
-    @Override
-    public void clearMarket() {
-    	
-        log.trace("positive clearing.");
-        ClearingData positiveClearingData = doClearMarketFor(positiveSupplies, positiveQuantity); // positiveSupplies-> wiso final, sollte die Liste nicht mit jedem Tick neu generiert werden???
-        totalClearedPositiveQuantity = positiveClearingData.getClearedQuantity();
-        lastPositiveAssignmentRate = positiveClearingData.getAssignmentRate();
-        lastClearedPositiveMaxPrice = positiveClearingData.getLastClearedMaxPrice();
-        
-        log.trace("negative clearing.");
-        ClearingData negativeClearingData = doClearMarketFor(negativeSupplies, negativeQuantity); // negativeSupplies-> wiso final, sollte die Liste nicht mit jedem Tick neu generiert werden???
-        totalClearedNegativeQuantity = negativeClearingData.getClearedQuantity();
-        lastNegativeAssignmentRate = negativeClearingData.getAssignmentRate();
-        lastClearedNegativeMaxPrice = negativeClearingData.getLastClearedMaxPrice();
-    }
-    
-    /**
-     * 
      * @param supplies
      * @param quantity
      * @return
@@ -158,7 +143,7 @@ public final class BalancingMarketOperatorImpl implements BalancingMarketOperato
         
         log.trace("Clearing done.");
         
-        supplies.clear();
+        
         
         final float finalTotalClearedQuantity = totalClearedQuantity;
         final float finalLastAssignmentRate = lastAssignmentRate;
@@ -234,7 +219,7 @@ public final class BalancingMarketOperatorImpl implements BalancingMarketOperato
      * @param marketOperatorListener
      * @param assignRate
      */
-    void doNotify(final BidSupport bidSupport, final MarketOperatorListener marketOperatorListener, float assignRate) {
+    void doNotify(final BidSupport bidSupport, final MarketOperatorListener marketOperatorListener, float assignRate) { // STRING type kann gelöscht werden sobald bidtype korrekt implementiert ist
         long tick = TimeUtil.getCurrentTick();
         marketOperatorListener.notifyClearingDone(TimeUtil.getDate(tick), Market.BALANCING_MARKET, bidSupport, bidSupport.getPrice(), assignRate);
 
@@ -244,7 +229,7 @@ public final class BalancingMarketOperatorImpl implements BalancingMarketOperato
                 + bidSupport.getBidType() + ";"
                 + NumberFormatUtil.format(bidSupport.getPrice()) + ";"
                 + NumberFormatUtil.format(bidSupport.getQuantity()) + ";"
-                + NumberFormatUtil.format(bidSupport.getQuantity() * assignRate) + ";");
+                + NumberFormatUtil.format(bidSupport.getQuantity() * assignRate) + ";" );
     }
     
     /**
@@ -282,26 +267,62 @@ public final class BalancingMarketOperatorImpl implements BalancingMarketOperato
 
         float getAssignmentRate();
     }
-
+    
+    // Leistungspreis
 	@Override
 	public void clearMarketCapacityPrice() {
-
-        log.trace("positive clearing.");
+		//Clear all old supplies:
+	    positiveSupplies.clear();
+	    negativeSupplies.clear();
+	    positiveSuppliesArbeitsPreis.clear();
+	    negativeSuppliesArbeitsPreis.clear();
+		
+		
+        log.trace("positive clearing Capacity Price.");
         ClearingData positiveClearingData = doClearMarketFor(positiveSupplies, positiveQuantity); // positiveSupplies-> wiso final, sollte die Liste nicht mit jedem Tick neu generiert werden???
         totalClearedPositiveQuantity = positiveClearingData.getClearedQuantity();
         lastPositiveAssignmentRate = positiveClearingData.getAssignmentRate();
         lastClearedPositiveMaxPrice = positiveClearingData.getLastClearedMaxPrice();
         
-        log.trace("negative clearing.");
+        log.trace("negative clearing Capacity Price.");
         ClearingData negativeClearingData = doClearMarketFor(negativeSupplies, negativeQuantity); // negativeSupplies-> wiso final, sollte die Liste nicht mit jedem Tick neu generiert werden???
         totalClearedNegativeQuantity = negativeClearingData.getClearedQuantity();
         lastNegativeAssignmentRate = negativeClearingData.getAssignmentRate();
         lastClearedNegativeMaxPrice = negativeClearingData.getLastClearedMaxPrice();
 		
 	}
+	
+	//Arbeitspreis
+	public void clearMarketEnergyPrice() {
+		log.trace("positive clearing Energy Price.");
+        ClearingData positiveClearingData = doClearMarketFor(positiveSupplies, positiveQuantity); // positiveSupplies-> wiso final, sollte die Liste nicht mit jedem Tick neu generiert werden???
+        totalClearedPositiveQuantity = positiveClearingData.getClearedQuantity();
+        lastPositiveAssignmentRate = positiveClearingData.getAssignmentRate();
+        lastClearedPositiveMaxPrice = positiveClearingData.getLastClearedMaxPrice();
+        
+        log.trace("negative clearing Energy Price.");
+        ClearingData negativeClearingData = doClearMarketFor(negativeSupplies, negativeQuantity); // negativeSupplies-> wiso final, sollte die Liste nicht mit jedem Tick neu generiert werden???
+        totalClearedNegativeQuantity = negativeClearingData.getClearedQuantity();
+        lastNegativeAssignmentRate = negativeClearingData.getAssignmentRate();
+        lastClearedNegativeMaxPrice = negativeClearingData.getLastClearedMaxPrice();
+	}
+	
+
+	
 	@Override
-	public void clearMarketenergyPrice() {
-		// TODO Auto-generated method stub
+	public void addNegativeSupplyArbeitspreis(PowerNegative pNegSupplyArbeitspreis) {
+		   if (pNegSupplyArbeitspreis.getQuantity() < 0.00001) {
+	            return;
+	        }
+	        negativeSupplies.add(pNegSupplyArbeitspreis);
+		
+	}
+	@Override
+	public void addPositiveSupplyArbeitspreis(PowerPositive pPosSupplyArbeitspreis) {
+		  if (pPosSupplyArbeitspreis.getQuantity() < 0.00001) {
+	            return;
+	        }
+	        positiveSuppliesArbeitsPreis.add(pPosSupplyArbeitspreis);
 		
 	}
 
