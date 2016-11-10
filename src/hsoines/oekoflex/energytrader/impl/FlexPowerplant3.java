@@ -332,6 +332,7 @@ public class FlexPowerplant3 implements EOMTrader, BalancingMarketTrader, Market
 		}
       
         
+		
 		// 2.1 Ermittlung Gebotsmenge des Flexibilitätsgebots [MW]
         float pFlex = Math.min((powerMax - positiveQuantityAssignedBPM - pMustRun),(pConstRampUp - positiveQuantityAssignedBPM)-pMustRun);
         float eFlex  = 0;
