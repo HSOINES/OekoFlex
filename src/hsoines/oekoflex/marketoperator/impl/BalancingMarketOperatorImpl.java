@@ -272,10 +272,10 @@ public final class BalancingMarketOperatorImpl implements BalancingMarketOperato
 	@Override
 	public void clearMarketCapacityPrice() {
 		//Clear all old supplies:
-	    positiveSupplies.clear();
-	    negativeSupplies.clear();
-	    positiveSuppliesArbeitsPreis.clear();
-	    negativeSuppliesArbeitsPreis.clear();
+//	    positiveSupplies.clear();
+//	    negativeSupplies.clear();
+//	    positiveSuppliesArbeitsPreis.clear();
+//	    negativeSuppliesArbeitsPreis.clear();
 		
 		
         log.trace("positive clearing Capacity Price.");
