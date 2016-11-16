@@ -1,0 +1,114 @@
+---------------------------------------------------------------------------------------------------------------------------------------------------------
+                                      Overview of all test classes and additional classes for stubs and mocks:
+---------------------------------------------------------------------------------------------------------------------------------------------------------
+
+hsoines.oekoflex							// Corresponing with which files? -> Check against src classes.
+			TestJava						// Useless, maybe delete?! -> Oder in eigenen Ordner mit allgemeinen Java Tests 
+
+
+hsoines.oekoflex.builder					// Corresponing with which files? -> Check against src classes.
+			CSVParameterTest				// Should run correct
+			OekoFlexContextBuilderTest		// Should run correct
+
+
+hsoines.oekoflex.builder.traderfactories	// Corresponing with which files? -> Check against src classes.
+			StorageFactoryTest				// Not correct implemented yet
+			TotalLoadFactoryTest			// Should run correct
+
+
+hsoines.oekoflex.display					// Corresponing with which files? -> Check against src classes.
+			MerritOrderGraphTest			// Should run correct
+			TestChartMain					// Should run correct
+
+
+hsoines.oekoflex.energytrader.impl			// Corresponing with which files? -> Check against src classes.
+			EnergySlotListImplTest			//
+			FlexPowerplant3Test				// Not correct implemented yet
+			LearningStorageImplTest			// Not correct implemented yet
+			LearningStorageImplTest2		// Not correct implemented yet
+			StorageBalancingMarketTest		// Not correct implemented yet
+			StorageSpotMarketTest			// Not correct implemented yet
+			TradeRegistryImplTest			// Should run correct
+			TradeRegistryImplTest2			// Should run correct
+			TradeRegistryWithPrerunTest		// Should run correct
+
+
+hsoines.oekoflex.energytrader.tools			// No Testcase just stubs and mocks
+			TestBalancingMarketOperator		// No Testcase just stubs and mocks
+			TestSpotMarketOperator			// No Testcase just stubs and mocks
+
+
+hsoines.oekoflex.impl						// Corresponing with which files? -> Check against src classes.
+			SpotMarketOperatorTest			// Should run correct
+
+
+hsoines.oekoflex.marketoperator.impl		// Corresponing with which files? -> Check against src classes.
+			BalancingMarketOperatorImplTest	// Not correct implemented yet
+			RegelEnergieMarketImplTest		// Not correct implemented yet
+			SpotMarketOperatorImplTest		// Should run correct
+
+
+hsoines.oekoflex.priceforwardcurve.impl		// Corresponing with which files? -> Check against src classes.
+			PriceForwardCurveImplTest		// Should run correct
+
+
+hsoines.oekoflex.summary					// Corresponing with which files? -> Check against src classes.
+			EnergyTraderTypeLoggerTest		// Should run correct
+			LoggerFileImplTest				// Should run correct
+
+
+hsoines.oekoflex.tools						// No Testcase just stubs and mocks
+			RepastTestInitializer			// No Testcase just stubs and mocks
+	
+			
+hsoines.oekoflex.util						// Corresponing with which files? -> Check against src classes.
+			NumberFormatUtilTest			// Should run correct
+			TestSorting						// Should run correct
+			TimeUtilTest					// Should run correct
+
+
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------
+                                      TODOs:
+---------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Allgemein:
+	- TODO: Liste der Klassen vs. getestete Klassen erstellen.
+	- TODO: Beschreibung der einzelnen TestKlassen und Testfälle erstellen.
+	- TODO: Comparator Tests
+
+Für spezifische Klassen:
+	- TODO:  BalancingMarketOperatorImplTest.java 		Werden die Listen wieder korekt gelöscht? .> Testcase erstellen.
+	- TODO: 
+	- TODO: 
+	- TODO: 
+	- TODO: 
+	- TODO: 
+	- TODO: 
+	- TODO: 
+	- TODO: 
+	- TODO: 
+	- TODO: 
+	- TODO: 
+	- TODO: 
+	- TODO: 
+	- TODO: 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

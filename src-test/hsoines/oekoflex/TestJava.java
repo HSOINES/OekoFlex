@@ -4,6 +4,8 @@ import org.junit.Test;
 
 /**
  * Created by jhense on 16.06.2016.
+ * WTF???? float to integer test ??!!!
+ * Delete !
  */
 public class TestJava {
     @Test

@@ -12,25 +12,19 @@ import java.util.Date;
 import static org.junit.Assert.assertEquals;
 
 /**
- * User: jh
- * Date: 07/01/16
- * Time: 13:25
+ * 
  */
 public class EnergySlotListImplTest {
 
     private TradeRegistryImpl energySlotList;
     private Date date0;
-    private Date date1;
-    private Date date2;
-    private Date date3;
+
 
     @Before
     public void setUp() throws Exception {
         energySlotList = new TradeRegistryImpl(TradeRegistry.Type.PRODUCE, 1000, 1000);
         date0 = TimeUtil.getDate(0);
-        date1 = TimeUtil.getDate(1);
-        date2 = TimeUtil.getDate(2);
-        date3 = TimeUtil.getDate(3);
+
     }
 
     @Test

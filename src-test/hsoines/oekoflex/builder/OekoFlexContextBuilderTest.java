@@ -9,11 +9,12 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Locale;
 
-import static org.junit.Assert.*;
-
 /**
- * Created by jhense on 13.03.2016.
+ * evtl. noch einbauen: File wieder einlesen und gegen checken mit erwartetem Ergebnis?!
+ * 
+ * Wo wird die test.csv hingeschrieben? -> hier direkt in den Ordner.
  */
+
 public class OekoFlexContextBuilderTest {
 @Before
     public void setup(){
@@ -31,6 +32,7 @@ public class OekoFlexContextBuilderTest {
         fileWriter.write(NumberFormatUtil.format(-1234567.123456f)+"\n");
         fileWriter.write(NumberFormatUtil.format(-1234567.123456f)+"\n");
         fileWriter.close();
+        
     }
 
 }

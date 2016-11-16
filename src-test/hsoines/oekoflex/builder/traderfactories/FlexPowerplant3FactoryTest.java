@@ -11,8 +11,9 @@ import java.util.Locale;
 import java.util.Properties;
 
 /**
+ * 
  */
-public class FlexPowerplant2FactoryTest {
+public class FlexPowerplant3FactoryTest {
     static {
         Locale.setDefault(OekoFlexContextBuilder.defaultlocale);
         OekoFlexContextBuilder.defaultNumberFormat = DecimalFormat.getNumberInstance();
