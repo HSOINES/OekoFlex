@@ -11,9 +11,6 @@ import java.util.Locale;
 import java.util.Properties;
 
 /**
- * User: jh
- * Date: 27/01/16
- * Time: 22:45
  */
 public class FlexPowerplant2FactoryTest {
     static {
