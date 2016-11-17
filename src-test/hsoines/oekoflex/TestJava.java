@@ -3,6 +3,7 @@ package hsoines.oekoflex;
 import org.junit.Test;
 
 /**
+ * 
  * WTF???? float to integer test ??!!!
  * Delete !
  */
