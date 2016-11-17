@@ -10,9 +10,7 @@ import repast.simphony.engine.schedule.ISchedule;
 import repast.simphony.engine.schedule.Schedule;
 
 /**
- * User: jh
- * Date: 07/01/16
- * Time: 20:07
+ * 
  */
 public final class RepastTestInitializer {
 

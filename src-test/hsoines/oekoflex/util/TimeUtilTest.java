@@ -9,9 +9,7 @@ import java.util.Date;
 import static org.junit.Assert.assertEquals;
 
 /**
- * User: jh
- * Date: 17/12/15
- * Time: 08:16
+ * 
  */
 public class TimeUtilTest {
     public TimeUtilTest() {

@@ -13,9 +13,7 @@ import java.util.Iterator;
 import static org.junit.Assert.assertEquals;
 
 /**
- * User: jh
- * Date: 30/03/16
- * Time: 17:45
+ * 
  */
 public class CSVParameterTest {
 

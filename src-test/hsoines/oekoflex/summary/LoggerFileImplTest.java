@@ -8,9 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * User: jh
- * Date: 10/03/16
- * Time: 14:27
+ * 
  */
 public class LoggerFileImplTest {
     private static final Log log = LogFactory.getLog(LoggerFileImplTest.class);

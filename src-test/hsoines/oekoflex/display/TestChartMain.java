@@ -7,9 +7,7 @@ import org.knowm.xchart.internal.chartpart.Chart;
 
 
 /**
- * User: jh
- * Date: 15/12/15
- * Time: 14:47
+ * 
  */
 public final class TestChartMain {
 

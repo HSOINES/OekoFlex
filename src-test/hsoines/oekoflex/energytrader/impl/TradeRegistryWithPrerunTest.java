@@ -12,9 +12,7 @@ import java.util.Date;
 import static org.junit.Assert.assertEquals;
 
 /**
- * User: jh
- * Date: 27/04/16
- * Time: 23:00
+ * 
  */
 public class TradeRegistryWithPrerunTest {
 

@@ -15,9 +15,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 /**
- * User: jh
- * Date: 15/06/16
- * Time: 21:26
+ * 
  */
 public class TestSpotMarketOperator implements SpotMarketOperator {
     private EnergyDemand lastEnergyDemand;

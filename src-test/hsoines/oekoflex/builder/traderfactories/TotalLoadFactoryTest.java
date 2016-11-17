@@ -7,9 +7,7 @@ import repast.simphony.context.DefaultContext;
 import java.io.File;
 
 /**
- * User: jh
- * Date: 19/02/16
- * Time: 08:39
+ * 
  */
 public class TotalLoadFactoryTest {
     @Test

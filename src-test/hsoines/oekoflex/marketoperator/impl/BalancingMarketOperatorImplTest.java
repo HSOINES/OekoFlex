@@ -14,9 +14,7 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
 /**
- * User: jh
- * Date: 27/01/16
- * Time: 21:23
+ * 
  */
 public class BalancingMarketOperatorImplTest {
 

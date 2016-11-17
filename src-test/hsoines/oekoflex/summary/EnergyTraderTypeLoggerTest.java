@@ -20,9 +20,7 @@ import java.util.concurrent.TimeUnit;
 import static org.junit.Assert.fail;
 
 /**
- * User: jh
- * Date: 15/01/16
- * Time: 23:19
+ * 
  */
 public class EnergyTraderTypeLoggerTest {
 

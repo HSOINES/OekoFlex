@@ -5,9 +5,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
 /**
- * User: jh
- * Date: 18/01/16
- * Time: 14:23
+ * 
  */
 public class NumberFormatUtilTest {
     @Test

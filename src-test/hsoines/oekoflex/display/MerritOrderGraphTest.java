@@ -12,7 +12,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Created by jhense on 15.03.2016.
+ * 
  */
 public class MerritOrderGraphTest {
     @Test

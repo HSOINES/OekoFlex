@@ -17,9 +17,7 @@
 //import static org.mockito.Mockito.*;
 //
 ///**
-// * User: jh
-// * Date: 07/01/16
-// * Time: 11:14
+// * 
 // */
 //public class RegelEnergieMarketImplTest {
 //

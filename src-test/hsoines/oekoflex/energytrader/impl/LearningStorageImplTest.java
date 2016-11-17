@@ -16,9 +16,7 @@
 //import static org.junit.Assert.assertEquals;
 //
 ///**
-// * User: jh
-// * Date: 15/06/16
-// * Time: 21:22
+// * 
 // */
 //public class LearningStorageImplTest {
 //

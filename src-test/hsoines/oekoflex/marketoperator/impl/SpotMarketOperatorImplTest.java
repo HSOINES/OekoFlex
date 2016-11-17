@@ -18,9 +18,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 
 /**
- * User: jh
- * Date: 18/01/16
- * Time: 13:38
+ * 
  */
 public class SpotMarketOperatorImplTest {
 

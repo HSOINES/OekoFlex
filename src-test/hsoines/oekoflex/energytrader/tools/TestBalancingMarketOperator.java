@@ -14,9 +14,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
 /**
- * User: jh
- * Date: 16/06/16
- * Time: 12:31
+ * 
  */
 public class TestBalancingMarketOperator implements BalancingMarketOperator {
 

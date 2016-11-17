@@ -9,9 +9,7 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 
 /**
- * User: jh
- * Date: 30/03/16
- * Time: 19:19
+ * 
  */
 public class PriceForwardCurveImplTest {
 

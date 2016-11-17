@@ -8,9 +8,7 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 
 /**
- * User: jh
- * Date: 10/03/16
- * Time: 11:41
+ * 
  */
 public class BidSupportTest {
 

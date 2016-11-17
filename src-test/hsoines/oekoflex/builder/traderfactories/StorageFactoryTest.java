@@ -7,9 +7,7 @@
 //import java.io.File;
 //
 ///**
-// * User: jh
-// * Date: 19/02/16
-// * Time: 08:41
+// * 
 // */
 //public class StorageFactoryTest {
 //    @Test

@@ -15,9 +15,7 @@
 //import static org.junit.Assert.assertEquals;
 //
 ///**
-// * User: jh
-// * Date: 18/01/16
-// * Time: 18:23
+// * 
 // */
 //public class StorageBalancingMarketTest {
 //
