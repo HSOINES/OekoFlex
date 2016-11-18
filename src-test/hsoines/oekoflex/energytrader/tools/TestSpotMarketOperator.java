@@ -25,7 +25,7 @@ public class TestSpotMarketOperator implements SpotMarketOperator {
     private EOMTrader eomTrader;
 
     public TestSpotMarketOperator() {
-        energyDemands = new ArrayList<>();
+        energyDemands  = new ArrayList<>();
         energySupplies = new ArrayList<>();
     }
 

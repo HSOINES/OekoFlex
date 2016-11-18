@@ -1,73 +1,73 @@
----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
                                       Overview of all test classes and additional classes for stubs and mocks:
----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 											|																							| 1/1 Everything runs					|										|
 hsoines.oekoflex							| Corresponding with which files? -> Check against src classes.								|										|										|
 			TestJava						| Useless, maybe delete?! -> Oder in eigenen Ordner mit allgemeinen Java Tests 				| runs correct(17.11.2016)				|										|
----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 											|																							| 2/2 Everything runs		 			|										|
 hsoines.oekoflex.builder					| Corresponding with which files? -> Check against src classes.								|										|										|
 			CSVParameterTest				| Should run correct																		| runs correct(17.11.2016)				|										|	
 			OekoFlexContextBuilderTest		| Should run correct																		| runs correct(17.11.2016)				|										|
----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 											|																							| 2/3 running							|										|
 hsoines.oekoflex.builder.traderfactories	| Corresponding with which files? -> Check against src classes.								|										|										|
 			FlexPowerplant3FactoryTest		|																							| runs correct(17.11.2016)				|										|
-			StorageFactoryTest				| Not correct implemented yet - Storage will be imlemented in a new version					| commented out			 				|  Implement Storage First				| 
+			StorageFactoryTest				| Not correct implemented yet - Storage will be implemented in a new version				| commented out			 				|  Implement Storage First				| 
 			TotalLoadFactoryTest			| Should run correct																		| runs correct(17.11.2016)				|  										|
----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 											|																							| 1/1 Everything runs					|										|
 hsoines.oekoflex.display					| Corresponding with which files? -> Check against src classes.								|										|										|
 			MerritOrderGraphTest			| Should run correct																		| runs correct(17.11.2016)				|										|
-			TestChartMain					| No Testcase just stubs and mocks															| No Testcase just stubs and mocks		|										|
----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+			TestChartMain					| No Test case just stubs and mocks															| No Test case just stubs and mocks		|										|
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 											|																							| 4/9 running							|										|
 hsoines.oekoflex.energytrader.impl			| Corresponding with which files? -> Check against src classes.								|										|										|
 			EnergySlotListImplTest			| Should run correct																		| runs correct(17.11.2016)				| Check what it does					|
 			FlexPowerplant3Test				| Not correct implemented yet																| commented out							| 										|
 			LearningStorageImplTest			| Not correct implemented yet																| commented out							| Implement Storage First				|	
 			LearningStorageImplTest2		| Not correct implemented yet																| commented out							| Implement Storage First				|
-			StorageBalancingMarketTest		| Not correct implemented yet - Storage will be imlemented in a new version					| commented out							| Implement Storage First				|
-			StorageSpotMarketTest			| Not correct implemented yet - Storage will be imlemented in a new version					| commented out							| Implement Storage First				|
+			StorageBalancingMarketTest		| Not correct implemented yet - Storage will be implemented in a new version				| commented out							| Implement Storage First				|
+			StorageSpotMarketTest			| Not correct implemented yet - Storage will be implemented in a new version				| commented out							| Implement Storage First				|
 			TradeRegistryImplTest			| Should run correct																		| runs correct(17.11.2016)				|										|
 			TradeRegistryImplTest2			| Should run correct																		| runs correct(17.11.2016)				|										|
 			TradeRegistryWithPrerunTest		| Should run correct																		| runs correct(17.11.2016)				|										|			
----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-											|																							| No Testcase just stubs and mocks		|										|
-hsoines.oekoflex.energytrader.tools			| No Testcase just stubs and mocks															| No Testcase just stubs and mocks		|										|
-			TestBalancingMarketOperator		| No Testcase just stubs and mocks															| No Testcase just stubs and mocks		|										|
-			TestSpotMarketOperator			| No Testcase just stubs and mocks															| No Testcase just stubs and mocks		|										|
----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+											|																							| No Test case just stubs and mocks		|										|
+hsoines.oekoflex.energytrader.tools			| No Test case just stubs and mocks															| No Test case just stubs and mocks		|										|
+			TestBalancingMarketOperator		| No Test case just stubs and mocks															| No Test case just stubs and mocks		|										|
+			TestSpotMarketOperator			| No Test case just stubs and mocks															| No Test case just stubs and mocks		|										|
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 											|																							| 1/1  Everything runs					|										|
 hsoines.oekoflex.impl						| Corresponding with which files? -> Check against src classes.								|										|										|
 			SpotMarketOperatorTest			| Should run correct																		| runs correct(17.11.2016)				|										| 
----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 											|																							| 2/3 running							|										|
 hsoines.oekoflex.marketoperator.impl		| Corresponding with which files? -> Check against src classes.								|										|										|
 			BalancingMarketOperatorImplTest	| Not correct implemented yet																| runs correct(17.11.2016)				|										| 
 			RegelEnergieMarketImplTest		| Not correct implemented yet																| commented out							|										|			
 			SpotMarketOperatorImplTest		| Should run correct																		| runs correct(17.11.2016)				|										|	
----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 											|																							| 1/1  Everything runs					|										|
 hsoines.oekoflex.priceforwardcurve.impl		| Corresponding with which files? -> Check against src classes.								|										|										|
 			PriceForwardCurveImplTest		| Should run correct																		| runs correct(17.11.2016)				|										|
----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 											|																							| 1/1  Everything runs					|										|
 hsoines.oekoflex.summary					| Corresponding with which files? -> Check against src classes.								|										|										|
 			EnergyTraderTypeLoggerTest		| Should run correct																		| runs correct(17.11.2016)				|										|	
 			LoggerFileImplTest				| Should run correct																		| runs correct(17.11.2016)				|										|			
----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-											|																							| No Testcase just stubs and mocks		|										|
-hsoines.oekoflex.tools						| No Testcase just stubs and mocks															| No Testcase just stubs and mocks		|										|
-			RepastTestInitializer			| No Testcase just stubs and mocks															| No Testcase just stubs and mocks		|										|
----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+											|																							| No Test case just stubs and mocks		|										|
+hsoines.oekoflex.tools						| No Testcase just stubs and mocks															| No Test case just stubs and mocks		|										|
+			RepastTestInitializer			| No Testcase just stubs and mocks															| No Test case just stubs and mocks		|										|
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 											|																							| 1/1  Everything runs					|										|			
 hsoines.oekoflex.util						| Corresponding with which files? -> Check against src classes.								|										|										|
 			NumberFormatUtilTest			| Should run correct																		| runs correct(17.11.2016)				|										|
 			TestSorting						| Should run correct																		| runs correct(17.11.2016)				|										| 
 			TimeUtilTest					| Should run correct																		| runs correct(17.11.2016)				|										| 
----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
 
@@ -90,19 +90,7 @@ Allgemein:
 Für spezifische Klassen:
 	- TODO:  BalancingMarketOperatorImplTest.java 		Werden die Listen wieder korekt gelöscht? .> Testcase erstellen.
 	- TODO:  TotalLoad, passt dies noch in unsere jetzige (17.11.2016) Implementierung
-	- TODO: 
-	- TODO: 
-	- TODO: 
-	- TODO: 
-	- TODO: 
-	- TODO: 
-	- TODO: 
-	- TODO: 
-	- TODO: 
-	- TODO: 
-	- TODO: 
-	- TODO: 
-	- TODO: 
+
 
 
 

@@ -18,7 +18,7 @@ public final class SequenceDefinition {
     public static final int BPMBidPriority = 100;
     
     /** priority of  balancing power market clearing for the capacityPrice (Leistungspreis)*/
-    public static final int BPMClearingPriorityCapacityPrice = 99;
+    public static final int BPMClearingPriorityCapacityPrice = 90;
     
     /** priority of  balancing power market clearing for the energyPrice (Arbeitspreis)*/
     public static final int BPMClearingPriorityEnergyPrice = 77;
@@ -27,7 +27,7 @@ public final class SequenceDefinition {
     public static final int EOMBidPriority = 50;
     
     /** priority of  energy only market clearing*/
-    public static final int EOMClearingPriority = 49;
+    public static final int EOMClearingPriority = 40;
     
     /** priority of reporting */
     public static final int ReportingPriority = 1;

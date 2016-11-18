@@ -42,7 +42,7 @@ public interface BalancingMarketOperator extends OekoflexAgent {
 	 * market clearing, is called by the Repast scheduler 
 	 */
 	
-	// Every 16 ticks clearing for Leistungspreis with prio 99
+	// Every 16 ticks clearing for Leistungspreis with prio 90
 	@ScheduledMethod(start = SequenceDefinition.SimulationStart, interval = SequenceDefinition.BalancingMarketInterval, priority = SequenceDefinition.BPMClearingPriorityCapacityPrice)
 	void clearMarketCapacityPrice();
 	

@@ -271,11 +271,7 @@ public final class BalancingMarketOperatorImpl implements BalancingMarketOperato
     // Leistungspreis
 	@Override
 	public void clearMarketCapacityPrice() {
-		//Clear all old supplies:
-//	    positiveSupplies.clear();
-//	    negativeSupplies.clear();
-//	    positiveSuppliesArbeitsPreis.clear();
-//	    negativeSuppliesArbeitsPreis.clear();
+
 		
 		
         log.trace("positive clearing Capacity Price.");
@@ -289,6 +285,13 @@ public final class BalancingMarketOperatorImpl implements BalancingMarketOperato
         totalClearedNegativeQuantity = negativeClearingData.getClearedQuantity();
         lastNegativeAssignmentRate = negativeClearingData.getAssignmentRate();
         lastClearedNegativeMaxPrice = negativeClearingData.getLastClearedMaxPrice();
+        
+		//Clear all old supplies: 
+        // Has to be at the end otherwise, all added supplies would be deleted before the clearing
+	    positiveSupplies.clear();
+	    negativeSupplies.clear();
+	    positiveSuppliesArbeitsPreis.clear();
+	    negativeSuppliesArbeitsPreis.clear();
 		
 	}
 	

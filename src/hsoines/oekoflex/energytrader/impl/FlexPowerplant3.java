@@ -171,6 +171,7 @@ public class FlexPowerplant3 implements EOMTrader, BalancingMarketTrader, Market
 	@Override
 	public void notifyClearingDone(Date currentDate, Market market, Bid bid, float clearedPrice, float rate) {
 		switch (bid.getBidType()) {
+		
 			case ENERGY_SUPPLY_MUSTRUN:
 				if (rate < 0.0001f) { return; }  	// Schrott zur Absicherung
 				if (1 - rate > 0.00001f) {			
@@ -180,16 +181,22 @@ public class FlexPowerplant3 implements EOMTrader, BalancingMarketTrader, Market
 			case ENERGY_SUPPLY:
 				energyTradeRegistry.addAssignedQuantity(currentDate, market, bid.getPrice(), clearedPrice, bid.getQuantity(), rate, bid.getBidType());
 				break;
+		
 			case POWER_NEGATIVE_ARBEITSPREIS:
 			case POWER_POSITIVE_ARBEITSPREIS:
 				powerTradeRegistry.addAssignedQuantity(currentDate, market, bid.getPrice(), clearedPrice, bid.getQuantity(), rate, bid.getBidType());
-				break;
+				break;	
+				
+			case POWER_NEGATIVE_LEISTUNGSPREIS:
 			case POWER_NEGATIVE:
 				negativeQuantityAssignedBPM = bid.getQuantity()*rate;
 				break;
+				
+			case POWER_POSITIVE_LEISTUNGSPREIS:
 			case POWER_POSITIVE:
-				positiveQuantityAssignedBPM =  bid.getQuantity()*rate;
+				positiveQuantityAssignedBPM = bid.getQuantity()*rate;
 				break;
+				
 			default:
 				throw new IllegalStateException("No matching Bidtype, BidType is: " + bid.getBidType());
 		}
