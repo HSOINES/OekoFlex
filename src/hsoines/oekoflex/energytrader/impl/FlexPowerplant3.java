@@ -22,7 +22,7 @@ import hsoines.oekoflex.priceforwardcurve.PriceForwardCurve;
 import hsoines.oekoflex.util.Market;
 import hsoines.oekoflex.util.TimeUtil;
 /**
- * texty text for class
+ * texty text for class 
  * 
  */
 public class FlexPowerplant3 implements EOMTrader, BalancingMarketTrader, MarketOperatorListener {
