@@ -35,15 +35,15 @@ import java.util.List;
  * </ul>
  */
 public final class BalancingMarketOperatorImpl implements BalancingMarketOperator {
+	
     private static final Log log = LogFactory.getLog(BalancingMarketOperatorImpl.class);
-
     private final String name;
     private final int positiveQuantity;
     private final int negativeQuantity;
     private final List<BidSupport> positiveSupplies = new ArrayList<>(); // wiso final, sollte die Liste nicht mit jedem Tick neu generiert werden???
     private final List<BidSupport> negativeSupplies = new ArrayList<>(); // wiso final, sollte die Liste nicht mit jedem Tick neu generiert werden???
     
-    // Liste der ArbeitspreisGebote
+    // Liste der Arbeitspreis Gebote
     private  List<BidSupport> positiveSuppliesArbeitsPreis = new ArrayList<>(); 
     private  List<BidSupport> negativeSuppliesArbeitsPreis = new ArrayList<>(); 
 
@@ -219,7 +219,7 @@ public final class BalancingMarketOperatorImpl implements BalancingMarketOperato
      * @param marketOperatorListener
      * @param assignRate
      */
-    void doNotify(final BidSupport bidSupport, final MarketOperatorListener marketOperatorListener, float assignRate) { // STRING type kann gelöscht werden sobald bidtype korrekt implementiert ist
+    void doNotify(final BidSupport bidSupport, final MarketOperatorListener marketOperatorListener, float assignRate) { 
         long tick = TimeUtil.getCurrentTick();
         marketOperatorListener.notifyClearingDone(TimeUtil.getDate(tick), Market.BALANCING_MARKET, bidSupport, bidSupport.getPrice(), assignRate);
 
@@ -229,7 +229,7 @@ public final class BalancingMarketOperatorImpl implements BalancingMarketOperato
                 + bidSupport.getBidType() + ";"
                 + NumberFormatUtil.format(bidSupport.getPrice()) + ";"
                 + NumberFormatUtil.format(bidSupport.getQuantity()) + ";"
-                + NumberFormatUtil.format(bidSupport.getQuantity() * assignRate) + ";" );
+                + NumberFormatUtil.format(bidSupport.getQuantity() * assignRate));
     }
     
     /**
@@ -272,8 +272,6 @@ public final class BalancingMarketOperatorImpl implements BalancingMarketOperato
 	@Override
 	public void clearMarketCapacityPrice() {
 
-		
-		
         log.trace("positive clearing Capacity Price.");
         ClearingData positiveClearingData = doClearMarketFor(positiveSupplies, positiveQuantity); // positiveSupplies-> wiso final, sollte die Liste nicht mit jedem Tick neu generiert werden???
         totalClearedPositiveQuantity = positiveClearingData.getClearedQuantity();
