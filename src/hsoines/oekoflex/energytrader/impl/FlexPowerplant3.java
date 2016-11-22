@@ -234,11 +234,9 @@ public class FlexPowerplant3 implements EOMTrader, BalancingMarketTrader, Market
 	@Override
     public void makeBidBalancingMarket(long currentTick) {
 				
-		Date currentDate = TimeUtil.getDate(currentTick);
-		Date precedingDate = TimeUtil.precedingDate(currentDate); // precedingDate = currentDate plus 15min 
+		//Date currentDate = TimeUtil.getDate(currentTick);
+		//Date precedingDate = TimeUtil.precedingDate(currentDate); // precedingDate = currentDate plus 15min 
 	
-		
-
 		float pfcCostsAverage = priceForwardCurve.avgPriceOverTicks(currentTick, Market.BALANCING_MARKET.getTicks());//  Market.BALANCING_MARKET.getTicks() is equivalent to 16
 		
 		float pRampUp   = (powerRampUp   / LATENCY);
@@ -253,6 +251,7 @@ public class FlexPowerplant3 implements EOMTrader, BalancingMarketTrader, Market
 		}
 		
 		if (mengeRegelleistungPpos > 0) {
+			
 			// 1.2 Bestimmung Leistungspreis am Regelenergiemarkt - positive Regelleistung
 			float leistungspreisPpos = Math.max((pfcCostsAverage - marginalCosts) * dtau, 0)+ Math.abs(Math.min(((pfcCostsAverage - marginalCosts) * dtau * powerMin) / mengeRegelleistungPpos, 0));
 			float arbeitspreisPpos   =  marginalCosts; // FACTOR_BALANCING_CALL := Faktor Regelenergieabruf
@@ -263,6 +262,7 @@ public class FlexPowerplant3 implements EOMTrader, BalancingMarketTrader, Market
 			
 			PowerPositive pPosSupplyArbeitspreis= new PowerPositive(arbeitspreisPpos, mengeRegelleistungPpos, this, BidType.POWER_POSITIVE_ARBEITSPREIS);
 			balancingMarketOperator.addPositiveSupplyArbeitspreis(pPosSupplyArbeitspreis);
+			
 		}
 		
 		
@@ -276,6 +276,7 @@ public class FlexPowerplant3 implements EOMTrader, BalancingMarketTrader, Market
 		
 		
 		if (mengeRegelleistungPneg > 0) {
+			
 			// 2.2 Bestimmung Leistungspreis am Regelenergiemarkt - negative Regelleistung
 			float leistungspreisPneg = Math.abs(Math.min(((pfcCostsAverage - marginalCosts) * dtau * (powerMin + mengeRegelleistungPneg)) / mengeRegelleistungPneg, 0));
 			float arbeitspreisPneg   = -marginalCosts;
@@ -286,6 +287,7 @@ public class FlexPowerplant3 implements EOMTrader, BalancingMarketTrader, Market
 			
 			PowerNegative pNegSupplyArbeitspreis =new PowerNegative(arbeitspreisPneg, mengeRegelleistungPneg, this,BidType.POWER_NEGATIVE_ARBEITSPREIS);
 			balancingMarketOperator.addNegativeSupplyArbeitspreis(pNegSupplyArbeitspreis);
+			
 		}
 
 	}

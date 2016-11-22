@@ -7,7 +7,7 @@ import hsoines.oekoflex.energytrader.MarketOperatorListener;
  */
 public final class PowerPositive extends PowerBid {
 	
-	public BidType b;;
+	public BidType b;
 
 	/**
 	 * Constructor, with constructor channeling,calls the superclass PowerBid
