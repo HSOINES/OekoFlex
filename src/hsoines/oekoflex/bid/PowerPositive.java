@@ -3,7 +3,7 @@ package hsoines.oekoflex.bid;
 import hsoines.oekoflex.energytrader.MarketOperatorListener;
 
 /**
- * bid for positive power specifies the kind of Power bid
+ * bid for positive power specifies the kind of Power bid 
  */
 public final class PowerPositive extends PowerBid {
 	
